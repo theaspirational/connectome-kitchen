@@ -56,6 +56,13 @@ npm run typecheck
 npm run build
 ```
 
+The installer also switches off npm's update notifier, audit and fund lookups;
+`--offline` alone leaves the notifier free to query the registry on a fresh
+cache. `scripts/check-offline-install.sh /path/to/typescript-pins` is the
+regression check: it runs the installer in a scratch copy with a fresh cache and
+an emptied environment under `strace -f -e trace=network`, and fails on any IPv4
+or IPv6 socket call, loopback and DNS included.
+
 `npm run build` deletes `dist/` and recompiles, so stale output cannot satisfy a
 test; `npm test` builds first. `scripts/build` is a different thing: it adds the
 older publication smoke fixture to `dist/` and must run after `npm run build`.
