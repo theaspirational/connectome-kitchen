@@ -9,7 +9,12 @@ def inventory(plan):
  section=plan.read_text().split('### 4.1 Inventory',1)[1].split('### 4.2',1)[0]
  for line in section.splitlines():
   if not re.match(r'^\| \d+ \|',line):continue
-  fields=line.split('|'); number=int(fields[1]); source=fields[3]; ids=re.findall(r'`([^`]+)`',fields[5])
+  fields=line.split('|'); number=int(fields[1]); source=fields[3]; tokens=[t for t in re.findall(r'`([^`]+)`',fields[5]) if ':' not in t];ids=[]
+  for i,token in enumerate(tokens):
+   if token.startswith('.'):ids.append(base+token)
+   else:
+    base=token
+    if i+1==len(tokens) or not tokens[i+1].startswith('.'):ids.append(token)
   refs=[];current=None
   if not re.search(r'\[[ST]\]',source):
    for m in re.finditer(r'`(?:(?P<file>[\w/]+\.py))?:(?P<start>\d+)(?:-(?P<end>\d+))?`',source):

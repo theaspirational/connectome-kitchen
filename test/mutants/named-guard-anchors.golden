@@ -1,0 +1,1185 @@
+[
+  {
+    "id": "catalog.unit.overlap",
+    "rows": [
+      48
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 842,
+    "start": 41241,
+    "end": 41269,
+    "before": "not env.keys() & base.keys()",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "secrets.reserved.catalog",
+    "rows": [
+      49
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 329,
+    "start": 15223,
+    "end": 15308,
+    "before": "not names & {'PATH', 'HOME', 'TMPDIR', 'DATA_DIR', 'WORKSPACE_DIR', 'LANG', 'LC_ALL'}",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "secrets.reserved.grammar",
+    "rows": [
+      49
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 408,
+    "start": 17928,
+    "end": 18023,
+    "before": "any(not isinstance(name, str) or not re.fullmatch(r'[A-Z_][A-Z0-9_]*', name) for name in names)",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "secrets.reserved.direct",
+    "rows": [
+      49
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 410,
+    "start": 18081,
+    "end": 18118,
+    "before": "names & {'DATA_DIR', 'WORKSPACE_DIR'}",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "secrets.reserved.collision",
+    "rows": [
+      49
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 418,
+    "start": 18347,
+    "end": 18393,
+    "before": "direct & {record['env'] for record in records}",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "recipe.secret-ref.token",
+    "rows": [
+      50
+    ],
+    "file": "module_utils/connectome_cook.py",
+    "line": 157,
+    "start": 8046,
+    "end": 8138,
+    "before": "not ('token' in settings and not re.fullmatch(r'\\$\\{[A-Z_][A-Z0-9_]*\\}', settings['token']))",
+    "after": "True",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+  },
+  {
+    "id": "recipe.secret-ref.catalog-token",
+    "rows": [
+      50
+    ],
+    "file": "module_utils/connectome_cook.py",
+    "line": 174,
+    "start": 9371,
+    "end": 9516,
+    "before": "'token' not in settings or isinstance(settings['token'], str) and\n                     re.fullmatch(r'\\$\\{[A-Z_][A-Z0-9_]*\\}', settings['token'])",
+    "after": "True",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+  },
+  {
+    "id": "recipe.secret-ref.env",
+    "rows": [
+      50
+    ],
+    "file": "module_utils/connectome_cook.py",
+    "line": 200,
+    "start": 11088,
+    "end": 11130,
+    "before": "key in names and value == '${' + key + '}'",
+    "after": "True",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+  },
+  {
+    "id": "recipe.secret-ref.spawn-token",
+    "rows": [
+      50
+    ],
+    "file": "module_utils/connectome_spawn/planner.py",
+    "line": 87,
+    "start": 3758,
+    "end": 3845,
+    "before": "type(settings['token']) is str and settings['token'] in ('${' + n + '}' for n in names)",
+    "after": "True",
+    "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+  },
+  {
+    "id": "recipe.secret-ref.spawn-env",
+    "rows": [
+      50
+    ],
+    "file": "module_utils/connectome_spawn/planner.py",
+    "line": 94,
+    "start": 4255,
+    "end": 4297,
+    "before": "key in names and value == '${' + key + '}'",
+    "after": "True",
+    "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+  },
+  {
+    "id": "deploy.private.secret-dir",
+    "rows": [
+      52
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 947,
+    "start": 47454,
+    "end": 47570,
+    "before": "not stat.S_ISDIR(info.st_mode) or stat.S_IMODE(info.st_mode) != 0o700 or\n                info.st_uid != os.geteuid()",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "deploy.private.secret-entry",
+    "rows": [
+      52
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 953,
+    "start": 47781,
+    "end": 47929,
+    "before": "path.name not in allowed or not stat.S_ISREG(info.st_mode) or\n                    stat.S_IMODE(info.st_mode) != 0o600 or info.st_uid != os.geteuid()",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "deploy.private.canonical",
+    "rows": [
+      52
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 496,
+    "start": 22618,
+    "end": 22780,
+    "before": "not isinstance(value, str) or not Path(value).is_absolute() or\n                value != os.path.abspath(value) or any(ord(c) < 32 or ord(c) == 127 for c in value)",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "catalog.build.executable",
+    "rows": [
+      53
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 639,
+    "start": 29995,
+    "end": 30015,
+    "before": "executable.is_file()",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.build.status",
+    "rows": [
+      53
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 643,
+    "start": 30348,
+    "end": 30370,
+    "before": "result.returncode == 0",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.build.export",
+    "rows": [
+      53
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 646,
+    "start": 30549,
+    "end": 30585,
+    "before": "(directory / name / value).is_file()",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.contained.archive",
+    "rows": [
+      54
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 628,
+    "start": 29198,
+    "end": 29261,
+    "before": "archive.resolve().is_relative_to(build.parent.parent.resolve())",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.preflight.chars",
+    "rows": [
+      55
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 679,
+    "start": 32129,
+    "end": 32189,
+    "before": "all(not any(c in arg for c in '%$\\n\\r\\\\\\\"') for arg in argv)",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.preflight.absolute",
+    "rows": [
+      55
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 677,
+    "start": 31969,
+    "end": 31996,
+    "before": "Path(argv[0]).is_absolute()",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "spawn.lifecycle.store-binding",
+    "rows": [
+      56
+    ],
+    "file": "module_utils/connectome_spawn/lifecycle.py",
+    "line": 96,
+    "start": 4822,
+    "end": 4850,
+    "before": "value['store'] == str(store)",
+    "after": "True",
+    "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+  },
+  {
+    "id": "spawn.lifecycle.target",
+    "rows": [
+      56
+    ],
+    "file": "module_utils/connectome_spawn/lifecycle.py",
+    "line": 151,
+    "start": 8067,
+    "end": 8107,
+    "before": "target in STATES and target != 'planned'",
+    "after": "True",
+    "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+  },
+  {
+    "id": "spawn.identity.op-digest",
+    "rows": [
+      57
+    ],
+    "file": "module_utils/connectome_spawn/identity.py",
+    "line": 145,
+    "start": 6818,
+    "end": 6849,
+    "before": "prior['digest'] == request_hash",
+    "after": "True",
+    "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
+  },
+  {
+    "id": "spawn.identity.rename",
+    "rows": [
+      57
+    ],
+    "file": "module_utils/connectome_spawn/identity.py",
+    "line": 177,
+    "start": 8539,
+    "end": 8588,
+    "before": "not row['retired'] and row['kind'] == 'temporary'",
+    "after": "True",
+    "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
+  },
+  {
+    "id": "spawn.identity.no-truncate",
+    "rows": [
+      57
+    ],
+    "file": "module_utils/connectome_spawn/identity.py",
+    "line": 49,
+    "start": 1933,
+    "end": 2031,
+    "before": "type(name) is str and len(name) <= provider.max_name_length and match(name, provider.name_pattern)",
+    "after": "True",
+    "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
+  },
+  {
+    "id": "spawn.identity.capability",
+    "rows": [
+      57
+    ],
+    "file": "module_utils/connectome_spawn/lifecycle.py",
+    "line": 202,
+    "start": 11871,
+    "end": 11992,
+    "before": "value['supportsRename'] is None or\n                     value['supportsRename'] == self.identity_provider.supports_rename",
+    "after": "True",
+    "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+  },
+  {
+    "id": "spawn.persist.traversal",
+    "rows": [
+      58
+    ],
+    "file": "module_utils/connectome_spawn/persistence.py",
+    "line": 17,
+    "start": 404,
+    "end": 426,
+    "before": "'..' not in path.parts",
+    "after": "True",
+    "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
+  },
+  {
+    "id": "spawn.persist.symlink",
+    "rows": [
+      58
+    ],
+    "file": "module_utils/connectome_spawn/persistence.py",
+    "line": 19,
+    "start": 516,
+    "end": 537,
+    "before": "not part.is_symlink()",
+    "after": "True",
+    "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
+  },
+  {
+    "id": "spawn.persist.bound",
+    "rows": [
+      58
+    ],
+    "file": "module_utils/connectome_spawn/persistence.py",
+    "line": 49,
+    "start": 1152,
+    "end": 1175,
+    "before": "len(raw) <= 1024 * 1024",
+    "after": "True",
+    "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
+  },
+  {
+    "id": "lock.schema.recipe",
+    "rows": [
+      59
+    ],
+    "file": "module_utils/connectome_lock.py",
+    "line": 142,
+    "start": 6650,
+    "end": 6888,
+    "before": "isinstance(recipe, dict) and set(recipe) == {'path', 'sha256'} and\n            text(recipe['path']) and digest(recipe['sha256']) and\n            text(data['recipePath']) and recipe['path'] == data['recipePath'] and text(data['createdAt'])",
+    "after": "True",
+    "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+  },
+  {
+    "id": "lock.schema.timestamp",
+    "rows": [
+      59
+    ],
+    "file": "module_utils/connectome_lock.py",
+    "line": 160,
+    "start": 7613,
+    "end": 7801,
+    "before": "re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z', data['createdAt'])\n                and datetime.fromisoformat(data['createdAt'].replace('Z', '+00:00'))",
+    "after": "True",
+    "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+  },
+  {
+    "id": "lock.schema.requirements",
+    "rows": [
+      59
+    ],
+    "file": "module_utils/connectome_lock.py",
+    "line": 170,
+    "start": 8351,
+    "end": 8714,
+    "before": "isinstance(requirements, list) and all(\n        isinstance(r, dict) and set(r) == {'name', 'envName', 'origin'} and\n        text(r['name']) and text(r['envName']) and re.fullmatch(r'[A-Z_][A-Z0-9_]*', r['envName']) and\n        text(r['origin']) and\n        r['origin'] in {'env-file', 'process-env', 'probe', 'prompt', 'unresolved'}\n        for r in requirements)",
+    "after": "True",
+    "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+  },
+  {
+    "id": "lock.schema.credentials",
+    "rows": [
+      59
+    ],
+    "file": "module_utils/connectome_lock.py",
+    "line": 177,
+    "start": 8812,
+    "end": 8991,
+    "before": "isinstance(credentials, list) and all(isinstance(n, str) and\n            re.fullmatch(r'(?:[A-Z_][A-Z0-9_]*|[A-Za-z0-9_./-]+#[A-Za-z0-9_-]+)', n)\n            for n in credentials)",
+    "after": "True",
+    "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+  },
+  {
+    "id": "lock.schema.extensions",
+    "rows": [
+      59
+    ],
+    "file": "module_utils/connectome_lock.py",
+    "line": 208,
+    "start": 11265,
+    "end": 11403,
+    "before": "isinstance(extension, dict) and set(extension) == {'name', 'hostDir', 'path'} and\n                all(text(v) for v in extension.values())",
+    "after": "True",
+    "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+  },
+  {
+    "id": "lock.schema.state",
+    "rows": [
+      59
+    ],
+    "file": "module_utils/connectome_lock.py",
+    "line": 211,
+    "start": 11479,
+    "end": 11639,
+    "before": "isinstance(data['state'], dict) and set(data['state']) == {'path'} and\n                text(data['state']['path']) and Path(data['state']['path']).is_absolute()",
+    "after": "True",
+    "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+  },
+  {
+    "id": "lock.schema.health",
+    "rows": [
+      59
+    ],
+    "file": "module_utils/connectome_lock.py",
+    "line": 290,
+    "start": 16725,
+    "end": 16922,
+    "before": "isinstance(health, dict) and set(health) == {'command'} and\n                isinstance(health['command'], list) and health['command'] and\n                all(text(arg) for arg in health['command'])",
+    "after": "True",
+    "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+  },
+  {
+    "id": "lock.schema.launch",
+    "rows": [
+      59
+    ],
+    "file": "module_utils/connectome_lock.py",
+    "line": 294,
+    "start": 16998,
+    "end": 17119,
+    "before": "isinstance(launch, dict) and set(launch) <= {'kind', 'script', 'userUnit'} and\n            launch.get('kind') == 'script'",
+    "after": "True",
+    "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+  },
+  {
+    "id": "lock.schema.units-ambiguous",
+    "rows": [
+      59
+    ],
+    "file": "module_utils/connectome_lock.py",
+    "line": 299,
+    "start": 17271,
+    "end": 17290,
+    "before": "'units' not in data",
+    "after": "True",
+    "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+  },
+  {
+    "id": "catalog.descriptor.duplicate",
+    "rows": [
+      60
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 55,
+    "start": 1490,
+    "end": 1545,
+    "before": "not result.keys() & config.get('connectors', {}).keys()",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.descriptor.name",
+    "rows": [
+      60
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 73,
+    "start": 2033,
+    "end": 2105,
+    "before": "isinstance(name, str) and re.fullmatch('[a-z0-9][a-z0-9_-]{0,62}', name)",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.descriptor.keys",
+    "rows": [
+      60
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 74,
+    "start": 2145,
+    "end": 2334,
+    "before": "isinstance(entry, dict) and 'pin_ref' in entry and\n             entry.keys() <= {'kind', 'requires', 'enabled', 'build', 'exports', 'settings', 'run', 'required_secrets', 'pin_ref', 'repo'}",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.descriptor.deps",
+    "rows": [
+      60
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 79,
+    "start": 2555,
+    "end": 2671,
+    "before": "isinstance(requires(entry), list) and all(isinstance(n, str) and n in entries\n             for n in requires(entry))",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.descriptor.exports",
+    "rows": [
+      60
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 82,
+    "start": 2769,
+    "end": 2879,
+    "before": "isinstance(exports, dict) and all(isinstance(k, str) and relative(v)\n             for k, v in exports.items())",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.descriptor.preflight-run",
+    "rows": [
+      60
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 88,
+    "start": 3281,
+    "end": 3329,
+    "before": "(kind(entry) == 'preflight') == ('run' in entry)",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.descriptor.pin-ref",
+    "rows": [
+      60
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 90,
+    "start": 3453,
+    "end": 3493,
+    "before": "entry['pin_ref'] == section + '.' + name",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.descriptor.cycle",
+    "rows": [
+      60
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 124,
+    "start": 5719,
+    "end": 5739,
+    "before": "name not in visiting",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.descriptor.reference",
+    "rows": [
+      60
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 146,
+    "start": 6387,
+    "end": 6402,
+    "before": "name in entries",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.descriptor.runtimes",
+    "rows": [
+      60
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 109,
+    "start": 4884,
+    "end": 4994,
+    "before": "name in entries and kind(entries[name]) == 'runtime' and\n             name in entries[name].get('exports', {})",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.data-args.flag",
+    "rows": [
+      61
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 345,
+    "start": 15815,
+    "end": 15886,
+    "before": "isinstance(flag, str) and re.fullmatch(r'--data-[a-z][a-z0-9-]*', flag)",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.data-args.command",
+    "rows": [
+      61
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 356,
+    "start": 16281,
+    "end": 16318,
+    "before": "isinstance(value.get('command'), str)",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.data-args.conflict",
+    "rows": [
+      61
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 359,
+    "start": 16489,
+    "end": 16551,
+    "before": "command not in result or result[command] == value['data_args']",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.data-args.binding",
+    "rows": [
+      61
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 253,
+    "start": 11262,
+    "end": 11288,
+    "before": "value == data_args[option]",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "catalog.audit-site.separate",
+    "rows": [
+      62
+    ],
+    "file": "module_utils/connectome_catalog.py",
+    "line": 460,
+    "start": 21095,
+    "end": 21211,
+    "before": "not state.resolve().is_relative_to(build.resolve()) and\n         not build.resolve().is_relative_to(state.resolve())",
+    "after": "True",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+  },
+  {
+    "id": "inputs.record.activation",
+    "rows": [
+      63
+    ],
+    "file": "module_utils/connectome_inputs.py",
+    "line": 63,
+    "start": 2430,
+    "end": 2556,
+    "before": "isinstance(config.get('activation', 'start'), str) and\n         config.get('activation', 'start') in ('start', 'install_only')",
+    "after": "True",
+    "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+  },
+  {
+    "id": "name.grammar.agent",
+    "rows": [
+      64
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 342,
+    "start": 15086,
+    "end": 15167,
+    "before": "not isinstance(value, str) or not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,62}', value)",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "name.grammar.connector",
+    "rows": [
+      64
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 358,
+    "start": 15696,
+    "end": 15776,
+    "before": "not isinstance(name, str) or not re.fullmatch(r'[a-z0-9][a-z0-9_-]{0,62}', name)",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "name.grammar.unit",
+    "rows": [
+      64
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 972,
+    "start": 48677,
+    "end": 48729,
+    "before": "not re.fullmatch(r'[A-Za-z0-9_.@-]+\\.service', name)",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "name.grammar.spawn-agent",
+    "rows": [
+      64
+    ],
+    "file": "module_utils/connectome_spawn/lifecycle.py",
+    "line": 33,
+    "start": 1391,
+    "end": 1409,
+    "before": "match(value, NAME)",
+    "after": "True",
+    "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+  },
+  {
+    "id": "deploy.prepare.no-adapter",
+    "rows": [
+      65
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 769,
+    "start": 37943,
+    "end": 37964,
+    "before": "not self.cook_command",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "deploy.prepare.active",
+    "rows": [
+      65
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 773,
+    "start": 38124,
+    "end": 38190,
+    "before": "self.current.is_symlink() and self.current.resolve() == self.build",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "deploy.prepare.owned-units",
+    "rows": [
+      65
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 775,
+    "start": 38273,
+    "end": 38355,
+    "before": "any(path != self.build and path.is_relative_to(self.build) for path in self.owned)",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "deploy.prepare.unmanaged-build",
+    "rows": [
+      65
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 1043,
+    "start": 52336,
+    "end": 52411,
+    "before": "self.build.exists() and self.owned.get(self.build) != {'kind': 'directory'}",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "deploy.units.name",
+    "rows": [
+      66
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 844,
+    "start": 42135,
+    "end": 42215,
+    "before": "not re.fullmatch(r'[A-Za-z0-9_.@-]+\\.service', path.name) or path.name in result",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "deploy.units.digest",
+    "rows": [
+      66
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 846,
+    "start": 42300,
+    "end": 42364,
+    "before": "hashlib.sha256(path.read_bytes()).hexdigest() != entry['sha256']",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "deploy.units.empty",
+    "rows": [
+      66
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 853,
+    "start": 42779,
+    "end": 42789,
+    "before": "not result",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "deploy.units.conflict",
+    "rows": [
+      66
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 1145,
+    "start": 57401,
+    "end": 57444,
+    "before": "path in result and result[path] != artifact",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "deploy.units.dropin-symlink",
+    "rows": [
+      66
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 981,
+    "start": 49103,
+    "end": 49125,
+    "before": "directory.is_symlink()",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "deploy.activate.health-argv",
+    "rows": [
+      68
+    ],
+    "file": "module_utils/connectome_deploy.py",
+    "line": 921,
+    "start": 46275,
+    "end": 46314,
+    "before": "not isinstance(health['command'], list)",
+    "after": "False",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+  },
+  {
+    "id": "config.layers.count",
+    "rows": [
+      69
+    ],
+    "file": "module_utils/connectome_config.py",
+    "line": 32,
+    "start": 944,
+    "end": 1016,
+    "before": "len(layers) != 4 or any(not isinstance(layer, dict) for layer in layers)",
+    "after": "False",
+    "source_sha256": "4b8cb0c5bef5dc84a4813e37672c4918fd582d9027034256c0a158acc998324f"
+  },
+  {
+    "id": "config.layers.enabled-type",
+    "rows": [
+      69
+    ],
+    "file": "module_utils/connectome_config.py",
+    "line": 48,
+    "start": 1787,
+    "end": 1866,
+    "before": "not isinstance(entry, dict) or not isinstance(entry.get('enabled', True), bool)",
+    "after": "False",
+    "source_sha256": "4b8cb0c5bef5dc84a4813e37672c4918fd582d9027034256c0a158acc998324f"
+  },
+  {
+    "id": "config.layers.public-connectors",
+    "rows": [
+      69
+    ],
+    "file": "module_utils/connectome_config.py",
+    "line": 59,
+    "start": 2250,
+    "end": 2272,
+    "before": "'connectors' in result",
+    "after": "False",
+    "source_sha256": "4b8cb0c5bef5dc84a4813e37672c4918fd582d9027034256c0a158acc998324f"
+  },
+  {
+    "id": "cook.disabled",
+    "rows": [
+      69
+    ],
+    "file": "module_utils/connectome_cook.py",
+    "line": 148,
+    "start": 7287,
+    "end": 7321,
+    "before": "entry.get('enabled', True) is True",
+    "after": "True",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+  },
+  {
+    "id": "cook.input.spec",
+    "rows": [
+      70
+    ],
+    "file": "module_utils/connectome_cook.py",
+    "line": 117,
+    "start": 5310,
+    "end": 5368,
+    "before": "isinstance(spec, dict) and set(spec) == {'config', 'pins'}",
+    "after": "True",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+  },
+  {
+    "id": "cook.input.pins",
+    "rows": [
+      70
+    ],
+    "file": "module_utils/connectome_cook.py",
+    "line": 124,
+    "start": 5799,
+    "end": 5837,
+    "before": "resolve_pins(config, versions) == pins",
+    "after": "True",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+  },
+  {
+    "id": "cook.input.pin-ref",
+    "rows": [
+      70
+    ],
+    "file": "module_utils/connectome_cook.py",
+    "line": 123,
+    "start": 5690,
+    "end": 5734,
+    "before": "entry.get('pin_ref') == 'connectors.' + name",
+    "after": "True",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+  },
+  {
+    "id": "cook.input.budgets",
+    "rows": [
+      70
+    ],
+    "file": "module_utils/connectome_cook.py",
+    "line": 126,
+    "start": 5905,
+    "end": 6105,
+    "before": "raise AdapterError('step/cost budgets not supported by host recipe schema at ' +\n                           pins['runtime']['connectome-host'] + '; remove budgets explicitly', 'E_BUDGETS_UNSUPPORTED')",
+    "after": "pass",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+  },
+  {
+    "id": "cook.input.settings",
+    "rows": [
+      70
+    ],
+    "file": "module_utils/connectome_cook.py",
+    "line": 155,
+    "start": 7871,
+    "end": 7942,
+    "before": "settings.keys() <= allowed and isinstance(settings.get('command'), str)",
+    "after": "True",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+  },
+  {
+    "id": "cook.input.module-source",
+    "rows": [
+      70
+    ],
+    "file": "module_utils/connectome_cook.py",
+    "line": 162,
+    "start": 8405,
+    "end": 8449,
+    "before": "'repo' not in entry and 'build' not in entry",
+    "after": "True",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+  },
+  {
+    "id": "cook.input.catalog-connector",
+    "rows": [
+      70
+    ],
+    "file": "module_utils/connectome_cook.py",
+    "line": 172,
+    "start": 9122,
+    "end": 9287,
+    "before": "isinstance(settings, dict) and isinstance(settings.get('command'), str) and Path(settings['command']).is_absolute() and\n                     'source' not in settings",
+    "after": "True",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+  },
+  {
+    "id": "cook.input.connector-state",
+    "rows": [
+      70
+    ],
+    "file": "module_utils/connectome_cook.py",
+    "line": 270,
+    "start": 15115,
+    "end": 15221,
+    "before": "isinstance(settings['connector_state'], dict) and not settings['connector_state'].keys() & external.keys()",
+    "after": "True",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+  },
+  {
+    "id": "spawn.schema.template-v1",
+    "rows": [
+      71
+    ],
+    "file": "module_utils/connectome_spawn/schema.py",
+    "line": 62,
+    "start": 2576,
+    "end": 2659,
+    "before": "not (type(value) is dict and value.get('schema') == 'connectome.spawn-template/v1')",
+    "after": "True",
+    "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+  },
+  {
+    "id": "spawn.schema.identity-policy",
+    "rows": [
+      71
+    ],
+    "file": "module_utils/connectome_spawn/identity.py",
+    "line": 23,
+    "start": 751,
+    "end": 919,
+    "before": "type(pattern) is str and pattern.count('{timestamp}') == 1 and\n         match(pattern.replace('{timestamp}', '20000101T000000000000Z'), r'[A-Za-z][A-Za-z0-9_-]{0,255}')",
+    "after": "True",
+    "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
+  },
+  {
+    "id": "spawn.catalog.file-name",
+    "rows": [
+      72
+    ],
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "line": 103,
+    "start": 4447,
+    "end": 4505,
+    "before": "set(value) == {path.stem} and path.stem not in descriptors",
+    "after": "True",
+    "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+  },
+  {
+    "id": "spawn.catalog.select",
+    "rows": [
+      72
+    ],
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "line": 154,
+    "start": 7002,
+    "end": 7086,
+    "before": "name in catalog.descriptors and descriptor(name, catalog.descriptors[name]) in kinds",
+    "after": "True",
+    "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+  },
+  {
+    "id": "spawn.catalog.cycle",
+    "rows": [
+      72
+    ],
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "line": 137,
+    "start": 6152,
+    "end": 6170,
+    "before": "name not in active",
+    "after": "True",
+    "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+  },
+  {
+    "id": "spawn.catalog.home-transport",
+    "rows": [
+      72
+    ],
+    "file": "module_utils/connectome_spawn/planner.py",
+    "line": 134,
+    "start": 6650,
+    "end": 6762,
+    "before": "declaration['home']['transport'] == 'console' or\n         declaration['home']['transport'] in spec['connectors']",
+    "after": "True",
+    "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+  },
+  {
+    "id": "spawn.catalog.ingress",
+    "rows": [
+      72
+    ],
+    "file": "module_utils/connectome_spawn/schema.py",
+    "line": 180,
+    "start": 9036,
+    "end": 9056,
+    "before": "ingress_root is None",
+    "after": "True",
+    "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+  },
+  {
+    "id": "spawn.catalog.one-source",
+    "rows": [
+      72
+    ],
+    "file": "module_utils/connectome_spawn/sources.py",
+    "line": 196,
+    "start": 8607,
+    "end": 8660,
+    "before": "sum(v is not None for v in (inline, file, repo)) == 1",
+    "after": "True",
+    "source_sha256": "29958c9f80020d83309f3506d6d758e86af7c6c75171853fc8ee357e155c6fbf"
+  },
+  {
+    "id": "spawn.artifact.digest",
+    "rows": [
+      73
+    ],
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "line": 191,
+    "start": 8484,
+    "end": 8511,
+    "before": "computed == value['sha256']",
+    "after": "True",
+    "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+  },
+  {
+    "id": "spawn.artifact.tree-entries",
+    "rows": [
+      73
+    ],
+    "file": "module_utils/connectome_spawn/sources.py",
+    "line": 216,
+    "start": 9506,
+    "end": 9553,
+    "before": "mode in ('100644', '100755') and kind == 'blob'",
+    "after": "True",
+    "source_sha256": "29958c9f80020d83309f3506d6d758e86af7c6c75171853fc8ee357e155c6fbf"
+  },
+  {
+    "id": "spawn.artifact.limit",
+    "rows": [
+      73
+    ],
+    "file": "module_utils/connectome_spawn/sources.py",
+    "line": 220,
+    "start": 9778,
+    "end": 9801,
+    "before": "total <= ARTIFACT_LIMIT",
+    "after": "True",
+    "source_sha256": "29958c9f80020d83309f3506d6d758e86af7c6c75171853fc8ee357e155c6fbf"
+  },
+  {
+    "id": "spawn.cli.parser",
+    "rows": [
+      74
+    ],
+    "file": "module_utils/connectome_spawn/cli.py",
+    "line": 15,
+    "start": 480,
+    "end": 533,
+    "before": "raise SpawnError('invalid CLI arguments; see --help')",
+    "after": "pass",
+    "source_sha256": "fa8efe31073cc3fcfb9bd99cbdd078746c572e813c56ad2de5463f0172f4c80c"
+  }
+]

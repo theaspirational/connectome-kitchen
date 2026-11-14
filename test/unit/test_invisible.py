@@ -11,6 +11,37 @@ import connectome_deploy as deploy
 import test_deploy
 
 class InvisibleGuards(unittest.TestCase):
+ def test_row48_isolation_golden(self):
+  import base64
+  import connectome_catalog as catalog
+  root=Path('/fixture/build');state=Path('/fixture/state')
+  self.assertFalse(Path('/fixture').exists(),'fixture namespace must be absent')
+  config={'state_dir':str(state),'required_secrets':['EXAMPLE_SECRET'],'catalog':{
+   'node':{'kind':'runtime','exports':{'node':'bin/node'}},
+   'bun':{'kind':'runtime','exports':{'bun':'bin/bun'}},
+   'check':{'kind':'preflight','run':['/fixture/build/catalog/node/bin/node','/fixture/build/check.js']}}}
+  pins={'platform':{}}
+  body='[Service]\nWorkingDirectory=/fixture/build\nEnvironment=SAFE=value\nExecStart=/fixture/build/run\nExecStop=/fixture/build/stop\n'
+  text=catalog.isolated_unit(config,pins,root,body)
+  # Independently decode the emitted payload instead of trusting an encoder
+  # helper shared with the mutant. Compare every byte-producing disposition.
+  lines=text.splitlines()
+  self.assertEqual(lines[:5],['[Service]','Environment=','PassEnvironment=','EnvironmentFile=',
+   'UnsetEnvironment='+' '.join(sorted(catalog.CODE_ENV))])
+  self.assertEqual(lines[5],'EnvironmentFile="/state/build.env"')
+  self.assertEqual([line for line in lines if line in ('ExecStart=','ExecStop=','ExecStartPre=')],['ExecStart=','ExecStop=','ExecStartPre='])
+  payloads=[]
+  for line in lines:
+   if line.startswith(('ExecStart="','ExecStop="','ExecStartPre="')):
+    self.assertTrue(line.startswith(('ExecStart="/fixture/build/catalog/node/bin/node" "--eval" ', 'ExecStop="/fixture/build/catalog/node/bin/node" "--eval" ', 'ExecStartPre="/fixture/build/catalog/node/bin/node" "--eval" ')))
+    # Last quoted operand is the ASCII base64 payload; it has no escapes.
+    payload=json.loads(base64.b64decode(line.rsplit('"',2)[1]));payloads.append(payload)
+    self.assertEqual(payload['secrets'],['EXAMPLE_SECRET']);self.assertEqual(payload['build'],str(root))
+    self.assertEqual(payload['platform'],[])
+    self.assertEqual(payload['env'],{'SAFE':'value','PATH':'/fixture/build/catalog/bun/bin:/fixture/build/catalog/node/bin:/fixture/build/platform-bin','HOME':'/fixture/build/catalog-home','TMPDIR':str(state),'LANG':'C.UTF-8','NO_UPDATE_NOTIFIER':'1','npm_config_offline':'true','npm_config_cache':'/fixture/build/catalog-cache','BUN_INSTALL_CACHE_DIR':'/fixture/build/catalog-cache','DATA_DIR':str(state)})
+  self.assertEqual([p['argv'] for p in payloads],[['/fixture/build/run'],['/fixture/build/stop'],['/fixture/build/catalog/node/bin/node','/fixture/build/check.js']])
+  self.assertEqual(catalog.systemd_words(['a%$"\\b']), '"a%%$$\\"\\\\b"')
+  with self.assertRaises(ValueError):catalog.isolated_unit(config,pins,root,body.replace('SAFE=value','LANG=C'))
  def test_row51_stdio_and_environment(self):
   calls=[]
   def child(argv,**kw):
@@ -63,6 +94,8 @@ class InvisibleGuards(unittest.TestCase):
     self.assertEqual(env['npm_config_offline'],'true')
     for key in ('HOME','TMPDIR','npm_config_cache'):self.assertTrue(Path(env[key]).is_relative_to(fixture.build))
     self.assertNotIn('OPERATOR_ONLY',env)
+    expected=os.pathsep.join(str(fixture.build/'catalog'/n/Path(e['exports'][n]).parent) for n,e in catalog.entries_for(fixture.config).items() if n in ('node','bun') and (fixture.build/'catalog'/n).exists())
+    self.assertEqual(env['PATH'],expected)
     for key in ('stdin','stdout','stderr'):self.assertEqual(kw[key],subprocess.DEVNULL)
    return original(argv,**kw)
   with patch.dict(os.environ,{'OPERATOR_ONLY':'private'}),patch.object(catalog.subprocess,'run',side_effect=run):fixture.install()

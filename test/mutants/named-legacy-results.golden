@@ -1,0 +1,4560 @@
+[
+  {
+    "id": "catalog.unit.overlap",
+    "status": "survived",
+    "rows": [
+      48
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_unit_bootstrap_execs_preflight_and_launch_with_closed_environment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_start_wrapper_refuses_post_verify_swap_and_writable_directory",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 3,
+    "trial_limit": 8
+  },
+  {
+    "id": "secrets.reserved.catalog",
+    "status": "survived",
+    "rows": [
+      49
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_environment_path_escape_and_ambiguity_at_install_and_reuse",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_state_and_workspace_code_refused_at_plan_install_and_verify",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_and_launch_escapes_refused_before_execution_or_unit_render",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_digest_mismatch_and_archive_escape_links_duplicates_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_created_symlink_is_refused_before_next_command",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_execution_and_unit_are_selected_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_and_cook_environment_never_copy_operator_environment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 28,
+    "trial_limit": 8
+  },
+  {
+    "id": "secrets.reserved.grammar",
+    "status": "survived",
+    "rows": [
+      49
+    ],
+    "trials": [
+      {
+        "test": "test_operator_inputs.OperatorTests.test_secret_files_closed_shapes_names_and_conflicts",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_invocation_names_only_fresh_dir_and_post_build_validation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_operator_inputs.OperatorTests.test_file_lock_binds_destination_name_and_source_lookup_is_exact",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_unowned_alias_and_fixed_temporary_name_are_untouched",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_target_file_lookup_exact_names_and_check_plan",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_operator_inputs.OperatorTests.test_secret_file_symlinks_modes_and_unmanaged_names_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_no_secret_recipe_omits_cook_only_requirements",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_translate_normalized_spec_and_quote_build_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 134,
+    "trial_limit": 8
+  },
+  {
+    "id": "secrets.reserved.direct",
+    "status": "survived",
+    "rows": [
+      49
+    ],
+    "trials": [
+      {
+        "test": "test_operator_inputs.OperatorTests.test_secret_files_closed_shapes_names_and_conflicts",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_invocation_names_only_fresh_dir_and_post_build_validation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_state_and_workspace_code_refused_at_plan_install_and_verify",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_target_file_lookup_exact_names_and_check_plan",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_operator_inputs.OperatorTests.test_secret_file_symlinks_modes_and_unmanaged_names_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_no_secret_recipe_omits_cook_only_requirements",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_translate_normalized_spec_and_quote_build_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_disabled_missing_launch_literal_secret_and_unpinned_ref_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 134,
+    "trial_limit": 8
+  },
+  {
+    "id": "secrets.reserved.collision",
+    "status": "killed",
+    "rows": [
+      49
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_unknown_lock_and_secret_value_records_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_manifest_records_exact_installed_paths_and_survives_rollback",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_operator_inputs.OperatorTests.test_secret_files_closed_shapes_names_and_conflicts",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 94,
+    "trial_limit": 8
+  },
+  {
+    "id": "recipe.secret-ref.token",
+    "status": "survived",
+    "rows": [
+      50
+    ],
+    "trials": [
+      {
+        "test": "test_cook.AdapterTests.test_translate_normalized_spec_and_quote_build_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_disabled_missing_launch_literal_secret_and_unpinned_ref_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_nonempty_budgets_fail_closed_at_host_schema_boundary",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_unsafe_ssh_and_scp_authorities_rejected_before_any_subprocess",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_unsafe_sources_rejected_before_any_subprocess",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_argv_provenance_fields_rejected_before_any_subprocess",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_registry_claim_requires_origin_and_sha512_without_network",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_option_like_cook_value_rejected_before_verification",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 10,
+    "trial_limit": 8
+  },
+  {
+    "id": "recipe.secret-ref.catalog-token",
+    "status": "survived",
+    "rows": [
+      50
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_hidden_paths_in_settings_args_env_and_generated_launchers",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_and_launch_escapes_refused_before_execution_or_unit_render",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_digest_mismatch_and_archive_escape_links_duplicates_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_created_symlink_is_refused_before_next_command",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_execution_and_unit_are_selected_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_and_cook_environment_never_copy_operator_environment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_argv_executable_exports_symlinks_and_ambiguous_forms",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 28,
+    "trial_limit": 8
+  },
+  {
+    "id": "recipe.secret-ref.env",
+    "status": "killed",
+    "rows": [
+      50
+    ],
+    "trials": [
+      {
+        "test": "test_cook.AdapterTests.test_invocation_names_only_fresh_dir_and_post_build_validation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_translate_normalized_spec_and_quote_build_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_disabled_missing_launch_literal_secret_and_unpinned_ref_refused",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 11,
+    "trial_limit": 8
+  },
+  {
+    "id": "recipe.secret-ref.spawn-token",
+    "status": "uncovered",
+    "rows": [
+      50
+    ],
+    "trials": []
+  },
+  {
+    "id": "recipe.secret-ref.spawn-env",
+    "status": "survived",
+    "rows": [
+      50
+    ],
+    "trials": [
+      {
+        "test": "test_spawn.SpawnTests.test_hashes_bind_intent_catalog_target_and_observation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_identity_and_computed_digests",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_temporary_name_template_plans_and_capability_branches",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_seed_plans_cli_and_v1_migration",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_role_catalog_single_source_and_future_kind",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_preflight_dependency_closure_is_recorded_not_executed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_inline_file_repo_have_identical_hashes_and_plans",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_plan_and_dry_run_show_pinned_name_record",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 9,
+    "trial_limit": 8
+  },
+  {
+    "id": "deploy.private.secret-dir",
+    "status": "killed",
+    "rows": [
+      52
+    ],
+    "trials": [
+      {
+        "test": "test_operator_inputs.OperatorTests.test_file_only_canary_rewrite_rotation_removal_and_no_leaks",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_operator_inputs.OperatorTests.test_secret_file_symlinks_modes_and_unmanaged_names_refused",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 5,
+    "trial_limit": 8
+  },
+  {
+    "id": "deploy.private.secret-entry",
+    "status": "killed",
+    "rows": [
+      52
+    ],
+    "trials": [
+      {
+        "test": "test_operator_inputs.OperatorTests.test_file_only_canary_rewrite_rotation_removal_and_no_leaks",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_operator_inputs.OperatorTests.test_secret_file_symlinks_modes_and_unmanaged_names_refused",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 5,
+    "trial_limit": 8
+  },
+  {
+    "id": "deploy.private.canonical",
+    "status": "survived",
+    "rows": [
+      52
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_environment_file_health_requires_exact_nonoptional_manager_path",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalDeploymentTests.test_unsafe_or_relative_path_argument_refused_before_activation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_ambiguous_systemd_paths_fail_before_writes",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_identifier_boundaries_allowed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_secrets_default_uses_agent_account_home_not_environment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_invalid_state_paths_and_permissions_fail_without_repair",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_symlinked_bases_and_derived_escapes_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_writable_ancestors_are_named_and_never_modified",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 93,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.build.executable",
+    "status": "survived",
+    "rows": [
+      53
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_argv_executable_exports_symlinks_and_ambiguous_forms",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_created_symlink_is_refused_before_next_command",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_execution_and_unit_are_selected_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_and_cook_environment_never_copy_operator_environment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_environment_path_escape_and_ambiguity_at_install_and_reuse",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_bare_environment_paths_and_lists_refused_fresh_and_digest_valid_reuse",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_literal_local_argv_and_unit_cwd_are_accepted",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_environment_controls_fail_at_install_and_digest_valid_reuse",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 24,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.build.status",
+    "status": "survived",
+    "rows": [
+      53
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_build_created_symlink_is_refused_before_next_command",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_execution_and_unit_are_selected_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_and_cook_environment_never_copy_operator_environment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_argv_executable_exports_symlinks_and_ambiguous_forms",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_environment_path_escape_and_ambiguity_at_install_and_reuse",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_bare_environment_paths_and_lists_refused_fresh_and_digest_valid_reuse",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_literal_local_argv_and_unit_cwd_are_accepted",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_environment_controls_fail_at_install_and_digest_valid_reuse",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 24,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.build.export",
+    "status": "survived",
+    "rows": [
+      53
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_start_wrapper_refuses_post_verify_swap_and_writable_directory",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_digest_mismatch_and_archive_escape_links_duplicates_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_created_symlink_is_refused_before_next_command",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_execution_and_unit_are_selected_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_and_cook_environment_never_copy_operator_environment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_argv_executable_exports_symlinks_and_ambiguous_forms",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_environment_path_escape_and_ambiguity_at_install_and_reuse",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_bare_environment_paths_and_lists_refused_fresh_and_digest_valid_reuse",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 25,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.contained.archive",
+    "status": "survived",
+    "rows": [
+      54
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_digest_mismatch_and_archive_escape_links_duplicates_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_created_symlink_is_refused_before_next_command",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_and_cook_environment_never_copy_operator_environment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_verify_reaudits_digest_valid_build_preflight_and_launch_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_compile_build_lock_and_revalidate_without_input_archives",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_execution_and_unit_are_selected_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_argv_executable_exports_symlinks_and_ambiguous_forms",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 25,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.preflight.chars",
+    "status": "survived",
+    "rows": [
+      55
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_execution_and_unit_are_selected_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_compile_build_lock_and_revalidate_without_input_archives",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_verify_refuses_writable_directories_files_and_outward_links",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_explicit_state_data_argument_is_lowered_and_verified",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_exported_launch_and_execstartpre_use_actual_cwd",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_hidden_paths_in_settings_args_env_and_generated_launchers",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_launcher_cd_and_unclassified_shell_forms_fail_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_exported_exec_launcher_and_lock_health_refuse_state_code",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 13,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.preflight.absolute",
+    "status": "survived",
+    "rows": [
+      55
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_execution_and_unit_are_selected_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_compile_build_lock_and_revalidate_without_input_archives",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_verify_refuses_writable_directories_files_and_outward_links",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_explicit_state_data_argument_is_lowered_and_verified",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_exported_launch_and_execstartpre_use_actual_cwd",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_hidden_paths_in_settings_args_env_and_generated_launchers",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_launcher_cd_and_unclassified_shell_forms_fail_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_exported_exec_launcher_and_lock_health_refuse_state_code",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 13,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.lifecycle.store-binding",
+    "status": "survived",
+    "rows": [
+      56
+    ],
+    "trials": [
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_existing_store_is_recovery_not_import",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_store_created_during_build_refuses_ingest_and_bad_receipt",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_status_cli_read_only_and_missing_state",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_hard_linked_seed_and_lifecycle_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_symlinks_corrupt_state_and_migration_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_process_death_releases_lock_but_never_replays_import",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_seed_refusals_and_explicit_optional_branches",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_name_convention_capability_validation_and_no_truncation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 28,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.lifecycle.target",
+    "status": "survived",
+    "rows": [
+      56
+    ],
+    "trials": [
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_process_death_releases_lock_but_never_replays_import",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_existing_store_is_recovery_not_import",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_seed_refusals_and_explicit_optional_branches",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_name_convention_capability_validation_and_no_truncation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_marker_write_crash_and_missing_adapters",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_seed_ingest_crash_is_not_retried",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_store_created_during_build_refuses_ingest_and_bad_receipt",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_illegal_transition_matrix_and_failure_retirement",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 25,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.identity.op-digest",
+    "status": "killed",
+    "rows": [
+      57
+    ],
+    "trials": [
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_provider_restart_idempotence_unique_ownership_and_concurrency",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 2,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.identity.rename",
+    "status": "killed",
+    "rows": [
+      57
+    ],
+    "trials": [
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_rename_preserves_handle_without_retiring_it",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 2,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.identity.no-truncate",
+    "status": "killed",
+    "rows": [
+      57
+    ],
+    "trials": [
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_provider_constraints_refuse_name_before_named_state",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 15,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.identity.capability",
+    "status": "killed",
+    "rows": [
+      57
+    ],
+    "trials": [
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_provider_constraints_refuse_name_before_named_state",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_missing_provider_and_retire_never_reuses_temporary",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_changed_capability_and_invalid_provider_handles_refused",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 13,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.persist.traversal",
+    "status": "survived",
+    "rows": [
+      58
+    ],
+    "trials": [
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_persistence_crash_before_and_after_replace",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_reuses_strict_record_decoder",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_requires_real_repository_top",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_full_sha_ref_collisions_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_bare_store_and_explicit_git_directory",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_provider_restart_idempotence_unique_ownership_and_concurrency",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_status_cli_read_only_and_missing_state",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_hard_linked_seed_and_lifecycle_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 34,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.persist.symlink",
+    "status": "survived",
+    "rows": [
+      58
+    ],
+    "trials": [
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_persistence_crash_before_and_after_replace",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_reuses_strict_record_decoder",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_requires_real_repository_top",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_full_sha_ref_collisions_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_bare_store_and_explicit_git_directory",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_provider_restart_idempotence_unique_ownership_and_concurrency",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_status_cli_read_only_and_missing_state",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_hard_linked_seed_and_lifecycle_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 34,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.persist.bound",
+    "status": "survived",
+    "rows": [
+      58
+    ],
+    "trials": [
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_persistence_crash_before_and_after_replace",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_reuses_strict_record_decoder",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_requires_real_repository_top",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_full_sha_ref_collisions_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_bare_store_and_explicit_git_directory",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_provider_restart_idempotence_unique_ownership_and_concurrency",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_status_cli_read_only_and_missing_state",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_hard_linked_seed_and_lifecycle_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 34,
+    "trial_limit": 8
+  },
+  {
+    "id": "lock.schema.recipe",
+    "status": "survived",
+    "rows": [
+      59
+    ],
+    "trials": [
+      {
+        "test": "test_external.ExternalAdapterTests.test_generated_recipe_refuses_recorded_external",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalAdapterTests.test_supplied_recipe_binds_recorded_external_servers",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalDeploymentTests.test_unsafe_or_relative_path_argument_refused_before_activation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_planned_units_digest_and_health_contract",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.LockTests.test_build_host_and_secret_binding",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_malformed_external_entries_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.LockTests.test_recorded_v2_accepted_and_mapped",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_without_external_key_is_unchanged",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 84,
+    "trial_limit": 8
+  },
+  {
+    "id": "lock.schema.timestamp",
+    "status": "killed",
+    "rows": [
+      59
+    ],
+    "trials": [
+      {
+        "test": "test_cook.LockTests.test_build_host_and_secret_binding",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_malformed_external_entries_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.LockTests.test_recorded_v2_accepted_and_mapped",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_without_external_key_is_unchanged",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_external_list_accepted_and_exposed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.LockTests.test_unit_export_and_planned_units_map_with_containment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_lock_connector_state_must_not_name_external",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.LockTests.test_every_lock_scalar_has_an_exact_type",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 84,
+    "trial_limit": 8
+  },
+  {
+    "id": "lock.schema.requirements",
+    "status": "survived",
+    "rows": [
+      59
+    ],
+    "trials": [
+      {
+        "test": "test_operator_inputs.OperatorTests.test_file_lock_binds_destination_name_and_source_lookup_is_exact",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_external_list_accepted_and_exposed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_lock_connector_state_must_not_name_external",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalDataDeploymentTests.test_env_shell_private_script_probe_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalDataDeploymentTests.test_find_exec_private_python_probe_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalDataDeploymentTests.test_dash_private_script_probe_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalDataDeploymentTests.test_python_option_value_private_script_probe_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_retired_link_retargeted_to_never_installed_build_file_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 84,
+    "trial_limit": 8
+  },
+  {
+    "id": "lock.schema.credentials",
+    "status": "killed",
+    "rows": [
+      59
+    ],
+    "trials": [
+      {
+        "test": "test_external.ExternalLockTests.test_external_list_accepted_and_exposed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.LockTests.test_build_host_and_secret_binding",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_malformed_external_entries_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.LockTests.test_recorded_v2_accepted_and_mapped",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_without_external_key_is_unchanged",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.LockTests.test_unit_export_and_planned_units_map_with_containment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_lock_connector_state_must_not_name_external",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.LockTests.test_every_lock_scalar_has_an_exact_type",
+        "tests": 1,
+        "failures": 3,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 84,
+    "trial_limit": 8
+  },
+  {
+    "id": "lock.schema.extensions",
+    "status": "killed",
+    "rows": [
+      59
+    ],
+    "trials": [
+      {
+        "test": "test_cook.LockTests.test_every_lock_scalar_has_an_exact_type",
+        "tests": 1,
+        "failures": 15,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 1,
+    "trial_limit": 8
+  },
+  {
+    "id": "lock.schema.state",
+    "status": "survived",
+    "rows": [
+      59
+    ],
+    "trials": [
+      {
+        "test": "test_external.ExternalAdapterTests.test_connector_state_naming_external_refused_before_cook",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_late_state_symlink_and_wrong_lock_state_fail_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalDeploymentTests.test_unsafe_or_relative_path_argument_refused_before_activation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_state_is_created_private_and_not_owned_as_an_artifact",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_reused_build_recreates_missing_state_directory_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_operator_reapply_previous_recorded_request_without_rebuild_or_state_changes",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_rebuild_and_rollback_leave_external_state_untouched",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_real_shaped_split_layout_lock_accepts_only_exact_external_state",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 77,
+    "trial_limit": 8
+  },
+  {
+    "id": "lock.schema.health",
+    "status": "killed",
+    "rows": [
+      59
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_planned_units_digest_and_health_contract",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.LockTests.test_every_lock_scalar_has_an_exact_type",
+        "tests": 1,
+        "failures": 10,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 2,
+    "trial_limit": 8
+  },
+  {
+    "id": "lock.schema.launch",
+    "status": "survived",
+    "rows": [
+      59
+    ],
+    "trials": [
+      {
+        "test": "test_external.ExternalDataDeploymentTests.test_env_shell_private_script_probe_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalDataDeploymentTests.test_dash_private_script_probe_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalDataDeploymentTests.test_python_option_value_private_script_probe_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.LockTests.test_recorded_v2_accepted_and_mapped",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_without_external_key_is_unchanged",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_external_list_accepted_and_exposed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.LockTests.test_unit_export_and_planned_units_map_with_containment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalLockTests.test_lock_connector_state_must_not_name_external",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 82,
+    "trial_limit": 8
+  },
+  {
+    "id": "lock.schema.units-ambiguous",
+    "status": "survived",
+    "rows": [
+      59
+    ],
+    "trials": [
+      {
+        "test": "test_cook.LockTests.test_unit_export_and_planned_units_map_with_containment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_invocation_names_only_fresh_dir_and_post_build_validation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_real_shaped_split_layout_lock_accepts_only_exact_external_state",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 4,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.descriptor.duplicate",
+    "status": "survived",
+    "rows": [
+      60
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_descriptor_changes_require_new_digest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_placeholder_and_zero_pins_fail_before_io",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_dependencies_cycles_and_node_major_fail_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_public_catalog_selection_and_placeholder_supply",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_spawn_reader_matches_role_archive_pin_validation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_and_launch_escapes_refused_before_execution_or_unit_render",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_digest_mismatch_and_archive_escape_links_duplicates_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 33,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.descriptor.name",
+    "status": "survived",
+    "rows": [
+      60
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_descriptor_changes_require_new_digest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_placeholder_and_zero_pins_fail_before_io",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_dependencies_cycles_and_node_major_fail_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_public_catalog_selection_and_placeholder_supply",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_spawn_reader_matches_role_archive_pin_validation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_and_launch_escapes_refused_before_execution_or_unit_render",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_digest_mismatch_and_archive_escape_links_duplicates_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 33,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.descriptor.keys",
+    "status": "survived",
+    "rows": [
+      60
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_created_symlink_is_refused_before_next_command",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_and_cook_environment_never_copy_operator_environment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_argv_executable_exports_symlinks_and_ambiguous_forms",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_verify_reaudits_digest_valid_build_preflight_and_launch_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_compile_build_lock_and_revalidate_without_input_archives",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_hidden_paths_in_settings_args_env_and_generated_launchers",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 33,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.descriptor.deps",
+    "status": "incompetent",
+    "rows": [
+      60
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_descriptor_changes_require_new_digest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_placeholder_and_zero_pins_fail_before_io",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_dependencies_cycles_and_node_major_fail_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 1,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_public_catalog_selection_and_placeholder_supply",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_spawn_reader_matches_role_archive_pin_validation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_and_launch_escapes_refused_before_execution_or_unit_render",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_digest_mismatch_and_archive_escape_links_duplicates_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 33,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.descriptor.exports",
+    "status": "survived",
+    "rows": [
+      60
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_argv_executable_exports_symlinks_and_ambiguous_forms",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_descriptor_changes_require_new_digest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_placeholder_and_zero_pins_fail_before_io",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_dependencies_cycles_and_node_major_fail_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_public_catalog_selection_and_placeholder_supply",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_spawn_reader_matches_role_archive_pin_validation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_and_launch_escapes_refused_before_execution_or_unit_render",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 33,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.descriptor.preflight-run",
+    "status": "survived",
+    "rows": [
+      60
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_and_launch_escapes_refused_before_execution_or_unit_render",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_execution_and_unit_are_selected_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_verify_reaudits_digest_valid_build_preflight_and_launch_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_unit_bootstrap_execs_preflight_and_launch_with_closed_environment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_descriptor_changes_require_new_digest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_placeholder_and_zero_pins_fail_before_io",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_dependencies_cycles_and_node_major_fail_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 33,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.descriptor.pin-ref",
+    "status": "survived",
+    "rows": [
+      60
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_descriptor_changes_require_new_digest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_placeholder_and_zero_pins_fail_before_io",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_dependencies_cycles_and_node_major_fail_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_public_catalog_selection_and_placeholder_supply",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_spawn_reader_matches_role_archive_pin_validation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_and_launch_escapes_refused_before_execution_or_unit_render",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_digest_mismatch_and_archive_escape_links_duplicates_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 33,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.descriptor.cycle",
+    "status": "incompetent",
+    "rows": [
+      60
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_dependencies_cycles_and_node_major_fail_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 1,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_public_catalog_selection_and_placeholder_supply",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_spawn_reader_matches_role_archive_pin_validation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_and_launch_escapes_refused_before_execution_or_unit_render",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_digest_mismatch_and_archive_escape_links_duplicates_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_created_symlink_is_refused_before_next_command",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_execution_and_unit_are_selected_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 31,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.descriptor.reference",
+    "status": "survived",
+    "rows": [
+      60
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_and_launch_escapes_refused_before_execution_or_unit_render",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_digest_mismatch_and_archive_escape_links_duplicates_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_created_symlink_is_refused_before_next_command",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_execution_and_unit_are_selected_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_and_cook_environment_never_copy_operator_environment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_argv_executable_exports_symlinks_and_ambiguous_forms",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_environment_path_escape_and_ambiguity_at_install_and_reuse",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 28,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.descriptor.runtimes",
+    "status": "survived",
+    "rows": [
+      60
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_argv_executable_exports_symlinks_and_ambiguous_forms",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_dependencies_cycles_and_node_major_fail_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_public_catalog_selection_and_placeholder_supply",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_spawn_reader_matches_role_archive_pin_validation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_and_launch_escapes_refused_before_execution_or_unit_render",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_digest_mismatch_and_archive_escape_links_duplicates_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_created_symlink_is_refused_before_next_command",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 31,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.data-args.flag",
+    "status": "killed",
+    "rows": [
+      61
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_explicit_state_data_argument_is_lowered_and_verified",
+        "tests": 1,
+        "failures": 5,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 2,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.data-args.command",
+    "status": "survived",
+    "rows": [
+      61
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_explicit_state_data_argument_is_lowered_and_verified",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_spawn_reader_loads_role_fixtures_and_matches_catalog_recipe",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 2,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.data-args.conflict",
+    "status": "survived",
+    "rows": [
+      61
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_explicit_state_data_argument_is_lowered_and_verified",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_spawn_reader_loads_role_fixtures_and_matches_catalog_recipe",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 2,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.data-args.binding",
+    "status": "survived",
+    "rows": [
+      61
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_explicit_state_data_argument_is_lowered_and_verified",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_spawn_reader_loads_role_fixtures_and_matches_catalog_recipe",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 2,
+    "trial_limit": 8
+  },
+  {
+    "id": "catalog.audit-site.separate",
+    "status": "survived",
+    "rows": [
+      62
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_created_symlink_is_refused_before_next_command",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_and_cook_environment_never_copy_operator_environment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_verify_reaudits_digest_valid_build_preflight_and_launch_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_compile_build_lock_and_revalidate_without_input_archives",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_explicit_state_data_argument_is_lowered_and_verified",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_exported_exec_launcher_and_lock_health_refuse_state_code",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_state_and_workspace_code_refused_at_plan_install_and_verify",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 28,
+    "trial_limit": 8
+  },
+  {
+    "id": "inputs.record.activation",
+    "status": "survived",
+    "rows": [
+      63
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_install_only_refuses_late_activation_before_env_or_pointer_changes",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_install_only_then_start_reuses_release_and_lock",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_install_only_then_start_without_install_section",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_install_only_rollback_and_operator_rollback_never_start",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_install_only_check_never_queries_or_writes",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_install_only_active_refused_before_any_changes",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_install_only_first_failure_never_starts",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_install_only_runs_static_verify_when_available",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 143,
+    "trial_limit": 8
+  },
+  {
+    "id": "name.grammar.agent",
+    "status": "killed",
+    "rows": [
+      64
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_invalid_names_fail_before_any_filesystem_mutation",
+        "tests": 1,
+        "failures": 12,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 141,
+    "trial_limit": 8
+  },
+  {
+    "id": "name.grammar.connector",
+    "status": "survived",
+    "rows": [
+      64
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_enabled_unpinned_connector_fails_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_generic_closed_schema_names_duplicates_and_no_subprocess",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_translate_normalized_spec_and_quote_build_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_disabled_missing_launch_literal_secret_and_unpinned_ref_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_operator_recipe_skips_connector_module_and_agent_generation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_nonempty_budgets_fail_closed_at_host_schema_boundary",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_unsafe_ssh_and_scp_authorities_rejected_before_any_subprocess",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_unsafe_sources_rejected_before_any_subprocess",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 42,
+    "trial_limit": 8
+  },
+  {
+    "id": "name.grammar.unit",
+    "status": "survived",
+    "rows": [
+      64
+    ],
+    "trials": [
+      {
+        "test": "test_operator_inputs.OperatorTests.test_file_lock_binds_destination_name_and_source_lookup_is_exact",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_unowned_alias_and_fixed_temporary_name_are_untouched",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_module_active_guard_precedes_root_and_serialization_lock",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_secrets_permissions_owner_and_symlinks_fail_closed_before_start",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_install_only_refuses_late_activation_before_env_or_pointer_changes",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_exclusive_refusal_rechecked_before_activation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_contained_dropin_directory_alias_over_other_unit_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_preexisting_units_links_dropins_and_enable_links_are_not_adopted",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 63,
+    "trial_limit": 8
+  },
+  {
+    "id": "name.grammar.spawn-agent",
+    "status": "survived",
+    "rows": [
+      64
+    ],
+    "trials": [
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_name_convention_capability_validation_and_no_truncation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_provider_constraints_refuse_name_before_named_state",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_hard_linked_name_record_refused_before_named_transition",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_name_ingress_component_boundary",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_refusals_leave_lifecycle_unchanged",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_pinned_provenance_and_identical_file_hash",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_without_prompt_remains_absent_through_activation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_status_cli_read_only_and_missing_state",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 28,
+    "trial_limit": 8
+  },
+  {
+    "id": "deploy.prepare.no-adapter",
+    "status": "survived",
+    "rows": [
+      65
+    ],
+    "trials": [
+      {
+        "test": "test_external.ExternalDeploymentTests.test_unsafe_external_command_refused_before_activation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalDataDeploymentTests.test_opt_in_does_not_exempt_command_or_other_args",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_failed_cook_preserves_active_and_retry_is_fresh",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_optional_health_command_rolls_back",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalDeploymentTests.test_root_owned_external_command_activates_and_is_rechecked",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_owned_builds_alias_refused_before_cleanup",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_secrets_permissions_owner_and_symlinks_fail_closed_before_start",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_install_only_refuses_late_activation_before_env_or_pointer_changes",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 72,
+    "trial_limit": 8
+  },
+  {
+    "id": "deploy.prepare.active",
+    "status": "survived",
+    "rows": [
+      65
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_late_state_symlink_and_wrong_lock_state_fail_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_reused_build_recreates_missing_state_directory_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_retired_link_retargeted_to_never_installed_build_file_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_failed_first_activation_leaves_no_current_or_units",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_owned_builds_alias_refused_before_cleanup",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_secrets_permissions_owner_and_symlinks_fail_closed_before_start",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalDeploymentTests.test_unsafe_external_command_refused_before_activation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 72,
+    "trial_limit": 8
+  },
+  {
+    "id": "deploy.prepare.owned-units",
+    "status": "killed",
+    "rows": [
+      65
+    ],
+    "trials": [
+      {
+        "test": "test_external.ExternalDeploymentTests.test_unsafe_or_relative_path_argument_refused_before_activation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_owned_builds_alias_refused_before_cleanup",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_state_is_created_private_and_not_owned_as_an_artifact",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_reused_build_recreates_missing_state_directory_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_retired_link_retargeted_to_never_installed_build_file_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_prepare_cannot_delete_retained_manifest_owned_unit_files",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 72,
+    "trial_limit": 8
+  },
+  {
+    "id": "deploy.prepare.unmanaged-build",
+    "status": "killed",
+    "rows": [
+      65
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_unknown_build_directory_is_refused_unchanged",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 80,
+    "trial_limit": 8
+  },
+  {
+    "id": "deploy.units.name",
+    "status": "survived",
+    "rows": [
+      66
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_planned_install_links_and_unsupported_directives",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_planned_units_digest_and_health_contract",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_real_shaped_split_layout_lock_accepts_only_exact_external_state",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_install_only_then_start_without_install_section",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 5,
+    "trial_limit": 8
+  },
+  {
+    "id": "deploy.units.digest",
+    "status": "survived",
+    "rows": [
+      66
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_planned_install_links_and_unsupported_directives",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_planned_units_digest_and_health_contract",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_real_shaped_split_layout_lock_accepts_only_exact_external_state",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_install_only_then_start_without_install_section",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 5,
+    "trial_limit": 8
+  },
+  {
+    "id": "deploy.units.empty",
+    "status": "survived",
+    "rows": [
+      66
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_planned_install_links_and_unsupported_directives",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_planned_units_digest_and_health_contract",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_real_shaped_split_layout_lock_accepts_only_exact_external_state",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_install_only_then_start_without_install_section",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 5,
+    "trial_limit": 8
+  },
+  {
+    "id": "deploy.units.conflict",
+    "status": "survived",
+    "rows": [
+      66
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_artifact_escape_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_state_is_created_private_and_not_owned_as_an_artifact",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_secrets_permissions_owner_and_symlinks_fail_closed_before_start",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_install_only_refuses_late_activation_before_env_or_pointer_changes",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_exclusive_refusal_rechecked_before_activation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_contained_dropin_directory_alias_over_other_unit_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_preexisting_units_links_dropins_and_enable_links_are_not_adopted",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_symlinked_dropin_escape_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 62,
+    "trial_limit": 8
+  },
+  {
+    "id": "deploy.units.dropin-symlink",
+    "status": "killed",
+    "rows": [
+      66
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_contained_dropin_directory_alias_over_other_unit_refused",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 62,
+    "trial_limit": 8
+  },
+  {
+    "id": "deploy.activate.health-argv",
+    "status": "survived",
+    "rows": [
+      68
+    ],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_optional_health_command_rolls_back",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_planned_units_digest_and_health_contract",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 2,
+    "trial_limit": 8
+  },
+  {
+    "id": "config.layers.count",
+    "status": "killed",
+    "rows": [
+      69
+    ],
+    "trials": [
+      {
+        "test": "test_layers.LayerTests.test_disable_can_be_overridden_by_higher_layer",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_layers.LayerTests.test_bad_layers_and_nonboolean_enabled_rejected",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 106,
+    "trial_limit": 8
+  },
+  {
+    "id": "config.layers.enabled-type",
+    "status": "killed",
+    "rows": [
+      69
+    ],
+    "trials": [
+      {
+        "test": "test_layers.LayerTests.test_bad_layers_and_nonboolean_enabled_rejected",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 104,
+    "trial_limit": 8
+  },
+  {
+    "id": "config.layers.public-connectors",
+    "status": "survived",
+    "rows": [
+      69
+    ],
+    "trials": [
+      {
+        "test": "test_compatibility.CompatibilityTests.test_default_off_byte_identical_render_argv_and_lock",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_directory_helper_sets_exact_modes_under_fully_restrictive_umask",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_external.ExternalDataDeploymentTests.test_invalid_input_has_typed_error_before_writes",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_invalid_names_fail_before_any_filesystem_mutation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_module_rejects_before_root_mkdir_or_lock",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_closed_activation_and_exclusive_schema",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_explicit_base_contains_root",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_deploy.DeployTests.test_enabled_unpinned_connector_fails_closed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 101,
+    "trial_limit": 8
+  },
+  {
+    "id": "cook.disabled",
+    "status": "killed",
+    "rows": [
+      69
+    ],
+    "trials": [
+      {
+        "test": "test_cook.AdapterTests.test_no_secret_recipe_omits_cook_only_requirements",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_translate_normalized_spec_and_quote_build_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_disabled_missing_launch_literal_secret_and_unpinned_ref_refused",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 13,
+    "trial_limit": 8
+  },
+  {
+    "id": "cook.input.spec",
+    "status": "survived",
+    "rows": [
+      70
+    ],
+    "trials": [
+      {
+        "test": "test_cook.AdapterTests.test_translate_normalized_spec_and_quote_build_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_no_secret_recipe_omits_cook_only_requirements",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_generic_closed_schema_names_duplicates_and_no_subprocess",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_disabled_missing_launch_literal_secret_and_unpinned_ref_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_operator_recipe_skips_connector_module_and_agent_generation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_nonempty_budgets_fail_closed_at_host_schema_boundary",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_unsafe_ssh_and_scp_authorities_rejected_before_any_subprocess",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_unsafe_sources_rejected_before_any_subprocess",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 45,
+    "trial_limit": 8
+  },
+  {
+    "id": "cook.input.pins",
+    "status": "killed",
+    "rows": [
+      70
+    ],
+    "trials": [
+      {
+        "test": "test_cook.AdapterTests.test_no_secret_recipe_omits_cook_only_requirements",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_translate_normalized_spec_and_quote_build_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_disabled_missing_launch_literal_secret_and_unpinned_ref_refused",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 44,
+    "trial_limit": 8
+  },
+  {
+    "id": "cook.input.pin-ref",
+    "status": "survived",
+    "rows": [
+      70
+    ],
+    "trials": [
+      {
+        "test": "test_cook.AdapterTests.test_translate_normalized_spec_and_quote_build_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_disabled_missing_launch_literal_secret_and_unpinned_ref_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_nonempty_budgets_fail_closed_at_host_schema_boundary",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_unsafe_ssh_and_scp_authorities_rejected_before_any_subprocess",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_unsafe_sources_rejected_before_any_subprocess",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_argv_provenance_fields_rejected_before_any_subprocess",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_registry_claim_requires_origin_and_sha512_without_network",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_option_like_cook_value_rejected_before_verification",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 38,
+    "trial_limit": 8
+  },
+  {
+    "id": "cook.input.budgets",
+    "status": "killed",
+    "rows": [
+      70
+    ],
+    "trials": [
+      {
+        "test": "test_cook.AdapterTests.test_nonempty_budgets_fail_closed_at_host_schema_boundary",
+        "tests": 1,
+        "failures": 3,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 1,
+    "trial_limit": 8
+  },
+  {
+    "id": "cook.input.settings",
+    "status": "killed",
+    "rows": [
+      70
+    ],
+    "trials": [
+      {
+        "test": "test_cook.AdapterTests.test_translate_normalized_spec_and_quote_build_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_disabled_missing_launch_literal_secret_and_unpinned_ref_refused",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 10,
+    "trial_limit": 8
+  },
+  {
+    "id": "cook.input.module-source",
+    "status": "killed",
+    "rows": [
+      70
+    ],
+    "trials": [
+      {
+        "test": "test_cook.AdapterTests.test_translate_normalized_spec_and_quote_build_argv",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_invocation_names_only_fresh_dir_and_post_build_validation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_no_secret_recipe_omits_cook_only_requirements",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_cook.AdapterTests.test_disabled_missing_launch_literal_secret_and_unpinned_ref_refused",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 13,
+    "trial_limit": 8
+  },
+  {
+    "id": "cook.input.catalog-connector",
+    "status": "survived",
+    "rows": [
+      70
+    ],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_build_created_symlink_is_refused_before_next_command",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_environment_path_escape_and_ambiguity_at_install_and_reuse",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_hidden_paths_in_settings_args_env_and_generated_launchers",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_and_launch_escapes_refused_before_execution_or_unit_render",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_digest_mismatch_and_archive_escape_links_duplicates_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_preflight_execution_and_unit_are_selected_only",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_build_and_cook_environment_never_copy_operator_environment",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 28,
+    "trial_limit": 8
+  },
+  {
+    "id": "cook.input.connector-state",
+    "status": "killed",
+    "rows": [
+      70
+    ],
+    "trials": [
+      {
+        "test": "test_external.ExternalAdapterTests.test_connector_state_naming_external_refused_before_cook",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 9,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.schema.template-v1",
+    "status": "killed",
+    "rows": [
+      71
+    ],
+    "trials": [
+      {
+        "test": "test_spawn.SpawnTests.test_unsafe_template_refusals",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_catalog_fail_closed_and_template_cannot_supply_executables",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_temporary_name_template_plans_and_capability_branches",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_symlinks_corrupt_state_and_migration_refused",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 15,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.schema.identity-policy",
+    "status": "killed",
+    "rows": [
+      71
+    ],
+    "trials": [
+      {
+        "test": "test_spawn.SpawnTests.test_unsafe_template_refusals",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_status_cli_read_only_and_missing_state",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_hard_linked_seed_and_lifecycle_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_symlinks_corrupt_state_and_migration_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_process_death_releases_lock_but_never_replays_import",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_existing_store_is_recovery_not_import",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_seed_refusals_and_explicit_optional_branches",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_name_convention_capability_validation_and_no_truncation",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 42,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.catalog.file-name",
+    "status": "survived",
+    "rows": [
+      72
+    ],
+    "trials": [
+      {
+        "test": "test_spawn.SpawnTests.test_cli_inline_file_repo_equivalence",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_cli_read_only_independent_of_ansible_and_working_directory",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_strict_decode_refusals",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_instance_refusals_and_no_identity_fallback",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_missing_partial_clone_objects_never_invoke_remote_helper",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_git_ignores_ambient_config_and_replace_objects",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_unpinned_and_escaping_sources_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_unsafe_template_refusals",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 22,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.catalog.select",
+    "status": "survived",
+    "rows": [
+      72
+    ],
+    "trials": [
+      {
+        "test": "test_spawn.SpawnTests.test_catalog_fail_closed_and_template_cannot_supply_executables",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_hashes_bind_intent_catalog_target_and_observation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_temporary_name_template_plans_and_capability_branches",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_role_catalog_single_source_and_future_kind",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_plan_and_dry_run_show_pinned_name_record",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_catalog.CatalogTests.test_spawn_reader_loads_role_fixtures_and_matches_catalog_recipe",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_archive_symlinks_and_digest_mismatch_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_identity_and_computed_digests",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 13,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.catalog.cycle",
+    "status": "incompetent",
+    "rows": [
+      72
+    ],
+    "trials": [
+      {
+        "test": "test_spawn.SpawnTests.test_temporary_name_template_plans_and_capability_branches",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_plan_and_dry_run_show_pinned_name_record",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_archive_symlinks_and_digest_mismatch_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_catalog_fail_closed_and_template_cannot_supply_executables",
+        "tests": 1,
+        "failures": 0,
+        "errors": 1,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_hashes_bind_intent_catalog_target_and_observation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_identity_and_computed_digests",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_seed_plans_cli_and_v1_migration",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_role_catalog_single_source_and_future_kind",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 13,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.catalog.home-transport",
+    "status": "survived",
+    "rows": [
+      72
+    ],
+    "trials": [
+      {
+        "test": "test_spawn.SpawnTests.test_archive_symlinks_and_digest_mismatch_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_catalog_fail_closed_and_template_cannot_supply_executables",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_hashes_bind_intent_catalog_target_and_observation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_identity_and_computed_digests",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_temporary_name_template_plans_and_capability_branches",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_seed_plans_cli_and_v1_migration",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_role_catalog_single_source_and_future_kind",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_preflight_dependency_closure_is_recorded_not_executed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 13,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.catalog.ingress",
+    "status": "killed",
+    "rows": [
+      72
+    ],
+    "trials": [
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_reuses_strict_record_decoder",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_requires_real_repository_top",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_full_sha_ref_collisions_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_bare_store_and_explicit_git_directory",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_repo_name_refusals_leave_lifecycle_unchanged",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 8,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.catalog.one-source",
+    "status": "killed",
+    "rows": [
+      72
+    ],
+    "trials": [
+      {
+        "test": "test_spawn.SpawnTests.test_inline_file_repo_have_identical_hashes_and_plans",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_git_ignores_ambient_config_and_replace_objects",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_unpinned_and_escaping_sources_refused",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 4,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.artifact.digest",
+    "status": "killed",
+    "rows": [
+      73
+    ],
+    "trials": [
+      {
+        "test": "test_spawn.SpawnTests.test_identity_and_computed_digests",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_archive_symlinks_and_digest_mismatch_refused",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 13,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.artifact.tree-entries",
+    "status": "killed",
+    "rows": [
+      73
+    ],
+    "trials": [
+      {
+        "test": "test_spawn.SpawnTests.test_role_catalog_single_source_and_future_kind",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_archive_symlinks_and_digest_mismatch_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_catalog_fail_closed_and_template_cannot_supply_executables",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 13,
+    "trial_limit": 8
+  },
+  {
+    "id": "spawn.cli.parser",
+    "status": "uncovered",
+    "rows": [
+      74
+    ],
+    "trials": []
+  },
+  {
+    "id": "spawn.artifact.limit",
+    "status": "survived",
+    "rows": [
+      73
+    ],
+    "trials": [
+      {
+        "test": "test_spawn.SpawnTests.test_archive_symlinks_and_digest_mismatch_refused",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_catalog_fail_closed_and_template_cannot_supply_executables",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_hashes_bind_intent_catalog_target_and_observation",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_identity_and_computed_digests",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_temporary_name_template_plans_and_capability_branches",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_seed_plans_cli_and_v1_migration",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_role_catalog_single_source_and_future_kind",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "test": "test_spawn.SpawnTests.test_preflight_dependency_closure_is_recorded_not_executed",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 13,
+    "trial_limit": 8
+  }
+]

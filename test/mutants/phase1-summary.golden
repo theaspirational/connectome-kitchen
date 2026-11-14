@@ -1,0 +1,28 @@
+{
+  "guard_site_mutants": 573,
+  "combined_killed": 296,
+  "equivalent": 0,
+  "remaining_unreviewed": 277,
+  "remaining_categories": {
+    "survived": 249,
+    "not-pure-engine": 4,
+    "no-vectors": 23,
+    "runtime-error": 1
+  },
+  "named_checks": 203,
+  "named_mutants_implemented": 113,
+  "named_killed": 69,
+  "named_remaining": 134,
+  "B_recorded": 279,
+  "B_independent_replayed": 0,
+  "C_recorded": 60,
+  "C_shim_replayed": 0,
+  "negative_vectors": 154,
+  "unavailable_rows": [
+    14,
+    43,
+    44,
+    45,
+    46
+  ]
+}

@@ -1,0 +1,232 @@
+[
+  {
+    "id": "cook.argv.stdin",
+    "row": 51,
+    "file": "module_utils/connectome_cook.py",
+    "line": 48,
+    "before": "stdin=subprocess.DEVNULL,",
+    "after": "stdin=None,",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3",
+    "vector": "test_row51_stdio_and_environment"
+  },
+  {
+    "id": "cook.git.safe-directory",
+    "row": 51,
+    "file": "module_utils/connectome_cook.py",
+    "line": 83,
+    "before": "'safe.directory=' + checkout",
+    "after": "'safe.directory=*'",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3",
+    "vector": "test_row51_git_options"
+  },
+  {
+    "id": "cook.git.fsmonitor",
+    "row": 51,
+    "file": "module_utils/connectome_cook.py",
+    "line": 83,
+    "before": "'core.fsmonitor=false'",
+    "after": "'core.fsmonitor=true'",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3",
+    "vector": "test_row51_git_options"
+  },
+  {
+    "id": "cook.git.hooks",
+    "row": 51,
+    "file": "module_utils/connectome_cook.py",
+    "line": 84,
+    "before": "'core.hooksPath=/dev/null'",
+    "after": "'core.hooksPath=/tmp'",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3",
+    "vector": "test_row51_git_options"
+  },
+  {
+    "id": "cook.git.optional-locks",
+    "row": 51,
+    "file": "module_utils/connectome_cook.py",
+    "line": 84,
+    "before": "'--no-optional-locks'",
+    "after": "'--optional-locks'",
+    "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3",
+    "vector": "test_row51_git_options"
+  },
+  {
+    "id": "catalog.build.output",
+    "row": 53,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 642,
+    "before": "stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL",
+    "after": "stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row53_build_sandbox_stdio_and_environment"
+  },
+  {
+    "id": "catalog.build.offline",
+    "row": 53,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 620,
+    "before": "env = {'HOME': str(build / 'catalog-home'), 'TMPDIR': str(build / 'catalog-tmp'),\n           'PATH': '', 'LANG': 'C.UTF-8', 'NO_UPDATE_NOTIFIER': '1', 'npm_config_offline': 'true',\n           'npm_config_cache': str(build / 'catalog-cache')}",
+    "after": "env = {'HOME': str(build / 'catalog-home'), 'TMPDIR': str(build / 'catalog-tmp'),\n           'PATH': '', 'LANG': 'C.UTF-8', 'NO_UPDATE_NOTIFIER': '1', 'npm_config_offline': 'false',\n           'npm_config_cache': str(build / 'catalog-cache')}",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row53_build_sandbox_stdio_and_environment"
+  },
+  {
+    "id": "catalog.build.env",
+    "row": 53,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 620,
+    "before": "env = {'HOME': str(build / 'catalog-home'), 'TMPDIR': str(build / 'catalog-tmp'),\n           'PATH': '', 'LANG': 'C.UTF-8', 'NO_UPDATE_NOTIFIER': '1', 'npm_config_offline': 'true',\n           'npm_config_cache': str(build / 'catalog-cache')}",
+    "after": "env = {'HOME': str(build.parent / 'catalog-home'), 'TMPDIR': str(build / 'catalog-tmp'),\n           'PATH': '', 'LANG': 'C.UTF-8', 'NO_UPDATE_NOTIFIER': '1', 'npm_config_offline': 'true',\n           'npm_config_cache': str(build / 'catalog-cache')}",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row53_build_sandbox_stdio_and_environment"
+  },
+  {
+    "id": "spawn.persist.fsync-file",
+    "row": 58,
+    "file": "module_utils/connectome_spawn/persistence.py",
+    "line": 56,
+    "before": "os.fsync(stream.fileno())",
+    "after": "pass",
+    "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e",
+    "vector": "test_row58_syscall_order"
+  },
+  {
+    "id": "spawn.persist.fsync-dir",
+    "row": 58,
+    "file": "module_utils/connectome_spawn/persistence.py",
+    "line": 58,
+    "before": "        sync_dir(path.parent)\n    finally:",
+    "after": "        pass\n    finally:",
+    "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e",
+    "vector": "test_row58_syscall_order"
+  },
+  {
+    "id": "spawn.persist.atomic",
+    "row": 58,
+    "file": "module_utils/connectome_spawn/persistence.py",
+    "line": 57,
+    "before": "os.replace(temporary, path)",
+    "after": "Path(path).write_bytes(Path(temporary).read_bytes())",
+    "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e",
+    "vector": "test_row58_syscall_order"
+  },
+  {
+    "id": "deploy.prepare.ownership-first",
+    "row": 65,
+    "file": "module_utils/connectome_deploy.py",
+    "line": 787,
+    "before": "        self._save_ownership()  # persist ownership before invoking cook",
+    "after": "        pass  # mutant: omit pre-cook ownership",
+    "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d",
+    "vector": "test_row65_ownership_durable_before_cook"
+  },
+  {
+    "id": "catalog.unit.reset",
+    "row": 48,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 845,
+    "before": "lines = ['Environment=', 'PassEnvironment=', 'EnvironmentFile=',",
+    "after": "lines = ['Environment=', 'EnvironmentFile=',",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row48_isolation_golden"
+  },
+  {
+    "id": "catalog.unit.unset",
+    "row": 48,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 846,
+    "before": "'UnsetEnvironment=' + ' '.join(sorted(CODE_ENV))",
+    "after": "'UnsetEnvironment='",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row48_isolation_golden"
+  },
+  {
+    "id": "catalog.unit.envfile",
+    "row": 48,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 849,
+    "before": "lines.append('EnvironmentFile=' + systemd_words([str(secret_env_path(build))]))",
+    "after": "pass",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row48_isolation_golden"
+  },
+  {
+    "id": "catalog.unit.overlap",
+    "row": 48,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 842,
+    "before": "need(not env.keys() & base.keys(), 'unit environment overlaps constructed environment')",
+    "after": "pass",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row48_isolation_golden"
+  },
+  {
+    "id": "catalog.unit.base-env",
+    "row": 48,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 825,
+    "before": "base.update({'DATA_DIR': str(state), 'TMPDIR': str(state)})",
+    "after": "pass",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row48_isolation_golden"
+  },
+  {
+    "id": "catalog.unit.escape",
+    "row": 48,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 810,
+    "before": ".replace('%', '%%')",
+    "after": "",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row48_isolation_golden"
+  },
+  {
+    "id": "catalog.unit.exec-clear",
+    "row": 48,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 851,
+    "before": "lines.append(key + '=')",
+    "after": "pass",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row48_isolation_golden"
+  },
+  {
+    "id": "catalog.unit.preflights",
+    "row": 48,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 844,
+    "before": "commands.setdefault('ExecStartPre', []).extend(preflights(config, build))",
+    "after": "pass",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row48_isolation_golden"
+  },
+  {
+    "id": "catalog.unit.wrap",
+    "row": 48,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 854,
+    "before": "systemd_words(isolated_argv(config, build, argv, env, pins['platform']))",
+    "after": "systemd_words(argv)",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row48_isolation_golden"
+  },
+  {
+    "id": "catalog.unit.payload-names",
+    "row": 48,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 802,
+    "before": "'secrets': secret_environment_names(config)",
+    "after": "'secrets': []",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row48_isolation_golden"
+  },
+  {
+    "id": "catalog.build.path",
+    "row": 53,
+    "file": "module_utils/connectome_catalog.py",
+    "line": 631,
+    "before": "env['PATH'] = os.pathsep.join(str(directory / n / Path(e['exports'][n]).parent)\n                                      for n, e in entries.items() if n in ('node', 'bun') and\n                                      (directory / n).exists())",
+    "after": "env['PATH'] = ''",
+    "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+    "vector": "test_row53_build_sandbox_stdio_and_environment"
+  }
+]

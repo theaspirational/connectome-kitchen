@@ -1,9 +1,23 @@
 #!/usr/bin/env python3
-"""Never report module completion while oracle coverage gaps remain."""
-import json,sys
+"""Fail closed, with separately actionable guard/named/B/C deficits."""
+import importlib.machinery, json, subprocess, sys
 from pathlib import Path
-summary=json.loads((Path(__file__).resolve().parents[1]/'test/mutants/combined-summary.golden').read_text())
-if summary['remaining_unreviewed']:
- print('BLOCKED: unreviewed oracle guard-site mutants',summary['remaining_unreviewed']);sys.exit(1)
-print('BLOCKED: named independent-check enumeration and complete B/C replay require review')
-sys.exit(1)
+ROOT=Path(__file__).resolve().parents[1]
+spec=importlib.machinery.SourceFileLoader('phase1',str(ROOT/'scripts/summarize-phase1')).load_module()
+try:
+ counts,reviews=spec.summarize()
+ if counts!=json.loads((ROOT/'test/mutants/phase1-summary.golden').read_text()):raise ValueError('stale phase1 summary')
+ if reviews!=json.loads((ROOT/'test/mutants/guard-review.golden').read_text()):raise ValueError('stale per-guard review')
+ subprocess.run([sys.executable,str(ROOT/'scripts/inventory-sites')],check=True)
+ subprocess.run([sys.executable,str(ROOT/'scripts/site-manifest')],check=True)
+ subprocess.run([sys.executable,str(ROOT/'test/differential/guard_vectors.py'),'replay','--vectors',str(ROOT/'test/vectors/guard-negative.golden')],check=True)
+except (ValueError,OSError,KeyError,subprocess.CalledProcessError) as error:
+ print('BLOCKED: invalid/stale phase-1 evidence ('+type(error).__name__+')');sys.exit(1)
+missing=[]
+if counts['remaining_unreviewed']:missing.append('unreviewed guard mutants: '+str(counts['remaining_unreviewed']))
+if counts['named_remaining']:missing.append('named independent checks not killed: '+str(counts['named_remaining']))
+if counts['B_independent_replayed']!=counts['B_recorded']:missing.append('independent B contract replays: '+str(counts['B_independent_replayed'])+'/'+str(counts['B_recorded']))
+if counts['C_shim_replayed']!=counts['C_recorded']:missing.append('C shim projections: '+str(counts['C_shim_replayed'])+'/'+str(counts['C_recorded']))
+for message in missing:print('BLOCKED: '+message)
+if not missing:print('PASS phase-1 evidence; does not qualify a TS engine port or publication')
+sys.exit(int(bool(missing)))

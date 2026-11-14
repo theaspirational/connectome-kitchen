@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+"""Enumerate the freeze's actual line-based sites and bind each to source bytes."""
+import argparse, hashlib, importlib.machinery, json, subprocess
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+inv=importlib.machinery.SourceFileLoader('inventory',str(ROOT/'scripts/inventory-sites')).load_module()
+
+def build():
+ rows=inv.inventory(ROOT/'docs/approved-plan.md');files=[]
+ for name,path in sorted(inv.files(ROOT/'oracle').items()):
+  source=path.read_text();lines=source.splitlines();sites=[]
+  for line in inv.sites(source):
+   memberships=[r['row'] for r in rows if any(f==name and a<=line<=b for f,a,b in r['refs'])]
+   sites.append({'line':line,'text':lines[line-1],'rows':memberships,'helper':(name,line) in inv.HELPERS})
+  files.append({'name':name,'path':str(path.relative_to(ROOT)),'sha256':hashlib.sha256(source.encode()).hexdigest(),'sites':sites})
+ return {'freeze':'a49b5dc3bb5104637cb2dc5dc242e59c037576c2','definition':'line-start need/require/unsafe call, raise, or if/except with inline raise','total':sum(len(f['sites']) for f in files),'cited':sum(bool(s['rows']) for f in files for s in f['sites']),'helpers':sum(s['helper'] for f in files for s in f['sites']),'files':files}
+
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--write',action='store_true');p.add_argument('--source',type=Path);a=p.parse_args();result=build()
+ if a.source:
+  # Compare original engine/adaptor bytes, not the rewritten fixture identities.
+  for f in result['files']:
+   path=f['path'].removeprefix('oracle/')
+   original='roles/connectome_agent/'+path if not path.startswith('scripts/') else path
+   blob=subprocess.check_output(['git','-C',str(a.source),'show',result['freeze']+':'+original])
+   if hashlib.sha256(blob).hexdigest()!=f['sha256']:
+    if not f['name'].startswith('scripts/') or inv.sites(blob.decode()) or f['sites']:
+     raise ValueError('source freeze mismatch: '+f['name'])
+    # Relocated launchers and the later publication gate contain no sites.
+   if inv.sites(blob.decode())!=[s['line'] for s in f['sites']]:raise ValueError('source sites differ')
+ target=ROOT/'test/mutants/site-manifest.golden';data=json.dumps(result,indent=2)+'\n'
+ if a.write:target.write_text(data)
+ elif target.read_text()!=data:raise ValueError('site manifest is stale')
+ print(json.dumps({k:v for k,v in result.items() if k!='files'}))
+if __name__=='__main__':main()

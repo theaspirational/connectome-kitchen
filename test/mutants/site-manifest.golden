@@ -1,0 +1,4883 @@
+{
+  "freeze": "a49b5dc3bb5104637cb2dc5dc242e59c037576c2",
+  "definition": "line-start need/require/unsafe call, raise, or if/except with inline raise",
+  "total": 585,
+  "cited": 578,
+  "helpers": 7,
+  "files": [
+    {
+      "name": "archive.py",
+      "path": "oracle/module_utils/connectome_archive.py",
+      "sha256": "e2376aeb6ee0cf52730f5ceb4335f5ca0add0ed4ebbeb5f004485b24293ad3f3",
+      "sites": [
+        {
+          "line": 29,
+          "text": "        raise ArchiveError(message, code)",
+          "rows": [],
+          "helper": true
+        },
+        {
+          "line": 62,
+          "text": "    need(isinstance(entry, dict) and {'name', 'archive', 'sha256', 'kind', 'version'} <= entry.keys() and",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 66,
+          "text": "    need(npm_name(entry['name']) and not credential_shaped(entry['name']) and",
+          "rows": [
+            1,
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 69,
+          "text": "    need(isinstance(entry['kind'], str) and entry['kind'] in {'registry_release', 'artifact', 'git_commit'}, 'invalid archive kind')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 71,
+          "text": "        need(digest(entry.get('commit'), 40) and entry['commit'] != '0' * 40,",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 74,
+          "text": "        need('commit' not in entry, 'commit required only for git_commit')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 76,
+          "text": "        need(registry_origin(entry.get('registry_url')) and sha512_integrity(entry.get('registry_integrity')),",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 79,
+          "text": "        need(not {'registry_url', 'registry_integrity'} & entry.keys(),",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 82,
+          "text": "    need(text(value) and not credential_shaped(value) and not any(c in value for c in '?#') and",
+          "rows": [
+            1,
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 84,
+          "text": "    need(digest(entry['sha256']), 'invalid archive hash', 'E_ARCHIVE_HASH')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 90,
+          "text": "    need(isinstance(artifact, dict) and {'path', 'sha256'} <= artifact.keys() and",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 95,
+          "text": "        need(artifact['registry_release'] is True and artifact.get('name') == FRAMEWORK and",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 99,
+          "text": "        need(set(artifact) == {'path', 'sha256'}, 'release identity requires registry_release: true')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 112,
+          "text": "    need(isinstance(entries, list), 'host_dependencies must be a list')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 117,
+          "text": "    need(len(names) == len(set(names)), 'duplicate host dependencies refused')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 123,
+          "text": "    need(path.is_file() and not path.is_symlink(), 'archive must be an absolute regular file')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 126,
+          "text": "        need(hashlib.sha256(data).hexdigest() == entry['sha256'],",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 130,
+          "text": "            need(observed == entry['registry_integrity'], 'registry integrity mismatch', 'E_ARCHIVE_HASH')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 134,
+          "text": "            need(len(manifests) == 1 and manifests[0].size <= 1024 * 1024, 'archive manifest required')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 137,
+          "text": "        raise",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 139,
+          "text": "        raise ArchiveError('unreadable archive or manifest') from None",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 140,
+          "text": "    need(isinstance(manifest, dict), 'archive manifest must be a mapping')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 141,
+          "text": "    need(manifest.get('name') == entry['name'] and version(manifest.get('version')) and",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 155,
+          "text": "            need(head == pin if 'gitHead' in manifest else entry['kind'] == 'artifact',",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 158,
+          "text": "            need(head == entry['commit'] if entry['kind'] == 'git_commit' else",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 193,
+          "text": "    need(isinstance(record, dict), 'invalid dependency provenance', 'E_LOCK_INVALID')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 198,
+          "text": "    need(type(record.get('commit_verifiable')) is bool and",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 210,
+          "text": "    need([d['name'] for d in actual] == [d['name'] for d in expected],",
+          "rows": [
+            9
+          ],
+          "helper": false
+        },
+        {
+          "line": 219,
+          "text": "        need(dep['sha256'] == entry['sha256'] and",
+          "rows": [
+            9
+          ],
+          "helper": false
+        },
+        {
+          "line": 226,
+          "text": "            need(record == wanted, 'host dependency provenance mismatch', 'E_LOCK_INVALID')",
+          "rows": [
+            9
+          ],
+          "helper": false
+        },
+        {
+          "line": 243,
+          "text": "        raise ArchiveError('framework provenance lock mismatch', 'E_LOCK_INVALID')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "catalog.py",
+      "path": "oracle/module_utils/connectome_catalog.py",
+      "sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd",
+      "sites": [
+        {
+          "line": 27,
+          "text": "        raise ArchiveError(message, 'E_CATALOG_INVALID')",
+          "rows": [],
+          "helper": true
+        },
+        {
+          "line": 55,
+          "text": "    need(not result.keys() & config.get('connectors', {}).keys(), 'duplicate artifact name')",
+          "rows": [
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 70,
+          "text": "    need(isinstance(entries, dict) and entries, 'selected catalog entries required')",
+          "rows": [
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 73,
+          "text": "        need(isinstance(name, str) and re.fullmatch('[a-z0-9][a-z0-9_-]{0,62}', name), 'invalid artifact name')",
+          "rows": [
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 74,
+          "text": "        need(isinstance(entry, dict) and 'pin_ref' in entry and",
+          "rows": [
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 77,
+          "text": "        need(entry.get('enabled', True) is True and kind(entry) in",
+          "rows": [
+            60,
+            69
+          ],
+          "helper": false
+        },
+        {
+          "line": 79,
+          "text": "        need(isinstance(requires(entry), list) and all(isinstance(n, str) and n in entries",
+          "rows": [
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 82,
+          "text": "        need(isinstance(exports, dict) and all(isinstance(k, str) and relative(v)",
+          "rows": [
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 84,
+          "text": "        need(isinstance(entry.get('build', []), list), 'build must be an argv list')",
+          "rows": [
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 86,
+          "text": "            need(isinstance(argv, list) and argv and all(isinstance(a, str) and a and",
+          "rows": [
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 88,
+          "text": "        need((kind(entry) == 'preflight') == ('run' in entry), 'preflight requires run argv')",
+          "rows": [
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 90,
+          "text": "        need(entry['pin_ref'] == section + '.' + name, 'pin_ref must match artifact identity')",
+          "rows": [
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 92,
+          "text": "        need(isinstance(pin, dict) and set(pin) == {'archive', 'sha256', 'descriptor_sha256', 'version'} | ({'commit'} if kind(entry) == 'connector' else set()) and",
+          "rows": [
+            21
+          ],
+          "helper": false
+        },
+        {
+          "line": 102,
+          "text": "            need(repository(entry.get('repo')), 'connector requires reviewed repository identity')",
+          "rows": [
+            21
+          ],
+          "helper": false
+        },
+        {
+          "line": 103,
+          "text": "            need(isinstance(pin['commit'], str) and re.fullmatch('[a-f0-9]{40}', pin['commit']) and",
+          "rows": [
+            21
+          ],
+          "helper": false
+        },
+        {
+          "line": 105,
+          "text": "        need(pin['descriptor_sha256'] == descriptor_digest(entry), 'catalog descriptor digest mismatch')",
+          "rows": [
+            21
+          ],
+          "helper": false
+        },
+        {
+          "line": 109,
+          "text": "        need(name in entries and kind(entries[name]) == 'runtime' and",
+          "rows": [
+            21,
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 111,
+          "text": "    need(result['node']['version'].split('.')[0] == '24', 'catalog requires Node v24')",
+          "rows": [
+            21
+          ],
+          "helper": false
+        },
+        {
+          "line": 113,
+          "text": "    need(isinstance(platform, dict), 'platform closure must be a mapping')",
+          "rows": [
+            21
+          ],
+          "helper": false
+        },
+        {
+          "line": 115,
+          "text": "        need(isinstance(path, str) and path.startswith('/') and Path(path).as_posix() == os.path.normpath(path)",
+          "rows": [
+            21
+          ],
+          "helper": false
+        },
+        {
+          "line": 124,
+          "text": "        need(name not in visiting, 'artifact dependency cycle')",
+          "rows": [
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 146,
+          "text": "        need(name in entries, 'reference to unselected artifact')",
+          "rows": [
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 149,
+          "text": "    need('{artifact:' not in result, 'malformed artifact reference')",
+          "rows": [
+            60
+          ],
+          "helper": false
+        },
+        {
+          "line": 167,
+          "text": "        need(Path(path).is_file() and Path(path).resolve().parent in",
+          "rows": [
+            21
+          ],
+          "helper": false
+        },
+        {
+          "line": 188,
+          "text": "        need(value != '/', 'root dependency refused')",
+          "rows": [
+            17
+          ],
+          "helper": false
+        },
+        {
+          "line": 189,
+          "text": "        need(not re.search(r'file://(?!/)', value), 'nonlocal file URI refused')",
+          "rows": [
+            17
+          ],
+          "helper": false
+        },
+        {
+          "line": 191,
+          "text": "        need('file:' not in value or 'file:/' in value, 'relative file URI refused')",
+          "rows": [
+            17
+          ],
+          "helper": false
+        },
+        {
+          "line": 195,
+          "text": "            need(bool(raw), 'root dependency refused')",
+          "rows": [
+            17
+          ],
+          "helper": false
+        },
+        {
+          "line": 197,
+          "text": "            need('..' not in path.parts and not any(c in raw for c in '$%{}'), 'dynamic or escaping absolute path')",
+          "rows": [
+            17
+          ],
+          "helper": false
+        },
+        {
+          "line": 198,
+          "text": "            need((path.is_relative_to(root) and path.resolve().is_relative_to(root.resolve())) or",
+          "rows": [
+            17
+          ],
+          "helper": false
+        },
+        {
+          "line": 205,
+          "text": "    need(isinstance(value, str) and bool(re.fullmatch(r'[A-Za-z0-9_.+@/-]+', value)),",
+          "rows": [
+            17
+          ],
+          "helper": false
+        },
+        {
+          "line": 219,
+          "text": "        need(False, 'unresolvable command path')",
+          "rows": [
+            17
+          ],
+          "helper": false
+        },
+        {
+          "line": 220,
+          "text": "    need((path.is_relative_to(Path(root)) and resolved.is_relative_to(roots[0])) or",
+          "rows": [
+            17
+          ],
+          "helper": false
+        },
+        {
+          "line": 233,
+          "text": "    need(isinstance(argv, list) and argv and all(isinstance(a, str) and a for a in argv),",
+          "rows": [
+            18
+          ],
+          "helper": false
+        },
+        {
+          "line": 236,
+          "text": "    need('/' in argv[0], 'executable requires an explicit path')",
+          "rows": [
+            18
+          ],
+          "helper": false
+        },
+        {
+          "line": 246,
+          "text": "            need(bool(re.fullmatch(r'--[A-Za-z0-9][A-Za-z0-9-]*|-[A-Za-z0-9]', option)),",
+          "rows": [
+            18
+          ],
+          "helper": false
+        },
+        {
+          "line": 248,
+          "text": "            need(option not in ('-c', '-e', '--command', '--eval'), 'inline command language refused')",
+          "rows": [
+            18
+          ],
+          "helper": false
+        },
+        {
+          "line": 251,
+          "text": "            need(option.startswith('--'), 'ambiguous attached short option')",
+          "rows": [
+            18
+          ],
+          "helper": false
+        },
+        {
+          "line": 253,
+          "text": "                need(value == data_args[option], 'data argument differs from declaration')",
+          "rows": [
+            18,
+            61
+          ],
+          "helper": false
+        },
+        {
+          "line": 257,
+          "text": "        need(not arg.startswith('@'), 'ambiguous command argument')",
+          "rows": [
+            18
+          ],
+          "helper": false
+        },
+        {
+          "line": 278,
+          "text": "    need(isinstance(name, str) and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name),",
+          "rows": [
+            19
+          ],
+          "helper": false
+        },
+        {
+          "line": 287,
+          "text": "    need(not denied, 'code-loading/interpreter-control environment refused: ' + name)",
+          "rows": [
+            19
+          ],
+          "helper": false
+        },
+        {
+          "line": 291,
+          "text": "    need(isinstance(env, dict), 'catalog environment must be a mapping')",
+          "rows": [
+            19
+          ],
+          "helper": false
+        },
+        {
+          "line": 294,
+          "text": "        need(isinstance(value, str) and not any(ord(c) < 32 for c in value),",
+          "rows": [
+            19
+          ],
+          "helper": false
+        },
+        {
+          "line": 298,
+          "text": "        need(not any(c in value for c in '$`{}\\\\'), 'ambiguous catalog environment value')",
+          "rows": [
+            19,
+            50
+          ],
+          "helper": false
+        },
+        {
+          "line": 311,
+          "text": "            need(bool(re.fullmatch(r'(?:--)?[A-Za-z0-9_-]+', option)),",
+          "rows": [
+            19
+          ],
+          "helper": false
+        },
+        {
+          "line": 314,
+          "text": "            need(bool(re.fullmatch(r'[A-Za-z0-9_.+@/ -]+', item)) and",
+          "rows": [
+            19
+          ],
+          "helper": false
+        },
+        {
+          "line": 329,
+          "text": "    need(not names & {'PATH', 'HOME', 'TMPDIR', 'DATA_DIR', 'WORKSPACE_DIR', 'LANG', 'LC_ALL'},",
+          "rows": [
+            49
+          ],
+          "helper": false
+        },
+        {
+          "line": 343,
+          "text": "    need(isinstance(data, dict), 'data_args must be a mapping')",
+          "rows": [
+            61
+          ],
+          "helper": false
+        },
+        {
+          "line": 345,
+          "text": "        need(isinstance(flag, str) and re.fullmatch(r'--data-[a-z][a-z0-9-]*', flag),",
+          "rows": [
+            61
+          ],
+          "helper": false
+        },
+        {
+          "line": 347,
+          "text": "        need(isinstance(value, str) and Path(value).is_absolute(), 'data argument must be absolute')",
+          "rows": [
+            61
+          ],
+          "helper": false
+        },
+        {
+          "line": 356,
+          "text": "                need(isinstance(value.get('command'), str), 'data_args requires a command')",
+          "rows": [
+            61
+          ],
+          "helper": false
+        },
+        {
+          "line": 359,
+          "text": "                need(command not in result or result[command] == value['data_args'],",
+          "rows": [
+            61
+          ],
+          "helper": false
+        },
+        {
+          "line": 390,
+          "text": "    need(build.is_dir() and build.resolve() == build, 'build alias refused')",
+          "rows": [
+            12
+          ],
+          "helper": false
+        },
+        {
+          "line": 393,
+          "text": "        need(not stat.S_ISLNK(info.st_mode), 'build symlinks are refused')",
+          "rows": [
+            12
+          ],
+          "helper": false
+        },
+        {
+          "line": 394,
+          "text": "        need(stat.S_ISREG(info.st_mode) or stat.S_ISDIR(info.st_mode), 'build special file refused')",
+          "rows": [
+            12
+          ],
+          "helper": false
+        },
+        {
+          "line": 395,
+          "text": "        need(not stat.S_ISREG(info.st_mode) or info.st_nlink == 1, 'build hardlink refused')",
+          "rows": [
+            12
+          ],
+          "helper": false
+        },
+        {
+          "line": 396,
+          "text": "        need(not info.st_mode & 0o222, 'agent-writable build path refused')",
+          "rows": [
+            12
+          ],
+          "helper": false
+        },
+        {
+          "line": 402,
+          "text": "    need(build.resolve() == build, 'build alias refused')",
+          "rows": [
+            12
+          ],
+          "helper": false
+        },
+        {
+          "line": 406,
+          "text": "        need(stat.S_ISREG(info.st_mode) or stat.S_ISDIR(info.st_mode), 'build links/special files refused')",
+          "rows": [
+            12
+          ],
+          "helper": false
+        },
+        {
+          "line": 407,
+          "text": "        need(not stat.S_ISREG(info.st_mode) or info.st_nlink == 1, 'build hardlink refused')",
+          "rows": [
+            12
+          ],
+          "helper": false
+        },
+        {
+          "line": 441,
+          "text": "                need(isinstance(command, str) and isinstance(args, list), 'ambiguous launch command')",
+          "rows": [
+            62
+          ],
+          "helper": false
+        },
+        {
+          "line": 446,
+          "text": "                need(False, 'data_args requires a command')",
+          "rows": [
+            61,
+            62
+          ],
+          "helper": false
+        },
+        {
+          "line": 448,
+          "text": "                need(False, 'launch args without a classified command')",
+          "rows": [
+            61,
+            62
+          ],
+          "helper": false
+        },
+        {
+          "line": 460,
+          "text": "    need(not state.resolve().is_relative_to(build.resolve()) and",
+          "rows": [
+            11,
+            62
+          ],
+          "helper": false
+        },
+        {
+          "line": 478,
+          "text": "    need(not any(c in value for c in '$%`\\\\;|&<>(){}*?\\n\\r'),",
+          "rows": [
+            20
+          ],
+          "helper": false
+        },
+        {
+          "line": 483,
+          "text": "        need(False, 'invalid launch quoting')",
+          "rows": [
+            20
+          ],
+          "helper": false
+        },
+        {
+          "line": 500,
+          "text": "        need(bool(sep), 'ambiguous unit directive')",
+          "rows": [
+            20
+          ],
+          "helper": false
+        },
+        {
+          "line": 501,
+          "text": "        need(key not in ('RootDirectory', 'RootImage', 'ExecSearchPath'), 'unit execution remapping refused')",
+          "rows": [
+            20
+          ],
+          "helper": false
+        },
+        {
+          "line": 502,
+          "text": "        need(key not in ('EnvironmentFile', 'PassEnvironment', 'UnsetEnvironment', 'PAMName'),",
+          "rows": [
+            20
+          ],
+          "helper": false
+        },
+        {
+          "line": 507,
+          "text": "                need(bool(sep), 'unit environment requires literal assignments')",
+          "rows": [
+            20
+          ],
+          "helper": false
+        },
+        {
+          "line": 512,
+          "text": "            need(cwd is None and Path(value).is_absolute(), 'ambiguous unit working directory')",
+          "rows": [
+            20
+          ],
+          "helper": false
+        },
+        {
+          "line": 516,
+          "text": "    need(cwd is not None, 'unit requires explicit working directory')",
+          "rows": [
+            20
+          ],
+          "helper": false
+        },
+        {
+          "line": 520,
+          "text": "        need(argv and Path(argv[0]).is_absolute(), 'unit requires a literal absolute executable')",
+          "rows": [
+            20
+          ],
+          "helper": false
+        },
+        {
+          "line": 537,
+          "text": "        need(bool(argv), 'empty launcher command')",
+          "rows": [
+            20
+          ],
+          "helper": false
+        },
+        {
+          "line": 541,
+          "text": "            need(len(argv) == 2 and Path(argv[1]).is_absolute() and",
+          "rows": [
+            20
+          ],
+          "helper": false
+        },
+        {
+          "line": 546,
+          "text": "            need(len(argv) == 2 and argv[1].isdigit(), 'ambiguous launcher exit')",
+          "rows": [
+            20
+          ],
+          "helper": false
+        },
+        {
+          "line": 556,
+          "text": "        need(not path.is_symlink(), 'build symlinks are refused')",
+          "rows": [
+            15
+          ],
+          "helper": false
+        },
+        {
+          "line": 564,
+          "text": "                    need(False, 'invalid interpreter directive')",
+          "rows": [
+            15
+          ],
+          "helper": false
+        },
+        {
+          "line": 565,
+          "text": "                need(argv and Path(argv[0]).is_absolute(), 'interpreter must be absolute')",
+          "rows": [
+            15
+          ],
+          "helper": false
+        },
+        {
+          "line": 570,
+          "text": "    need(directory.is_dir() and directory.resolve() == directory, 'artifact directory alias refused')",
+          "rows": [
+            54
+          ],
+          "helper": false
+        },
+        {
+          "line": 573,
+          "text": "        need(not path.is_symlink(), 'artifact symlinks are refused')",
+          "rows": [
+            54
+          ],
+          "helper": false
+        },
+        {
+          "line": 576,
+          "text": "        need(path.is_file(), 'artifact special file refused')",
+          "rows": [
+            54
+          ],
+          "helper": false
+        },
+        {
+          "line": 582,
+          "text": "    need(path.resolve() == path and path.is_file(), 'archive must be an agent-local regular file')",
+          "rows": [
+            16
+          ],
+          "helper": false
+        },
+        {
+          "line": 586,
+          "text": "        need(stream_sha256(stream) == expected, 'artifact archive digest mismatch')",
+          "rows": [
+            16
+          ],
+          "helper": false
+        },
+        {
+          "line": 592,
+          "text": "                need(relative(name) and name not in seen and (member.isdir() or member.isfile()), 'unsafe archive member')",
+          "rows": [
+            16
+          ],
+          "helper": false
+        },
+        {
+          "line": 595,
+          "text": "                need(size <= 1024 ** 3 and len(seen) <= 100000, 'artifact extraction limit exceeded')",
+          "rows": [
+            16
+          ],
+          "helper": false
+        },
+        {
+          "line": 628,
+          "text": "        need(archive.resolve().is_relative_to(build.parent.parent.resolve()), 'archive escapes agent tree')",
+          "rows": [
+            54
+          ],
+          "helper": false
+        },
+        {
+          "line": 639,
+          "text": "            need(executable.is_file(), 'build executable must be installed')",
+          "rows": [
+            53
+          ],
+          "helper": false
+        },
+        {
+          "line": 643,
+          "text": "            need(result.returncode == 0, 'artifact build failed')",
+          "rows": [
+            53
+          ],
+          "helper": false
+        },
+        {
+          "line": 646,
+          "text": "            need((directory / name / value).is_file(), 'artifact export missing after build')",
+          "rows": [
+            53
+          ],
+          "helper": false
+        },
+        {
+          "line": 677,
+          "text": "        need(Path(argv[0]).is_absolute(), 'preflight executable must be absolute')",
+          "rows": [
+            55
+          ],
+          "helper": false
+        },
+        {
+          "line": 679,
+          "text": "        need(all(not any(c in arg for c in '%$\\n\\r\\\\\\\"') for arg in argv), 'unsafe preflight unit argv')",
+          "rows": [
+            55
+          ],
+          "helper": false
+        },
+        {
+          "line": 696,
+          "text": "        need(record == expected, 'catalog installed inventory differs from lock')",
+          "rows": [
+            22
+          ],
+          "helper": false
+        },
+        {
+          "line": 708,
+          "text": "            need(lock['recipe']['sha256'] == record['recipe_sha256'], 'cook recipe digest mismatch')",
+          "rows": [
+            22,
+            62
+          ],
+          "helper": false
+        },
+        {
+          "line": 710,
+          "text": "            need(lock.get('external', []) == external and not lock['components'] and not lock['localExtensions'],",
+          "rows": [
+            22,
+            62
+          ],
+          "helper": false
+        },
+        {
+          "line": 712,
+          "text": "            need(set(lock.get('engines', {})) == {'bun', 'node'}, 'catalog requires engine provenance')",
+          "rows": [
+            22,
+            62
+          ],
+          "helper": false
+        },
+        {
+          "line": 714,
+          "text": "                need(engine['path'] == engine['realPath'] == runtime(config, build, name), 'engine outside pinned catalog')",
+          "rows": [
+            22,
+            62
+          ],
+          "helper": false
+        },
+        {
+          "line": 715,
+          "text": "                need(engine['version'].removeprefix('v') == pins['artifacts'][name]['version'], 'engine version mismatch')",
+          "rows": [
+            22,
+            62
+          ],
+          "helper": false
+        },
+        {
+          "line": 719,
+          "text": "                need(path.resolve().is_relative_to(build), 'unit path escapes build')",
+          "rows": [
+            22,
+            62
+          ],
+          "helper": false
+        },
+        {
+          "line": 725,
+          "text": "            need(path.resolve().is_relative_to(build), 'launch path escapes build')",
+          "rows": [
+            22,
+            62
+          ],
+          "helper": false
+        },
+        {
+          "line": 733,
+          "text": "        raise",
+          "rows": [
+            22
+          ],
+          "helper": false
+        },
+        {
+          "line": 735,
+          "text": "        raise ArchiveError('catalog lock or launch surface invalid', 'E_CATALOG_INVALID') from None",
+          "rows": [
+            22
+          ],
+          "helper": false
+        },
+        {
+          "line": 753,
+          "text": "        need(isinstance(value, str) and Path(value).is_absolute(), 'catalog requires local cook inputs')",
+          "rows": [
+            54
+          ],
+          "helper": false
+        },
+        {
+          "line": 755,
+          "text": "        need(path.is_relative_to(root) and path.resolve().is_relative_to(root.resolve()) and",
+          "rows": [
+            54
+          ],
+          "helper": false
+        },
+        {
+          "line": 768,
+          "text": "        need(not target.exists() and not target.is_symlink(), 'platform tool basename collision')",
+          "rows": [
+            48
+          ],
+          "helper": false
+        },
+        {
+          "line": 842,
+          "text": "    need(not env.keys() & base.keys(), 'unit environment overlaps constructed environment')",
+          "rows": [
+            48
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "config.py",
+      "path": "oracle/module_utils/connectome_config.py",
+      "sha256": "4b8cb0c5bef5dc84a4813e37672c4918fd582d9027034256c0a158acc998324f",
+      "sites": [
+        {
+          "line": 33,
+          "text": "        raise ValueError('exactly four mapping layers required')",
+          "rows": [
+            69
+          ],
+          "helper": false
+        },
+        {
+          "line": 46,
+          "text": "            raise ValueError('connectors and modules must be mappings')",
+          "rows": [
+            69
+          ],
+          "helper": false
+        },
+        {
+          "line": 49,
+          "text": "                raise ValueError('entries must be mappings with boolean enabled')",
+          "rows": [
+            69
+          ],
+          "helper": false
+        },
+        {
+          "line": 60,
+          "text": "        raise ValueError('public connectors belong in the catalog')",
+          "rows": [
+            69
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "cook.py",
+      "path": "oracle/module_utils/connectome_cook.py",
+      "sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3",
+      "sites": [
+        {
+          "line": 31,
+          "text": "        raise AdapterError(message, code)",
+          "rows": [],
+          "helper": true
+        },
+        {
+          "line": 36,
+          "text": "    need(isinstance(argv, list) and argv and all(",
+          "rows": [
+            1,
+            51
+          ],
+          "helper": false
+        },
+        {
+          "line": 52,
+          "text": "            raise AdapterError('local command unavailable', 'E_COOK_FAILED') from None",
+          "rows": [
+            28
+          ],
+          "helper": false
+        },
+        {
+          "line": 55,
+          "text": "            raise AdapterError('cook adapter command failed (output redacted)',",
+          "rows": [
+            28
+          ],
+          "helper": false
+        },
+        {
+          "line": 67,
+          "text": "    need(text(value) and not credential_shaped(value) and not any(c in value for c in '?#'),",
+          "rows": [
+            1,
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 70,
+          "text": "    need(path.is_absolute(), 'absolute adapter path required')",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 76,
+          "text": "    need(entrypoint.is_absolute() and entrypoint.is_file(), 'absolute cook entrypoint required')",
+          "rows": [
+            38
+          ],
+          "helper": false
+        },
+        {
+          "line": 78,
+          "text": "    need(entrypoint.resolve() == root.resolve() / 'bin/cook', 'use the reviewed source bin/cook entrypoint')",
+          "rows": [
+            38
+          ],
+          "helper": false
+        },
+        {
+          "line": 90,
+          "text": "    need(git('rev-parse', 'HEAD') == pin, 'cook checkout differs from requested pin')",
+          "rows": [
+            38
+          ],
+          "helper": false
+        },
+        {
+          "line": 91,
+          "text": "    need(git('rev-parse', 'HEAD^{tree}') == git('rev-parse', COOK_COMMIT + '^{tree}'),",
+          "rows": [
+            38
+          ],
+          "helper": false
+        },
+        {
+          "line": 93,
+          "text": "    need(not git('status', '--porcelain', '--untracked-files=normal', flag_indices=(1, 2)),",
+          "rows": [
+            38,
+            51
+          ],
+          "helper": false
+        },
+        {
+          "line": 99,
+          "text": "    need(isinstance(builds, list) and all(isinstance(argv, list) and argv and",
+          "rows": [
+            1
+          ],
+          "helper": false
+        },
+        {
+          "line": 106,
+          "text": "    need(repository(entry.get('repo')), 'source requires a safe HTTPS, SSH/scp or absolute local repository')",
+          "rows": [
+            3
+          ],
+          "helper": false
+        },
+        {
+          "line": 117,
+          "text": "    need(isinstance(spec, dict) and set(spec) == {'config', 'pins'}, 'normalized deployment spec required')",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 123,
+          "text": "        need(entry.get('pin_ref') == 'connectors.' + name, 'connector pin_ref must name its resolved connector')",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 124,
+          "text": "    need(resolve_pins(config, versions) == pins, 'normalized pins required')",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 126,
+          "text": "        raise AdapterError('step/cost budgets not supported by host recipe schema at ' +",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 134,
+          "text": "            raise AdapterError(str(error)) from None",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 136,
+          "text": "        need(not set(names) & BASE_ENV and not set(names) & {'DATA_DIR', 'WORKSPACE_DIR'},",
+          "rows": [
+            49
+          ],
+          "helper": false
+        },
+        {
+          "line": 140,
+          "text": "    need(isinstance(agent, dict) and (agent.get('systemPrompt') is None or isinstance(agent['systemPrompt'], str)),",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 148,
+          "text": "            need(entry.get('enabled', True) is True, 'adapter input must already exclude disabled entries')",
+          "rows": [
+            69
+          ],
+          "helper": false
+        },
+        {
+          "line": 150,
+          "text": "            need(isinstance(settings, dict), 'descriptor settings must be a mapping')",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 155,
+          "text": "                need(settings.keys() <= allowed and isinstance(settings.get('command'), str),",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 157,
+          "text": "                need(not ('token' in settings and not re.fullmatch(r'\\$\\{[A-Z_][A-Z0-9_]*\\}', settings['token'])),",
+          "rows": [
+            50
+          ],
+          "helper": false
+        },
+        {
+          "line": 162,
+          "text": "                need('repo' not in entry and 'build' not in entry,",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 168,
+          "text": "        need(build_dir is not None, 'catalog compilation requires the agent build path')",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 172,
+          "text": "                need(isinstance(settings, dict) and isinstance(settings.get('command'), str) and Path(settings['command']).is_absolute() and",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 174,
+          "text": "                need('token' not in settings or isinstance(settings['token'], str) and",
+          "rows": [
+            50
+          ],
+          "helper": false
+        },
+        {
+          "line": 188,
+          "text": "    need(not set(names) & BASE_ENV and not set(names) & {'DATA_DIR', 'WORKSPACE_DIR'},",
+          "rows": [
+            49
+          ],
+          "helper": false
+        },
+        {
+          "line": 200,
+          "text": "                need(key in names and value == '${' + key + '}',",
+          "rows": [
+            50
+          ],
+          "helper": false
+        },
+        {
+          "line": 208,
+          "text": "    need(isinstance(servers, dict), 'recipe mcpServers must be a mapping')",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 223,
+          "text": "    need(all(path.is_absolute() and path.resolve() == path for path in (build, state, spec_path)),",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 225,
+          "text": "    need(build.is_dir() and spec_path.name == 'deployment.json', 'fresh deployment.json required')",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 226,
+          "text": "    need(build.parent.name == 'builds', 'adapter output must be ROOT/builds/REQUEST')",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 228,
+          "text": "    need(not state.is_relative_to(root) and not root.is_relative_to(state),",
+          "rows": [
+            11,
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 235,
+          "text": "        need(all(Path(p).is_absolute() and os.access(p, os.X_OK) for p in (runtime, bun_path, node_path)),",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 251,
+          "text": "                raise AdapterError('invalid staged recipe') from None",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 257,
+          "text": "                raise AdapterError('invalid recipe input') from None",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 258,
+          "text": "    need(set(build.iterdir()) == allowed, 'cook requires a fresh build containing only deployment.json and optional recipe')",
+          "rows": [
+            38
+          ],
+          "helper": false
+        },
+        {
+          "line": 261,
+          "text": "    need(config.get('state_dir') == str(state), 'adapter state must match configured state_dir')",
+          "rows": [
+            11,
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 263,
+          "text": "    need(isinstance(settings, dict), 'cook settings must be a mapping')",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 264,
+          "text": "    need({'host_repo', 'connector_state'} <= settings.keys() and",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 268,
+          "text": "    need(repository(settings['host_repo']), 'cook.host_repo requires a safe HTTPS, SSH/scp or absolute local repository')",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 270,
+          "text": "    need(isinstance(settings['connector_state'], dict) and not settings['connector_state'].keys() & external.keys(),",
+          "rows": [
+            70
+          ],
+          "helper": false
+        },
+        {
+          "line": 336,
+          "text": "    need(lock.get('layout') == layout and lock.get('state') == {'path': str(state)},",
+          "rows": [
+            11
+          ],
+          "helper": false
+        },
+        {
+          "line": 342,
+          "text": "        need(actual == expected and 'external' not in lock and",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 349,
+          "text": "        need(not actual, 'catalog components must come from the digest-pinned closure')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 351,
+          "text": "    need(recorded == external, 'cook external servers differ from the recipe')",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 355,
+          "text": "    need(len(lock.get('hostDependencies', [])) == len(expected) and",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 360,
+          "text": "        need(dep['version'] == record['version'] and dep['sha256'] == record['sha256'],",
+          "rows": [
+            39
+          ],
+          "helper": false
+        },
+        {
+          "line": 374,
+          "text": "    need(not env_file.exists() or not env_file.read_text().strip(), 'cook unexpectedly wrote runtime env values')",
+          "rows": [
+            38
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "deploy.py",
+      "path": "oracle/module_utils/connectome_deploy.py",
+      "sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d",
+      "sites": [
+        {
+          "line": 90,
+          "text": "            raise AncestorWritable(parent)",
+          "rows": [
+            31
+          ],
+          "helper": false
+        },
+        {
+          "line": 134,
+          "text": "            raise ExternalCommandUnsafe(name, 'missing or unreadable path') from None",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 136,
+          "text": "            raise ExternalCommandUnsafe(name, 'not root-owned')",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 141,
+          "text": "            raise ExternalCommandUnsafe(name, 'not a regular file' if last else 'not a directory')",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 143,
+          "text": "            raise ExternalCommandUnsafe(name, 'group/other-writable')",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 145,
+          "text": "            raise ExternalCommandUnsafe(name, 'not readable/executable by the agent account',",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 166,
+          "text": "                raise ExternalCommandUnsafe(name, 'too many symbolic links')",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 172,
+          "text": "                raise ExternalCommandUnsafe(name, 'not a regular file')",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 176,
+          "text": "        raise ExternalCommandUnsafe(name, 'not a regular file')",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 183,
+          "text": "        raise ExternalCommandUnsafe(name, 'invalid private data argument', 'E_EXTERNAL_DATA_ARG')",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 186,
+          "text": "        unsafe()",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 193,
+          "text": "            unsafe()",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 201,
+          "text": "            unsafe()",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 207,
+          "text": "                unsafe()",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 210,
+          "text": "                raise ExternalCommandUnsafe(name, 'ancestor denies agent access', 'E_EXTERNAL_ACCESS')",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 214,
+          "text": "        unsafe()",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 222,
+          "text": "        raise DeployError('invalid private data declaration', 'E_EXTERNAL_DATA_ARG') from None",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 234,
+          "text": "            raise ExternalCommandUnsafe(entry['server'], 'unbound data argument', 'E_EXTERNAL_DATA_ARG')",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 243,
+          "text": "            raise DeployError('external server differs from the installed recipe', 'E_LOCK_INVALID')",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 253,
+          "text": "                    raise ValueError",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 255,
+          "text": "                raise ExternalCommandUnsafe(record['name'], 'invalid private data interpreter',",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 263,
+          "text": "                    raise ValueError",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 267,
+          "text": "                    raise ValueError",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 269,
+          "text": "                raise ExternalCommandUnsafe(record['name'], 'invalid first-argument script',",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 276,
+          "text": "                raise ExternalCommandUnsafe(record['name'], 'relative path argument')",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 288,
+          "text": "                    raise ExternalCommandUnsafe(record['name'], 'unbound data position or flag',",
+          "rows": [
+            33
+          ],
+          "helper": false
+        },
+        {
+          "line": 303,
+          "text": "            raise DeployError('refusing non-directory or symlinked directory') from None",
+          "rows": [
+            31
+          ],
+          "helper": false
+        },
+        {
+          "line": 343,
+          "text": "        raise DeployError('invalid agent or connector identifier')",
+          "rows": [
+            64
+          ],
+          "helper": false
+        },
+        {
+          "line": 351,
+          "text": "        raise DeployError(str(error), 'E_EXTERNAL_DATA_ARG') from None",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 353,
+          "text": "        raise DeployError(str(error)) from None",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 359,
+          "text": "            raise DeployError('invalid connector identifier')",
+          "rows": [
+            64
+          ],
+          "helper": false
+        },
+        {
+          "line": 369,
+          "text": "        raise DeployError('symlinked base directory is unsupported')",
+          "rows": [
+            31
+          ],
+          "helper": false
+        },
+        {
+          "line": 376,
+          "text": "        raise DeployError('artifact path escapes base')",
+          "rows": [
+            31
+          ],
+          "helper": false
+        },
+        {
+          "line": 389,
+          "text": "                raise UnitVerificationFailed() from None",
+          "rows": [
+            28
+          ],
+          "helper": false
+        },
+        {
+          "line": 390,
+          "text": "            raise DeployError('command unavailable', 'E_COOK_FAILED' if adapter else 'E_DEPLOY_FAILED') from None",
+          "rows": [
+            28
+          ],
+          "helper": false
+        },
+        {
+          "line": 393,
+          "text": "                raise UnitVerificationFailed(result.returncode) from None",
+          "rows": [
+            28
+          ],
+          "helper": false
+        },
+        {
+          "line": 397,
+          "text": "                raise DeployError(safe['msg'], safe['error_code'], safe.get('cook_error_code'))",
+          "rows": [
+            28
+          ],
+          "helper": false
+        },
+        {
+          "line": 398,
+          "text": "            raise DeployError('command failed (output redacted)')",
+          "rows": [
+            28
+          ],
+          "helper": false
+        },
+        {
+          "line": 409,
+          "text": "        raise DeployError('invalid secret name')",
+          "rows": [
+            49
+          ],
+          "helper": false
+        },
+        {
+          "line": 411,
+          "text": "        raise DeployError('secret names overlap runtime state environment')",
+          "rows": [
+            49
+          ],
+          "helper": false
+        },
+        {
+          "line": 419,
+          "text": "        raise DeployError('secret file environment name conflicts with direct secret delivery')",
+          "rows": [
+            49
+          ],
+          "helper": false
+        },
+        {
+          "line": 443,
+          "text": "            raise DeployError('unknown connector pin reference') from None",
+          "rows": [
+            21
+          ],
+          "helper": false
+        },
+        {
+          "line": 449,
+          "text": "        raise DeployError('unresolved or invalid full commit pin')",
+          "rows": [
+            21
+          ],
+          "helper": false
+        },
+        {
+          "line": 491,
+          "text": "            raise DeployError('state_dir must be a canonical absolute path outside the deployment root')",
+          "rows": [
+            11
+          ],
+          "helper": false
+        },
+        {
+          "line": 498,
+          "text": "            raise DeployError('secrets_file must be a canonical absolute path')",
+          "rows": [
+            52
+          ],
+          "helper": false
+        },
+        {
+          "line": 534,
+          "text": "                raise DeployError('state_dir must be outside and separate from the deployment root/builds')",
+          "rows": [
+            11
+          ],
+          "helper": false
+        },
+        {
+          "line": 536,
+          "text": "            raise DeployError('state_dir must be separate from unit_dir')",
+          "rows": [
+            11
+          ],
+          "helper": false
+        },
+        {
+          "line": 543,
+          "text": "                raise DeployError('state_dir must be a real directory, mode 0700, owned by the agent account; not repaired')",
+          "rows": [
+            52
+          ],
+          "helper": false
+        },
+        {
+          "line": 562,
+          "text": "            raise DeployError('secrets file check failed: require non-symlink directory 0700 and regular file 0600, both owned by the agent account (see plan secrets_file); not repaired', 'E_SECRETS_MODE')",
+          "rows": [
+            35
+          ],
+          "helper": false
+        },
+        {
+          "line": 570,
+          "text": "            raise DeployError('agent secrets file lookup failed (values redacted)') from None",
+          "rows": [
+            35
+          ],
+          "helper": false
+        },
+        {
+          "line": 635,
+          "text": "                    raise DeployError('cannot inspect exclusive unit') from None",
+          "rows": [
+            34
+          ],
+          "helper": false
+        },
+        {
+          "line": 638,
+          "text": "                raise UnitActive(record['unit'], record['scope'], 'E_UNIT_EXCLUSIVE')",
+          "rows": [
+            34
+          ],
+          "helper": false
+        },
+        {
+          "line": 649,
+          "text": "                raise DeployError('cannot inspect unit state') from None",
+          "rows": [
+            34
+          ],
+          "helper": false
+        },
+        {
+          "line": 651,
+          "text": "                raise DeployError('cannot inspect unit state')",
+          "rows": [
+            34
+          ],
+          "helper": false
+        },
+        {
+          "line": 653,
+          "text": "                raise UnitActive(name)",
+          "rows": [
+            34
+          ],
+          "helper": false
+        },
+        {
+          "line": 675,
+          "text": "            raise DeployError('invalid activation bookkeeping')",
+          "rows": [
+            68
+          ],
+          "helper": false
+        },
+        {
+          "line": 698,
+          "text": "                raise DeployError('invalid framework provenance', 'E_LOCK_INVALID') from None",
+          "rows": [
+            39,
+            67
+          ],
+          "helper": false
+        },
+        {
+          "line": 705,
+          "text": "            raise DeployError(str(error), 'E_LOCK_INVALID') from None",
+          "rows": [
+            67
+          ],
+          "helper": false
+        },
+        {
+          "line": 713,
+          "text": "            raise DeployError('cook lock must declare configured external state_dir', 'E_LOCK_STATE_PATH')",
+          "rows": [
+            11
+          ],
+          "helper": false
+        },
+        {
+          "line": 718,
+          "text": "                raise DeployError('cook state does not match configured state_dir', 'E_LOCK_STATE_PATH')",
+          "rows": [
+            11
+          ],
+          "helper": false
+        },
+        {
+          "line": 721,
+          "text": "                raise DeployError('state must be outside deployment root/builds', 'E_LOCK_STATE_PATH')",
+          "rows": [
+            11
+          ],
+          "helper": false
+        },
+        {
+          "line": 733,
+          "text": "                raise DeployError('framework provenance lock missing or malformed', 'E_LOCK_INVALID') from None",
+          "rows": [
+            67
+          ],
+          "helper": false
+        },
+        {
+          "line": 738,
+          "text": "                raise DeployError('framework provenance lock mismatch', 'E_LOCK_INVALID')",
+          "rows": [
+            67
+          ],
+          "helper": false
+        },
+        {
+          "line": 742,
+          "text": "            raise DeployError(str(error), 'E_LOCK_INVALID') from None",
+          "rows": [
+            67
+          ],
+          "helper": false
+        },
+        {
+          "line": 766,
+          "text": "            raise DeployError(str(error)) from None",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 770,
+          "text": "            raise DeployError('configure a pinned cook adapter command')",
+          "rows": [
+            65
+          ],
+          "helper": false
+        },
+        {
+          "line": 774,
+          "text": "            raise DeployError('refusing to rebuild active directory')",
+          "rows": [
+            65
+          ],
+          "helper": false
+        },
+        {
+          "line": 776,
+          "text": "            raise DeployError('refusing to rebuild a directory with manifest-owned unit files')",
+          "rows": [
+            65
+          ],
+          "helper": false
+        },
+        {
+          "line": 828,
+          "text": "                raise DeployError('host script launcher required')",
+          "rows": [
+            66
+          ],
+          "helper": false
+        },
+        {
+          "line": 831,
+          "text": "                raise DeployError('missing launcher')",
+          "rows": [
+            66
+          ],
+          "helper": false
+        },
+        {
+          "line": 845,
+          "text": "                raise DeployError('invalid or duplicate user unit')",
+          "rows": [
+            66
+          ],
+          "helper": false
+        },
+        {
+          "line": 847,
+          "text": "                raise DeployError('unit output digest mismatch')",
+          "rows": [
+            66
+          ],
+          "helper": false
+        },
+        {
+          "line": 854,
+          "text": "            raise DeployError('no units to activate')",
+          "rows": [
+            66
+          ],
+          "helper": false
+        },
+        {
+          "line": 863,
+          "text": "            raise DeployError('systemd paths require an absolute literal path without whitespace or special characters',",
+          "rows": [
+            32
+          ],
+          "helper": false
+        },
+        {
+          "line": 870,
+          "text": "            raise DeployError('operator input destination already exists')",
+          "rows": [
+            23
+          ],
+          "helper": false
+        },
+        {
+          "line": 889,
+          "text": "            raise DeployError('cannot inspect unit environment file', 'E_ENVIRONMENT_FILE') from None",
+          "rows": [
+            35
+          ],
+          "helper": false
+        },
+        {
+          "line": 895,
+          "text": "            raise DeployError('required unit environment file not accepted', 'E_ENVIRONMENT_FILE')",
+          "rows": [
+            35
+          ],
+          "helper": false
+        },
+        {
+          "line": 901,
+          "text": "                raise DeployError('current does not point at installed release')",
+          "rows": [
+            68
+          ],
+          "helper": false
+        },
+        {
+          "line": 904,
+          "text": "                    raise DeployError('installed unit file missing')",
+          "rows": [
+            68
+          ],
+          "helper": false
+        },
+        {
+          "line": 922,
+          "text": "                raise DeployError('health command must be argv')",
+          "rows": [
+            68
+          ],
+          "helper": false
+        },
+        {
+          "line": 949,
+          "text": "            raise DeployError('secret file directory must be agent-owned mode 0700; not repaired')",
+          "rows": [
+            52
+          ],
+          "helper": false
+        },
+        {
+          "line": 955,
+          "text": "                raise DeployError('secret file must be declared, regular and agent-owned mode 0600; not repaired')",
+          "rows": [
+            52
+          ],
+          "helper": false
+        },
+        {
+          "line": 973,
+          "text": "            raise DeployError('invalid user unit')",
+          "rows": [
+            64
+          ],
+          "helper": false
+        },
+        {
+          "line": 982,
+          "text": "            raise DeployError('refusing symlinked drop-in directory (aliased parent or escape)')",
+          "rows": [
+            66
+          ],
+          "helper": false
+        },
+        {
+          "line": 995,
+          "text": "            raise DeployError('refusing symlinked artifact parent directory')",
+          "rows": [
+            31
+          ],
+          "helper": false
+        },
+        {
+          "line": 997,
+          "text": "            raise DeployError('refusing non-directory artifact parent')",
+          "rows": [
+            31
+          ],
+          "helper": false
+        },
+        {
+          "line": 1012,
+          "text": "            raise DeployError('refusing symlinked ownership manifest')",
+          "rows": [
+            30
+          ],
+          "helper": false
+        },
+        {
+          "line": 1016,
+          "text": "            raise DeployError('invalid ownership manifest; regular file required')",
+          "rows": [
+            30
+          ],
+          "helper": false
+        },
+        {
+          "line": 1021,
+          "text": "                raise ValueError()",
+          "rows": [
+            30
+          ],
+          "helper": false
+        },
+        {
+          "line": 1024,
+          "text": "                    raise ValueError()",
+          "rows": [
+            30
+          ],
+          "helper": false
+        },
+        {
+          "line": 1036,
+          "text": "                    raise ValueError()",
+          "rows": [
+            30
+          ],
+          "helper": false
+        },
+        {
+          "line": 1039,
+          "text": "            raise DeployError('invalid ownership manifest; operator recovery required') from None",
+          "rows": [
+            30
+          ],
+          "helper": false
+        },
+        {
+          "line": 1044,
+          "text": "            raise DeployError('refusing unmanaged build directory; no matching ownership manifest entry')",
+          "rows": [
+            30,
+            65
+          ],
+          "helper": false
+        },
+        {
+          "line": 1055,
+          "text": "                raise DeployError('refusing unmanaged, modified or missing artifact; ownership mismatch')",
+          "rows": [
+            30
+          ],
+          "helper": false
+        },
+        {
+          "line": 1075,
+          "text": "            raise DeployError('refusing to remove unmanaged or modified artifact')",
+          "rows": [
+            30
+          ],
+          "helper": false
+        },
+        {
+          "line": 1081,
+          "text": "            raise DeployError('refusing to remove unmanaged or modified artifact')",
+          "rows": [
+            30
+          ],
+          "helper": false
+        },
+        {
+          "line": 1106,
+          "text": "                raise DeployError('unsupported unit Install directive; use explicit target links')",
+          "rows": [
+            32
+          ],
+          "helper": false
+        },
+        {
+          "line": 1114,
+          "text": "                    raise DeployError('unsupported unit Install target or alias')",
+          "rows": [
+            32
+          ],
+          "helper": false
+        },
+        {
+          "line": 1146,
+          "text": "                    raise DeployError('conflicting unit installation paths')",
+          "rows": [
+            66
+          ],
+          "helper": false
+        },
+        {
+          "line": 1156,
+          "text": "                raise DeployError('refusing unmanaged artifact; no matching ownership manifest entry')",
+          "rows": [
+            30
+          ],
+          "helper": false
+        },
+        {
+          "line": 1197,
+          "text": "                raise DeployError('external servers require the installed recipe', 'E_LOCK_INVALID') from None",
+          "rows": [
+            68
+          ],
+          "helper": false
+        },
+        {
+          "line": 1227,
+          "text": "            raise DeployError('secret provider must return exactly the declared names')",
+          "rows": [
+            35
+          ],
+          "helper": false
+        },
+        {
+          "line": 1229,
+          "text": "            raise DeployError('secret provider must return exactly the declared names')",
+          "rows": [
+            35
+          ],
+          "helper": false
+        },
+        {
+          "line": 1232,
+          "text": "            raise DeployError('multiline/NUL env secrets are unsupported')",
+          "rows": [
+            35
+          ],
+          "helper": false
+        },
+        {
+          "line": 1299,
+          "text": "                raise ActivationFailed(step, cause, restored=False) from cause",
+          "rows": [
+            36
+          ],
+          "helper": false
+        },
+        {
+          "line": 1300,
+          "text": "            raise ActivationFailed(step, cause, restored=True) from cause",
+          "rows": [
+            36
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "errors.py",
+      "path": "oracle/module_utils/connectome_errors.py",
+      "sha256": "90881495b7718230c4459be71f672cd95e65ae1d3686b93343a0b4a95e20c4c9",
+      "sites": []
+    },
+    {
+      "name": "filter_plugins/connectome.py",
+      "path": "oracle/filter_plugins/connectome.py",
+      "sha256": "64a820b261eb103eca364c7ef14d229c79a645f4fc65678b662c7e55467d95f6",
+      "sites": []
+    },
+    {
+      "name": "inputs.py",
+      "path": "oracle/module_utils/connectome_inputs.py",
+      "sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216",
+      "sites": [
+        {
+          "line": 13,
+          "text": "        raise ValueError(message)",
+          "rows": [],
+          "helper": true
+        },
+        {
+          "line": 58,
+          "text": "        raise ExternalDataArgError('invalid external_data_args')",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 63,
+          "text": "    need(isinstance(config.get('activation', 'start'), str) and",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 67,
+          "text": "    need(isinstance(exclusive, list), 'exclusive_with must be a list')",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 70,
+          "text": "        need(isinstance(record, dict) and set(record) == {'scope', 'unit'},",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 72,
+          "text": "        need(isinstance(record['scope'], str) and record['scope'] in ('system', 'user') and",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 77,
+          "text": "        need(key not in seen, 'duplicate exclusive unit')",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 81,
+          "text": "        need(isinstance(record, dict) and set(record) == {'path', 'sha256'}, 'closed recipe_file record required')",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 83,
+          "text": "        need(isinstance(value, str) and value.startswith('/') and '{' not in value and '}' not in value",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 86,
+          "text": "        need(value == os.path.abspath(value), 'controller recipe path must be canonical')",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 87,
+          "text": "        need(isinstance(record['sha256'], str) and re.fullmatch(r'[a-f0-9]{64}', record['sha256']),",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 91,
+          "text": "        need(isinstance(records, list), 'secret_files must be a list')",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 94,
+          "text": "            need(isinstance(record, dict) and set(record) == {'secret', 'env'}, 'closed secret_files record required')",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 95,
+          "text": "            need(all(isinstance(value, str) and re.fullmatch(r'[A-Z_][A-Z0-9_]*', value)",
+          "rows": [
+            49,
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 97,
+          "text": "            need(record['env'] not in seen and record['env'] not in {'DATA_DIR', 'WORKSPACE_DIR', 'PATH', 'HOME', 'LANG', 'LC_ALL', 'TMPDIR'},",
+          "rows": [
+            49,
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 103,
+          "text": "    need(hashlib.sha256(content).hexdigest() == record['sha256'], 'recipe digest mismatch')",
+          "rows": [
+            7,
+            23
+          ],
+          "helper": false
+        },
+        {
+          "line": 107,
+          "text": "            need(key not in result, 'duplicate recipe JSON key')",
+          "rows": [
+            7,
+            23
+          ],
+          "helper": false
+        },
+        {
+          "line": 111,
+          "text": "        raise ValueError('nonfinite recipe JSON number')",
+          "rows": [
+            7,
+            23
+          ],
+          "helper": false
+        },
+        {
+          "line": 114,
+          "text": "        need(isinstance(recipe, dict), 'recipe must be a JSON object')",
+          "rows": [
+            7,
+            23
+          ],
+          "helper": false
+        },
+        {
+          "line": 116,
+          "text": "        raise ValueError('invalid recipe JSON') from None",
+          "rows": [
+            7,
+            23
+          ],
+          "helper": false
+        },
+        {
+          "line": 123,
+          "text": "        need(path.resolve() == path and stat.S_ISREG(path.lstat().st_mode),",
+          "rows": [
+            23
+          ],
+          "helper": false
+        },
+        {
+          "line": 127,
+          "text": "        raise ValueError('recipe input unavailable') from None",
+          "rows": [
+            23
+          ],
+          "helper": false
+        },
+        {
+          "line": 144,
+          "text": "    need(isinstance(supplied, dict) and set(supplied) == expected, 'recipe transport inventory mismatch')",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 150,
+          "text": "        raise ValueError('invalid recipe transport') from None",
+          "rows": [
+            63
+          ],
+          "helper": false
+        },
+        {
+          "line": 161,
+          "text": "        need(stat.S_IMODE(info.st_mode) == 0o600 and info.st_uid == os.geteuid(),",
+          "rows": [
+            23
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "library/connectome_release.py",
+      "path": "oracle/library/connectome_release.py",
+      "sha256": "5a5fdc03d9ea480fd22fec6e8f8cd96f3b1dffab5dc35a7d112b1fde5845c3ee",
+      "sites": []
+    },
+    {
+      "name": "lock.py",
+      "path": "oracle/module_utils/connectome_lock.py",
+      "sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9",
+      "sites": [
+        {
+          "line": 16,
+          "text": "        raise LockError(message)",
+          "rows": [],
+          "helper": true
+        },
+        {
+          "line": 85,
+          "text": "            require(compact not in {'value', 'values', 'secret', 'secrets', 'token',",
+          "rows": [
+            2
+          ],
+          "helper": false
+        },
+        {
+          "line": 93,
+          "text": "        require(not any(ord(c) < 32 or 127 <= ord(c) <= 159 for c in value), 'lock contains control characters')",
+          "rows": [
+            2
+          ],
+          "helper": false
+        },
+        {
+          "line": 94,
+          "text": "        require(not credential_shaped(value), 'lock contains a value-looking secret')",
+          "rows": [
+            2
+          ],
+          "helper": false
+        },
+        {
+          "line": 108,
+          "text": "    require(text(value), 'lock artifact path required')",
+          "rows": [
+            10
+          ],
+          "helper": false
+        },
+        {
+          "line": 110,
+          "text": "    require(path.resolve().is_relative_to(build.resolve()), 'lock artifact path escapes build')",
+          "rows": [
+            10
+          ],
+          "helper": false
+        },
+        {
+          "line": 111,
+          "text": "    require(path.is_file() and not path.is_symlink(), 'lock artifact must be a regular file')",
+          "rows": [
+            10
+          ],
+          "helper": false
+        },
+        {
+          "line": 122,
+          "text": "    require(isinstance(data, dict) and type(data.get('version')) is int and data['version'] == 2,",
+          "rows": [
+            4
+          ],
+          "helper": false
+        },
+        {
+          "line": 124,
+          "text": "    require(data.get('backend') == 'host', 'host lock v2 required')",
+          "rows": [
+            4
+          ],
+          "helper": false
+        },
+        {
+          "line": 129,
+          "text": "    require(required <= data.keys(), 'lock missing required v2 fields')",
+          "rows": [
+            4
+          ],
+          "helper": false
+        },
+        {
+          "line": 130,
+          "text": "    require(data.keys() <= required | optional, 'lock contains unsupported fields')",
+          "rows": [
+            4
+          ],
+          "helper": false
+        },
+        {
+          "line": 132,
+          "text": "    require('incomplete' not in data, 'incomplete cook install refused')",
+          "rows": [
+            5
+          ],
+          "helper": false
+        },
+        {
+          "line": 134,
+          "text": "    require(isinstance(identity, dict) and set(identity) == {'id', 'dir'} and",
+          "rows": [
+            6
+          ],
+          "helper": false
+        },
+        {
+          "line": 137,
+          "text": "    require(isinstance(data['cook'], dict) and set(data['cook']) <= {'version', 'commit'} and",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 140,
+          "text": "        require(digest(data['cook']['commit'], 40), 'invalid cook commit')",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 142,
+          "text": "    require(isinstance(recipe, dict) and set(recipe) == {'path', 'sha256'} and",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 155,
+          "text": "            require(recipe['sha256'] == config['recipe_file']['sha256'] and",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 158,
+          "text": "            raise LockError('invalid operator recipe provenance') from None",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 160,
+          "text": "        require(re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z', data['createdAt'])",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 163,
+          "text": "        raise LockError('invalid lock timestamp') from None",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 165,
+          "text": "    require(isinstance(host, dict) and set(host) <= {'url', 'ref', 'commit', 'path'} and",
+          "rows": [
+            8
+          ],
+          "helper": false
+        },
+        {
+          "line": 170,
+          "text": "    require(isinstance(requirements, list) and all(",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 177,
+          "text": "    require(isinstance(credentials, list) and all(isinstance(n, str) and",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 181,
+          "text": "    require(set(required_names) <= declared, 'lock omits a declared required secret')",
+          "rows": [
+            8
+          ],
+          "helper": false
+        },
+        {
+          "line": 182,
+          "text": "    require(isinstance(data['components'], list) and isinstance(data['localExtensions'], list) and",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 185,
+          "text": "        require(isinstance(component, dict) and component.get('kind') in {'git', 'npm'},",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 188,
+          "text": "            require(set(component) <= {'kind', 'key', 'role', 'url', 'ref', 'commit', 'path', 'install'} and",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 193,
+          "text": "            require(set(component) <= {'kind', 'key', 'role', 'name', 'spec', 'version', 'integrity'} and",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 199,
+          "text": "        require(component.get('role') in {'mcp', 'extension'}, 'invalid component role')",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 201,
+          "text": "        require(isinstance(output, dict) and set(output) <= {'path', 'mode', 'sha256', 'sha256Omitted'} and",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 204,
+          "text": "        require('sha256' not in output or digest(output['sha256']), 'invalid output digest')",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 205,
+          "text": "        require('sha256Omitted' not in output or output['sha256Omitted'] == 'contains-requirement-value',",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 208,
+          "text": "        require(isinstance(extension, dict) and set(extension) == {'name', 'hostDir', 'path'} and",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 211,
+          "text": "        require(isinstance(data['state'], dict) and set(data['state']) == {'path'} and",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 214,
+          "text": "        require(isinstance(data['engines'], dict) and set(data['engines']) == {'bun', 'node'}, 'invalid engine records')",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 216,
+          "text": "            require(isinstance(engine, dict) and set(engine) == {'path', 'realPath', 'version'} and",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 221,
+          "text": "        require(isinstance(layout, dict) and set(layout) == roots | {'schema', 'connectorState'} and",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 226,
+          "text": "            require(isinstance(bindings, dict) and all(",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 233,
+          "text": "        require(isinstance(external, list) and bool(external) and all(",
+          "rows": [
+            8
+          ],
+          "helper": false
+        },
+        {
+          "line": 238,
+          "text": "        require(len(set(names)) == len(names), 'duplicate external server name')",
+          "rows": [
+            8
+          ],
+          "helper": false
+        },
+        {
+          "line": 240,
+          "text": "        require(names == sorted(names),",
+          "rows": [
+            8
+          ],
+          "helper": false
+        },
+        {
+          "line": 243,
+          "text": "            require(not set(names) & data['layout']['connectorState'].keys(),",
+          "rows": [
+            8
+          ],
+          "helper": false
+        },
+        {
+          "line": 246,
+          "text": "        require(isinstance(data['hostDependencies'], list), 'invalid host dependency inventory')",
+          "rows": [
+            9
+          ],
+          "helper": false
+        },
+        {
+          "line": 249,
+          "text": "            require(isinstance(dependency, dict) and set(dependency) - {'provenance'} == {",
+          "rows": [
+            9
+          ],
+          "helper": false
+        },
+        {
+          "line": 259,
+          "text": "            require(npm_name(dependency['name']) and dependency['name'] not in seen,",
+          "rows": [
+            9
+          ],
+          "helper": false
+        },
+        {
+          "line": 266,
+          "text": "                    require(all(provenance[k] == dependency[k] for k in ('name', 'sha256', 'version')),",
+          "rows": [
+            9
+          ],
+          "helper": false
+        },
+        {
+          "line": 269,
+          "text": "                    raise LockError('invalid host dependency provenance') from None",
+          "rows": [
+            9
+          ],
+          "helper": false
+        },
+        {
+          "line": 271,
+          "text": "            require(isinstance(delta, dict) and set(delta) == {'direct', 'override'}, 'invalid dependency delta')",
+          "rows": [
+            9
+          ],
+          "helper": false
+        },
+        {
+          "line": 275,
+          "text": "                require(isinstance(edit, dict) and set(edit) == {'section', 'name', 'before', 'after'} and",
+          "rows": [
+            9
+          ],
+          "helper": false
+        },
+        {
+          "line": 287,
+          "text": "            raise LockError('host dependencies differ from config') from None",
+          "rows": [
+            9
+          ],
+          "helper": false
+        },
+        {
+          "line": 290,
+          "text": "        require(isinstance(health, dict) and set(health) == {'command'} and",
+          "rows": [
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 294,
+          "text": "    require(isinstance(launch, dict) and set(launch) <= {'kind', 'script', 'userUnit'} and",
+          "rows": [
+            10,
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 299,
+          "text": "        require('units' not in data, 'ambiguous lock unit declarations')",
+          "rows": [
+            10,
+            59
+          ],
+          "helper": false
+        },
+        {
+          "line": 301,
+          "text": "        require(re.fullmatch(r'[A-Za-z0-9_.-]+\\.service', path.name), 'invalid exported user unit')",
+          "rows": [
+            10
+          ],
+          "helper": false
+        },
+        {
+          "line": 305,
+          "text": "        require(isinstance(result['units'], list) and bool(result['units']), 'invalid unit records')",
+          "rows": [
+            10
+          ],
+          "helper": false
+        },
+        {
+          "line": 307,
+          "text": "            require(isinstance(unit, dict) and set(unit) == {'path', 'sha256'} and",
+          "rows": [
+            10
+          ],
+          "helper": false
+        },
+        {
+          "line": 310,
+          "text": "            require(path.suffix == '.service' and hashlib.sha256(path.read_bytes()).hexdigest() == unit['sha256'],",
+          "rows": [
+            10
+          ],
+          "helper": false
+        },
+        {
+          "line": 319,
+          "text": "            require(key not in result, 'duplicate lock fields refused')",
+          "rows": [
+            7
+          ],
+          "helper": false
+        },
+        {
+          "line": 324,
+          "text": "        raise LockError('nonfinite lock number refused')",
+          "rows": [
+            7
+          ],
+          "helper": false
+        },
+        {
+          "line": 331,
+          "text": "        raise",
+          "rows": [
+            7
+          ],
+          "helper": false
+        },
+        {
+          "line": 333,
+          "text": "        raise LockError('malformed or unreadable cook lock v2') from None",
+          "rows": [
+            7
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "lookup_plugins/connectome_file.py",
+      "path": "oracle/lookup_plugins/connectome_file.py",
+      "sha256": "cc83c04d812944b98d000149c110e6d3c1d804913c2a92f5b76d382c5168392c",
+      "sites": [
+        {
+          "line": 14,
+          "text": "                raise ValueError()",
+          "rows": [
+            29
+          ],
+          "helper": false
+        },
+        {
+          "line": 17,
+          "text": "            raise AnsibleError('local secret lookup failed (values redacted)') from None",
+          "rows": [
+            29
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "lookup_plugins/connectome_inputs.py",
+      "path": "oracle/lookup_plugins/connectome_inputs.py",
+      "sha256": "f4629f122097dbc8f82d5975d7e20d162556f2bd6c5c29a8e0b456bc5bd0de28",
+      "sites": [
+        {
+          "line": 18,
+          "text": "            raise AnsibleError('E_EXTERNAL_DATA_ARG: invalid external data argument input (content redacted)') from None",
+          "rows": [
+            29
+          ],
+          "helper": false
+        },
+        {
+          "line": 20,
+          "text": "            raise AnsibleError('operator input validation failed (content redacted)') from None",
+          "rows": [
+            29
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "scripts/check_public.py",
+      "path": "oracle/scripts/check_public.py",
+      "sha256": "74340800a8cca0b2b2bb45242814f9be31881989a7d423ba9a7b32fa202803c0",
+      "sites": []
+    },
+    {
+      "name": "scripts/connectome-spawn",
+      "path": "oracle/scripts/connectome-spawn",
+      "sha256": "ac4cf37eafcfcd5ab95c0717899296b318c62cb7d06ea053e1eca8d1e7fa7974",
+      "sites": []
+    },
+    {
+      "name": "scripts/cook-adapter.py",
+      "path": "oracle/scripts/cook-adapter.py",
+      "sha256": "b53d33c6ed36cdc1dda066931413f12c7ee481d9e58d438363c61cb03d350ded",
+      "sites": []
+    },
+    {
+      "name": "spawn/__init__.py",
+      "path": "oracle/module_utils/connectome_spawn/__init__.py",
+      "sha256": "f412cf6ef8d83dab61a60deff09055f5a3e69272d9aee2648ebefdf58f3965cf",
+      "sites": []
+    },
+    {
+      "name": "spawn/catalog.py",
+      "path": "oracle/module_utils/connectome_spawn/catalog.py",
+      "sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3",
+      "sites": [
+        {
+          "line": 34,
+          "text": "    need(type(value) is list and bool(value) and all(type(v) is str and v and",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 40,
+          "text": "    need(match(value, r'[A-Za-z0-9_.+@/-]+') and",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 46,
+          "text": "    need(match(name, CATALOG_NAME), 'invalid catalog name')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 48,
+          "text": "    need(type(entry) is dict, 'catalog descriptor must be an object')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 50,
+          "text": "    need(type(kind) is str and kind in KINDS, 'unknown catalog kind')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 54,
+          "text": "        need(type(entry['repo']) is str and bool(entry['repo']) and '\\x00' not in entry['repo'],",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 56,
+          "text": "        need(type(entry['settings']) is dict, 'connector settings required')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 59,
+          "text": "    need(entry['pin_ref'] == KINDS[kind] + '.' + name, 'pin_ref must name its descriptor')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 60,
+          "text": "    need(type(entry.get('enabled', True)) is bool, 'enabled must be boolean')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 64,
+          "text": "        need(type(items) is list and all(match(v, pattern) for v in items) and",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 66,
+          "text": "    need(type(entry.get('build', [])) is list, 'build must be argv lists')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 72,
+          "text": "        need('run' in entry, 'preflight run argv required')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 74,
+          "text": "    need(type(exports) is dict and all(type(k) is str for k in exports), 'invalid exports')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 81,
+          "text": "    need(isinstance(catalog, RoleCatalog), 'load_catalog result required')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 84,
+          "text": "        need(type(catalog.versions.get(section, {})) is dict, 'invalid version section')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 85,
+          "text": "    need(type(catalog.descriptors) is dict, 'invalid descriptors')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 99,
+          "text": "    need(root.is_dir() and (root / 'connectors').is_dir(), 'catalog root required')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 103,
+          "text": "        need(set(value) == {path.stem} and path.stem not in descriptors,",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 114,
+          "text": "    need(value is not None, 'catalog pin missing')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 116,
+          "text": "        need(kind == 'connector' and match(value, COMMIT) and value != '0' * 40,",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 122,
+          "text": "        need(value['archive'].startswith('inputs/'), 'archive must be under inputs')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 123,
+          "text": "        need(match(value['version'], VERSION), 'concrete artifact version required')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 125,
+          "text": "            need(match(value[field], SHA) and value[field] != '0' * 64, 'nonzero artifact digest required')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 126,
+          "text": "        need(value['descriptor_sha256'] == descriptor_digest(entry), 'descriptor digest mismatch')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 128,
+          "text": "            need(match(value.get('commit'), COMMIT) and value['commit'] != '0' * 40,",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 136,
+          "text": "        need(name in catalog.descriptors, 'unknown catalog selection')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 137,
+          "text": "        need(name not in active, 'catalog dependency cycle')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 154,
+          "text": "            need(name in catalog.descriptors and descriptor(name, catalog.descriptors[name]) in kinds,",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 161,
+          "text": "    need(type(value) is dict, 'local object-store map required')",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 163,
+          "text": "        need(match(ref, r'(?:runtime|connectors|artifacts)\\.' + CATALOG_NAME), 'invalid local-store pin_ref')",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 174,
+          "text": "        need(not component.is_symlink(), 'symlinked payload path refused')",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 175,
+          "text": "    need(candidate.resolve().is_relative_to(Path(root).resolve()), 'payload escapes root')",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 183,
+          "text": "    need(ref in stores, 'selected artifact needs an explicit local store')",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 191,
+          "text": "        need(computed == value['sha256'], 'archive digest mismatch')",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 204,
+          "text": "    need({'cook', 'connectome-host', 'agent-framework'} <= catalog.versions['runtime'].keys(),",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 208,
+          "text": "        need(match(name, CATALOG_NAME), 'invalid runtime name')",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 210,
+          "text": "        need(ref in stores, 'runtime pin needs an explicit local object store')",
+          "rows": [
+            73
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "spawn/cli.py",
+      "path": "oracle/module_utils/connectome_spawn/cli.py",
+      "sha256": "fa8efe31073cc3fcfb9bd99cbdd078746c572e813c56ad2de5463f0172f4c80c",
+      "sites": [
+        {
+          "line": 15,
+          "text": "        raise SpawnError('invalid CLI arguments; see --help')",
+          "rows": [
+            74
+          ],
+          "helper": false
+        },
+        {
+          "line": 40,
+          "text": "                raise SpawnError('status requires agent and state root only')",
+          "rows": [
+            74
+          ],
+          "helper": false
+        },
+        {
+          "line": 44,
+          "text": "            raise SpawnError('template command requires instance, not status arguments')",
+          "rows": [
+            74
+          ],
+          "helper": false
+        },
+        {
+          "line": 49,
+          "text": "                raise SpawnError('validate accepts template and instance only')",
+          "rows": [
+            74
+          ],
+          "helper": false
+        },
+        {
+          "line": 54,
+          "text": "                raise SpawnError('planning requires a role catalog and local stores')",
+          "rows": [
+            74
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "spawn/data.py",
+      "path": "oracle/module_utils/connectome_spawn/data.py",
+      "sha256": "4e13c466fe664f563d284391a9b65159c65cdbe22cc599b245a5b717e0e923f9",
+      "sites": [
+        {
+          "line": 19,
+          "text": "        raise SpawnError(message)",
+          "rows": [],
+          "helper": true
+        },
+        {
+          "line": 23,
+          "text": "    need(type(value) is dict and set(required) <= value.keys() <= set(required) | set(optional),",
+          "rows": [],
+          "helper": true
+        },
+        {
+          "line": 32,
+          "text": "    need(depth <= 32, 'document nesting limit exceeded')",
+          "rows": [
+            27
+          ],
+          "helper": false
+        },
+        {
+          "line": 34,
+          "text": "        need(all(type(k) is str for k in value), 'string keys required')",
+          "rows": [
+            27
+          ],
+          "helper": false
+        },
+        {
+          "line": 42,
+          "text": "        need(not any(0xD800 <= ord(c) <= 0xDFFF for c in value), 'invalid Unicode scalar')",
+          "rows": [
+            27
+          ],
+          "helper": false
+        },
+        {
+          "line": 44,
+          "text": "        need(value is None or type(value) in (bool, int) or",
+          "rows": [
+            27
+          ],
+          "helper": false
+        },
+        {
+          "line": 51,
+          "text": "        need(type(key) is str and key not in result, 'duplicate or non-string key')",
+          "rows": [
+            27
+          ],
+          "helper": false
+        },
+        {
+          "line": 74,
+          "text": "        need(type(raw) in (bytes, str) and len(raw) <= LIMIT, 'document too large')",
+          "rows": [
+            27
+          ],
+          "helper": false
+        },
+        {
+          "line": 76,
+          "text": "        need(len(text.encode('utf-8')) <= LIMIT, 'document too large')",
+          "rows": [
+            27
+          ],
+          "helper": false
+        },
+        {
+          "line": 79,
+          "text": "                raise SpawnError('nonfinite number')",
+          "rows": [
+            27
+          ],
+          "helper": false
+        },
+        {
+          "line": 84,
+          "text": "                need(not isinstance(event, yaml.AliasEvent) and",
+          "rows": [
+            27
+          ],
+          "helper": false
+        },
+        {
+          "line": 89,
+          "text": "                    need(depth <= 32, 'document nesting limit exceeded')",
+          "rows": [
+            27
+          ],
+          "helper": false
+        },
+        {
+          "line": 94,
+          "text": "        need(type(value) is dict, 'document must be an object')",
+          "rows": [
+            27
+          ],
+          "helper": false
+        },
+        {
+          "line": 97,
+          "text": "        raise SpawnError('invalid JSON/YAML document') from None",
+          "rows": [
+            27
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "spawn/identity.py",
+      "path": "oracle/module_utils/connectome_spawn/identity.py",
+      "sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e",
+      "sites": [
+        {
+          "line": 23,
+          "text": "    need(type(pattern) is str and pattern.count('{timestamp}') == 1 and",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 32,
+          "text": "    need(instant.tzinfo is not None, 'timezone-aware temporary identity timestamp required')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 38,
+          "text": "    need(type(provider.supports_rename) is bool and type(provider.max_name_length) is int and",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 44,
+          "text": "        need(False, 'invalid identity provider charset')",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 49,
+          "text": "    need(type(name) is str and len(name) <= provider.max_name_length and match(name, provider.name_pattern),",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 84,
+          "text": "                    need(supplied is None or supplied == value['capabilities'][key],",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 107,
+          "text": "        need(type(value['identities']) is dict and type(value['operations']) is dict,",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 112,
+          "text": "            need(match(key, r'[0-9a-f]{32}') and match(row['agent'], NAME) and",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 118,
+          "text": "                need(row['name'] not in active_names and role not in active_roles, 'duplicate active identity')",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 123,
+          "text": "            need(match(key, r'[a-z][a-z0-9-]{0,62}:[A-Za-z0-9_:-]{1,256}') and",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 132,
+          "text": "        need(match(handle['id'], r'[0-9a-f]{32}') and match(handle['agent'], NAME), 'invalid identity handle')",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 134,
+          "text": "        need(row is not None and row['agent'] == handle['agent'], 'unknown identity handle')",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 138,
+          "text": "        need(match(agent, NAME) and match(operation_id, r'[A-Za-z0-9_:-]{1,256}'),",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 145,
+          "text": "                need(prior['digest'] == request_hash, 'identity operation id conflict')",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 155,
+          "text": "            need(not any(not row['retired'] and (row['name'] == name or",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 174,
+          "text": "        need(self.supports_rename, 'provider does not support rename')",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 177,
+          "text": "            need(not row['retired'] and row['kind'] == 'temporary', 'only live temporary identity can be renamed')",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 178,
+          "text": "            need(not any(key != handle['id'] and not other['retired'] and",
+          "rows": [
+            57
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "spawn/lifecycle.py",
+      "path": "oracle/module_utils/connectome_spawn/lifecycle.py",
+      "sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97",
+      "sites": [
+        {
+          "line": 33,
+          "text": "    need(match(value, NAME), 'invalid agent identifier')",
+          "rows": [
+            64
+          ],
+          "helper": false
+        },
+        {
+          "line": 39,
+          "text": "    need(value['agent'] == agent and match(value['id'], r'[A-Za-z0-9_-]{1,128}'),",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 47,
+          "text": "    need(value['schema'] == 'connectome.spawn-state/v1' and value['agent'] == agent and",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 50,
+          "text": "    need(value['seed']['mode'] in ('required', 'clean', 'optional') and",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 54,
+          "text": "    need(value['seed']['mode'] == 'optional' or",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 60,
+          "text": "        need(value['nameRecord']['recordHash'] == digest(value['identity']), 'name record hash mismatch')",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 61,
+          "text": "    need(type(value['store']) is str and type(value['operations']) is dict, 'invalid lifecycle records')",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 62,
+          "text": "    need(identity_policy(value['identityPolicy']) == value['identityPolicy'] and",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 71,
+          "text": "        need(match(key, r'[A-Za-z0-9_-]{1,128}') and match(row['digest'], r'[0-9a-f]{64}') and",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 75,
+          "text": "        need(match(value['pending']['operation'], r'[A-Za-z0-9_-]{1,128}') and",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 96,
+          "text": "        need(value['store'] == str(store), 'store binding mismatch')",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 121,
+          "text": "        need(value['seed']['branch'] == 'seeded' and",
+          "rows": [
+            40
+          ],
+          "helper": false
+        },
+        {
+          "line": 131,
+          "text": "        need(match(operation_id, r'[A-Za-z0-9_-]{1,128}'), 'invalid operation id')",
+          "rows": [
+            40
+          ],
+          "helper": false
+        },
+        {
+          "line": 136,
+          "text": "                need(value['operations'].get(operation_id) == {'digest': request, 'target': 'planned'},",
+          "rows": [
+            40
+          ],
+          "helper": false
+        },
+        {
+          "line": 139,
+          "text": "            need(not store.exists() and not marker.exists(),",
+          "rows": [
+            40
+          ],
+          "helper": false
+        },
+        {
+          "line": 151,
+          "text": "        need(target in STATES and target != 'planned', 'illegal lifecycle target')",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 152,
+          "text": "        need(match(operation_id, r'[A-Za-z0-9_-]{1,128}'), 'invalid operation id')",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 153,
+          "text": "        need(name_file is None or name_source is None, 'exactly one name record source required')",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 161,
+          "text": "            need((target == 'named') == (record is not None), 'name record required only for named transition')",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 162,
+          "text": "            need(payload is None or target == 'active' and value['seed']['branch'] == 'seeded',",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 170,
+          "text": "                need(value['operations'][operation_id] == {'digest': request, 'target': target},",
+          "rows": [
+            40
+          ],
+          "helper": false
+        },
+        {
+          "line": 173,
+          "text": "            need(value['pending'] is None, 'uncertain operation requires recovery; replay refused')",
+          "rows": [
+            40
+          ],
+          "helper": false
+        },
+        {
+          "line": 180,
+          "text": "            need(legal, 'illegal lifecycle transition')",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 186,
+          "text": "                need(seed_intent({'mode': value['seed']['mode']}, payload) == value['seed'],",
+          "rows": [
+            40
+          ],
+          "helper": false
+        },
+        {
+          "line": 188,
+          "text": "                need(not store.exists() and not marker.exists(),",
+          "rows": [
+            40
+          ],
+          "helper": false
+        },
+        {
+          "line": 190,
+          "text": "                need(self.importer is not None, 'seed importer adapter required')",
+          "rows": [
+            40,
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 192,
+          "text": "                need(value['temporaryIdentity'] is not None, 'temporary identity missing')",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 194,
+          "text": "            need(not effects or self.adapter is not None, 'lifecycle adapter required')",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 198,
+          "text": "                need(self.identity_provider is not None, 'identity provider required')",
+          "rows": [
+            56
+          ],
+          "helper": false
+        },
+        {
+          "line": 202,
+          "text": "                need(value['supportsRename'] is None or",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 238,
+          "text": "                    need(not store.exists() and not marker.exists(),",
+          "rows": [
+            40
+          ],
+          "helper": false
+        },
+        {
+          "line": 252,
+          "text": "                        need(value['permanentIdentity'] == value['temporaryIdentity'],",
+          "rows": [
+            57
+          ],
+          "helper": false
+        },
+        {
+          "line": 260,
+          "text": "                        need(value['permanentIdentity'] != value['temporaryIdentity'],",
+          "rows": [
+            57
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "spawn/persistence.py",
+      "path": "oracle/module_utils/connectome_spawn/persistence.py",
+      "sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e",
+      "sites": [
+        {
+          "line": 17,
+          "text": "    need('..' not in path.parts, 'path traversal refused')",
+          "rows": [
+            58
+          ],
+          "helper": false
+        },
+        {
+          "line": 19,
+          "text": "        need(not part.is_symlink(), 'symlink persistence path refused')",
+          "rows": [
+            58
+          ],
+          "helper": false
+        },
+        {
+          "line": 37,
+          "text": "    need(path.is_dir(), 'directory required')",
+          "rows": [
+            58
+          ],
+          "helper": false
+        },
+        {
+          "line": 49,
+          "text": "    need(len(raw) <= 1024 * 1024, 'state size limit exceeded')",
+          "rows": [
+            58
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "spawn/planner.py",
+      "path": "oracle/module_utils/connectome_spawn/planner.py",
+      "sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867",
+      "sites": [
+        {
+          "line": 39,
+          "text": "    need(not symbolic_fields(value), 'unbound build directory in apply input')",
+          "rows": [
+            41
+          ],
+          "helper": false
+        },
+        {
+          "line": 42,
+          "text": "            need(not any(BUILD_BINDING in key for key in item), 'unbound build directory in apply input')",
+          "rows": [
+            41
+          ],
+          "helper": false
+        },
+        {
+          "line": 58,
+          "text": "        need(BUILD_BINDING not in value, 'catalog must use artifact references, not build tokens')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 61,
+          "text": "            need(name in selected, 'artifact reference is not selected or required')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 64,
+          "text": "        need('{artifact:' not in result, 'malformed artifact reference')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 67,
+          "text": "            need(not any(part in ('.', '..') for part in result.split('/')) and",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 80,
+          "text": "    need(settings.keys() <= allowed and type(settings.get('command')) is str,",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 83,
+          "text": "    need(type(settings.get('args', [])) is list and all(type(a) is str and '\\x00' not in a",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 87,
+          "text": "        need(type(settings['token']) is str and settings['token'] in ('${' + n + '}' for n in names),",
+          "rows": [
+            50
+          ],
+          "helper": false
+        },
+        {
+          "line": 90,
+          "text": "    need(type(environment) is dict and all(match(k, r'[A-Z_][A-Z0-9_]*') and type(v) is str",
+          "rows": [
+            50
+          ],
+          "helper": false
+        },
+        {
+          "line": 94,
+          "text": "            need(key in names and value == '${' + key + '}', 'secret values forbidden in recipe')",
+          "rows": [
+            50
+          ],
+          "helper": false
+        },
+        {
+          "line": 99,
+          "text": "            need(type(data) is dict, 'data_args must be a mapping')",
+          "rows": [
+            61
+          ],
+          "helper": false
+        },
+        {
+          "line": 101,
+          "text": "                need(match(flag, r'--data-[a-z][a-z0-9-]*') and type(value) is str and",
+          "rows": [
+            61
+          ],
+          "helper": false
+        },
+        {
+          "line": 104,
+          "text": "                need(PurePosixPath(value).is_relative_to(state), 'data argument outside state')",
+          "rows": [
+            61
+          ],
+          "helper": false
+        },
+        {
+          "line": 108,
+          "text": "        need(not any('{artifact:' in s for s in (settings['command'], *settings.get('args', []))),",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 132,
+          "text": "    need(observed['deploymentHash'] is None or match(observed['deploymentHash'], r'[0-9a-f]{64}'),",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 134,
+          "text": "    need(declaration['home']['transport'] == 'console' or",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 148,
+          "text": "        need(match(value, r'[0-9a-f]{64}') and value != '0' * 64, 'invalid platform pin')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "spawn/schema.py",
+      "path": "oracle/module_utils/connectome_spawn/schema.py",
+      "sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a",
+      "sites": [
+        {
+          "line": 23,
+          "text": "    need(type(value) is str and bool(value.strip()) and value == value.strip() and",
+          "rows": [
+            42
+          ],
+          "helper": false
+        },
+        {
+          "line": 28,
+          "text": "    need(not any(ord(c) < 32 and c not in '\\n\\t' or ord(c) == 127 for c in value),",
+          "rows": [
+            42
+          ],
+          "helper": false
+        },
+        {
+          "line": 35,
+          "text": "    need(len(canonical(value)) <= 1024 * 1024, 'document too large')",
+          "rows": [
+            42
+          ],
+          "helper": false
+        },
+        {
+          "line": 39,
+          "text": "                need(re.sub('[^a-z]', '', key.lower()) not in FORBIDDEN,",
+          "rows": [
+            42
+          ],
+          "helper": false
+        },
+        {
+          "line": 51,
+          "text": "    need(type(value) is list and all(match(v, CATALOG_NAME) if allowed is None else v in allowed",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 58,
+          "text": "    need(type(value) is int and 0 < value <= 10000000, 'bounded positive integer required')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 62,
+          "text": "    need(not (type(value) is dict and value.get('schema') == 'connectome.spawn-template/v1'),",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 66,
+          "text": "    need(value['schema'] == 'connectome.spawn-template/v2', 'unsupported template schema')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 73,
+          "text": "    need('identity' not in value or type(value['identity']) is dict, 'identity policy must be an object')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 80,
+          "text": "            need(match(agent[field], r'[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}'), 'invalid model/provider name')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 81,
+          "text": "    need(agent['provider'] in ('anthropic', 'openai-responses', 'openai-codex', 'openrouter', 'bedrock', 'mock'),",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 90,
+          "text": "    need(strategy['type'] == 'autobiographical', 'unsupported strategy')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 92,
+          "text": "        need(match(strategy['compressionModel'], r'[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}'), 'invalid compression model')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 94,
+          "text": "        need(strategy['foldingStrategy'] in ('kv-unified', 'kv-stable', 'flat-profile', 'oldest-first'),",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 99,
+          "text": "        need(type(strategy[key]) is bool, 'boolean strategy setting required')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 101,
+          "text": "        need(type(strategy[key]) in (int, float) and 0 <= strategy[key] <= 1, 'ratio out of range')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 104,
+          "text": "        need(strategy['recentWindowTokens'] <= agent['contextBudgetTokens'], 'tail exceeds context budget')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 107,
+          "text": "        need(agent['responses']['reasoningEffort'] in ('none', 'low', 'medium', 'high', 'xhigh', 'max'),",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 111,
+          "text": "        need(type(agent['codex']['fastMode']) is bool, 'boolean fastMode required')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 116,
+          "text": "        need(agent['proseRouting'] in ('locus', 'explicit', 'hybrid', 'disabled'), 'invalid prose routing')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 125,
+          "text": "    need(value['schema'] == 'connectome.spawn-instance/v1', 'unsupported instance schema')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 126,
+          "text": "    need(match(value['instance'], NAME) and match(value['unixName'], NAME), 'invalid instance/unix name')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 128,
+          "text": "    need(match(value['agent']['logicalName'], LOGICAL), 'explicit logicalName required')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 131,
+          "text": "    need(match(value['home']['transport'], CATALOG_NAME), 'transport catalog name required')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 132,
+          "text": "    need(match(value['home']['channel'], r'[A-Za-z0-9][A-Za-z0-9_.:/-]{0,255}') and",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 135,
+          "text": "    need(type(value['rights']['administration']) is bool, 'explicit administration boolean required')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 137,
+          "text": "    need(value['target']['os'] == 'linux' and value['target']['architecture'] in ('x86_64', 'aarch64'),",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 152,
+          "text": "        need(len(value[key]) <= limit and not any(",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 155,
+          "text": "    need(match(value['name'], LOGICAL) and match(value['summaryParticipant'], LOGICAL),",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 157,
+          "text": "    need(match(value['displayName'], r'[\\w .-]+'), 'unsafe display name')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 173,
+          "text": "    need(source.get('kind') in ('file', 'repo'), 'unsupported name record source')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 180,
+          "text": "        need(ingress_root is None, 'file ingress root does not authorize a repository source')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 191,
+          "text": "    need(match(value['recordHash'], r'[0-9a-f]{64}'), 'invalid name record hash')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 193,
+          "text": "    need(type(source) is dict and source.get('kind') in ('file', 'repo'), 'invalid name source')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 196,
+          "text": "        need(type(source['path']) is str and source['path'].startswith('/') and",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 202,
+          "text": "        need(all(match(source[key], COMMIT) and source[key] != '0' * 40 for key in ('commit', 'blob')),",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 204,
+          "text": "        need(all(type(source[key]) is str for key in ('author', 'committer')), 'invalid provenance')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 213,
+          "text": "    need(match(home['transport'], CATALOG_NAME) and",
+          "rows": [
+            71
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "spawn/seed.py",
+      "path": "oracle/module_utils/connectome_spawn/seed.py",
+      "sha256": "b96f61dd54a447f116baf285c1ce353e600deb7f9af717027c6badc9c0e477cf",
+      "sites": [
+        {
+          "line": 26,
+          "text": "    need(value['mode'] in ('required', 'clean', 'optional'), 'unknown seed mode')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 32,
+          "text": "    need(payload is None or type(payload) is bytes and 0 < len(payload) <= 1024 * 1024,",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 34,
+          "text": "    need(mode != 'required' or payload is not None, 'required seed payload missing')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        },
+        {
+          "line": 35,
+          "text": "    need(mode != 'clean' or payload is None, 'clean mode refuses seed payload')",
+          "rows": [
+            71
+          ],
+          "helper": false
+        }
+      ]
+    },
+    {
+      "name": "spawn/sources.py",
+      "path": "oracle/module_utils/connectome_spawn/sources.py",
+      "sha256": "29958c9f80020d83309f3506d6d758e86af7c6c75171853fc8ee357e155c6fbf",
+      "sites": [
+        {
+          "line": 17,
+          "text": "    need(match(value, RELATIVE) and all(p not in ('.', '..', '.git') for p in value.split('/')),",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 23,
+          "text": "    need(type(value) is str and value.startswith('/') and not value.startswith('//'),",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 25,
+          "text": "    need(match(value[1:], RELATIVE) and all(p not in ('.', '..') for p in value[1:].split('/')),",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 41,
+          "text": "    need('..' not in path.parts and '..' not in boundary.parts, 'path traversal refused')",
+          "rows": [
+            24
+          ],
+          "helper": false
+        },
+        {
+          "line": 42,
+          "text": "    need(path != boundary and path.is_relative_to(boundary), 'input escapes root')",
+          "rows": [
+            24
+          ],
+          "helper": false
+        },
+        {
+          "line": 55,
+          "text": "            need(stat.S_ISREG(metadata.st_mode), 'regular input file required')",
+          "rows": [
+            24
+          ],
+          "helper": false
+        },
+        {
+          "line": 56,
+          "text": "            need(metadata.st_nlink == 1, 'single-link input file required')",
+          "rows": [
+            24
+          ],
+          "helper": false
+        },
+        {
+          "line": 58,
+          "text": "            need(resolved.is_absolute() and resolved.is_relative_to(boundary) and",
+          "rows": [
+            24
+          ],
+          "helper": false
+        },
+        {
+          "line": 61,
+          "text": "            need(len(data) <= limit, 'input size limit exceeded')",
+          "rows": [
+            24
+          ],
+          "helper": false
+        },
+        {
+          "line": 64,
+          "text": "        raise SpawnError('unreadable local file') from None",
+          "rows": [
+            24
+          ],
+          "helper": false
+        },
+        {
+          "line": 110,
+          "text": "            need(code == 0 and len(data) <= bound, 'missing or oversized local git object')",
+          "rows": [
+            25
+          ],
+          "helper": false
+        },
+        {
+          "line": 114,
+          "text": "            need(run(('rev-parse', '--is-bare-repository'), LIMIT) == b'true\\n',",
+          "rows": [
+            25
+          ],
+          "helper": false
+        },
+        {
+          "line": 118,
+          "text": "        raise SpawnError('unreadable local repository or git unavailable') from None",
+          "rows": [
+            25
+          ],
+          "helper": false
+        },
+        {
+          "line": 125,
+          "text": "    need(match(commit, COMMIT) and commit != '0' * 40, 'full nonzero commit required')",
+          "rows": [
+            26
+          ],
+          "helper": false
+        },
+        {
+          "line": 127,
+          "text": "    need(not any(ref.endswith(b'/' + commit.encode('ascii')) for ref in refs),",
+          "rows": [
+            26
+          ],
+          "helper": false
+        },
+        {
+          "line": 130,
+          "text": "    need(resolved == (commit + '\\n').encode('ascii'), 'exact commit object required')",
+          "rows": [
+            26
+          ],
+          "helper": false
+        },
+        {
+          "line": 131,
+          "text": "    need(git(repo, 'cat-file', '-t', commit) == b'commit\\n', 'commit object required')",
+          "rows": [
+            26
+          ],
+          "helper": false
+        },
+        {
+          "line": 134,
+          "text": "    need(re.fullmatch('tree ' + COMMIT, first) is not None, 'invalid commit tree')",
+          "rows": [
+            26
+          ],
+          "helper": false
+        },
+        {
+          "line": 162,
+          "text": "    need(entry is not None and entry[0] in ('100644', '100755') and entry[1] == 'blob',",
+          "rows": [
+            26
+          ],
+          "helper": false
+        },
+        {
+          "line": 175,
+          "text": "        need(len(rows) == 1, 'commit author and committer required')",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 179,
+          "text": "            raise SpawnError('invalid commit provenance') from None",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 190,
+          "text": "        raise SpawnError('expected local repo + path @ full-commit') from None",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 196,
+          "text": "    need(sum(v is not None for v in (inline, file, repo)) == 1, 'exactly one source required')",
+          "rows": [
+            72
+          ],
+          "helper": false
+        },
+        {
+          "line": 216,
+          "text": "        need(mode in ('100644', '100755') and kind == 'blob', 'artifact links and submodules refused')",
+          "rows": [
+            73
+          ],
+          "helper": false
+        },
+        {
+          "line": 220,
+          "text": "        need(total <= ARTIFACT_LIMIT, 'artifact size limit exceeded')",
+          "rows": [
+            73
+          ],
+          "helper": false
+        }
+      ]
+    }
+  ]
+}

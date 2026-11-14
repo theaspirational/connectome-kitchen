@@ -1,0 +1,163 @@
+[
+  {
+    "id": "cook.argv.stdin",
+    "row": 51,
+    "vector": "test_row51_stdio_and_environment",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "cook.git.safe-directory",
+    "row": 51,
+    "vector": "test_row51_git_options",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "cook.git.fsmonitor",
+    "row": 51,
+    "vector": "test_row51_git_options",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "cook.git.hooks",
+    "row": 51,
+    "vector": "test_row51_git_options",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "cook.git.optional-locks",
+    "row": 51,
+    "vector": "test_row51_git_options",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.build.output",
+    "row": 53,
+    "vector": "test_row53_build_sandbox_stdio_and_environment",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.build.offline",
+    "row": 53,
+    "vector": "test_row53_build_sandbox_stdio_and_environment",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.build.env",
+    "row": 53,
+    "vector": "test_row53_build_sandbox_stdio_and_environment",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "spawn.persist.fsync-file",
+    "row": 58,
+    "vector": "test_row58_syscall_order",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "spawn.persist.fsync-dir",
+    "row": 58,
+    "vector": "test_row58_syscall_order",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "spawn.persist.atomic",
+    "row": 58,
+    "vector": "test_row58_syscall_order",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "deploy.prepare.ownership-first",
+    "row": 65,
+    "vector": "test_row65_ownership_durable_before_cook",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.unit.reset",
+    "row": 48,
+    "vector": "test_row48_isolation_golden",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.unit.unset",
+    "row": 48,
+    "vector": "test_row48_isolation_golden",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.unit.envfile",
+    "row": 48,
+    "vector": "test_row48_isolation_golden",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.unit.overlap",
+    "row": 48,
+    "vector": "test_row48_isolation_golden",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.unit.base-env",
+    "row": 48,
+    "vector": "test_row48_isolation_golden",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.unit.escape",
+    "row": 48,
+    "vector": "test_row48_isolation_golden",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.unit.exec-clear",
+    "row": 48,
+    "vector": "test_row48_isolation_golden",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.unit.preflights",
+    "row": 48,
+    "vector": "test_row48_isolation_golden",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.unit.wrap",
+    "row": 48,
+    "vector": "test_row48_isolation_golden",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.unit.payload-names",
+    "row": 48,
+    "vector": "test_row48_isolation_golden",
+    "status": "killed",
+    "exit": 1
+  },
+  {
+    "id": "catalog.build.path",
+    "row": 53,
+    "vector": "test_row53_build_sandbox_stdio_and_environment",
+    "status": "killed",
+    "exit": 1
+  }
+]

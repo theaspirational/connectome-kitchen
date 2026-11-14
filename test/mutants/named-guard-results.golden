@@ -1,0 +1,752 @@
+[
+  {
+    "id": "catalog.unit.overlap",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "secrets.reserved.catalog",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "secrets.reserved.grammar",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": [
+      "eaef7c7c9525212befb43d9e93e67ec2b4d8df9311a34c00e968b28aa3efa89b"
+    ]
+  },
+  {
+    "id": "secrets.reserved.direct",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "secrets.reserved.collision",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "recipe.secret-ref.token",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "recipe.secret-ref.catalog-token",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "recipe.secret-ref.env",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "recipe.secret-ref.spawn-token",
+    "status": "no-vectors"
+  },
+  {
+    "id": "recipe.secret-ref.spawn-env",
+    "status": "no-vectors"
+  },
+  {
+    "id": "deploy.private.secret-dir",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.private.secret-entry",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.private.canonical",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.build.executable",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.build.status",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.build.export",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.contained.archive",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.preflight.chars",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.preflight.absolute",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": [
+      "f796b5ef906f8032ac2c7142af9bd8e9d7c26df43b5dd75610a82ee81720dbc0"
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.store-binding",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.lifecycle.target",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.identity.op-digest",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.identity.rename",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.identity.no-truncate",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": [
+      "e0d228eea223710fbb64914d8b3fe7dcc013f695eb3a871b3209022268794284"
+    ]
+  },
+  {
+    "id": "spawn.identity.capability",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.persist.traversal",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.persist.symlink",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.persist.bound",
+    "status": "no-vectors"
+  },
+  {
+    "id": "lock.schema.recipe",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "11be0c117046ba984af62a1d8be4866b1a1a45e652a2f5221fe039312affef06"
+    ]
+  },
+  {
+    "id": "lock.schema.timestamp",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "c3c8a966010cd049ebd68874ddcbc39e9e7b557ad05473a39f972da9d91ef604"
+    ]
+  },
+  {
+    "id": "lock.schema.requirements",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "3141a1ca72f2afb4966752264c00db02d121dfe50f0d518365c6578fa23f3f1d"
+    ]
+  },
+  {
+    "id": "lock.schema.credentials",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "7eac9255c340e6a66a554c11e7b4629e62e692239141d082fafd0a94b6f29a4b"
+    ]
+  },
+  {
+    "id": "lock.schema.extensions",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "3a5156ba5d07e46458e74b5706182318a0cbfddb5881c6d6ea66f2a1c00f486d"
+    ]
+  },
+  {
+    "id": "lock.schema.state",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "2bac9237c789d417e0fb2881c089f4c4ce58078fd70094b3f24122588df27eaa"
+    ]
+  },
+  {
+    "id": "lock.schema.health",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "6a51affed139ee62af05406f3fe35d74e67a60d2d14d9c92c25297fddb6edd2e"
+    ]
+  },
+  {
+    "id": "lock.schema.launch",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "32fb2763e0fed8092f0ca6b3b2f8d06232e2efbf9757be10fa1c44d6a6d6d31a"
+    ]
+  },
+  {
+    "id": "lock.schema.units-ambiguous",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.descriptor.duplicate",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.descriptor.name",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.descriptor.keys",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": [
+      "bde0b0f60ffcb1b1d6e7b55bd9412e36d60496d8b4adf2a5bc0f19c8c66b1098"
+    ]
+  },
+  {
+    "id": "catalog.descriptor.deps",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": [
+      "cd04e4721029373523fa69c37cea61423780fbea9ec0f631dfb47c043842d086"
+    ]
+  },
+  {
+    "id": "catalog.descriptor.exports",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": [
+      "0b79bdcefb08e4f8f2028ed280e22d2205acd690cc447400332330174806879c"
+    ]
+  },
+  {
+    "id": "catalog.descriptor.preflight-run",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": [
+      "7fa57da50a774ed703bc762e7a96c32ea8cba9f35bb4c035a4c03ee5838c349c"
+    ]
+  },
+  {
+    "id": "catalog.descriptor.pin-ref",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": [
+      "ce3fe0d8928353100f4135d79143e1bfdbc2c3da838595a024038a80fc06be9c"
+    ]
+  },
+  {
+    "id": "catalog.descriptor.cycle",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.descriptor.reference",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": [
+      "432518dc68a32d5849d2e9e7d64477ae26557c36ea142d992118a19b70956e44"
+    ]
+  },
+  {
+    "id": "catalog.descriptor.runtimes",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.data-args.flag",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": [
+      "71305487613c4824bf457e50224f28228c647f5084368de1532a3c15cca71de8"
+    ]
+  },
+  {
+    "id": "catalog.data-args.command",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": [
+      "a809a0ee39575e42a4d450e207fb3c52614b546843281d1b27ac5040c9100e12"
+    ]
+  },
+  {
+    "id": "catalog.data-args.conflict",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.data-args.binding",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.separate",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.activation",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "name.grammar.agent",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": [
+      "22cdb70f4a820186b6bd3562a41f1c9196b3e3f2d0437ff32a0f3f4a8e8cf81f"
+    ]
+  },
+  {
+    "id": "name.grammar.connector",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": [
+      "da626d494a06ebb87506a38c9ae9206804ed146904b5e369ff7b09140b371276"
+    ]
+  },
+  {
+    "id": "name.grammar.unit",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "name.grammar.spawn-agent",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": [
+      "62600a4ea06ccf12a7cbbc9e190db8ac1620b2e6ce0f8023d772ceeb66453b5e"
+    ]
+  },
+  {
+    "id": "deploy.prepare.no-adapter",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.prepare.active",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.prepare.owned-units",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.prepare.unmanaged-build",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.units.name",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.units.digest",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.units.empty",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.units.conflict",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.units.dropin-symlink",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.activate.health-argv",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "config.layers.count",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": [
+      "d3fe7fc79cc9a1e16b1cb8676e2be13c6309ed0c5466a4224a63181318e86527"
+    ]
+  },
+  {
+    "id": "config.layers.enabled-type",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": [
+      "9c8b2d4f05c15058c9490a0a1cc6eb9e657d0444afaa6d8ac70f62d52470d92a"
+    ]
+  },
+  {
+    "id": "config.layers.public-connectors",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.disabled",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.spec",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.pins",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.pin-ref",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.budgets",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.settings",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.module-source",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.catalog-connector",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.connector-state",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.schema.template-v1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 26,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.schema.identity-policy",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": [
+      "e45969c31b2fc7cc74d780ca1adc54cb7804b5c64cb0133c200041171b31a554"
+    ]
+  },
+  {
+    "id": "spawn.catalog.file-name",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.select",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.cycle",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.home-transport",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.catalog.ingress",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 26,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.one-source",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.artifact.digest",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.artifact.tree-entries",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.artifact.limit",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.cli.parser",
+    "status": "no-vectors"
+  }
+]

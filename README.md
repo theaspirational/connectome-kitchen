@@ -27,12 +27,16 @@ on this machine. Nothing was installed.
   apply and baseline spawn; verify/recover/cutover are unavailable at this freeze.
 - `test/mutants/`: exact-anchor guard-site mutation runners and results, plus
   named observable-effect mutants. `scripts/check-module-ready` refuses completion
-  while coverage gaps remain. Site-generated mutants are **not** a completed
-  semantic enumeration of every named independent check in the plan.
+  while coverage gaps remain. The 203 semantic names are now individually source-anchored; 113 have
+  executable independent mutants and 69 are killed. Compound and uncovered
+  obligations remain blocking. `phase1-summary.golden` is authoritative; the
+  older `combined-summary.golden` preserves the previous slice baseline.
 - `scripts/inventory-sites`: globs all engine/adaptor files and checks all 74
   rows. Branch-only rows 14, 43–46 are unavailable on this baseline. The chosen
   line matcher finds 585 sites, seven reviewed helper exemptions, no uncovered
-  sites (one less than the plan's reported 586; definition/count needs review).
+  sites. The committed site manifest reproduces the same 585 against original
+  a49 source; `docs/site-count-erratum.md` corrects the plan's 586/579 prose
+  total to 585/578, plus the same seven helpers.
 
 ## Offline commands
 
@@ -73,7 +77,10 @@ python3 test/mutants/invisible.py
 Recorder tests that patch internals are explicitly listed rather than silently
 promoted to independent A vectors. Full raw records and initial tar snapshots
 remain private ignored scratch; only the portable canonical subset is committed.
-Most legacy B/C vectors still need conversion/replay through the contract shim.
+All 279 recorded B scenarios and all 60 recorded C entries remain pending
+independent conversion/replay through the contract shim. The latter are patched
+cook-error calls, not independently runnable CLI requests. The precise audit
+and residual raw nondeterminism are in `docs/phase1-replay-limits.md`.
 Tests and subprocess captures are not automatically conformance vectors.
 
 For history rehearsal, clone locally into a new scratch repo, remove remotes,
@@ -96,3 +103,36 @@ formatting parity. Node 24 production runtime, actual platform tool digests,
 real Ansible `combine`, cook execution, independent replay of every scenario,
 complete named-check mutants, and review approval remain unverified/unmet.
 No phase-3+ engine work has started.
+
+## Phase-1 continuation
+
+Guard kills increased from 165 to **296/573**. **277 remain unreviewed**; the
+committed equivalence waiver list is deliberately empty. The 154 committed
+negative vectors pass with zero mismatches/runtime errors and independently
+kill 155 guard-site mutants; these overlap prior unit kills. Errors and timeouts
+are never kills. The 151,885-case exploratory builder is byte-reproducible from
+the preserved recording (also checked with a different Python hash seed), not
+from a fresh legacy extraction. A fixture collision detected during minimization
+was repaired and its exploratory results discarded before final counting.
+
+Additional offline reproduction (the original `.cache/kitchen` is preserved
+outside this nested repository):
+
+```
+python3 scripts/site-manifest --source /path/to/local/source
+python3 test/differential/guard_vectors.py replay --vectors test/vectors/guard-negative.golden
+python3 test/mutants/guard_vectors.py --anchors test/mutants/guard-anchors.golden --vectors test/vectors/guard-negative.golden --out .cache/guard-reproduction
+python3 test/mutants/named_effects.py
+python3 test/mutants/guard_vectors.py --anchors test/mutants/named-guard-anchors.golden --vectors test/vectors/guard-negative.golden --out .cache/named-reproduction
+python3 test/mutants/named_checks.py
+python3 scripts/summarize-phase1
+python3 scripts/check-module-ready
+```
+
+To reconstruct the large exploratory corpus, use `guard_vectors.py build
+--recording ../recording-v2/functions.jsonl --out .cache/exploratory.golden`.
+For bounded legacy retries, derive covering tests from `coverage.golden`, then
+run `test/mutants/extend.py --source ../baseline --anchors <anchors> --out
+.cache/legacy-reproduction --max-trials 8`. The committed guard anchors retain
+the original three candidates, not the full coverage-derived candidate list;
+see the dispatch report for the exact preparation command.

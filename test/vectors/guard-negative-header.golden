@@ -1,0 +1,17 @@
+{
+  "builder": "test/differential/guard_vectors.py",
+  "builder_sha256": "92ad24cb6945bc5a55f7318864144bdd9af69efcf69f99470ed8f2f67416a96f",
+  "input_recording_sha256": "b2187ddecfa6a3801cf20d611ebc9117eba454fd6b06eb982e839d834bafd428",
+  "exploratory_vectors": 151885,
+  "exploratory_sha256": "5e25bea3c0839954c592fdb84ec751d23836e09f52f744eec60fc38f3e67ac18",
+  "baseline": {
+    "mismatches": 0,
+    "runtime_errors": 0
+  },
+  "retained_witness_vectors": 154,
+  "selection": "first valid mismatch witness for each killed exact-anchor guard; deduplicate by SHA-256",
+  "waivers": 0,
+  "discarded_evidence": "all pre-isolation lock-mutant results; shared fixture allowed race-induced digest mismatches",
+  "reproduced_with_PYTHONHASHSEED": 7,
+  "byte_reproduced": true
+}

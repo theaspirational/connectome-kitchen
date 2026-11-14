@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+"""Derive the phase-1 deficit from individual evidence, not hand-edited totals."""
+import argparse, hashlib, importlib.machinery, json
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+M=ROOT/'test/mutants'
+def read(name):return json.loads((M/name).read_text())
+def unit_kill(row):
+ return row.get('status')=='killed' and any(t.get('tests')==1 and t.get('failures',0)>0 and t.get('errors')==0 and not t.get('timeout') and not t.get('driver_error') for t in row.get('trials',[]))
+def summarize():
+ anchors=read('guard-anchors.golden');expected={x['id'] for x in anchors}
+ if len(expected)!=573:raise ValueError('missing or duplicate guard anchors')
+ for a in anchors:
+  if hashlib.sha256((ROOT/'oracle'/a['file']).read_bytes()).hexdigest()!=a['source_sha256']:raise ValueError('stale oracle anchor')
+ witnesses={hashlib.sha256(line.encode()).hexdigest() for line in (ROOT/'test/vectors/guard-negative.golden').read_text().splitlines()}
+ evidence={k:[] for k in expected};latest={}
+ for file,kind in [('oracle-results.golden','unit'),('a-results.golden','prior-A'),('extended-results.golden','unit'),('negative-results.golden','negative')]:
+  for row in read(file):
+   ident=row['id']
+   if ident not in expected:raise ValueError('unknown mutant')
+   latest[ident]=row['status']
+   killed=unit_kill(row) if kind=='unit' else row.get('status')=='killed' and bool(row.get('witnesses'))
+   if kind=='negative' and killed and not set(row['witnesses'])<=witnesses:raise ValueError('missing committed killing witness')
+   if killed:evidence[ident].append({'file':file,'kind':kind,'witness':row.get('witnesses',[None])[0]})
+ waivers=read('equivalence-waivers.golden');waived={}
+ for w in waivers:
+  if w['id'] not in expected or not w.get('justification') or not w.get('no_observable_difference') or not w.get('anchor'):raise ValueError('invalid equivalence waiver')
+  if w['id'] in waived:raise ValueError('duplicate equivalence waiver')
+  waived[w['id']]=w
+ reviews=[]
+ for anchor in anchors:
+  ident=anchor['id'];status='killed' if evidence[ident] else 'equivalent' if ident in waived else 'unreviewed'
+  reviews.append({'id':ident,'file':anchor['file'],'line':anchor['line'],'status':status,'last_trial_category':latest.get(ident,'uncovered'),'evidence':evidence[ident]})
+ import sys
+ sys.path.insert(0,str(ROOT/'test/mutants'))
+ from named_checks import build
+ named=read('named-checks.golden')
+ if named!=build():raise ValueError('stale named check evidence')
+ named_ids={r['id'] for r in named};nk=set();ng=set()
+ for file,kind in [('named-guard-results.golden','negative'),('named-legacy-results.golden','unit'),('named-effect-results.golden','effect')]:
+  for row in read(file):
+   if row['id'] not in named_ids:raise ValueError('unknown semantic name')
+   ng.add(row['id'])
+   killed=unit_kill(row) if kind=='unit' else row.get('status')=='killed'
+   if killed:nk.add(row['id'])
+ B=json.loads((ROOT/'test/vectors/scenario-obligations.golden').read_text());C=json.loads((ROOT/'test/vectors/cli-obligations.golden').read_text())
+ counts={'guard_site_mutants':len(anchors),'combined_killed':sum(r['status']=='killed' for r in reviews),'equivalent':len(waived),'remaining_unreviewed':sum(r['status']=='unreviewed' for r in reviews),'remaining_categories':{},'named_checks':len(named),'named_mutants_implemented':len(ng),'named_killed':len(nk),'named_remaining':len(named_ids-nk),'B_recorded':len(B),'B_independent_replayed':sum(r['status']=='replayed' for r in B),'C_recorded':len(C),'C_shim_replayed':sum(r['status']=='replayed' for r in C),'negative_vectors':len(witnesses),'unavailable_rows':[14,43,44,45,46]}
+ for r in reviews:
+  if r['status']=='unreviewed':counts['remaining_categories'][r['last_trial_category']]=counts['remaining_categories'].get(r['last_trial_category'],0)+1
+ return counts,reviews
+if __name__=='__main__':
+ p=argparse.ArgumentParser();p.add_argument('--write',action='store_true');args=p.parse_args();counts,reviews=summarize()
+ for name,value in [('phase1-summary.golden',counts),('guard-review.golden',reviews)]:
+  data=json.dumps(value,indent=2)+'\n';target=M/name
+  if args.write:target.write_text(data)
+  elif target.read_text()!=data:raise ValueError('stale summary: '+name)
+ print(json.dumps(counts,sort_keys=True))

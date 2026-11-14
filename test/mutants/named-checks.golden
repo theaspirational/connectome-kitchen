@@ -1,0 +1,4083 @@
+[
+  {
+    "id": "catalog.unit.reset",
+    "row": 48,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 845,
+        "text": "    lines = ['Environment=', 'PassEnvironment=', 'EnvironmentFile=',",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row48_isolation_golden",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.unit.unset",
+    "row": 48,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 846,
+        "text": "             'UnsetEnvironment=' + ' '.join(sorted(CODE_ENV))]",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row48_isolation_golden",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.unit.envfile",
+    "row": 48,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 849,
+        "text": "    lines.append('EnvironmentFile=' + systemd_words([str(secret_env_path(build))]))",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row48_isolation_golden",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.unit.overlap",
+    "row": 48,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 842,
+        "text": "    need(not env.keys() & base.keys(), 'unit environment overlaps constructed environment')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row48_isolation_golden",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.unit.base-env",
+    "row": 48,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 825,
+        "text": "    base.update({'DATA_DIR': str(state), 'TMPDIR': str(state)})",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 843,
+        "text": "    env.update(base)",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row48_isolation_golden",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.unit.escape",
+    "row": 48,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 810,
+        "text": "    return ' '.join('\"' + word.replace('\\\\', '\\\\\\\\').replace('\"', '\\\\\"').replace('%', '%%').replace('$', '$$') + '\"'",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row48_isolation_golden",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.unit.exec-clear",
+    "row": 48,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 851,
+        "text": "        lines.append(key + '=')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row48_isolation_golden",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.unit.preflights",
+    "row": 48,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 844,
+        "text": "    commands.setdefault('ExecStartPre', []).extend(preflights(config, build))",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row48_isolation_golden",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.unit.wrap",
+    "row": 48,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 854,
+        "text": "            lines.append(key + '=' + systemd_words(isolated_argv(config, build, argv, env, pins['platform'])))",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row48_isolation_golden",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.unit.payload-names",
+    "row": 48,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 802,
+        "text": "    payload = {'argv': argv, 'env': env, 'secrets': secret_environment_names(config),",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row48_isolation_golden",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "secrets.reserved.file-env",
+    "row": 49,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 97,
+        "text": "            need(record['env'] not in seen and record['env'] not in {'DATA_DIR', 'WORKSPACE_DIR', 'PATH', 'HOME', 'LANG', 'LC_ALL', 'TMPDIR'},",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "secrets.reserved.catalog",
+    "row": 49,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 329,
+        "text": "    need(not names & {'PATH', 'HOME', 'TMPDIR', 'DATA_DIR', 'WORKSPACE_DIR', 'LANG', 'LC_ALL'},",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "secrets.reserved.catalog-code-env",
+    "row": 49,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 328,
+        "text": "        environment_name(name)",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "secrets.reserved.grammar",
+    "row": 49,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 408,
+        "text": "    if any(not isinstance(name, str) or not re.fullmatch(r'[A-Z_][A-Z0-9_]*', name) for name in names):",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "eaef7c7c9525212befb43d9e93e67ec2b4d8df9311a34c00e968b28aa3efa89b"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "secrets.reserved.direct",
+    "row": 49,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 410,
+        "text": "    if names & {'DATA_DIR', 'WORKSPACE_DIR'}:",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "secrets.reserved.collision",
+    "row": 49,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 418,
+        "text": "    if direct & {record['env'] for record in records}:",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "secrets.reserved.adapter",
+    "row": 49,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 136,
+        "text": "        need(not set(names) & BASE_ENV and not set(names) & {'DATA_DIR', 'WORKSPACE_DIR'},",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      },
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 188,
+        "text": "    need(not set(names) & BASE_ENV and not set(names) & {'DATA_DIR', 'WORKSPACE_DIR'},",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "recipe.secret-ref.token",
+    "row": 50,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 157,
+        "text": "                need(not ('token' in settings and not re.fullmatch(r'\\$\\{[A-Z_][A-Z0-9_]*\\}', settings['token'])),",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "recipe.secret-ref.catalog-token",
+    "row": 50,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 174,
+        "text": "                need('token' not in settings or isinstance(settings['token'], str) and",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "recipe.secret-ref.env",
+    "row": 50,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 200,
+        "text": "                need(key in names and value == '${' + key + '}',",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "recipe.secret-ref.audit",
+    "row": 50,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 296,
+        "text": "        if name in secrets and value == '${' + name + '}':",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 298,
+        "text": "        need(not any(c in value for c in '$`{}\\\\'), 'ambiguous catalog environment value')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "recipe.secret-ref.spawn-token",
+    "row": 50,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/planner.py",
+        "line": 87,
+        "text": "        need(type(settings['token']) is str and settings['token'] in ('${' + n + '}' for n in names),",
+        "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "recipe.secret-ref.spawn-env",
+    "row": 50,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/planner.py",
+        "line": 94,
+        "text": "            need(key in names and value == '${' + key + '}', 'secret values forbidden in recipe')",
+        "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "cook.argv.dash",
+    "row": 51,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 37,
+        "text": "        text(arg) and not credential_shaped(arg) and (not arg.startswith('-') or index in flag_indices)",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "cook.argv.flag-position",
+    "row": 51,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 37,
+        "text": "        text(arg) and not credential_shaped(arg) and (not arg.startswith('-') or index in flag_indices)",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "cook.argv.validate-first",
+    "row": 51,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 317,
+        "text": "    validate_arguments(argv, flag_indices)",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "cook.argv.stdin",
+    "row": 51,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 48,
+        "text": "            result = subprocess.run(argv, cwd=cwd, env=env, stdin=subprocess.DEVNULL,",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row51_stdio_and_environment",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "cook.git.safe-directory",
+    "row": 51,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 83,
+        "text": "    prefix = ['git', '-c', 'safe.directory=' + checkout, '-c', 'core.fsmonitor=false',",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row51_git_options",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "cook.git.fsmonitor",
+    "row": 51,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 83,
+        "text": "    prefix = ['git', '-c', 'safe.directory=' + checkout, '-c', 'core.fsmonitor=false',",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row51_git_options",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "cook.git.hooks",
+    "row": 51,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 84,
+        "text": "              '-c', 'core.hooksPath=/dev/null', '--no-optional-locks', '-C', checkout]",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row51_git_options",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "cook.git.optional-locks",
+    "row": 51,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 84,
+        "text": "              '-c', 'core.hooksPath=/dev/null', '--no-optional-locks', '-C', checkout]",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row51_git_options",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "deploy.private.state-kind",
+    "row": 52,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 541,
+        "text": "            if (not stat.S_ISDIR(info.st_mode) or stat.S_IMODE(info.st_mode) != 0o700 or",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.private.state-mode",
+    "row": 52,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 541,
+        "text": "            if (not stat.S_ISDIR(info.st_mode) or stat.S_IMODE(info.st_mode) != 0o700 or",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.private.state-owner",
+    "row": 52,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 542,
+        "text": "                    info.st_uid != os.geteuid()):",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.private.state-recheck",
+    "row": 52,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 548,
+        "text": "        self._validate_state()",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.private.secret-dir",
+    "row": 52,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 947,
+        "text": "        if (not stat.S_ISDIR(info.st_mode) or stat.S_IMODE(info.st_mode) != 0o700 or",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "deploy.private.secret-entry",
+    "row": 52,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 953,
+        "text": "            if (path.name not in allowed or not stat.S_ISREG(info.st_mode) or",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "deploy.private.canonical",
+    "row": 52,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 496,
+        "text": "        if (not isinstance(value, str) or not Path(value).is_absolute() or",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.build.env",
+    "row": 53,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 620,
+        "text": "    env = {'HOME': str(build / 'catalog-home'), 'TMPDIR': str(build / 'catalog-tmp'),",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 624,
+        "text": "        Path(env[key]).mkdir()",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row53_build_sandbox_stdio_and_environment",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.build.path",
+    "row": 53,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 631,
+        "text": "        env['PATH'] = os.pathsep.join(str(directory / n / Path(e['exports'][n]).parent)",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row53_build_sandbox_stdio_and_environment",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.build.offline",
+    "row": 53,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 621,
+        "text": "           'PATH': '', 'LANG': 'C.UTF-8', 'NO_UPDATE_NOTIFIER': '1', 'npm_config_offline': 'true',",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row53_build_sandbox_stdio_and_environment",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.build.audit",
+    "row": 53,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 637,
+        "text": "            audit_argv(argv, directory / name, root, state, pins['platform'])",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.build.executable",
+    "row": 53,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 639,
+        "text": "            need(executable.is_file(), 'build executable must be installed')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.build.output",
+    "row": 53,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 642,
+        "text": "                                    stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row53_build_sandbox_stdio_and_environment",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.build.status",
+    "row": 53,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 643,
+        "text": "            need(result.returncode == 0, 'artifact build failed')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.build.export",
+    "row": 53,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 646,
+        "text": "            need((directory / name / value).is_file(), 'artifact export missing after build')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.adapter-env",
+    "row": 53,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 796,
+        "text": "            options['env'] = {'PATH': '/usr/bin:/bin', 'HOME': str(self.build),",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.stage.inventory",
+    "row": 54,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 570,
+        "text": "    need(directory.is_dir() and directory.resolve() == directory, 'artifact directory alias refused')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 573,
+        "text": "        need(not path.is_symlink(), 'artifact symlinks are refused')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 576,
+        "text": "        need(path.is_file(), 'artifact special file refused')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.stage.staged-exec",
+    "row": 54,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 300,
+        "text": "        entrypoint = str(catalog.stage_checkout(Path(entrypoint).parent.parent, build / 'cook-source') / 'bin/cook')",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      },
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 301,
+        "text": "        settings = dict(settings, host_repo=str(catalog.stage_checkout(",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.contained.archive",
+    "row": 54,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 628,
+        "text": "        need(archive.resolve().is_relative_to(build.parent.parent.resolve()), 'archive escapes agent tree')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.contained.inputs",
+    "row": 54,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 753,
+        "text": "        need(isinstance(value, str) and Path(value).is_absolute(), 'catalog requires local cook inputs')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 755,
+        "text": "        need(path.is_relative_to(root) and path.resolve().is_relative_to(root.resolve()) and",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.contained.checkout",
+    "row": 54,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 239,
+        "text": "        catalog.need(Path(entrypoint).is_relative_to(root) and Path(entrypoint).resolve() == Path(entrypoint),",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.preflight.chars",
+    "row": 55,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 679,
+        "text": "        need(all(not any(c in arg for c in '%$\\n\\r\\\\\\\"') for arg in argv), 'unsafe preflight unit argv')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.preflight.absolute",
+    "row": 55,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 677,
+        "text": "        need(Path(argv[0]).is_absolute(), 'preflight executable must be absolute')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "f796b5ef906f8032ac2c7142af9bd8e9d7c26df43b5dd75610a82ee81720dbc0"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.preflight.audit",
+    "row": 55,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 676,
+        "text": "        audit_argv(argv, cwd, build, state, platform)",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.lifecycle.state-schema",
+    "row": 56,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 45,
+        "text": "    fields(value, ('schema', 'agent', 'state', 'seed', 'home', 'identity', 'identityPolicy', 'temporaryName', 'supportsRename',",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      },
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 47,
+        "text": "    need(value['schema'] == 'connectome.spawn-state/v1' and value['agent'] == agent and",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.lifecycle.store-binding",
+    "row": 56,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 96,
+        "text": "        need(value['store'] == str(store), 'store binding mismatch')",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.lifecycle.target",
+    "row": 56,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 151,
+        "text": "        need(target in STATES and target != 'planned', 'illegal lifecycle target')",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.lifecycle.input-for-target",
+    "row": 56,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 161,
+        "text": "            need((target == 'named') == (record is not None), 'name record required only for named transition')",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      },
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 162,
+        "text": "            need(payload is None or target == 'active' and value['seed']['branch'] == 'seeded',",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.lifecycle.table",
+    "row": 56,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 175,
+        "text": "            legal = ((branch == 'clean' and (source, target) in",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      },
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 180,
+        "text": "            need(legal, 'illegal lifecycle transition')",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.lifecycle.adapter-required",
+    "row": 56,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 190,
+        "text": "                need(self.importer is not None, 'seed importer adapter required')",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      },
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 194,
+        "text": "            need(not effects or self.adapter is not None, 'lifecycle adapter required')",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      },
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 198,
+        "text": "                need(self.identity_provider is not None, 'identity provider required')",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.identity.no-reuse",
+    "row": 57,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/identity.py",
+        "line": 158,
+        "text": "            handle = {'id': uuid.uuid4().hex, 'agent': agent}",
+        "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.identity.tombstone",
+    "row": 57,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/identity.py",
+        "line": 190,
+        "text": "            self._row(value, handle)['retired'] = True",
+        "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.identity.duplicate-active",
+    "row": 57,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/identity.py",
+        "line": 118,
+        "text": "                need(row['name'] not in active_names and role not in active_roles, 'duplicate active identity')",
+        "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
+      },
+      {
+        "file": "module_utils/connectome_spawn/identity.py",
+        "line": 155,
+        "text": "            need(not any(not row['retired'] and (row['name'] == name or",
+        "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.identity.op-digest",
+    "row": 57,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/identity.py",
+        "line": 145,
+        "text": "                need(prior['digest'] == request_hash, 'identity operation id conflict')",
+        "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.identity.rename",
+    "row": 57,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/identity.py",
+        "line": 177,
+        "text": "            need(not row['retired'] and row['kind'] == 'temporary', 'only live temporary identity can be renamed')",
+        "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.identity.handle",
+    "row": 57,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/identity.py",
+        "line": 132,
+        "text": "        need(match(handle['id'], r'[0-9a-f]{32}') and match(handle['agent'], NAME), 'invalid identity handle')",
+        "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
+      },
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 260,
+        "text": "                        need(value['permanentIdentity'] != value['temporaryIdentity'],",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.identity.no-truncate",
+    "row": 57,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/identity.py",
+        "line": 49,
+        "text": "    need(type(name) is str and len(name) <= provider.max_name_length and match(name, provider.name_pattern),",
+        "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "e0d228eea223710fbb64914d8b3fe7dcc013f695eb3a871b3209022268794284"
+        ]
+      },
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.identity.capability",
+    "row": 57,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 202,
+        "text": "                need(value['supportsRename'] is None or",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.persist.traversal",
+    "row": 58,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/persistence.py",
+        "line": 17,
+        "text": "    need('..' not in path.parts, 'path traversal refused')",
+        "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.persist.symlink",
+    "row": 58,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/persistence.py",
+        "line": 19,
+        "text": "        need(not part.is_symlink(), 'symlink persistence path refused')",
+        "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.persist.bound",
+    "row": 58,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/persistence.py",
+        "line": 49,
+        "text": "    need(len(raw) <= 1024 * 1024, 'state size limit exceeded')",
+        "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.persist.fsync-file",
+    "row": 58,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/persistence.py",
+        "line": 56,
+        "text": "            os.fsync(stream.fileno())",
+        "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row58_syscall_order",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.persist.fsync-dir",
+    "row": 58,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/persistence.py",
+        "line": 58,
+        "text": "        sync_dir(path.parent)",
+        "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row58_syscall_order",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.persist.atomic",
+    "row": 58,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/persistence.py",
+        "line": 57,
+        "text": "        os.replace(temporary, path)",
+        "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row58_syscall_order",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.persist.lock-nofollow",
+    "row": 58,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/persistence.py",
+        "line": 68,
+        "text": "    fd = os.open(path, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)",
+        "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "lock.schema.cook",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 137,
+        "text": "    require(isinstance(data['cook'], dict) and set(data['cook']) <= {'version', 'commit'} and",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      },
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 140,
+        "text": "        require(digest(data['cook']['commit'], 40), 'invalid cook commit')",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "lock.schema.recipe",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 142,
+        "text": "    require(isinstance(recipe, dict) and set(recipe) == {'path', 'sha256'} and",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "11be0c117046ba984af62a1d8be4866b1a1a45e652a2f5221fe039312affef06"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "lock.schema.operator-recipe",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 154,
+        "text": "            inputs.read_file(path, config['recipe_file'])",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      },
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 155,
+        "text": "            require(recipe['sha256'] == config['recipe_file']['sha256'] and",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "lock.schema.timestamp",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 160,
+        "text": "        require(re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z', data['createdAt'])",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "c3c8a966010cd049ebd68874ddcbc39e9e7b557ad05473a39f972da9d91ef604"
+        ]
+      },
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "lock.schema.requirements",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 170,
+        "text": "    require(isinstance(requirements, list) and all(",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "3141a1ca72f2afb4966752264c00db02d121dfe50f0d518365c6578fa23f3f1d"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "lock.schema.credentials",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 177,
+        "text": "    require(isinstance(credentials, list) and all(isinstance(n, str) and",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "7eac9255c340e6a66a554c11e7b4629e62e692239141d082fafd0a94b6f29a4b"
+        ]
+      },
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "lock.schema.components",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 185,
+        "text": "        require(isinstance(component, dict) and component.get('kind') in {'git', 'npm'},",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      },
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 188,
+        "text": "            require(set(component) <= {'kind', 'key', 'role', 'url', 'ref', 'commit', 'path', 'install'} and",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      },
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 193,
+        "text": "            require(set(component) <= {'kind', 'key', 'role', 'name', 'spec', 'version', 'integrity'} and",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      },
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 199,
+        "text": "        require(component.get('role') in {'mcp', 'extension'}, 'invalid component role')",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "lock.schema.outputs",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 201,
+        "text": "        require(isinstance(output, dict) and set(output) <= {'path', 'mode', 'sha256', 'sha256Omitted'} and",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      },
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 204,
+        "text": "        require('sha256' not in output or digest(output['sha256']), 'invalid output digest')",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      },
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 205,
+        "text": "        require('sha256Omitted' not in output or output['sha256Omitted'] == 'contains-requirement-value',",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "lock.schema.extensions",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 208,
+        "text": "        require(isinstance(extension, dict) and set(extension) == {'name', 'hostDir', 'path'} and",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "3a5156ba5d07e46458e74b5706182318a0cbfddb5881c6d6ea66f2a1c00f486d"
+        ]
+      },
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "lock.schema.state",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 211,
+        "text": "        require(isinstance(data['state'], dict) and set(data['state']) == {'path'} and",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "2bac9237c789d417e0fb2881c089f4c4ce58078fd70094b3f24122588df27eaa"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "lock.schema.engines",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 214,
+        "text": "        require(isinstance(data['engines'], dict) and set(data['engines']) == {'bun', 'node'}, 'invalid engine records')",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      },
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 216,
+        "text": "            require(isinstance(engine, dict) and set(engine) == {'path', 'realPath', 'version'} and",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "lock.schema.layout",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 221,
+        "text": "        require(isinstance(layout, dict) and set(layout) == roots | {'schema', 'connectorState'} and",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      },
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 226,
+        "text": "            require(isinstance(bindings, dict) and all(",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "lock.schema.health",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 290,
+        "text": "        require(isinstance(health, dict) and set(health) == {'command'} and",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "6a51affed139ee62af05406f3fe35d74e67a60d2d14d9c92c25297fddb6edd2e"
+        ]
+      },
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "lock.schema.launch",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 294,
+        "text": "    require(isinstance(launch, dict) and set(launch) <= {'kind', 'script', 'userUnit'} and",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "32fb2763e0fed8092f0ca6b3b2f8d06232e2efbf9757be10fa1c44d6a6d6d31a"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "lock.schema.units-ambiguous",
+    "row": 59,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_lock.py",
+        "line": 299,
+        "text": "        require('units' not in data, 'ambiguous lock unit declarations')",
+        "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.descriptor.duplicate",
+    "row": 60,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 55,
+        "text": "    need(not result.keys() & config.get('connectors', {}).keys(), 'duplicate artifact name')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.descriptor.name",
+    "row": 60,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 73,
+        "text": "        need(isinstance(name, str) and re.fullmatch('[a-z0-9][a-z0-9_-]{0,62}', name), 'invalid artifact name')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.descriptor.keys",
+    "row": 60,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 74,
+        "text": "        need(isinstance(entry, dict) and 'pin_ref' in entry and",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "bde0b0f60ffcb1b1d6e7b55bd9412e36d60496d8b4adf2a5bc0f19c8c66b1098"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.descriptor.kind",
+    "row": 60,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 77,
+        "text": "        need(entry.get('enabled', True) is True and kind(entry) in",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.descriptor.deps",
+    "row": 60,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 79,
+        "text": "        need(isinstance(requires(entry), list) and all(isinstance(n, str) and n in entries",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "cd04e4721029373523fa69c37cea61423780fbea9ec0f631dfb47c043842d086"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.descriptor.exports",
+    "row": 60,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 82,
+        "text": "        need(isinstance(exports, dict) and all(isinstance(k, str) and relative(v)",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "0b79bdcefb08e4f8f2028ed280e22d2205acd690cc447400332330174806879c"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.descriptor.argv",
+    "row": 60,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 84,
+        "text": "        need(isinstance(entry.get('build', []), list), 'build must be an argv list')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 86,
+        "text": "            need(isinstance(argv, list) and argv and all(isinstance(a, str) and a and",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.descriptor.preflight-run",
+    "row": 60,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 88,
+        "text": "        need((kind(entry) == 'preflight') == ('run' in entry), 'preflight requires run argv')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "7fa57da50a774ed703bc762e7a96c32ea8cba9f35bb4c035a4c03ee5838c349c"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.descriptor.pin-ref",
+    "row": 60,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 90,
+        "text": "        need(entry['pin_ref'] == section + '.' + name, 'pin_ref must match artifact identity')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "ce3fe0d8928353100f4135d79143e1bfdbc2c3da838595a024038a80fc06be9c"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.descriptor.cycle",
+    "row": 60,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 124,
+        "text": "        need(name not in visiting, 'artifact dependency cycle')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.descriptor.reference",
+    "row": 60,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 146,
+        "text": "        need(name in entries, 'reference to unselected artifact')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "432518dc68a32d5849d2e9e7d64477ae26557c36ea142d992118a19b70956e44"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.descriptor.runtimes",
+    "row": 60,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 109,
+        "text": "        need(name in entries and kind(entries[name]) == 'runtime' and",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.data-args.flag",
+    "row": 61,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 345,
+        "text": "        need(isinstance(flag, str) and re.fullmatch(r'--data-[a-z][a-z0-9-]*', flag),",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "71305487613c4824bf457e50224f28228c647f5084368de1532a3c15cca71de8"
+        ]
+      },
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.data-args.state",
+    "row": 61,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 347,
+        "text": "        need(isinstance(value, str) and Path(value).is_absolute(), 'data argument must be absolute')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 348,
+        "text": "        audit_path(value, state, Path(state), state, {})",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.data-args.command",
+    "row": 61,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 356,
+        "text": "                need(isinstance(value.get('command'), str), 'data_args requires a command')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "a809a0ee39575e42a4d450e207fb3c52614b546843281d1b27ac5040c9100e12"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.data-args.conflict",
+    "row": 61,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 359,
+        "text": "                need(command not in result or result[command] == value['data_args'],",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.data-args.binding",
+    "row": 61,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 253,
+        "text": "                need(value == data_args[option], 'data argument differs from declaration')",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.data-args.spawn",
+    "row": 61,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/planner.py",
+        "line": 101,
+        "text": "                need(match(flag, r'--data-[a-z][a-z0-9-]*') and type(value) is str and",
+        "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+      },
+      {
+        "file": "module_utils/connectome_spawn/planner.py",
+        "line": 104,
+        "text": "                need(PurePosixPath(value).is_relative_to(state), 'data argument outside state')",
+        "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.audit-site.plan",
+    "row": 62,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 574,
+        "text": "            catalog.audit_descriptors(self.config, self.pins, self.build)",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      },
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 583,
+        "text": "                catalog.audit_recipe(surface, self.build, self.state_dir, self.pins['platform'],",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.audit-site.pre-build",
+    "row": 62,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 615,
+        "text": "    audit_descriptors(config, pins, build)",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 616,
+        "text": "    audit_recipe(json.loads((build / 'cook-recipe.json').read_text()), build, state, pins['platform'],",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.audit-site.post-build",
+    "row": 62,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 647,
+        "text": "    audit_descriptors(config, pins, build)",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 648,
+        "text": "    audit_recipe(json.loads((build / 'cook-recipe.json').read_text()), build, state, pins['platform'],",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.audit-site.separate",
+    "row": 62,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 460,
+        "text": "    need(not state.resolve().is_relative_to(build.resolve()) and",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.audit-site.verify-tree",
+    "row": 62,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 698,
+        "text": "        audit_tree_code(build, state, pins['platform'])",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 700,
+        "text": "        audit_descriptors(config, pins, build)",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 701,
+        "text": "        audit_recipe(recipe, build, state, pins['platform'], secrets=secret_environment_names(config), data_options=data_options_for(config, build))",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 702,
+        "text": "        audit(config.get('health', {}), root, state, pins['platform'])",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 703,
+        "text": "        audit(preflight_unit(config, build, platform=pins['platform']), root, state, pins['platform'])",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.audit-site.verify-lock",
+    "row": 62,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 706,
+        "text": "                audit_argv(lock['health']['command'], build, build, state, pins['platform'])",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 707,
+        "text": "            audit(lock, build.parent.parent, state, pins['platform'])",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.audit-site.verify-units",
+    "row": 62,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 720,
+        "text": "                audit(path.read_text(), root, state, pins['platform'])",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 721,
+        "text": "                cwd = audit_unit(path.read_text(), root, state, pins['platform'])",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 722,
+        "text": "                preflight_unit(config, build, cwd, pins['platform'])",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 726,
+        "text": "            audit(path.read_text(), root, state, pins['platform'])",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 728,
+        "text": "                for launch_cwd in audit_launcher(path.read_text(), cwd, root, state, pins['platform']):",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.audit-site.launch-cwd",
+    "row": 62,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 729,
+        "text": "                    audit_recipe(recipe, build, state, pins['platform'], launch_cwd, secret_environment_names(config), data_options=data_options_for(config, build))",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 731,
+        "text": "                        audit_unit(unit_body, root, state, pins['platform'], env_cwd=launch_cwd)",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "catalog.audit-site.cook-argv",
+    "row": 62,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 327,
+        "text": "        catalog.audit_argv(audited, build, root, state, spec['pins']['platform'])",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      },
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 329,
+        "text": "            catalog.audit_path(value, build, build, state, spec['pins']['platform'])",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      },
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 332,
+        "text": "        catalog.audit_tree_code(build, state, spec['pins']['platform'])",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "inputs.record.activation",
+    "row": 63,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 63,
+        "text": "    need(isinstance(config.get('activation', 'start'), str) and",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "inputs.record.exclusive",
+    "row": 63,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 67,
+        "text": "    need(isinstance(exclusive, list), 'exclusive_with must be a list')",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      },
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 70,
+        "text": "        need(isinstance(record, dict) and set(record) == {'scope', 'unit'},",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      },
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 72,
+        "text": "        need(isinstance(record['scope'], str) and record['scope'] in ('system', 'user') and",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      },
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 77,
+        "text": "        need(key not in seen, 'duplicate exclusive unit')",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "inputs.record.recipe-file",
+    "row": 63,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 81,
+        "text": "        need(isinstance(record, dict) and set(record) == {'path', 'sha256'}, 'closed recipe_file record required')",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      },
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 87,
+        "text": "        need(isinstance(record['sha256'], str) and re.fullmatch(r'[a-f0-9]{64}', record['sha256']),",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "inputs.record.recipe-path",
+    "row": 63,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 83,
+        "text": "        need(isinstance(value, str) and value.startswith('/') and '{' not in value and '}' not in value",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      },
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 86,
+        "text": "        need(value == os.path.abspath(value), 'controller recipe path must be canonical')",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "inputs.record.secret-files",
+    "row": 63,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 91,
+        "text": "        need(isinstance(records, list), 'secret_files must be a list')",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      },
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 94,
+        "text": "            need(isinstance(record, dict) and set(record) == {'secret', 'env'}, 'closed secret_files record required')",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      },
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 95,
+        "text": "            need(all(isinstance(value, str) and re.fullmatch(r'[A-Z_][A-Z0-9_]*', value)",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      },
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 97,
+        "text": "            need(record['env'] not in seen and record['env'] not in {'DATA_DIR', 'WORKSPACE_DIR', 'PATH', 'HOME', 'LANG', 'LC_ALL', 'TMPDIR'},",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "inputs.record.data-args",
+    "row": 63,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 37,
+        "text": "    seen = set()",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "inputs.record.data-path",
+    "row": 63,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 21,
+        "text": "    return (isinstance(value, str) and value.startswith('/') and not value.startswith('//') and",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "inputs.record.data-flag",
+    "row": 63,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 30,
+        "text": "    return (isinstance(value, str) and re.fullmatch(r'--?[A-Za-z][A-Za-z0-9_-]*', value) and",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "inputs.record.transport",
+    "row": 63,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 144,
+        "text": "    need(isinstance(supplied, dict) and set(supplied) == expected, 'recipe transport inventory mismatch')",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      },
+      {
+        "file": "module_utils/connectome_inputs.py",
+        "line": 148,
+        "text": "        content = base64.b64decode(supplied['cook-recipe.json'], validate=True)",
+        "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "name.grammar.agent",
+    "row": 64,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 342,
+        "text": "    if not isinstance(value, str) or not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,62}', value):",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "22cdb70f4a820186b6bd3562a41f1c9196b3e3f2d0437ff32a0f3f4a8e8cf81f"
+        ]
+      },
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "name.grammar.connector",
+    "row": 64,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 358,
+        "text": "        if not isinstance(name, str) or not re.fullmatch(r'[a-z0-9][a-z0-9_-]{0,62}', name):",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "da626d494a06ebb87506a38c9ae9206804ed146904b5e369ff7b09140b371276"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "name.grammar.unit",
+    "row": 64,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 972,
+        "text": "        if not re.fullmatch(r'[A-Za-z0-9_.@-]+\\.service', name):",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "name.grammar.spawn-agent",
+    "row": 64,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 33,
+        "text": "    need(match(value, NAME), 'invalid agent identifier')",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "62600a4ea06ccf12a7cbbc9e190db8ac1620b2e6ce0f8023d772ceeb66453b5e"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "deploy.prepare.marker",
+    "row": 65,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 758,
+        "text": "        if marker.is_file() and marker.read_text() == self.request_id:",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.prepare.no-adapter",
+    "row": 65,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 769,
+        "text": "        if not self.cook_command:",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.prepare.active",
+    "row": 65,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 773,
+        "text": "        if self.current.is_symlink() and self.current.resolve() == self.build:",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.prepare.owned-units",
+    "row": 65,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 775,
+        "text": "        if any(path != self.build and path.is_relative_to(self.build) for path in self.owned):",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "deploy.prepare.unmanaged-build",
+    "row": 65,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 1043,
+        "text": "        if self.build.exists() and self.owned.get(self.build) != {'kind': 'directory'}:",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "deploy.prepare.ownership-first",
+    "row": 65,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 787,
+        "text": "        self._save_ownership()  # persist ownership before invoking cook",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-effect-results.golden",
+        "vector": "test_row65_ownership_durable_before_cook",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "deploy.units.launcher",
+    "row": 66,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 827,
+        "text": "            if launch.get('kind') != 'script':",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      },
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 830,
+        "text": "            if not script.is_file():",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.units.name",
+    "row": 66,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 844,
+        "text": "            if not re.fullmatch(r'[A-Za-z0-9_.@-]+\\.service', path.name) or path.name in result:",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.units.digest",
+    "row": 66,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 846,
+        "text": "            if hashlib.sha256(path.read_bytes()).hexdigest() != entry['sha256']:",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.units.own-copy",
+    "row": 66,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 850,
+        "text": "            installed = inside(build, 'managed-units/' + path.name)",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      },
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 851,
+        "text": "            self.rendered_units[installed] = path.read_bytes().decode('utf-8')",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.units.empty",
+    "row": 66,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 853,
+        "text": "        if not result:",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.units.conflict",
+    "row": 66,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 1145,
+        "text": "                if path in result and result[path] != artifact:",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.units.dropin-symlink",
+    "row": 66,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 981,
+        "text": "        if directory.is_symlink():",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "deploy.retained.config",
+    "row": 67,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 820,
+        "text": "        validate_config(config)",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.retained.pins",
+    "row": 67,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 691,
+        "text": "        pin = (self.pins['runtime']['agent-framework'] if build == self.build else",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      },
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 707,
+        "text": "            catalog_pins = (self.pins if build == self.build else",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      },
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 729,
+        "text": "            pin = json.loads((build / 'deployment.json').read_text())['pins']['runtime']['agent-framework']",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.retained.recipe",
+    "row": 67,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 740,
+        "text": "            inputs.installed(build, config)",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.retained.previous-first",
+    "row": 67,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 1207,
+        "text": "        previous_lock = self._lock(previous) if previous else None",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.retained.sidecar",
+    "row": 67,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 731,
+        "text": "                recorded = json.loads((build / 'framework.lock.json').read_text())",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.activate.preflight",
+    "row": 68,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 1213,
+        "text": "        self._preflight(artifacts | {",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.activate.exclusive-recheck",
+    "row": 68,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 1160,
+        "text": "            self._exclusive_status(refuse=True)",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      },
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 1182,
+        "text": "            self._exclusive_status(refuse=True)",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.activate.reverify",
+    "row": 68,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 1185,
+        "text": "                    self._lock(build)",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.activate.marker",
+    "row": 68,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 674,
+        "text": "                (not path.is_file() or path.read_text() != 'install_only\\n')):",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.activate.install-only-health",
+    "row": 68,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 898,
+        "text": "        if self.activation == 'install_only':",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.activate.health-argv",
+    "row": 68,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 921,
+        "text": "            if not isinstance(health['command'], list):",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "deploy.activate.health-env",
+    "row": 68,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_deploy.py",
+        "line": 927,
+        "text": "                options['env'] = catalog.environment(config, pins, build, create=False)",
+        "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "config.layers.count",
+    "row": 69,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_config.py",
+        "line": 32,
+        "text": "    if len(layers) != 4 or any(not isinstance(layer, dict) for layer in layers):",
+        "source_sha256": "4b8cb0c5bef5dc84a4813e37672c4918fd582d9027034256c0a158acc998324f"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "d3fe7fc79cc9a1e16b1cb8676e2be13c6309ed0c5466a4224a63181318e86527"
+        ]
+      },
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "config.layers.fold",
+    "row": 69,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_config.py",
+        "line": 39,
+        "text": "        result = combine(result, layer, recursive=True)",
+        "source_sha256": "4b8cb0c5bef5dc84a4813e37672c4918fd582d9027034256c0a158acc998324f"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "config.layers.enabled-type",
+    "row": 69,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_config.py",
+        "line": 48,
+        "text": "            if not isinstance(entry, dict) or not isinstance(entry.get('enabled', True), bool):",
+        "source_sha256": "4b8cb0c5bef5dc84a4813e37672c4918fd582d9027034256c0a158acc998324f"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "9c8b2d4f05c15058c9490a0a1cc6eb9e657d0444afaa6d8ac70f62d52470d92a"
+        ]
+      },
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "config.layers.prune",
+    "row": 69,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_config.py",
+        "line": 50,
+        "text": "        result[section] = {name: entry for name, entry in entries.items()",
+        "source_sha256": "4b8cb0c5bef5dc84a4813e37672c4918fd582d9027034256c0a158acc998324f"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "config.layers.public-connectors",
+    "row": 69,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_config.py",
+        "line": 59,
+        "text": "    if 'connectors' in result:",
+        "source_sha256": "4b8cb0c5bef5dc84a4813e37672c4918fd582d9027034256c0a158acc998324f"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "cook.disabled",
+    "row": 69,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 148,
+        "text": "            need(entry.get('enabled', True) is True, 'adapter input must already exclude disabled entries')",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "catalog.disabled",
+    "row": 69,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "line": 77,
+        "text": "        need(entry.get('enabled', True) is True and kind(entry) in",
+        "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "cook.input.spec",
+    "row": 70,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 117,
+        "text": "    need(isinstance(spec, dict) and set(spec) == {'config', 'pins'}, 'normalized deployment spec required')",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "cook.input.pins",
+    "row": 70,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 124,
+        "text": "    need(resolve_pins(config, versions) == pins, 'normalized pins required')",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "cook.input.pin-ref",
+    "row": 70,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 123,
+        "text": "        need(entry.get('pin_ref') == 'connectors.' + name, 'connector pin_ref must name its resolved connector')",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "cook.input.budgets",
+    "row": 70,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 126,
+        "text": "        raise AdapterError('step/cost budgets not supported by host recipe schema at ' +",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "cook.input.settings",
+    "row": 70,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 155,
+        "text": "                need(settings.keys() <= allowed and isinstance(settings.get('command'), str),",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "cook.input.module-source",
+    "row": 70,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 162,
+        "text": "                need('repo' not in entry and 'build' not in entry,",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "cook.input.catalog-connector",
+    "row": 70,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 172,
+        "text": "                need(isinstance(settings, dict) and isinstance(settings.get('command'), str) and Path(settings['command']).is_absolute() and",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "cook.input.paths",
+    "row": 70,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 66,
+        "text": "def absolute_path(value):",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      },
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 223,
+        "text": "    need(all(path.is_absolute() and path.resolve() == path for path in (build, state, spec_path)),",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      },
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 225,
+        "text": "    need(build.is_dir() and spec_path.name == 'deployment.json', 'fresh deployment.json required')",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      },
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 226,
+        "text": "    need(build.parent.name == 'builds', 'adapter output must be ROOT/builds/REQUEST')",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "cook.input.staged-recipe",
+    "row": 70,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 249,
+        "text": "                content = inputs.read_file(staged, spec['config']['recipe_file'])",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "cook.input.cook-settings",
+    "row": 70,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 263,
+        "text": "    need(isinstance(settings, dict), 'cook settings must be a mapping')",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      },
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 264,
+        "text": "    need({'host_repo', 'connector_state'} <= settings.keys() and",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      },
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 268,
+        "text": "    need(repository(settings['host_repo']), 'cook.host_repo requires a safe HTTPS, SSH/scp or absolute local repository')",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "cook.input.connector-state",
+    "row": 70,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_cook.py",
+        "line": 270,
+        "text": "    need(isinstance(settings['connector_state'], dict) and not settings['connector_state'].keys() & external.keys(),",
+        "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.schema.template",
+    "row": 71,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/schema.py",
+        "line": 65,
+        "text": "    fields(value, ('schema', 'runtime', 'agent', 'connectors', 'modules', 'seed'), ('preflights', 'identity'))",
+        "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+      },
+      {
+        "file": "module_utils/connectome_spawn/schema.py",
+        "line": 66,
+        "text": "    need(value['schema'] == 'connectome.spawn-template/v2', 'unsupported template schema')",
+        "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.schema.template-v1",
+    "row": 71,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/schema.py",
+        "line": 62,
+        "text": "    need(not (type(value) is dict and value.get('schema') == 'connectome.spawn-template/v1'),",
+        "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.schema.instance",
+    "row": 71,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/schema.py",
+        "line": 124,
+        "text": "    fields(value, ('schema', 'instance', 'unixName', 'agent', 'homeDirectory', 'home', 'rights', 'target'))",
+        "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+      },
+      {
+        "file": "module_utils/connectome_spawn/schema.py",
+        "line": 125,
+        "text": "    need(value['schema'] == 'connectome.spawn-instance/v1', 'unsupported instance schema')",
+        "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.schema.name-record",
+    "row": 71,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/schema.py",
+        "line": 146,
+        "text": "    fields(value, ('name', 'displayName', 'summaryParticipant'), ('systemPrompt',))",
+        "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+      },
+      {
+        "file": "module_utils/connectome_spawn/schema.py",
+        "line": 151,
+        "text": "        concrete(value[key])",
+        "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.schema.name-receipt",
+    "row": 71,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/schema.py",
+        "line": 190,
+        "text": "    fields(value, ('recordHash', 'source'))",
+        "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+      },
+      {
+        "file": "module_utils/connectome_spawn/schema.py",
+        "line": 191,
+        "text": "    need(match(value['recordHash'], r'[0-9a-f]{64}'), 'invalid name record hash')",
+        "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.schema.home",
+    "row": 71,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/schema.py",
+        "line": 210,
+        "text": "    fields(home, ('transport', 'channel'))",
+        "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+      },
+      {
+        "file": "module_utils/connectome_spawn/schema.py",
+        "line": 213,
+        "text": "    need(match(home['transport'], CATALOG_NAME) and",
+        "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.schema.seed",
+    "row": 71,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/seed.py",
+        "line": 26,
+        "text": "    need(value['mode'] in ('required', 'clean', 'optional'), 'unknown seed mode')",
+        "source_sha256": "b96f61dd54a447f116baf285c1ce353e600deb7f9af717027c6badc9c0e477cf"
+      },
+      {
+        "file": "module_utils/connectome_spawn/seed.py",
+        "line": 32,
+        "text": "    need(payload is None or type(payload) is bytes and 0 < len(payload) <= 1024 * 1024,",
+        "source_sha256": "b96f61dd54a447f116baf285c1ce353e600deb7f9af717027c6badc9c0e477cf"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.schema.identity-policy",
+    "row": 71,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/identity.py",
+        "line": 23,
+        "text": "    need(type(pattern) is str and pattern.count('{timestamp}') == 1 and",
+        "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-guard-results.golden",
+        "vector": null,
+        "witnesses": [
+          "e45969c31b2fc7cc74d780ca1adc54cb7804b5c64cb0133c200041171b31a554"
+        ]
+      },
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.catalog.descriptor",
+    "row": 72,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 47,
+        "text": "    json_data(entry)",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.catalog.versions",
+    "row": 72,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 82,
+        "text": "    fields(catalog.versions, ('runtime', 'connectors'), ('artifacts', 'platform'))",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      },
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 84,
+        "text": "        need(type(catalog.versions.get(section, {})) is dict, 'invalid version section')",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.catalog.file-name",
+    "row": 72,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 103,
+        "text": "        need(set(value) == {path.stem} and path.stem not in descriptors,",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.catalog.pin",
+    "row": 72,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 114,
+        "text": "    need(value is not None, 'catalog pin missing')",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      },
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 116,
+        "text": "        need(kind == 'connector' and match(value, COMMIT) and value != '0' * 40,",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      },
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 119,
+        "text": "        fields(value, ('archive', 'version', 'sha256', 'descriptor_sha256'),",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      },
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 122,
+        "text": "        need(value['archive'].startswith('inputs/'), 'archive must be under inputs')",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      },
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 124,
+        "text": "        for field in ('sha256', 'descriptor_sha256'):",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      },
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 126,
+        "text": "        need(value['descriptor_sha256'] == descriptor_digest(entry), 'descriptor digest mismatch')",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      },
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 128,
+        "text": "            need(match(value.get('commit'), COMMIT) and value['commit'] != '0' * 40,",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.catalog.select",
+    "row": 72,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 154,
+        "text": "            need(name in catalog.descriptors and descriptor(name, catalog.descriptors[name]) in kinds,",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.catalog.cycle",
+    "row": 72,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 137,
+        "text": "        need(name not in active, 'catalog dependency cycle')",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.catalog.reference",
+    "row": 72,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/planner.py",
+        "line": 59,
+        "text": "        def substitute(found):",
+        "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+      },
+      {
+        "file": "module_utils/connectome_spawn/planner.py",
+        "line": 62,
+        "text": "            return BUILD_BINDING + '/catalog/' + name",
+        "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+      },
+      {
+        "file": "module_utils/connectome_spawn/planner.py",
+        "line": 64,
+        "text": "        need('{artifact:' not in result, 'malformed artifact reference')",
+        "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+      },
+      {
+        "file": "module_utils/connectome_spawn/planner.py",
+        "line": 67,
+        "text": "            need(not any(part in ('.', '..') for part in result.split('/')) and",
+        "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+      },
+      {
+        "file": "module_utils/connectome_spawn/planner.py",
+        "line": 68,
+        "text": "                 '\\\\' not in result, 'artifact path escape')",
+        "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.catalog.connector-settings",
+    "row": 72,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/planner.py",
+        "line": 80,
+        "text": "    need(settings.keys() <= allowed and type(settings.get('command')) is str,",
+        "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+      },
+      {
+        "file": "module_utils/connectome_spawn/planner.py",
+        "line": 83,
+        "text": "    need(type(settings.get('args', [])) is list and all(type(a) is str and '\\x00' not in a",
+        "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.catalog.home-transport",
+    "row": 72,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/planner.py",
+        "line": 134,
+        "text": "    need(declaration['home']['transport'] == 'console' or",
+        "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.catalog.ingress",
+    "row": 72,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/schema.py",
+        "line": 180,
+        "text": "        need(ingress_root is None, 'file ingress root does not authorize a repository source')",
+        "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.catalog.one-source",
+    "row": 72,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/sources.py",
+        "line": 196,
+        "text": "    need(sum(v is not None for v in (inline, file, repo)) == 1, 'exactly one source required')",
+        "source_sha256": "29958c9f80020d83309f3506d6d758e86af7c6c75171853fc8ee357e155c6fbf"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.artifact.store",
+    "row": 73,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 183,
+        "text": "    need(ref in stores, 'selected artifact needs an explicit local store')",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      },
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 210,
+        "text": "        need(ref in stores, 'runtime pin needs an explicit local object store')",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.artifact.payload-path",
+    "row": 73,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 170,
+        "text": "    absolute(root)",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      },
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 171,
+        "text": "    artifact_relative(path)",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      },
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 174,
+        "text": "        need(not component.is_symlink(), 'symlinked payload path refused')",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      },
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 175,
+        "text": "    need(candidate.resolve().is_relative_to(Path(root).resolve()), 'payload escapes root')",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.artifact.digest",
+    "row": 73,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/catalog.py",
+        "line": 191,
+        "text": "        need(computed == value['sha256'], 'archive digest mismatch')",
+        "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.artifact.tree-entries",
+    "row": 73,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/sources.py",
+        "line": 216,
+        "text": "        need(mode in ('100644', '100755') and kind == 'blob', 'artifact links and submodules refused')",
+        "source_sha256": "29958c9f80020d83309f3506d6d758e86af7c6c75171853fc8ee357e155c6fbf"
+      }
+    ],
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-legacy-results.golden",
+        "vector": null,
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
+  },
+  {
+    "id": "spawn.artifact.limit",
+    "row": 73,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/sources.py",
+        "line": 220,
+        "text": "        need(total <= ARTIFACT_LIMIT, 'artifact size limit exceeded')",
+        "source_sha256": "29958c9f80020d83309f3506d6d758e86af7c6c75171853fc8ee357e155c6fbf"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.artifact.provenance",
+    "row": 73,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/sources.py",
+        "line": 208,
+        "text": "    fields(entry, ('repo', 'commit'), ('path',))",
+        "source_sha256": "29958c9f80020d83309f3506d6d758e86af7c6c75171853fc8ee357e155c6fbf"
+      },
+      {
+        "file": "module_utils/connectome_spawn/sources.py",
+        "line": 211,
+        "text": "        return dict(entry, kind='blob', size=len(content), sha256=hashlib.sha256(content).hexdigest())",
+        "source_sha256": "29958c9f80020d83309f3506d6d758e86af7c6c75171853fc8ee357e155c6fbf"
+      },
+      {
+        "file": "module_utils/connectome_spawn/sources.py",
+        "line": 223,
+        "text": "    return dict(entry, kind='git-tree', tree=tree, size=total, files=files, sha256=digest(files))",
+        "source_sha256": "29958c9f80020d83309f3506d6d758e86af7c6c75171853fc8ee357e155c6fbf"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.cli.parser",
+    "row": 74,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/cli.py",
+        "line": 15,
+        "text": "        raise SpawnError('invalid CLI arguments; see --help')",
+        "source_sha256": "fa8efe31073cc3fcfb9bd99cbdd078746c572e813c56ad2de5463f0172f4c80c"
+      }
+    ],
+    "status": "not-killed",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.cli.combos",
+    "row": 74,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/cli.py",
+        "line": 38,
+        "text": "            if not args.agent or not args.state_root or any(value is not None for value in (args.inline, args.file, args.repo,",
+        "source_sha256": "fa8efe31073cc3fcfb9bd99cbdd078746c572e813c56ad2de5463f0172f4c80c"
+      },
+      {
+        "file": "module_utils/connectome_spawn/cli.py",
+        "line": 43,
+        "text": "        if args.agent or args.state_root or not args.instance:",
+        "source_sha256": "fa8efe31073cc3fcfb9bd99cbdd078746c572e813c56ad2de5463f0172f4c80c"
+      },
+      {
+        "file": "module_utils/connectome_spawn/cli.py",
+        "line": 48,
+        "text": "            if args.catalog or args.stores or args.observed or args.seed_file or args.name_file or args.name_repo:",
+        "source_sha256": "fa8efe31073cc3fcfb9bd99cbdd078746c572e813c56ad2de5463f0172f4c80c"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.cli.refusal",
+    "row": 74,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/cli.py",
+        "line": 64,
+        "text": "        error = {'error': 'spawn input refused', 'filesWritten': False}",
+        "source_sha256": "fa8efe31073cc3fcfb9bd99cbdd078746c572e813c56ad2de5463f0172f4c80c"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  },
+  {
+    "id": "spawn.cli.status-readonly",
+    "row": 74,
+    "anchors": [
+      {
+        "file": "module_utils/connectome_spawn/lifecycle.py",
+        "line": 100,
+        "text": "        value = self._read(agent)  # Atomic read; never creates files or lock directories.",
+        "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
+      }
+    ],
+    "status": "pending-semantic-mutant",
+    "evidence": [],
+    "reason": "source anchored; independent killing vector still required"
+  }
+]
