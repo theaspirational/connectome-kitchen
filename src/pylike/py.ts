@@ -183,7 +183,7 @@ export function hasControl(value: string): boolean {
 /*
  * Code points for which `str.isprintable()` is False in the oracle interpreter
  * (CPython 3.12, Unicode 15.0.0): categories Cc, Cf, Cs, Co, Cn, Zl, Zp and
- * Zs except the space. A table and not a `\\p{...}` class, because the
+ * Zs except the space. A table and not a `\p{...}` class, because the
  * JavaScript runtime's Unicode version is newer and differs between Node
  * releases. Ranges are `gap-from-previous-end,length-1` pairs in hex, made with
  *   flat=[];prev=0;start=None

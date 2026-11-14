@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+"""Fail closed on what the TS port of errors, lock and inputs still owes.
+
+This reads committed evidence only; `ts_mutants.py run --check` and
+`ts_port.py run` reproduce it. A mutant that is not killed stays blocking until
+its id is in test/mutants/ts-reviewed.golden, which only a review may extend:
+the implementer's written analysis (ts-unkilled.golden) is not an acceptance.
+"""
+import json, subprocess, sys
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[1]
+missing = []
+try:
+    results = json.loads((ROOT / 'test/mutants/ts-results.golden').read_text())['results']
+    unkilled = {entry['id'] for entry in json.loads((ROOT / 'test/mutants/ts-unkilled.golden').read_text())}
+    reviewed = set(json.loads((ROOT / 'test/mutants/ts-reviewed.golden').read_text()))
+    if not reviewed <= unkilled:
+        raise ValueError('reviewed id without an analysis')
+    subprocess.run([sys.executable, str(ROOT / 'scripts/porting-map.py'), '--check'], check=True)
+except (ValueError, OSError, KeyError, subprocess.CalledProcessError) as error:
+    print('BLOCKED: invalid/stale port evidence (' + type(error).__name__ + ')')
+    sys.exit(1)
+by_status = {}
+for result in results:
+    by_status.setdefault(result['status'], []).append(result['id'])
+for status in sorted(by_status):
+    if status == 'killed':
+        continue
+    open_ids = [ident for ident in by_status[status] if ident not in reviewed]
+    if status not in ('survived', 'compiler'):
+        missing.append('TS mutants with status ' + status + ': ' + ', '.join(by_status[status]))
+    elif open_ids:
+        missing.append('TS mutants not killed and not reviewed (' + status + '): ' + ', '.join(open_ids) + ' (analysis: test/mutants/ts-unkilled.golden)')
+if 'bind_seam' in (ROOT / 'src/archive.ts').read_text():
+    missing.append('src/archive.ts is a stub of the lock seam; row 9 is complete only when the archive module is ported')
+for message in missing:
+    print('BLOCKED: ' + message)
+if not missing:
+    print('PASS port evidence for errors, lock, inputs; ' + str(len(by_status.get('killed', []))) + ' of ' + str(len(results)) + ' TS mutants killed')
+sys.exit(int(bool(missing)))

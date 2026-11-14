@@ -134,7 +134,7 @@ export function credential_shaped(value: PyValue): boolean {
 }
 
 const USER = /^[A-Za-z0-9._][A-Za-z0-9._-]*$/u;
-const TRANSPORT_PREFIX = /^(?:[hH][tT][tT][pP][sSſ]?|[sSſ][sSſ][hH]|[gG][iIİı][tT]|[fF][iIİı][lL][eE]|[fF][tT][pP]|[eE][xX][tT]):/u;
+const TRANSPORT_PREFIX = /^(?:[hH][tT][tT][pP][sS\u017f]?|[sS\u017f][sS\u017f][hH]|[gG][iI\u0130\u0131][tT]|[fF][iI\u0130\u0131][lL][eE]|[fF][tT][pP]|[eE][xX][tT]):/u;
 const SCP = /^(?:[A-Za-z0-9._][A-Za-z0-9._-]*@)?[A-Za-z0-9][A-Za-z0-9.-]*:(?!:)[^\n]+$/u;
 const SPACE = new RegExp('[' + S + ']', 'u');
 

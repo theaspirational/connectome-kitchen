@@ -401,8 +401,8 @@ def failed(report):
                entry['recorded-outcome-differs-from-live-oracle'] for entry in report.values())
 
 
-def build_port():
-    """Write the committed corpus: each hand-written input gets the oracle's outcome and seam log. TS is not consulted."""
+def port_text():
+    """The committed corpus as text: each hand-written input with the oracle's outcome and seam log. TS is not consulted."""
     import port_seeds
     initialize()
     fixture()
@@ -425,9 +425,14 @@ def build_port():
         remove(root)
     Vector.made.clear()
     remove(TREES)
-    PORT.write_text('\n'.join(rows) + '\n')
-    PORT_TREES.write_text(json.dumps(trees, indent=1, sort_keys=True) + '\n')
-    print(canonical({'port_vectors': len(rows), 'trees': len(trees)}))
+    return '\n'.join(rows) + '\n', json.dumps(trees, indent=1, sort_keys=True) + '\n'
+
+
+def build_port():
+    rows, trees = port_text()
+    PORT.write_text(rows)
+    PORT_TREES.write_text(trees)
+    print(canonical({'port_vectors': rows.count('\n'), 'trees': len(json.loads(trees))}))
 
 
 def main():

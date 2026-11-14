@@ -111,6 +111,8 @@ MANUAL = [
     ('lock.repository.user-grammar', [3], 'lock', "(parts.scheme === 'ssh' && USER.test(url.unquote(user)))", "parts.scheme === 'ssh'", 'TS only'),
     ('lock.repository.malformed-url', [3], 'lock', '    if (error instanceof PyValueError) return false;\n    throw error;\n  }\n  // scp syntax', '    if (error instanceof PyValueError) return true;\n    throw error;\n  }\n  // scp syntax', 'TS only'),
     ('lock.repository.transport-prefix', [3], 'lock', '  if (TRANSPORT_PREFIX.test(decoded)) return false;\n', '', 'TS only'),
+    ('lock.repository.prefix-ignore-case', [3], 'lock', "/^(?:[hH][tT][tT][pP][sS\\u017f]?|[sS\\u017f][sS\\u017f][hH]|[gG][iI\\u0130\\u0131][tT]|[fF][iI\\u0130\\u0131][lL][eE]|[fF][tT][pP]|[eE][xX][tT]):/u",
+     '/^(?:https?|ssh|git|file|ftp|ext):/u', 'TS only; re.I on the prefix test'),
     ('lock.repository.scp-shape', [3], 'lock', "return SCP.test(decoded) && !decoded.includes('://');", "return !decoded.includes('://');", 'TS only'),
     ('lock.repository.scp-not-uri', [3], 'lock', "return SCP.test(decoded) && !decoded.includes('://');", 'return SCP.test(decoded);', 'TS only'),
     # Row 28: no oracle mutant exists for the errors module.

@@ -1,0 +1,26 @@
+[
+ {
+  "id": "lock.repository.text",
+  "status": "survived",
+  "class": "shadowed by a later identical test",
+  "analysis": "The mutant weakens `text(value)` (lock.py:51) to a type test. For a string, `text` refuses only the empty string and a string with a C0, DEL or C1 character. `unquote` maps the empty string to itself and changes nothing outside a %XX escape, so the same string is refused again by `text(decoded)` three statements later (lock.py:54), with the same answer, False. For anything that is not a string the type test that stays answers False as before. No input can tell the two apart. test/mutants/shadowed_repository.py tests the implication on the oracle: 200,000 seeded strings, 123,084 refused by `text`, none accepted after unquoting. The oracle has no mutant for this check either: its mutants are derived from `require`/`need`/`raise`, and `repository` has none."
+ },
+ {
+  "id": "lock.repository.password",
+  "status": "survived",
+  "class": "shadowed by an earlier check",
+  "analysis": "The mutant deletes `url.password is None` (lock.py:65). A password exists only when the text between `//` and the next `/`, `?` or `#` has a `:` before its last `@`. That text has no `/`, and it has no whitespace, because a value with whitespace is refused at lock.py:58 before the URL is parsed. So the raw value contains `://`, characters that are neither `/` nor whitespace, `:`, more of them, `@`: the third credential shape (lock.py:45), which refuses it at lock.py:51. The password test can therefore only repeat a refusal. test/mutants/shadowed_repository.py tests the implication on the oracle: of 200,000 seeded URL-like strings 54,765 reach the password test with a password, and every one of them is credential-shaped. The oracle has no mutant for this check either."
+ },
+ {
+  "id": "errors.closed.envelope-mapping",
+  "status": "compiler",
+  "class": "enforced by a type",
+  "analysis": "Deleting `if (!isDict(data)) return fallback;` (errors.py:92-93) leaves `get(data, ...)` with a value that may be a list, a string or a number; `get` takes a mapping, and the strict compiler rejects the program (TS2345). In the oracle the same deletion turns the fallback into an AttributeError that the handler at errors.py:96 does not catch. The TS check cannot be removed without also changing a signature."
+ },
+ {
+  "id": "errors.closed.envelope-type",
+  "status": "compiler",
+  "class": "enforced by a type",
+  "analysis": "`adapter_diagnostic` takes `unknown`, because the oracle accepts any object and answers the fallback for whatever `json.loads` rejects with a TypeError (errors.py:96). Deleting the test that narrows the argument to text or bytes leaves the decoder with an `unknown`, which the strict compiler rejects (TS2345)."
+ }
+]

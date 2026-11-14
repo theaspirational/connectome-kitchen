@@ -147,7 +147,12 @@ export function port(netloc: string): number | null {
 export const username = (netloc: string): string | null => userinfo(netloc)[0];
 export const password = (netloc: string): string | null => userinfo(netloc)[1];
 
-/** `str.lower()`. Only its emptiness and its leading character are observed by callers here. */
+/**
+ * `str.lower()`. Exact for every code point the oracle interpreter's Unicode
+ * version assigns (swept in test/differential/port_primitives.py); a letter
+ * that only a newer Unicode version knows is lowered here and left alone
+ * there. Callers observe only whether the host is empty and how it starts.
+ */
 const pyLower = (text: string): string => text.toLowerCase();
 
 /** `urlsplit(value)` with `.port` evaluated eagerly, as phase 0 defined it. */

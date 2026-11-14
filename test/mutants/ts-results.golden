@@ -1,8 +1,8 @@
 {
- "mutants": 191,
+ "mutants": 192,
  "counts": {
   "compiler": 2,
-  "killed": 187,
+  "killed": 188,
   "survived": 2
  },
  "unit_suite_disagrees": [],
@@ -3125,6 +3125,22 @@
     "lock.repository.prefix.ext-plain",
     "lock.repository.prefix.upper",
     "lock.repository.prefix.encoded"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.prefix-ignore-case",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.prefix.upper"
    ],
    "unit_suite": "fails",
    "named_fake_test": "passes"

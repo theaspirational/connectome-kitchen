@@ -304,7 +304,7 @@
   "after": "require(true,",
   "oracle_line": 108,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L110.4",
@@ -316,7 +316,7 @@
   "after": "require(true,",
   "oracle_line": 110,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L111.4",
@@ -328,7 +328,7 @@
   "after": "require(true,",
   "oracle_line": 111,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L122.4",
@@ -340,7 +340,7 @@
   "after": "require(true,",
   "oracle_line": 122,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L124.4",
@@ -352,7 +352,7 @@
   "after": "require(true,",
   "oracle_line": 124,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L129.4",
@@ -364,7 +364,7 @@
   "after": "require(true,",
   "oracle_line": 129,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L130.4",
@@ -376,7 +376,7 @@
   "after": "require(true,",
   "oracle_line": 130,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L132.4",
@@ -388,7 +388,7 @@
   "after": "require(true,",
   "oracle_line": 132,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L134.4",
@@ -400,7 +400,7 @@
   "after": "require(true,",
   "oracle_line": 134,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L137.4",
@@ -412,7 +412,7 @@
   "after": "require(true,",
   "oracle_line": 137,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L142.4",
@@ -424,7 +424,7 @@
   "after": "require(true,",
   "oracle_line": 142,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L165.4",
@@ -436,7 +436,7 @@
   "after": "require(true,",
   "oracle_line": 165,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L170.4",
@@ -448,7 +448,7 @@
   "after": "require(true,",
   "oracle_line": 170,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L177.4",
@@ -460,7 +460,7 @@
   "after": "require(true,",
   "oracle_line": 177,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L181.4",
@@ -472,7 +472,7 @@
   "after": "require(true,",
   "oracle_line": 181,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L182.4",
@@ -484,7 +484,7 @@
   "after": "require(true,",
   "oracle_line": 182,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L294.4",
@@ -497,7 +497,7 @@
   "after": "require(true,",
   "oracle_line": 294,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L324.8",
@@ -509,7 +509,7 @@
   "after": "return null;",
   "oracle_line": 324,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L140.8",
@@ -521,7 +521,7 @@
   "after": "require(true,",
   "oracle_line": 140,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L160.8",
@@ -533,7 +533,7 @@
   "after": "require(true,",
   "oracle_line": 160,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L163.8",
@@ -545,7 +545,7 @@
   "after": ";",
   "oracle_line": 163,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L185.8",
@@ -557,7 +557,7 @@
   "after": "require(true,",
   "oracle_line": 185,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L199.8",
@@ -569,7 +569,7 @@
   "after": "require(true,",
   "oracle_line": 199,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L201.8",
@@ -581,7 +581,7 @@
   "after": "require(true,",
   "oracle_line": 201,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L204.8",
@@ -593,7 +593,7 @@
   "after": "require(true,",
   "oracle_line": 204,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L205.8",
@@ -605,7 +605,7 @@
   "after": "require(true,",
   "oracle_line": 205,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L208.8",
@@ -617,7 +617,7 @@
   "after": "require(true,",
   "oracle_line": 208,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L211.8",
@@ -629,7 +629,7 @@
   "after": "require(true,",
   "oracle_line": 211,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L214.8",
@@ -641,7 +641,7 @@
   "after": "require(true,",
   "oracle_line": 214,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L221.8",
@@ -653,7 +653,7 @@
   "after": "require(true,",
   "oracle_line": 221,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L233.8",
@@ -665,7 +665,7 @@
   "after": "require(true,",
   "oracle_line": 233,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L238.8",
@@ -677,7 +677,7 @@
   "after": "require(true,",
   "oracle_line": 238,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L240.8",
@@ -689,7 +689,7 @@
   "after": "require(true,",
   "oracle_line": 240,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L246.8",
@@ -701,7 +701,7 @@
   "after": "require(true,",
   "oracle_line": 246,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L290.8",
@@ -713,7 +713,7 @@
   "after": "require(true,",
   "oracle_line": 290,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L299.8",
@@ -726,7 +726,7 @@
   "after": "require(true,",
   "oracle_line": 299,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L301.8",
@@ -738,7 +738,7 @@
   "after": "require(true,",
   "oracle_line": 301,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L305.8",
@@ -750,7 +750,7 @@
   "after": "require(true,",
   "oracle_line": 305,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L331.8",
@@ -762,7 +762,7 @@
   "after": "lock.py:330-331\n      return new Map();",
   "oracle_line": 331,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L333.8",
@@ -774,7 +774,7 @@
   "after": "return new Map();",
   "oracle_line": 333,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L85.12",
@@ -786,7 +786,7 @@
   "after": "require(true,",
   "oracle_line": 85,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L155.12",
@@ -798,7 +798,7 @@
   "after": "require(true,",
   "oracle_line": 155,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L158.12",
@@ -810,7 +810,7 @@
   "after": ";",
   "oracle_line": 158,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L188.12",
@@ -822,7 +822,7 @@
   "after": "require(true,",
   "oracle_line": 188,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L193.12",
@@ -834,7 +834,7 @@
   "after": "require(true,",
   "oracle_line": 193,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L216.12",
@@ -846,7 +846,7 @@
   "after": "require(true,",
   "oracle_line": 216,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L226.12",
@@ -858,7 +858,7 @@
   "after": "require(true,",
   "oracle_line": 226,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L243.12",
@@ -870,7 +870,7 @@
   "after": "require(true,",
   "oracle_line": 243,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L249.12",
@@ -882,7 +882,7 @@
   "after": "require(true,",
   "oracle_line": 249,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L259.12",
@@ -894,7 +894,7 @@
   "after": "require(true,",
   "oracle_line": 259,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L271.12",
@@ -906,7 +906,7 @@
   "after": "require(true,",
   "oracle_line": 271,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L287.12",
@@ -918,7 +918,7 @@
   "after": ";",
   "oracle_line": 287,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L307.12",
@@ -930,7 +930,7 @@
   "after": "require(true,",
   "oracle_line": 307,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L310.12",
@@ -942,7 +942,7 @@
   "after": "require(true,",
   "oracle_line": 310,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L319.12",
@@ -954,7 +954,7 @@
   "after": "require(true,",
   "oracle_line": 319,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L93.8",
@@ -966,7 +966,7 @@
   "after": "require(true,",
   "oracle_line": 93,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L94.8",
@@ -978,7 +978,7 @@
   "after": "require(true,",
   "oracle_line": 94,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L275.16",
@@ -990,7 +990,7 @@
   "after": "require(true,",
   "oracle_line": 275,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L266.20",
@@ -1002,7 +1002,7 @@
   "after": "require(true,",
   "oracle_line": 266,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.L269.20",
@@ -1014,7 +1014,7 @@
   "after": ";",
   "oracle_line": 269,
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.recipe",
@@ -1026,7 +1026,7 @@
   "after": "require(true,",
   "oracle_line": 142,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.timestamp",
@@ -1038,7 +1038,7 @@
   "after": "require(true,",
   "oracle_line": 160,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.requirements",
@@ -1050,7 +1050,7 @@
   "after": "require(true,",
   "oracle_line": 170,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.credentials",
@@ -1062,7 +1062,7 @@
   "after": "require(true,",
   "oracle_line": 177,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.extensions",
@@ -1074,7 +1074,7 @@
   "after": "require(true,",
   "oracle_line": 208,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.state",
@@ -1086,7 +1086,7 @@
   "after": "require(true,",
   "oracle_line": 211,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.health",
@@ -1098,7 +1098,7 @@
   "after": "require(true,",
   "oracle_line": 290,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.launch",
@@ -1110,7 +1110,7 @@
   "after": "require(true,",
   "oracle_line": 294,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.units-ambiguous",
@@ -1122,7 +1122,7 @@
   "after": "require(true,",
   "oracle_line": 299,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "inputs.record.activation",
@@ -1146,7 +1146,7 @@
   "after": "require(true,",
   "oracle_line": 137,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.cook#2",
@@ -1158,7 +1158,7 @@
   "after": "require(true,",
   "oracle_line": 140,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.components#1",
@@ -1170,7 +1170,7 @@
   "after": "require(true,",
   "oracle_line": 185,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.components#2",
@@ -1182,7 +1182,7 @@
   "after": "require(true,",
   "oracle_line": 188,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.components#3",
@@ -1194,7 +1194,7 @@
   "after": "require(true,",
   "oracle_line": 193,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.components#4",
@@ -1206,7 +1206,7 @@
   "after": "require(true,",
   "oracle_line": 199,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.outputs#1",
@@ -1218,7 +1218,7 @@
   "after": "require(true,",
   "oracle_line": 201,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.outputs#2",
@@ -1230,7 +1230,7 @@
   "after": "require(true,",
   "oracle_line": 204,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.outputs#3",
@@ -1242,7 +1242,7 @@
   "after": "require(true,",
   "oracle_line": 205,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.engines#1",
@@ -1254,7 +1254,7 @@
   "after": "require(true,",
   "oracle_line": 214,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.engines#2",
@@ -1266,7 +1266,7 @@
   "after": "require(true,",
   "oracle_line": 216,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.layout#1",
@@ -1278,7 +1278,7 @@
   "after": "require(true,",
   "oracle_line": 221,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.layout#2",
@@ -1290,7 +1290,7 @@
   "after": "require(true,",
   "oracle_line": 226,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.units-ambiguous#1",
@@ -1302,7 +1302,7 @@
   "after": "require(true,",
   "oracle_line": 299,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "inputs.record.activation#1",
@@ -1490,7 +1490,7 @@
   "before": "inputs.read_file(path, item(config as PyDict, 'recipe_file'));",
   "after": ";",
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.operator-recipe#2",
@@ -1501,7 +1501,7 @@
   "before": "eq(item(recipe as PyDict, 'sha256'), subscript(item(config as PyDict, 'recipe_file'), 'sha256'))",
   "after": "true",
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.schema.operator-recipe#3",
@@ -1512,7 +1512,7 @@
   "before": "eq(item(recipe as PyDict, 'path'), path)",
   "after": "true",
   "note": "",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "inputs.record.data-args#1",
@@ -1710,7 +1710,7 @@
   "before": "namesOnly(lock, frame + 1);",
   "after": ";",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.provider-token",
@@ -1721,7 +1721,7 @@
   "before": "'(?:gh[oprsu]_|github_pat_|glpat[-_]|xox[baprs]-|sk-)[A-Za-z0-9_-]{12,}',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.vault-token",
@@ -1732,7 +1732,7 @@
   "before": "BOUNDARY + 'hvs\\\\.[A-Za-z0-9_-]+',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.bot-token",
@@ -1743,7 +1743,7 @@
   "before": "BOUNDARY + '[0-9]{8,10}:[A-Za-z0-9_-]{30,}',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.private-key",
@@ -1754,7 +1754,7 @@
   "before": "'-----' + 'BEGIN [^\\\\n]*PRIVATE KEY-----',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.jwt",
@@ -1765,7 +1765,7 @@
   "before": "BOUNDARY + 'eyJ[' + W + '-]+\\\\.[' + W + '-]+\\\\.[' + W + '-]+',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.assignment",
@@ -1776,7 +1776,7 @@
   "before": "[TOKEN_SHAPES.join('|'), ASSIGNMENT, URL_SHAPES.join('|'), STORE_PATH]",
   "after": "[TOKEN_SHAPES.join('|'), '(?!)', URL_SHAPES.join('|'), STORE_PATH]",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.url-userinfo",
@@ -1787,7 +1787,7 @@
   "before": "'://[^/' + S + ']*:[^/' + S + ']*@',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.query",
@@ -1798,7 +1798,7 @@
   "before": "'[?&](?:' + ['token', 'password', 'secret', 'api_key'].map(insensitive).join('|') + ')=',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.store-path",
@@ -1809,7 +1809,7 @@
   "before": "[TOKEN_SHAPES.join('|'), ASSIGNMENT, URL_SHAPES.join('|'), STORE_PATH]",
   "after": "[TOKEN_SHAPES.join('|'), ASSIGNMENT, URL_SHAPES.join('|'), '(?!)']",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.word-boundary",
@@ -1820,7 +1820,7 @@
   "before": "const BOUNDARY = '(?<![' + W + '])';",
   "after": "const BOUNDARY = '';",
   "note": "TS only; \\b",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.unicode-boundary",
@@ -1831,7 +1831,7 @@
   "before": "const BOUNDARY = '(?<![' + W + '])';",
   "after": "const BOUNDARY = '(?<![A-Za-z0-9_])';",
   "note": "TS only; \\b is Unicode-aware",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.unicode-word",
@@ -1842,7 +1842,7 @@
   "before": "BOUNDARY + 'eyJ[' + W + '-]+\\\\.[' + W + '-]+\\\\.[' + W + '-]+',",
   "after": "BOUNDARY + 'eyJ[A-Za-z0-9_-]+\\\\.[A-Za-z0-9_-]+\\\\.[A-Za-z0-9_-]+',",
   "note": "TS only; \\w is Unicode-aware",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.unicode-space",
@@ -1853,7 +1853,7 @@
   "before": "[' + S + ']*[:=][' + S + ']*[^' + S + ']+';",
   "after": "\\\\s*[:=]\\\\s*\\\\S+';",
   "note": "TS only; \\s differs between the two engines",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.ignore-case",
@@ -1864,7 +1864,7 @@
   "before": "const lower = letter.toLowerCase(), upper = letter.toUpperCase();",
   "after": "const lower = letter, upper = letter;",
   "note": "TS only; re.I",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.case-equivalents",
@@ -1875,7 +1875,7 @@
   "before": "(lower === 'i' ? '\\\\u0130\\\\u0131' : lower === 's' ? '\\\\u017f' : lower === 'k' ? '\\\\u212a' : '')",
   "after": "''",
   "note": "TS only; CPython case equivalences under re.I",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.class-equivalents",
@@ -1886,7 +1886,7 @@
   "before": "const LETTER = 'A-Za-z\\\\u0130\\\\u0131\\\\u017f\\\\u212a';",
   "after": "const LETTER = 'A-Za-z';",
   "note": "TS only; the same equivalences inside a class",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.credential.dot",
@@ -1897,7 +1897,7 @@
   "before": "'-----' + 'BEGIN [^\\\\n]*PRIVATE KEY-----',",
   "after": "'-----' + 'BEGIN .*PRIVATE KEY-----',",
   "note": "TS only; \".\" excludes only a newline in Python",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.text",
@@ -1908,7 +1908,7 @@
   "before": "  if (!text(value)) return false;\n  if (credential_shaped(value)) return false;",
   "after": "  if (!isStr(value)) return false;\n  if (credential_shaped(value)) return false;",
   "note": "TS only; the type test stays",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.credential",
@@ -1919,7 +1919,7 @@
   "before": "  if (credential_shaped(value)) return false;\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.decoded-text",
@@ -1930,7 +1930,7 @@
   "before": "  if (!text(decoded)) return false;\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.decoded-credential",
@@ -1941,7 +1941,7 @@
   "before": "  if (credential_shaped(decoded)) return false;\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.delimiters",
@@ -1952,7 +1952,7 @@
   "before": "  if (/[?#\\\\]/u.test(decoded)) return false;\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.whitespace",
@@ -1963,7 +1963,7 @@
   "before": "  if (SPACE.test(decoded)) return false;\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.scheme",
@@ -1974,7 +1974,7 @@
   "before": "if (parts.scheme === 'https' || parts.scheme === 'ssh') {",
   "after": "if (parts.scheme) {",
   "note": "TS only; any scheme accepted as a URL",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.host",
@@ -1985,7 +1985,7 @@
   "before": "const host = url.hostname(parts.netloc), user",
   "after": "const host = url.hostname(parts.netloc) ?? 'host', user",
   "note": "TS only; an absent host passes",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.path",
@@ -1996,7 +1996,7 @@
   "before": "return Boolean(host\n        && parts.path",
   "after": "return Boolean(host",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.password",
@@ -2007,7 +2007,7 @@
   "before": "        && url.password(parts.netloc) === null\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.ssh-option-host",
@@ -2018,7 +2018,7 @@
   "before": "        && (parts.scheme !== 'ssh' || !url.unquote(host).startsWith('-'))\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.port-range",
@@ -2029,7 +2029,7 @@
   "before": "        && (port === null || (0 < port && port <= 65535))\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.port-syntax",
@@ -2040,7 +2040,7 @@
   "before": "const port = url.port(parts.netloc);",
   "after": "const port = null as number | null;",
   "note": "TS only; the port is no longer read, so a malformed one no longer refuses",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.user",
@@ -2051,7 +2051,7 @@
   "before": "        && (user === null || (parts.scheme === 'ssh' && USER.test(url.unquote(user)))));",
   "after": ");",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.user-grammar",
@@ -2062,7 +2062,7 @@
   "before": "(parts.scheme === 'ssh' && USER.test(url.unquote(user)))",
   "after": "parts.scheme === 'ssh'",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.malformed-url",
@@ -2073,7 +2073,7 @@
   "before": "    if (error instanceof PyValueError) return false;\n    throw error;\n  }\n  // scp syntax",
   "after": "    if (error instanceof PyValueError) return true;\n    throw error;\n  }\n  // scp syntax",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.transport-prefix",
@@ -2084,7 +2084,18 @@
   "before": "  if (TRANSPORT_PREFIX.test(decoded)) return false;\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+ },
+ {
+  "id": "lock.repository.prefix-ignore-case",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "/^(?:[hH][tT][tT][pP][sS\\u017f]?|[sS\\u017f][sS\\u017f][hH]|[gG][iI\\u0130\\u0131][tT]|[fF][iI\\u0130\\u0131][lL][eE]|[fF][tT][pP]|[eE][xX][tT]):/u",
+  "after": "/^(?:https?|ssh|git|file|ftp|ext):/u",
+  "note": "TS only; re.I on the prefix test",
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.scp-shape",
@@ -2095,7 +2106,7 @@
   "before": "return SCP.test(decoded) && !decoded.includes('://');",
   "after": "return !decoded.includes('://');",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "lock.repository.scp-not-uri",
@@ -2106,7 +2117,7 @@
   "before": "return SCP.test(decoded) && !decoded.includes('://');",
   "after": "return SCP.test(decoded);",
   "note": "TS only",
-  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
  },
  {
   "id": "errors.closed.cook-table",
