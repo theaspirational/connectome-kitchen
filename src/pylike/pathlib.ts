@@ -12,7 +12,7 @@
  */
 import fs from 'node:fs';
 import { decodeUtf8, fsdecode, fsencode } from './codec.js';
-import { PyOSError, PyRuntimeError, PyValueError, isprintable } from './py.js';
+import { PyOSError, PyRuntimeError, PyTypeError, PyValueError, isprintable } from './py.js';
 
 const ERRNO: Record<string, [number, string]> = {
   EPERM: [1, 'Operation not permitted'], ENOENT: [2, 'No such file or directory'], EIO: [5, 'Input/output error'],
@@ -40,6 +40,17 @@ function osError(error: unknown, path: string): never {
   if (typeof code !== 'string' || !/^E[A-Z0-9]+$/u.test(code)) throw error;
   const [number, text] = ERRNO[code] ?? [0, code];
   throw new PyOSError(code, '[Errno ' + number + '] ' + text + ': ' + repr(path));
+}
+
+/**
+ * `os.fspath(value)` for the one path type the port has. The signatures say
+ * `string`; a caller that is not type-checked (plain JavaScript, a decoded
+ * JSON value) gets the oracle's own answer for a wrong type, `TypeError`,
+ * instead of whatever the runtime would do with it.
+ */
+export function fspath(value: unknown): string {
+  if (typeof value !== 'string') throw new PyTypeError('expected str, bytes or os.PathLike object');
+  return value;
 }
 
 /** `str(PurePosixPath(value))`: `//` and `.` collapse, `..` stays, exactly two leading slashes stay. Never raises. */

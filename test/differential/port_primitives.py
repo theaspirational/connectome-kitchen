@@ -24,6 +24,22 @@ rather than hidden in a generator:
     letters added since; nothing in the engine can observe that.
   * `urlsplit` is whatever the oracle interpreter ships. Distributions backport
     fixes into it (bracketed hosts, here), so "3.12.3" does not pin it.
+  * `tar` compares `tarfile.open(..., 'r:gz')`, `getmembers()` and
+    `extractfile().read()` on valid gzip containers. A member is read on both
+    sides when tarfile reads it as a file (a regular or an unknown type) and
+    its size is at most 16 MiB; archive.py reads at most 1 MiB. Link members
+    are listed and not read. A read request above 2**36 bytes is MemoryError
+    in the model; on the oracle host the real bound lies between 2**36 and
+    2**38 and follows the machine's memory, so no case asks for a size in
+    that band.
+  * `tardepth` runs in a fresh interpreter, in a function the script calls
+    directly: chains of extension headers recurse in tarfile, and the bound
+    (328 as first member, 329 later) moves with the caller's depth.
+  * `targz` is a classification, not an equality: the TS reader checks the
+    whole gzip container first, the oracle decompresses only as far as it
+    reads. A container gzip reads to its end must give the same outcome of
+    the archive.py:131-139 flow on both sides; a damaged one must be an
+    OSError in TS, and is counted by what the oracle does with it.
 """
 import argparse, base64, binascii, datetime, hashlib, json, multiprocessing, os, posixpath, random, stat, struct, subprocess, sys, urllib.parse
 from pathlib import Path, PurePosixPath
@@ -963,6 +979,541 @@ def gen_sweep(rng, count, full):
     return [{'fn': fn, 'prefix': prefix, 'suffix': suffix, 'domain': known if fn == 'lowered_host' else domain} for fn, prefix, suffix in sweep_templates()]
 
 
+# ---------------------------------------------------------------- tar and gzip
+
+TAR_READ_LIMIT = 16 * 1024 * 1024  # members up to this size are read on both sides; archive.py reads at most 1 MiB
+MANIFEST = b'{"name": "example", "version": "1.0.0"}\n'
+
+
+def octal(value, width):
+    return ('%0*o' % (width - 1, value)).encode() + b'\0'
+
+
+def base256(value, width):
+    if value >= 0:
+        return b'\x80' + value.to_bytes(width - 1, 'big')
+    return b'\xff' + (256 ** (width - 1) + value).to_bytes(width - 1, 'big')
+
+
+def checksummed(block, signed=False):
+    block = bytearray(block)
+    block[148:156] = b' ' * 8
+    total = sum(byte - 256 if signed and byte > 127 else byte for byte in block)
+    block[148:156] = ('%06o' % (total % (8 ** 6))).encode() + b'\0 '
+    return bytes(block)
+
+
+def tar_header(name=b'file', size=0, kind=b'0', link=b'', prefix=b'', magic=b'ustar\x0000', signed=False, **raw):
+    """One 512-byte header. `size` is an int (octal text) or the raw 12 bytes; `raw` replaces any field by name."""
+    block = bytearray(512)
+    block[0:len(name[:100])] = name[:100]
+    fields = {'mode': (100, octal(0o644, 8)), 'uid': (108, octal(0, 8)), 'gid': (116, octal(0, 8)),
+              'size': (124, size if isinstance(size, bytes) else octal(size, 12)), 'mtime': (136, octal(0, 12)),
+              'devmajor': (329, octal(0, 8)), 'devminor': (337, octal(0, 8))}
+    for key, (start, value) in fields.items():
+        value = raw.get(key, value)
+        block[start:start + len(value)] = value
+    block[156:157] = kind
+    block[157:157 + len(link[:100])] = link[:100]
+    block[257:265] = magic
+    block[265:265 + 4] = b'user'
+    block[297:297 + 5] = b'group'
+    block[345:345 + len(prefix[:155])] = prefix[:155]
+    for start, value in raw.get('patch', ()):
+        block[start:start + len(value)] = value
+    return checksummed(block, signed) if 'chksum' not in raw else bytes(block[:148] + raw['chksum'] + block[156:])
+
+
+def padded(data):
+    return data + b'\0' * (-len(data) % 512)
+
+
+def pax_record(key, value):
+    body = b' ' + key + b'=' + value + b'\n'
+    length = len(body) + 1
+    while len(str(length)) + len(body) != length:
+        length = len(str(length)) + len(body)
+    return str(length).encode() + body
+
+
+def pax_block(records, kind=b'x', name=b'PaxHeader'):
+    data = b''.join(records)
+    return tar_header(name, len(data), kind) + padded(data)
+
+
+def sparse_structs(pairs, count):
+    out = b''
+    for index in range(count):
+        offset, numbytes = pairs[index] if index < len(pairs) else (0, 0)
+        out += octal(offset, 12) + octal(numbytes, 12)
+    return out
+
+
+NAMES = [b'package/package.json', b'package/index.js', b'pkg/package.json', b'package.json', b'a/b/package.json', b'package/package_json', b'x/packageXjson', b'package/lib/', b'dir/', b'dir///',
+         b'caf\xc3\xa9/package.json', b'bad\xe9name/package.json', b'\xed\xa0\x80/package.json', b'a' * 99, b'a' * 100, b'line\nbreak/package.json', b'', b'/', b'./package/package.json', b'p/package.json/']
+LONG_NAMES = [b'd/' * 60 + b'package.json', b'x' * 150, b'long/' + b'y' * 300, b'package/' + b'z' * 120 + b'/package.json', b'n' * 255 + b'/', b'deep/' * 70]
+PAX_VALUES = [b'0', b'1', b'5', b'512', b'513', b'1048576', b'1048577', b'-1', b'-5', b'+7', b' 7 ', b'1_0', b'7x', b'', b'0x10', b'\xd9\xa1\xd9\xa2', b'1e3', b'1.5', b'9' * 30, b'9' * 4301,
+              b'68719476736', b'9223372036854775807', b'9223372036854775808', b'\xff', b'1\x00']
+
+
+def tar_item(rng):
+    """One archive member, well-formed or not, as bytes."""
+    name = rng.choice(NAMES)
+    data = rng.choice([MANIFEST, b'', b'x' * 511, b'y' * 512, b'z' * 513, b'[1, 2]', b'{"a": NaN}', b'not json', bytes(rng.randrange(256) for _ in range(rng.randrange(0, 1500)))])
+    roll = rng.randrange(34)
+    if roll < 6:
+        return tar_header(name, len(data), rng.choice([b'0', b'0', b'\0', b'7'])) + padded(data)
+    if roll == 6:   # a directory, a link, a device, a fifo
+        return tar_header(name, rng.choice([0, 0, len(data)]), rng.choice([b'5', b'1', b'2', b'3', b'4', b'6']), link=rng.choice(NAMES)) + rng.choice([b'', padded(data)])
+    if roll == 7:   # unknown type bytes are read as regular files
+        return tar_header(name, len(data), bytes([rng.choice([0x38, 0x39, 0x41, 0x5a, 0x61, 0x7f, 0x80, 0xff, 0x20, 0x44, 0x4d, 0x4e, 0x56])])) + padded(data)
+    if roll == 8:   # ustar prefix
+        return tar_header(rng.choice([b'package.json', b'f', b'd/']), len(data), rng.choice([b'0', b'5', b'\0', b'L']), prefix=rng.choice([b'package', b'a/b', b'p' * 155, b'/', b'caf\xe9'])) + padded(data)
+    if roll == 9:   # GNU long name, and long link
+        long_name = rng.choice(LONG_NAMES + NAMES) + rng.choice([b'', b'\0', b'\0junk'])
+        kind = rng.choice([b'L', b'L', b'L', b'K'])
+        return tar_header(b'././@LongLink', len(long_name), kind, magic=b'ustar  \0') + padded(long_name) + tar_header(name, len(data), rng.choice([b'0', b'5', b'\0', b'x'])) + padded(data)
+    if roll == 10:  # long name whose size disagrees with its data
+        long_name = rng.choice(LONG_NAMES)
+        return tar_header(b'././@LongLink', rng.choice([0, 1, len(long_name) + 600, 2 ** 20]), b'L') + padded(long_name) + tar_header(name, len(data)) + padded(data)
+    if roll in (11, 12, 13, 14):  # pax extended header
+        records = []
+        for _ in range(rng.randrange(0, 4)):
+            key = rng.choice([b'path', b'path', b'size', b'size', b'linkpath', b'mtime', b'atime', b'uid', b'gid', b'uname', b'hdrcharset', b'comment', b'GNU.sparse.name', b'GNU.sparse.realsize',
+                              b'GNU.sparse.size', b'GNU.sparse.map', b'GNU.sparse.major', b'GNU.sparse.minor', b'GNU.sparse.offset', b'GNU.sparse.numbytes', b'GNU.sparse.numblocks', b'caf\xe9', b'k\xc3\xa9y'])
+            if key in (b'path', b'linkpath', b'GNU.sparse.name', b'uname'):
+                value = rng.choice(NAMES + LONG_NAMES)
+            elif key == b'hdrcharset':
+                value = rng.choice([b'BINARY', b'ISO-IR 10646 2000 UTF-8', b'x'])
+            elif key == b'GNU.sparse.map':
+                value = rng.choice([b'0,5', b'0,5,10,5', b'1,2,3', b'', b'x', b'0,-1', b'5,5,0,5', b'0,1048576', b'0,5,', b' 0 , 5 '])
+            elif key in (b'GNU.sparse.major', b'GNU.sparse.minor'):
+                value = rng.choice([b'1', b'0', b'1', b'0', b'2', b''])
+            else:
+                value = rng.choice(PAX_VALUES)
+            records.append(pax_record(key, value))
+        if rng.random() < 0.15:
+            records.append(rng.choice([b'5 x=\n', b'4 =\n', b'6 xy\n\n', b'0 x=y\n', b'99 path=x\n', b'12 path=abc', b'012 path=ab\n', b'x path=y\n', b'9 =path\n', b'00000000000000000013 path=ab\n',
+                                       b'000000000000000000013 path=ab\n', b'13path=abcd\n', b'6 a=b\n\0\0', b'18446744073709551616 a=b\n']))
+        rng.shuffle(records)
+        kind = rng.choice([b'x', b'x', b'x', b'g', b'X'])
+        follow = rng.choice([b'0', b'0', b'0', b'5', b'\0', b'S', b'2', b'Z'])
+        sparse_data = rng.choice([b'', b'1\n0\n5\n', b'2\n0\n5\n10\n5\n', b'1\n0\n', b'x\n', b'-1\n', b'3\n1\n2\n3\n4\n5\n6\n', b'1\n' + b'9' * 600 + b'\n5\n', b'no newline'])
+        body = sparse_data + data if rng.random() < 0.3 else data
+        declared = rng.choice([len(body), len(body), len(body), 0, len(body) + 1024])
+        return pax_block(records, kind) + tar_header(name, declared, follow) + padded(body)
+    if roll == 15:  # old GNU sparse member, with and without extension blocks
+        pairs = [(rng.choice([0, 0, 5, 512, 2 ** 20]), rng.choice([0, 5, 512, len(data)])) for _ in range(rng.randrange(0, 6))]
+        extension = rng.choice([0, 0, 1, 1])
+        origsize = rng.choice([len(data), 0, 100, 2000, 2 ** 20, 2 ** 21])
+        patch = [(386, sparse_structs(pairs, 4)), (482, bytes([extension])), (483, octal(origsize, 12))]
+        blocks = b''
+        if extension:
+            more = bytearray(sparse_structs(pairs[4:], 21)) + bytearray(8)
+            more[504] = rng.choice([0, 0, 0, 1])
+            blocks = bytes(more) if rng.random() < 0.8 else bytes(more[:rng.choice([0, 100, 504, 505])])
+        # GNU headers keep times where ustar keeps a prefix; tarfile must not read one as the other
+        return tar_header(name, len(data), b'S', magic=b'ustar  \0', prefix=rng.choice([b'', b'', b'12345670123\0', b'package']), patch=patch) + blocks + padded(data)
+    if roll == 16:  # sizes in base 256, negative sizes, sizes beyond the data
+        size = rng.choice([base256(len(data), 12), base256(-1, 12), base256(-512, 12), base256(2 ** 34, 12), base256(2 ** 62, 12), base256(2 ** 63, 12), base256(2 ** 70, 12), b'-0000000001\0',
+                           octal(len(data) + 512, 12), octal(len(data) + 5000, 12), octal(2 ** 33 - 1, 12), b'       \0    ', b'0o17\0       ', b'1_0\0        ', b'+7\0         ', b' 7 \0        ',
+                           b'\x80' + b'\0' * 11, b'\xff' * 12, b'8\0          ', b'12\xe9\0        '])
+        return tar_header(name, size, rng.choice([b'0', b'0', b'L', b'x', b'5', b'S'])) + padded(data)
+    if roll == 17:  # other number fields: valid oddities and garbage
+        field = rng.choice(['mode', 'uid', 'gid', 'mtime', 'devmajor', 'devminor'])
+        width = 12 if field == 'mtime' else 8
+        value = rng.choice([base256(7, width), base256(-7, width), b' ' * width, b'\0' * width, b'9' * width, b'-7\0'.ljust(width, b' '), b'0o7\0'.ljust(width, b'\0'), b'7 7'.ljust(width, b'\0'),
+                            b'\xe9'.ljust(width, b'\0'), b'\x1c7\x1c\0'.ljust(width, b'\0')])
+        return tar_header(name, len(data), **{field: value}) + padded(data)
+    if roll == 18:  # checksum variants
+        choice = rng.randrange(5)
+        high = rng.choice([b'caf\xe9/package.json', b'\xff\xfe/package.json'])
+        if choice == 0:
+            return tar_header(high, len(data), signed=True) + padded(data)
+        if choice == 1:
+            return tar_header(high, len(data)) + padded(data)
+        block = bytearray(tar_header(name, len(data)))
+        if choice == 2:
+            block[148:156] = b'0' * 8
+        elif choice == 3:
+            total = int(bytes(block[148:154]), 8)
+            block[148:156] = base256(total, 8)
+        else:
+            block[148:156] = bytes(block[148:154]).lstrip(b'0').rjust(6, b' ') + b'\0 '
+        return bytes(block) + padded(data)
+    if roll == 19:  # v7 header without magic; trailing slash on an old-style regular type
+        return tar_header(rng.choice([b'dir/', b'package/package.json/', name]), len(data), b'\0', magic=b'\0' * 8) + padded(data)
+    if roll == 20:  # pax header chains and a pax header before a long name
+        first = pax_block([pax_record(b'path', b'first/package.json')])
+        second = pax_block([pax_record(b'path', b'second/package.json'), pax_record(b'size', str(len(data)).encode())], rng.choice([b'x', b'g']))
+        long_name = b'third/' + b'q' * 150 + b'/package.json'
+        gnu = tar_header(b'././@LongLink', len(long_name) + 1, b'L') + padded(long_name + b'\0')
+        parts = rng.sample([first, second, gnu], rng.randrange(1, 4))
+        return b''.join(parts) + tar_header(name, len(data)) + padded(data)
+    if roll == 21:  # a header-like block that is only data of the previous member is never seen; a member without its data is
+        return tar_header(name, len(data))
+    if roll == 22:  # GNU sparse 1.0 in full
+        table = b'2\n0\n3\n10\n4\n'
+        body = padded(table) + data
+        records = [pax_record(b'GNU.sparse.major', b'1'), pax_record(b'GNU.sparse.minor', b'0'), pax_record(b'GNU.sparse.name', name), pax_record(b'GNU.sparse.realsize', rng.choice([b'14', b'20', b'0', b'7', b'x']))]
+        if rng.random() < 0.5:
+            records.append(pax_record(b'size', str(len(body)).encode()))
+        return pax_block(records) + tar_header(b'GNUSparseFile.0/' + name[:60], len(body)) + padded(body)
+    if roll == 23:  # GNU sparse 0.0 and 0.1
+        if rng.random() < 0.5:
+            records = [pax_record(b'GNU.sparse.size', rng.choice([b'20', b'0', b'x', b'-3'])), pax_record(b'GNU.sparse.numblocks', b'2'), pax_record(b'GNU.sparse.offset', rng.choice([b'0', b'\xff', b'x', b'1_0'])),
+                       pax_record(b'GNU.sparse.numbytes', b'3'), pax_record(b'GNU.sparse.offset', b'10'), pax_record(b'GNU.sparse.numbytes', rng.choice([b'4', b'', b'-1']))]
+        else:
+            records = [pax_record(b'GNU.sparse.size', b'20'), pax_record(b'GNU.sparse.numblocks', b'2'), pax_record(b'GNU.sparse.map', rng.choice([b'0,3,10,4', b'0,3,10', b'5,3', b'0,30', b'3,0,0,3', b'19,5']))]
+        if rng.random() < 0.3:
+            records.append(pax_record(b'GNU.sparse.name', b'sparse/package.json'))
+        return pax_block(records) + tar_header(name, len(data)) + padded(data)
+    if roll == 24:  # global header that later members inherit
+        records = [pax_record(rng.choice([b'path', b'size', b'GNU.sparse.realsize', b'GNU.sparse.name', b'comment', b'GNU.sparse.major']), rng.choice([b'global/package.json', b'5', b'1', b'0', b'x']))]
+        return pax_block(records, b'g') + tar_header(name, len(data)) + padded(data) + tar_header(b'second', 3) + padded(b'abc')
+    if roll == 25:  # several plain members, some with the same name
+        return b''.join(tar_header(rng.choice([name, b'package/package.json']), len(MANIFEST)) + padded(MANIFEST) for _ in range(rng.randrange(2, 5)))
+    if roll == 26:  # a pax or long-name header as the very last thing
+        return rng.choice([pax_block([pax_record(b'path', b'p/package.json')]), tar_header(b'././@LongLink', 10, b'L') + padded(b'long/name\0'), tar_header(b'././@LongLink', 10, b'L')])
+    if roll == 27:  # size override against the header size
+        declared = rng.choice([0, len(data), len(data) + 512, 2048])
+        override = rng.choice([0, len(data), len(data) + 512, 3, 2 ** 20, 2 ** 33])
+        return pax_block([pax_record(b'size', str(override).encode())], rng.choice([b'x', b'x', b'g', b'X'])) + tar_header(name, declared, rng.choice([b'0', b'5', b'Y'])) + padded(data)
+    if roll == 28:  # realsize far beyond the data, and a sparse map that asks for more than there is
+        records = [pax_record(b'GNU.sparse.realsize', rng.choice([b'1048576', b'2097152', b'600', b'-5']))]
+        if rng.random() < 0.5:
+            records.append(pax_record(b'GNU.sparse.map', rng.choice([b'0,600', b'0,5,1000,5', b'100,5', b'0,5,2,5', b'-5,10'])))
+        return pax_block(records) + tar_header(name, len(data)) + padded(data)
+    if roll == 29:  # a zero block in the middle, then more
+        return b'\0' * 512 + tar_header(name, len(data)) + padded(data)
+    if roll == 30:  # number fields cut short by a NUL, or filling the field without one
+        return tar_header(name, octal(len(data), 12)[:-1] + b' ', mode=b'0000644 ', mtime=b'1' * 12) + padded(data)
+    if roll == 31:  # sparse extension that runs into the end of the archive
+        patch = [(386, sparse_structs([(0, 5)], 4)), (482, b'\1'), (483, octal(5, 12))]
+        return tar_header(name, 5, b'S', patch=patch) + rng.choice([b'', b'\0' * 100, b'\0' * 505, sparse_structs([], 21) + b'\1' + b'\0' * 7])
+    if roll == 32:  # a long link target, and a hard link to an earlier name
+        return tar_header(b'target', len(data)) + padded(data) + tar_header(b'alias', 0, rng.choice([b'1', b'2']), link=b'target')
+    return tar_header(name, len(data), kind=rng.choice([b'x', b'g', b'X', b'L', b'K'])) + padded(data)
+
+
+def module_archive(rng):
+    """An archive the tarfile module writes itself, in one of its three formats."""
+    import io, tarfile
+    buffer = io.BytesIO()
+    fmt = rng.choice([tarfile.USTAR_FORMAT, tarfile.GNU_FORMAT, tarfile.PAX_FORMAT])
+    extra = {'comment': 'global', 'path': 'forced/package.json'} if fmt == tarfile.PAX_FORMAT and rng.random() < 0.1 else None
+    names = ['package/package.json', 'package/index.js', 'package/lib/', 'paquete/\u00f1and\u00fa.json', 'bad\udce9name/package.json', 'd/' * 60 + 'f', 'a' * 150, 'x' * 300, 'p/' + 'q' * 101 + '/package.json',
+             'package/\U0001f600.txt', 'dir', 'package/package.json']
+    with tarfile.open(fileobj=buffer, mode='w', format=fmt, pax_headers=extra, errors='surrogateescape') as archive:
+        for _ in range(rng.randrange(0, 6)):
+            info = tarfile.TarInfo(rng.choice(names))
+            info.type = rng.choice([tarfile.REGTYPE] * 5 + [tarfile.DIRTYPE, tarfile.SYMTYPE, tarfile.LNKTYPE, tarfile.FIFOTYPE, tarfile.CHRTYPE, tarfile.CONTTYPE, tarfile.AREGTYPE])
+            data = rng.choice([MANIFEST, b'', b'data' * 400]) if info.type in (tarfile.REGTYPE, tarfile.CONTTYPE, tarfile.AREGTYPE) else b''
+            info.size = len(data)
+            info.linkname = rng.choice(['package/package.json', 'l' * 150, '']) if info.type in (tarfile.SYMTYPE, tarfile.LNKTYPE) else ''
+            if fmt == tarfile.PAX_FORMAT and rng.random() < 0.3:
+                info.pax_headers = {rng.choice(['comment', 'path', 'size', 'mtime', 'uid']): rng.choice(['1', 'other/package.json', '1.5', 'x'])}
+            if rng.random() < 0.2:
+                info.size, info.uid = (2 ** 33 + 5, 2 ** 22) if fmt != tarfile.USTAR_FORMAT else (info.size, 0)
+            try:
+                archive.addfile(info, __import__('io').BytesIO(data.ljust(min(info.size, 4096), b'\0')) if info.size else None)
+            except (ValueError, OSError):
+                continue  # the format cannot express this member; the next one may fit
+    return buffer.getvalue()
+
+
+def tar_mutation(rng, tar):
+    roll = rng.randrange(12)
+    data = bytearray(tar)
+    headers = [index for index in range(0, len(data), 512) if data[index + 257:index + 262] == b'ustar']
+    if roll == 0 and headers:   # flip a header byte and leave the checksum stale
+        at = rng.choice(headers) + rng.randrange(512)
+        data[at] ^= 1 << rng.randrange(8)
+    elif roll in (1, 2) and headers:  # change a header byte and repair the checksum
+        start = rng.choice(headers)
+        at = rng.choice([rng.randrange(100), rng.randrange(100, 157), 156, 156, rng.randrange(124, 136), rng.randrange(345, 500), rng.randrange(157, 345), rng.randrange(386, 512)])
+        data[start + at] = rng.choice([data[start + at] ^ (1 << rng.randrange(8)), 0, 0x20, 0x2f, 0x30, 0x37, 0x38, 0x80, 0xff, rng.randrange(256)])
+        data[start:start + 512] = checksummed(data[start:start + 512], rng.random() < 0.1)
+    elif roll == 3:             # truncate: at a block boundary, inside a block, to almost nothing
+        data = data[:rng.choice([0, 1, 511, 512, 513, 1024, max(0, len(data) - 512), max(0, len(data) - 1), rng.randrange(len(data) + 1), (rng.randrange(len(data) + 1) // 512) * 512])]
+    elif roll == 4:             # a zero block somewhere, or one removed
+        at = rng.randrange(0, len(data) // 512 + 1) * 512
+        if rng.random() < 0.5:
+            data[at:at] = b'\0' * 512
+        else:
+            del data[at:at + 512]
+    elif roll == 5:             # something after the end marker
+        data += rng.choice([b'junk', tar_header(b'after/package.json', len(MANIFEST)) + padded(MANIFEST), b'\0' * 9000, b'\xff' * 512])
+    elif roll == 6 and headers:  # a pax record or a data byte damaged in place
+        start = rng.choice(headers) + 512
+        if start < len(data):
+            at = start + rng.randrange(min(64, len(data) - start))
+            data[at] = rng.choice([0, 0x0a, 0x20, 0x3d, 0x30, 0x39, data[at] ^ 0x01, 0xff])
+    elif roll == 7:             # the same archive twice
+        data = data + data
+    return bytes(data)
+
+
+def gzip_valid(rng, tar):
+    """A valid gzip container around the stream: one member or several, header flags, zero padding."""
+    import gzip, zlib
+    def member(chunk):
+        roll = rng.randrange(8)
+        if roll < 5:
+            return gzip.compress(chunk, rng.choice([0, 1, 6, 9]), mtime=0)
+        flags = rng.choice([4, 8, 16, 2, 4 | 8 | 16 | 2, 0x20, 0xe0, 8 | 2])
+        head = b'\x1f\x8b\x08' + bytes([flags]) + b'\0\0\0\0' + rng.choice([b'\0', b'\2', b'\4']) + rng.choice([b'\3', b'\xff'])
+        if flags & 4:
+            extra = bytes(rng.randrange(256) for _ in range(rng.choice([0, 1, 20])))
+            head += struct.pack('<H', len(extra)) + extra
+        if flags & 8:
+            head += rng.choice([b'name.tar\0', b'\0', b'caf\xe9\0'])
+        if flags & 16:
+            head += rng.choice([b'a comment\0', b'\0'])
+        if flags & 2:
+            head += rng.choice([b'\0\0', b'\x12\x34'])
+        raw = zlib.compressobj(rng.choice([0, 6]), zlib.DEFLATED, -15)
+        body = raw.compress(chunk) + raw.flush()
+        return head + body + struct.pack('<II', zlib.crc32(chunk), len(chunk) & 0xffffffff)
+    if rng.random() < 0.85 or not tar:
+        return member(tar) + rng.choice([b'', b'', b'', b'\0', b'\0' * 700])
+    cut = sorted(rng.randrange(len(tar) + 1) for _ in range(rng.randrange(1, 4)))
+    pieces = [tar[a:b] for a, b in zip([0] + cut, cut + [len(tar)])]
+    return b''.join(member(piece) + rng.choice([b'', b'', b'\0\0\0']) for piece in pieces)
+
+
+def gen_tar(rng, count):
+    jobs = []
+    for _ in range(count):
+        if rng.random() < 0.15:
+            tar = module_archive(rng)
+        else:
+            tar = b''.join(tar_item(rng) for _ in range(rng.choice([1, 1, 2, 2, 3, 5])))
+            tar += rng.choice([b'\0' * 1024, b'\0' * 1024, b'\0' * 1024, b'\0' * 512, b'', b'\0' * 10240])
+        if rng.random() < 0.35:
+            tar = tar_mutation(rng, tar)
+        jobs.append({'b': b64(gzip_valid(rng, tar))})
+    return jobs
+
+
+def tar_listing(data, limit=TAR_READ_LIMIT):
+    """tarfile.open(..., 'r:gz'), getmembers(), and extractfile().read() of what tarfile reads as a file."""
+    import io, tarfile
+    try:
+        with tarfile.open(fileobj=io.BytesIO(data), mode='r:gz') as archive:
+            members = []
+            for member in archive.getmembers():
+                entry = [member.name, member.isfile(), str(member.size), member.type[0]]
+                if (member.isfile() or member.type not in tarfile.SUPPORTED_TYPES) and member.size <= limit:
+                    try:
+                        entry.append(hashlib.sha256(archive.extractfile(member).read()).hexdigest())
+                    except Exception as error:
+                        entry.append({'error': type(error).__name__})
+                members.append(entry)
+            return {'members': members}
+    except Exception as error:
+        return {'error': type(error).__name__}
+
+
+def py_tar(job):
+    return tar_listing(base64.b64decode(job['b']))
+
+
+# The archive.py:131-135 flow, by the outcome archive.py:136-139 would give it.
+def manifest_flow(data):
+    import io, re, tarfile
+    try:
+        with tarfile.open(fileobj=io.BytesIO(data), mode='r:gz') as archive:
+            manifests = [member for member in archive.getmembers() if re.fullmatch(r'[^/]+/package.json', member.name) and member.isfile()]
+            if not (len(manifests) == 1 and manifests[0].size <= 1024 * 1024):
+                return ['refused', 'archive manifest required']
+            manifest = json.load(archive.extractfile(manifests[0]))
+            return ['accepted', hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest()]
+    except (OSError, ValueError, tarfile.TarError) as error:
+        return ['caught', type(error).__name__]
+    except Exception as error:
+        return ['uncaught', type(error).__name__]
+
+
+def container(data):
+    """Whether gzip reads the whole file without an error, which is what the TS reader requires."""
+    import gzip, io, zlib
+    try:
+        gzip.GzipFile(fileobj=io.BytesIO(data)).read()
+        return 'valid'
+    except (OSError, EOFError, zlib.error) as error:
+        return type(error).__name__
+
+
+def package_archive(rng, big=False):
+    members = [tar_header(b'package/package.json', len(MANIFEST)) + padded(MANIFEST)]
+    for index in range(rng.randrange(0, 4)):
+        body = bytes(rng.randrange(256) for _ in range(rng.choice([0, 10, 700, 3000])))
+        members.append(tar_header(b'package/file%d.js' % index, len(body)) + padded(body))
+    if big:
+        noise = random.Random(rng.random()).randbytes(rng.choice([200000, 400000]))
+        members.insert(rng.randrange(len(members) + 1), tar_header(b'package/big.bin', len(noise)) + padded(noise))
+    if rng.random() < 0.5:
+        rng.shuffle(members)
+    tar = b''.join(members) + b'\0' * 1024
+    return tar + b'\0' * (-len(tar) % 10240) if rng.random() < 0.7 else tar
+
+
+def gen_targz(rng, count):
+    import gzip
+    jobs = []
+    pool = [(package_archive(rng), 'small package') for _ in range(6)] + [(package_archive(rng, True), 'package with a member of several hundred KiB') for _ in range(3)]
+    fixed = [(b'', 'an empty file'), (b'\x1f', 'one byte of the magic'), (b'\x1f\x8b', 'the magic alone'), (b'\0', 'one zero byte'), (b'\0' * 600, 'zeros only'), (b'plain text, not gzip', 'not gzip at all'),
+             (padded(tar_header(b'package/package.json', len(MANIFEST)) + padded(MANIFEST)) + b'\0' * 1024, 'an uncompressed tar'), (b'\x1f\x8b\x08\x00', 'four header bytes'),
+             (b'\x1f\x8b\x07\x00' + b'\0' * 6, 'an unknown compression method'), (b'\x1f\x8b\x08\x08\0\0\0\0\0\3name', 'a header whose file name never ends')]
+    for data, what in fixed:
+        jobs.append({'b': b64(data), '_what': what})
+    while len(jobs) < count:
+        tar, base = rng.choice(pool)
+        good = gzip.compress(tar, rng.choice([1, 6, 9]), mtime=0)
+        roll = rng.randrange(20)
+        data = bytearray(good)
+        if roll == 0:
+            what = 'undamaged'
+        elif roll in (1, 2):
+            cut = rng.choice([1, 2, 3, 9, 10, 11, len(data) - 9, len(data) - 8, len(data) - 7, len(data) - 4, len(data) - 1, rng.randrange(len(data)), rng.randrange(len(data)), max(10, len(data) - rng.randrange(1, 200))])
+            data = data[:cut]
+            what = 'truncated to %d of %d bytes' % (cut, len(good))
+        elif roll in (3, 4, 5):
+            at = rng.choice([0, 1, 2, 3, rng.randrange(4, 10), 10, 11, rng.randrange(10, len(data) - 8), rng.randrange(10, len(data) - 8), rng.randrange(len(data) // 2, len(data) - 8), max(10, len(data) - 8 - rng.randrange(1, 40))])
+            bit = rng.randrange(8)
+            data[at] ^= 1 << bit
+            what = 'bit %d of byte %d flipped (%s)' % (bit, at, 'header' if at < 10 else 'deflate data, %d bytes before its end' % (len(good) - 8 - at))
+        elif roll in (6, 7):
+            at = len(data) - 8 + rng.randrange(4)
+            data[at] ^= 1 << rng.randrange(8)
+            what = 'one bit flipped in the CRC-32 trailer'
+        elif roll in (8, 9):
+            at = len(data) - 4 + rng.randrange(4)
+            data[at] ^= 1 << rng.randrange(8)
+            what = 'one bit flipped in the length trailer'
+        elif roll == 10:
+            tail = rng.choice([b'x', b'junk after the stream', b'\0\0\0x', b'\x1f', b'\x1f\x8b', b'\x1f\x8b\x08\x00', b'\0' * 9 + b'\1'])
+            data += tail
+            what = 'followed by %d bytes that are neither padding nor a member' % len(tail)
+        elif roll == 11:
+            data += b'\0' * rng.choice([1, 8, 5000])
+            what = 'followed by zero padding'
+        elif roll == 12:
+            data += gzip.compress(rng.choice([b'', b'\0' * 1024, tar_header(b'second/package.json', len(MANIFEST)) + padded(MANIFEST)]), mtime=0)
+            what = 'followed by a second, valid member'
+        elif roll == 13:
+            second = bytearray(gzip.compress(b'\0' * 2048, mtime=0))
+            second[rng.choice([len(second) - 1, len(second) - 6, 12])] ^= 0x10
+            data += second
+            what = 'followed by a second member that is damaged'
+        elif roll == 14:
+            half = len(tar) // 2 // 512 * 512
+            first = bytearray(gzip.compress(tar[:half], mtime=0))
+            first[len(first) - 8 + rng.randrange(8)] ^= 0x04
+            data = first + gzip.compress(tar[half:], mtime=0)
+            what = 'two members, the trailer of the first one damaged'
+        elif roll == 15:
+            data[3] = rng.choice([1, 2, 4, 8, 16, 32, 64, 128, 0x1f])
+            what = 'header flag byte changed to %#04x without the fields it announces' % data[3]
+        elif roll == 16:
+            data = data[:10] + rng.choice([b'', b'\x03\x00', b'\x01\x00\x00\xff\xff']) + data[-8:]
+            what = 'deflate data replaced by a short stream'
+        elif roll == 17:
+            at = rng.randrange(10, len(data) - 8)
+            del data[at:at + rng.choice([1, 2, 50])]
+            what = 'bytes removed from the deflate data'
+        elif roll == 18:
+            at = rng.randrange(10, len(data) - 8)
+            data[at:at] = bytes(rng.randrange(256) for _ in range(rng.choice([1, 2, 50])))
+            what = 'bytes inserted into the deflate data'
+        else:
+            at = len(data) - 8 - rng.choice([1, 2, 3, 4, 5, 8, 12, 20])
+            data[at] ^= 1 << rng.randrange(8)
+            what = 'one bit flipped in the last bytes of the deflate data'
+        jobs.append({'b': b64(bytes(data)), '_what': base + ', ' + what})
+    return jobs
+
+
+def py_targz(job):
+    data = base64.b64decode(job['b'])
+    return {'container': container(data), 'flow': manifest_flow(data)}
+
+
+TARGZ_BUCKETS = ('valid container', 'both refuse as unreadable', 'oracle refuses for the missing manifest, TS as unreadable', 'oracle accepts, TS refuses', 'oracle lets an uncaught class escape, TS refuses', 'TS ACCEPTS A DAMAGED CONTAINER')
+
+
+def judge_targz(want, got):
+    """(agrees, bucket). A valid container must give the same flow; a damaged one must be an OSError in TS."""
+    if not isinstance(got, dict) or 'flow' not in got:
+        return False, TARGZ_BUCKETS[5]
+    if want['container'] == 'valid':
+        return got['container'] == 'valid' and got['flow'] == want['flow'], TARGZ_BUCKETS[0]
+    if got['container'] == 'valid' or got['flow'][0] != 'caught' or got['flow'][1] not in ('BadGzipFile', 'OSError'):
+        return False, TARGZ_BUCKETS[5]
+    kind = want['flow'][0]
+    return True, TARGZ_BUCKETS[{'caught': 1, 'refused': 2, 'accepted': 3, 'uncaught': 4}[kind]]
+
+
+# Chains of extension headers recurse in tarfile; the bound is stated for a function a script calls directly.
+BARE_TAR = r'''
+import base64, gzip, io, json, sys, tarfile
+def listing(data):
+    try:
+        with tarfile.open(fileobj=io.BytesIO(data), mode='r:gz') as archive:
+            return 'members:%d' % len(archive.getmembers())
+    except Exception as error:
+        return type(error).__name__
+for line in sys.stdin:
+    print(listing(base64.b64decode(json.loads(line)['b'])))
+'''
+
+
+def chain(kind, length, first, extra=b''):
+    link = pax_block([pax_record(b'comment', b'x')] + ([pax_record(b'path', b'p/package.json')] if extra == b'path' else [])) if kind == 'x' else tar_header(b'././@LongLink', 2, b'L') + padded(b'n\0')
+    lead = b'' if first else tar_header(b'lead', 0)
+    return lead + link * length + tar_header(b'package/package.json', len(MANIFEST)) + padded(MANIFEST) + b'\0' * 1024
+
+
+def gen_tardepth(rng, count):
+    import gzip
+    jobs = []
+    for kind in ('x', 'L'):
+        for first in (True, False):
+            for length in list(range(300, 345)) + [1, 50, 400, 1000]:
+                jobs.append({'b': b64(gzip.compress(chain(kind, length, first), 1, mtime=0)), '_what': '%s chain of %d, %s' % (kind, length, 'first member' if first else 'second member')})
+    return jobs
+
+
+def bare_tar(jobs):
+    done = subprocess.run([sys.executable, '-I', '-c', BARE_TAR], input=''.join(json.dumps({'b': job['b']}) + '\n' for job in jobs), capture_output=True, text=True, timeout=600)
+    if done.returncode:
+        raise RuntimeError('bare interpreter failed: ' + done.stderr[-500:])
+    lines = done.stdout.split('\n')[:-1]
+    if len(lines) != len(jobs):
+        raise RuntimeError('bare interpreter answered %d of %d' % (len(lines), len(jobs)))
+    return lines
+
+
+def gen_pyint(rng, count):
+    pool = list('0123456789') * 3 + ['_', '_', '+', '-', ' ', '\t', '\n', '\x0b', '\x0c', '\r', '\x1c', '\x1f', '\x00', '\x7f', '\x85', '\xa0', '\u2003', '\u3000', '\ufeff', '\u0660', '\u0669', '\u06f5', '\uff10', '\uff19',
+                                      '\U0001d7ce', '\U0001d7ff', '\U0001e950', '\u00b2', '\u2460', 'x', 'e', '.', 'o', '0x', '0o', '\u0966']
+    jobs = [{'s': ''.join(rng.choice(pool) for _ in range(rng.choice([0, 1, 1, 2, 3, 5, 8])))} for _ in range(count)]
+    jobs += [{'s': text} for text in ('9' * 4300, '9' * 4301, '-' + '9' * 4300, '-' + '9' * 4301, '0' * 4301, '1_' * 2150 + '1', '1_' * 2151 + '1', ' ' + '7' * 4300 + ' ')]
+    jobs += [{'b': b64(''.join(rng.choice(pool) for _ in range(rng.choice([0, 1, 2, 3, 5]))).encode('utf-8', 'surrogatepass'))} for _ in range(count // 2)]
+    # every code point CPython knows as a decimal digit, alone and after an ASCII digit
+    digits = [chr(code) for code in range(0x110000) if chr(code).isdecimal()]
+    jobs += [{'s': rng.choice(['', '1', '-']) + digit} for digit in digits]
+    return jobs
+
+
+def py_pyint(job):
+    try:
+        return str(int(job['s'] if 's' in job else base64.b64decode(job['b'])))
+    except ValueError:
+        return 'ValueError'
+
+
 # ---------------------------------------------------------------- driver
 
 def kinds(full):
@@ -986,6 +1537,10 @@ def kinds(full):
         'adapter': (gen_adapter, py_adapter, 8000),
         'eq': (gen_eq, py_eq, 30000),
         'pyops': (gen_pyops, py_pyops, 20000),
+        'pyint': (gen_pyint, py_pyint, 6000),
+        'tar': (gen_tar, py_tar, 12000),
+        'tardepth': (gen_tardepth, None, 1),
+        'targz': (gen_targz, py_targz, 4000),
     }
 
 
@@ -1048,6 +1603,8 @@ def run(node='node', scale=1.0, only=None, full=True, processes=None, seed=20261
                 answers = [None] * len(made)
             elif name == 'depth':
                 answers = bare_outcomes(made)
+            elif name == 'tardepth':
+                answers = bare_tar(made)
             else:
                 answers = [oracle(job) for job in made]
             jobs += made
@@ -1060,12 +1617,18 @@ def run(node='node', scale=1.0, only=None, full=True, processes=None, seed=20261
         actual = node_answers(jobs, node, processes)
     finally:
         remove_tree()
-    witnesses = {}
+    witnesses, examples = {}, {}
     for job, want, got in zip(jobs, expected, actual):
         entry = report.setdefault(job['k'], {'cases': 0, 'mismatches': 0})
         entry['cases'] += 1
         want = joined(want)
-        if want != got:
+        if job['k'] == 'targz':
+            agrees, bucket = judge_targz(want, got)
+            entry.setdefault('buckets', {name: 0 for name in TARGZ_BUCKETS})[bucket] += 1
+            examples.setdefault(bucket, job['_what'])
+        else:
+            agrees = want == got
+        if not agrees:
             entry['mismatches'] += 1
             if job['k'] == 'sweep':
                 differing = next((pair for pair in zip(want, got) if pair[0] != pair[1]), (want[-1:], got[-1:]))
@@ -1075,7 +1638,9 @@ def run(node='node', scale=1.0, only=None, full=True, processes=None, seed=20261
             else:
                 detail = {'python': want, 'ts': got}
             if len(witnesses.setdefault(job['k'], [])) < 5:
-                witnesses[job['k']].append({'job': brief(job), 'differs': json.dumps(detail)[:600]})
+                witnesses[job['k']].append({'job': job.get('_what') or brief(job), 'differs': json.dumps(detail)[:600]})
+    if 'targz' in report:
+        report['targz']['examples'] = examples
     return report, witnesses
 
 
@@ -1091,6 +1656,8 @@ def main():
     args = parser.parse_args()
     report, witnesses = run(args.node, args.scale, args.kind, not args.sampled_sweep, args.processes)
     print(json.dumps(report, sort_keys=True))
+    for bucket, count in sorted(report.get('targz', {}).get('buckets', {}).items()):
+        print('BUCKET targz %d %s; first: %s' % (count, bucket, report['targz']['examples'].get(bucket, '-')))
     for kind, items in sorted(witnesses.items()):
         for item in items:
             print('WITNESS', kind, json.dumps(item, sort_keys=True))

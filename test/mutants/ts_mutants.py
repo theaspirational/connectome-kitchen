@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""TS mutants of errors, lock and inputs (plan 3.4 step 3).
+"""TS mutants of the ported engine modules (plan 3.4 step 3).
 
 `anchors` writes test/mutants/ts-anchors.golden; `run` applies every anchor to
 a scratch copy of src/, compiles it with the pinned compiler and replays the
@@ -8,21 +8,18 @@ committed vectors on the result.
 Ids. A guard-site mutant carries the id of the oracle mutant of the same guard
 (test/mutants/guard-anchors.golden, `lock.L122.4`); its TS anchor is found
 through the `lock.py:122` reference in the comment above the TS guard. A named
-check carries the phase-1 name (`lock.schema.cook#1`). Rows 1, 3 and 28 have no
-oracle mutant at all (the oracle mutants are derived from `require`/`need` and
-`raise` statements, and `credential_shaped`, `repository` and the errors module
-contain none): their checks get TS ids here, `lock.credential.*`,
-`lock.repository.*`, `errors.closed.*`.
+check carries the phase-1 name (`lock.schema.cook#1`). The oracle mutants are
+derived from `require`/`need` and `raise` statements, so a function without
+one has no oracle mutant at all (`credential_shaped`, `repository`, the errors
+module, the archive predicates, the clauses of one-`raise` functions). Their
+checks get TS ids here: `lock.credential.*`, `lock.repository.*`,
+`errors.closed.*`, `cook.provenance.*`, `config.layers.*`.
 
 A mutant must compile under the strict configuration; one that does not is
 `invalid` and counts as nothing. Status of a compiled mutant:
   killed       some committed vector gets a different *declared* outcome
-               (a value, or a ValueError with class and message), or a test
-               of test/unit/port-seam.test.js fails (those run the port
-               against a named fake of the unported archive module and
-               compare outcomes as data); and the node unit suite fails
-  killed-seam  the only difference is that the mutant asks the archive seam a
-               different question than the oracle did. Reported separately.
+               (a value, or a ValueError with class and message), and the
+               node unit suite fails
   crash-only   every differing vector differs only by a runtime error under
                the mutant. Reported separately and never counted as killed,
                as the phase-1 category of the same name.
@@ -36,13 +33,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 ANCHORS = ROOT / 'test/mutants/ts-anchors.golden'
 RESULTS = ROOT / 'test/mutants/ts-results.golden'
-SOURCES = {'lock': 'src/lock.ts', 'inputs': 'src/inputs.ts', 'errors': 'src/errors.ts'}
-MARKER = re.compile(r'^\s*// row (\d+) ([^:]+): .* (lock|inputs|errors)\.py:(\d+)(?:-(\d+))?$')
+SOURCES = {'lock': 'src/lock.ts', 'inputs': 'src/inputs.ts', 'errors': 'src/errors.ts', 'archive': 'src/archive.ts', 'config': 'src/config.ts'}
+MARKER = re.compile(r'^\s*// row (\d+) ([^:]+): .* (lock|inputs|errors|archive|config)\.py:(\d+)(?:-(\d+))?$')
 
 # What a deleted `raise` becomes where plain deletion would not compile or would change nothing.
 RAISE = {
     'lock.L324.8': 'return null;', 'lock.L331.8': 'return new Map();', 'lock.L333.8': 'return new Map();',
     'inputs.L111.8': 'return null;', 'inputs.L127.8': 'return Buffer.alloc(0);', 'inputs.L150.8': 'return new Map();',
+    # A swallowed refusal would leave `manifest` unassigned (UnboundLocalError in the oracle); these keep the program valid.
+    'archive.L137.8': "throw new ArchiveError('unreadable archive or manifest');", 'archive.L139.8': 'manifest = new Map();',
 }
 
 # Clause-level and TS-only anchors, written by hand: (id, rows, file, before, after, note).
@@ -72,6 +71,58 @@ MANUAL = [
     ('inputs.record.data-flag#3', [63], 'inputs', 'return !DENIED_PREFIXES.some(prefix => value.startsWith(prefix));', 'return true;', ''),
     ('inputs.record.transport#2', [63], 'inputs', "b64decodeStrict((transport as ReadonlyMap<string, unknown>).get('cook-recipe.json'))",
      "Buffer.from(String((transport as ReadonlyMap<string, unknown>).get('cook-recipe.json')), 'base64')", 'strict decoding replaced by a lenient one, as validate=False in the oracle mutant'),
+    # Row 69: the three named checks whose oracle mutant replaces a condition, and the two that change the merge.
+    ('config.layers.count', [69], 'config', 'len(layers) !== 4 || iterate(layers).some(layer => !isDict(layer))', 'false', ''),
+    ('config.layers.enabled-type', [69], 'config', "!isDict(entry) || typeof dictGet(entry, 'enabled', true) !== 'boolean'", 'false', ''),
+    ('config.layers.public-connectors', [69], 'config', "if (strIn('connectors', result)) {", 'if (false) {', ''),
+    ('config.layers.public-connectors#1', [69], 'config', "if (strIn('connectors', result)) {", 'if (false) {', 'same mutation as the name without a site number, as in the oracle lists'),
+    ('config.layers.fold#1', [69], 'config', 'for (const layer of layers as PyDict[]) merged = combine([merged, layer], true);', 'merged = (layers as PyDict[]).reduceRight((upper, lower) => combine([lower, upper], true));',
+     "the reversed fold of Ansible's multi-argument combine, as in the oracle mutant"),
+    ('config.layers.prune#1', [69], 'config', "filter(([, entry]) => dictGet(entry, 'enabled', true) === true)", 'filter(() => true)', ''),
+    ('config.layers.tombstones', [69], 'config', 'const result = prune(merged) as PyDict;', 'const result = merged;', 'TS only; nulls survive the merge'),
+    ('config.layers.tombstones-last', [69], 'config', 'if (recursive && isDict(value) && isDict(present)) result.set(key, combine([present, value], true));\n      else result.set(key, deepcopy(value));',
+     'if (recursive && isDict(value) && isDict(present)) result.set(key, combine([present, value], true));\n      else if (value === null) result.delete(key);\n      else result.set(key, deepcopy(value));',
+     'TS only; a null applied while merging instead of after it lets a lower layer come back'),
+    ('config.layers.recursive', [69], 'config', 'result.set(key, combine([present, value], true));', 'result.set(key, deepcopy(value));', 'TS only; an upper mapping replaces a lower one instead of merging into it'),
+    ('config.layers.empty-catalog', [69], 'config', "if (!truthy(dictGet(result, 'catalog', null))) result.delete('catalog');", ';', 'TS only'),
+    # Row 39: the archive predicates without a `need` (no oracle mutant), and the clauses of the sidecar check.
+    ('cook.provenance.npm-name-length', [39], 'archive', 'Array.from(value).length <= 214', 'true', 'TS only'),
+    ('cook.provenance.npm-name-reserved', [39], 'archive', "value !== 'node_modules' && value !== 'favicon.ico'", 'true', 'TS only'),
+    ('cook.provenance.npm-name-grammar', [39], 'archive', '&& NPM_NAME.test(value);', ';', 'TS only'),
+    ('cook.provenance.origin-characters', [39], 'archive', 'credential_shaped(value) || REGISTRY_REFUSED.test(value)) return false;', 'credential_shaped(value)) return false;', 'TS only'),
+    ('cook.provenance.origin-credential', [39, 1], 'archive', 'if (!text(value) || credential_shaped(value) || REGISTRY_REFUSED.test(value)) return false;', 'if (!text(value) || REGISTRY_REFUSED.test(value)) return false;', 'TS only'),
+    ('cook.provenance.origin-scheme', [39], 'archive', "if (!(parts.scheme === 'https' && url.username", 'if (!(url.username', 'TS only'),
+    ('cook.provenance.origin-user', [39], 'archive', 'url.username(parts.netloc) === null && url.password(parts.netloc) === null', 'url.password(parts.netloc) === null', 'TS only'),
+    ('cook.provenance.origin-password', [39], 'archive', 'url.username(parts.netloc) === null && url.password(parts.netloc) === null', 'url.username(parts.netloc) === null', 'TS only'),
+    ('cook.provenance.origin-path', [39], 'archive', "&& (parts.path === '' || parts.path === '/') && !parts.query", '&& !parts.query', 'TS only'),
+    ('cook.provenance.origin-query', [39], 'archive', '&& !parts.query && !parts.fragment', '&& !parts.fragment', 'TS only'),
+    ('cook.provenance.origin-fragment', [39], 'archive', '&& !parts.query && !parts.fragment', '&& !parts.query', 'TS only'),
+    ('cook.provenance.origin-host', [39], 'archive', '&& host !== null && REGISTRY_HOST.test(host))) return false;', '&& host !== null)) return false;', 'TS only'),
+    ('cook.provenance.origin-port', [39], 'archive', 'return port === null || (0 < port && port <= 65535);\n  } catch (error) {\n    if (error instanceof PyValueError) return false;\n    throw error;\n  }\n}\n\n/** archive.py:51-58 */',
+     'return true;\n  } catch (error) {\n    if (error instanceof PyValueError) return false;\n    throw error;\n  }\n}\n\n/** archive.py:51-58 */', 'TS only'),
+    ('cook.provenance.origin-malformed', [39], 'archive', 'return port === null || (0 < port && port <= 65535);\n  } catch (error) {\n    if (error instanceof PyValueError) return false;',
+     'return port === null || (0 < port && port <= 65535);\n  } catch (error) {\n    if (error instanceof PyValueError) return true;', 'TS only'),
+    ('cook.provenance.integrity-prefix', [39], 'archive', "if (!text(value) || !value.startsWith('sha512-')) return false;", 'if (!text(value)) return false;', 'TS only'),
+    ('cook.provenance.integrity-length', [39], 'archive', 'return decoded.length === 64 && b64encode(decoded) === value.slice(7);', 'return b64encode(decoded) === value.slice(7);', 'TS only'),
+    ('cook.provenance.integrity-canonical', [39], 'archive', 'return decoded.length === 64 && b64encode(decoded) === value.slice(7);', 'return decoded.length === 64;', 'TS only'),
+    ('cook.provenance.record-verifiable', [39], 'archive', "record.set('commit_verifiable', eq(kind, 'git_commit'));", "record.set('commit_verifiable', true);", 'TS only'),
+    ('cook.provenance.record-payload', [39], 'archive', "if (eq(kind, 'artifact')) record.set('payload', ARTIFACT_PAYLOAD);", '', 'TS only'),
+    ('cook.provenance.record-comparison', [39], 'archive', "if (eq(kind, 'registry_release')) record.set('registry_comparison', REGISTRY_COMPARISON);", '', 'TS only'),
+    ('cook.provenance.metadata-dependencies', [39], 'archive', "return strIn('host_dependencies', settings)\n    || ", 'return ', 'TS only'),
+    ('cook.provenance.metadata-release', [39], 'archive', "dictGet(dictGet(settings, 'framework_archive', new Map()), 'registry_release', null) === true;", "dictGet(dictGet(settings, 'framework_archive', new Map()), 'registry_release', null) !== null;", 'TS only'),
+    ('cook.provenance.sidecar-fields', [39], 'archive', 'const valid = isDict(record) && keysEqual(record, PROVENANCE_FIELDS)', 'const valid = isDict(record) && keysInclude(record, PROVENANCE_FIELDS)', 'TS only; extra fields pass'),
+    ('cook.provenance.sidecar-schema', [39], 'archive', "    && eq(field('schema'), 'connectome.framework-archive/v1')\n", '', 'TS only'),
+    ('cook.provenance.sidecar-digest', [39], 'archive', "&& eq(field('sha256'), subscript(artifact, 'sha256')) && eq(field('name'), FRAMEWORK)", "&& eq(field('name'), FRAMEWORK)", 'TS only'),
+    ('cook.provenance.sidecar-name', [39], 'archive', "&& eq(field('sha256'), subscript(artifact, 'sha256')) && eq(field('name'), FRAMEWORK)", "&& eq(field('sha256'), subscript(artifact, 'sha256'))", 'TS only'),
+    ('cook.provenance.sidecar-version', [39], 'archive', "&& version(field('version')) && !credential_shaped(field('version')) && eq(field('requested_commit'), pin)", "&& isStr(field('version')) && !credential_shaped(field('version')) && eq(field('requested_commit'), pin)", 'TS only; the type test stays'),
+    ('cook.provenance.sidecar-version-credential', [39, 1], 'archive', "&& version(field('version')) && !credential_shaped(field('version')) && eq(field('requested_commit'), pin)", "&& version(field('version')) && eq(field('requested_commit'), pin)", 'TS only'),
+    ('cook.provenance.sidecar-pin', [39], 'archive', "&& version(field('version')) && !credential_shaped(field('version')) && eq(field('requested_commit'), pin)", "&& version(field('version')) && !credential_shaped(field('version'))", 'TS only'),
+    ('cook.provenance.sidecar-release', [39], 'archive', "    && field('registry_release') === (dictGet(artifact, 'registry_release', null) === true)\n", '', 'TS only'),
+    ('cook.provenance.sidecar-verifiable', [39], 'archive', "    && (field('commit_verifiable') === true || field('registry_release') === true)\n", '', 'TS only'),
+    ('cook.provenance.sidecar-release-identity', [39], 'archive', "    && (field('registry_release') !== true || (eq(field('name'), dictGet(artifact, 'name', null))\n      && eq(field('version'), dictGet(artifact, 'version', null))));",
+     ';', 'TS only'),
+    ('cook.provenance.manifest-name-pattern', [39], 'archive', 'filter(member => MANIFEST_NAME.test(member.name) && member.isfile)', 'filter(member => member.isfile)', 'TS only'),
+    ('cook.provenance.manifest-regular-file', [39], 'archive', 'filter(member => MANIFEST_NAME.test(member.name) && member.isfile)', 'filter(member => MANIFEST_NAME.test(member.name))', 'TS only'),
     # Row 2: the call itself (the oracle has mutants only for the three checks inside).
     ('lock.names-only.call', [2], 'lock', 'namesOnly(lock, frame + 1);', ';', 'TS only'),
     # Row 1: no oracle mutant exists for credential_shaped.
@@ -214,6 +265,7 @@ def build_anchors():
         choices = [m for m in found if m['module'] == module and m['start'] <= line <= m['end'] and
                    (m['statement'].lstrip().startswith(('require(', 'need(')) if kind == 'True' else m['statement'].lstrip().startswith('throw '))]
         exact = [m for m in choices if m['start'] == line] or choices
+        exact = list({m['ts_line']: m for m in exact}.values())  # two rows may mark one guard
         if len(exact) != 1:
             raise ValueError('%s: %d TS guards cite line %d' % (ident, len(exact), line))
         marker = exact[0]
@@ -225,18 +277,21 @@ def build_anchors():
             before, after = call + before + ',', call + after + ','
         else:
             before, after = text, RAISE.get(ident, ';')
-            if ident == 'lock.L331.8':  # `throw error;` is not unique; anchor it to its marker comment
-                before, after = 'lock.py:330-331\n      throw error;', 'lock.py:330-331\n      return new Map();'
+            if (ROOT / marker['file']).read_text().count(before) != 1:  # e.g. `throw error;`: anchor it to its marker comment
+                above = (ROOT / marker['file']).read_text().split('\n')[marker['ts_line'] - 2:marker['ts_line']]
+                cite = above[0][above[0].rindex(module + '.py:'):]
+                indent = above[1][:len(above[1]) - len(above[1].lstrip())]
+                before, after = cite + '\n' + indent + before, cite + '\n' + indent + after
         anchors.append({'id': ident, 'rows': rows, 'file': marker['file'], 'before': before, 'after': after, 'oracle_line': line, 'note': note})
     for oracle in json.loads((ROOT / 'test/mutants/guard-anchors.golden').read_text()):
         module = oracle['id'].split('.')[0]
-        if module in ('lock', 'inputs'):
+        if module in SOURCES:
             guard(oracle['id'], oracle['rows'], module, oracle['line'], oracle['after'])
     manual = {entry[0] for entry in MANUAL}
     for source in ('named-guard-anchors.golden', 'named-site-anchors.golden'):
         for oracle in json.loads((ROOT / 'test/mutants' / source).read_text()):
             module = oracle['file'].rsplit('/', 1)[-1].removeprefix('connectome_').removesuffix('.py')
-            if module not in ('lock', 'inputs') or oracle['id'] in manual:
+            if module not in SOURCES or oracle['id'] in manual:
                 continue
             if oracle['after'].strip() != 'True':
                 raise ValueError('named site needs a hand-written TS anchor: ' + oracle['id'])
@@ -261,13 +316,13 @@ import { cleanup, evaluate, vectors } from './test/differential/ts_corpus.mjs';
 const differing = [];
 for (const vector of vectors()) {
   const { expected, actual } = evaluate(vector);
-  if (expected !== actual) differing.push({ id: vector.id, kind: 'crash' in JSON.parse(actual) ? 'crash' : 'seam_mismatch' in JSON.parse(actual) ? 'seam' : 'declared' });
+  if (expected !== actual) differing.push({ id: vector.id, kind: 'crash' in JSON.parse(actual) ? 'crash' : 'declared' });
 }
 cleanup();
 process.stdout.write(JSON.stringify(differing));
 '''
-COPIED = ['package.json', 'tsconfig.json', 'test/differential/ts_invoke.mjs', 'test/differential/ts_corpus.mjs', 'test/unit/port.test.js', 'test/unit/port-seam.test.js',
-          'test/vectors/guard-negative.golden', 'test/vectors/crash-only.golden', 'test/vectors/port-m1-3.golden', 'test/vectors/port-m1-3.trees.golden']
+COPIED = ['package.json', 'tsconfig.json', 'test/differential/ts_invoke.mjs', 'test/differential/ts_corpus.mjs', 'test/unit/port.test.js', 'test/unit/port-lazy.test.js',
+          'test/vectors/guard-negative.golden', 'test/vectors/crash-only.golden', 'test/vectors/port.golden', 'test/vectors/port.trees.golden', 'test/vectors/port-divergences.golden']
 local = getattr(threading, 'local')()  # spelled so that the publication gate does not read a host name
 counter = [0]
 mutex = threading.Lock()
@@ -278,7 +333,13 @@ def scratch(out):
         with mutex:
             counter[0] += 1
             local.root = out / ('worker-%d' % counter[0])
-        shutil.rmtree(local.root, ignore_errors=True)
+        if local.root.exists():  # a killed run leaves fixture directories without permissions behind
+            for directory, names, _files in os.walk(local.root):
+                for name in names:
+                    child = os.path.join(directory, name)
+                    if not os.path.islink(child):
+                        os.chmod(child, 0o700)
+            shutil.rmtree(local.root)
         local.root.mkdir(parents=True)
         os.symlink(ROOT / 'node_modules', local.root / 'node_modules')
         for relative in COPIED:
@@ -299,16 +360,13 @@ def compile_and_replay(root, node):
     if replay.returncode:
         return {'status': 'invalid', 'replay': replay.stderr.strip().splitlines()[-3:]}
     differing = json.loads(replay.stdout)
-    unit = subprocess.run([node, '--test', 'test/unit/port.test.js'], cwd=root, capture_output=True, text=True, env=env, timeout=600)
-    # The named-fake tests turn every outcome into data first, so a failure there is an assertion, never an error.
-    fake = subprocess.run([node, '--test', 'test/unit/port-seam.test.js'], cwd=root, capture_output=True, text=True, env=env, timeout=600)
+    # The test file is run directly: `node --test` adds a parent process that was seen spinning after its child had exited.
+    unit = subprocess.run([node, 'test/unit/port.test.js'], cwd=root, capture_output=True, text=True, env=env, timeout=600)
     declared = [d['id'] for d in differing if d['kind'] == 'declared']
-    seam = [d['id'] for d in differing if d['kind'] == 'seam']
     crash = [d['id'] for d in differing if d['kind'] == 'crash']
-    status = 'killed' if declared or fake.returncode else 'killed-seam' if seam else 'crash-only' if crash else 'survived'
-    return {'status': status, 'differing_vectors': len(differing), 'declared': len(declared), 'seam': len(seam), 'crash': len(crash),
-            'witnesses': (declared or seam or crash)[:3], 'unit_suite': 'fails' if unit.returncode or fake.returncode else 'passes',
-            'named_fake_test': 'fails' if fake.returncode else 'passes'}
+    status = 'killed' if declared else 'crash-only' if crash else 'survived'
+    return {'status': status, 'differing_vectors': len(differing), 'declared': len(declared), 'crash': len(crash),
+            'witnesses': (declared or crash)[:3], 'unit_suite': 'fails' if unit.returncode else 'passes'}
 
 
 def work(anchor, out, node):
@@ -345,7 +403,7 @@ def run(args):
     counts = {}
     for result in results:
         counts[result['status']] = counts.get(result['status'], 0) + 1
-    inconsistent = [r['id'] for r in results if (r['status'] in ('killed', 'killed-seam', 'crash-only')) != (r.get('unit_suite') == 'fails')]
+    inconsistent = [r['id'] for r in results if (r['status'] in ('killed', 'crash-only')) != (r.get('unit_suite') == 'fails')]
     report = {'mutants': len(results), 'counts': dict(sorted(counts.items())), 'unit_suite_disagrees': inconsistent, 'results': results}
     text = json.dumps(report, indent=1) + '\n'
     if args.only:

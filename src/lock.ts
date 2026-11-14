@@ -219,7 +219,7 @@ export function external_command(value: PyValue): boolean {
 export function contained_file(build: string, value: PyValue): string {
   // row 10 lock.launch-units: an artifact path is text. lock.py:108
   require(text(value), 'lock artifact path required');
-  const path = pathlib.joinPath(build, value as string);
+  const path = pathlib.joinPath(pathlib.fspath(build), value as string);
   // row 10 lock.launch-units: the resolved path stays inside the resolved build. lock.py:110
   require(pathlib.isRelativeTo(pathlib.resolve(path), pathlib.resolve(build)), 'lock artifact path escapes build');
   // row 10 lock.launch-units: a regular file, and not a link to one. lock.py:111
@@ -230,7 +230,8 @@ export function contained_file(build: string, value: PyValue): string {
 /** Keyword arguments of `map_lock` and `read_lock` (lock.py:115, :315). */
 export interface LockOptions {
   host_pin?: PyValue;
-  required_names?: Iterable<PyValue>;
+  /** Anything `set()` takes: a list or another iterable of names; a str counts as its characters, a dict as its keys. */
+  required_names?: Iterable<PyValue> | PyValue;
   config?: PyValue;
   framework_pin?: PyValue;
   framework_record?: PyValue;
@@ -281,16 +282,18 @@ function keysEqualExcept(mapping: PyDict, names: ReadonlySet<string>, skip: stri
   for (const key of mapping.keys()) { if (key === skip) continue; if (!names.has(key)) return false; count++; }
   return count === names.size;
 }
-/** `set(iterable)`: every element must be hashable. */
-function hashed(values: Iterable<PyValue>): PyValue[] {
-  const result = [...values];
+/** `set(iterable)`: the argument must be iterable and every element hashable, else `TypeError`. */
+function hashed(values: Iterable<PyValue> | PyValue): PyValue[] {
+  const result = isList(values) ? [...values] : isDict(values) ? [...values.keys()] : isStr(values) ? Array.from(values)
+    : values !== null && typeof values === 'object' && Symbol.iterator in values ? [...values as Iterable<PyValue>]
+      : ((): never => { throw new PyTypeError('object is not iterable'); })();
   for (const value of result) if (isList(value) || isDict(value)) throw new PyTypeError("unhashable type: '" + typeName(value) + "'");
   return result;
 }
 
 function mapLock(data: PyValue, build: string, options: LockOptions, frame: number): PyDict {
   const { host_pin = null, required_names = [], config = null, framework_pin = null, framework_record = null } = options;
-  const root = pathlib.pathStr(build);
+  const root = pathlib.pathStr(pathlib.fspath(build));
   // row 4 lock.schema.top: exact version. lock.py:122-123
   require(isDict(data) && isInt(get(data, 'version')) && eq(item(data, 'version'), TWO),
     'host lock v2 required; legacy and unknown versions refused');
@@ -591,7 +594,7 @@ export function read_lock(path: string, options: LockOptions = {}): PyDict {
     throw new LockError('nonfinite lock number refused');
   };
   try {
-    const file = pathlib.pathStr(path);
+    const file = pathlib.pathStr(pathlib.fspath(path));
     const data = loads(pathlib.readText(file), { object_pairs_hook: unique_fields, parse_constant: invalid_number });
     return mapLock(data, pathlib.parent(file), options, READ_LOCK_FRAME);
   } catch (error) {

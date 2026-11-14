@@ -26,8 +26,10 @@ construction. `cli-replay.golden` names host values instead of hashing them
 This limitation is explicit: no engine module can pass the module-complete
 gate on the present harness.
 
-`port-m1-3.golden` and `port-m1-3.trees.golden` belong to the TS port of
-`errors`, `lock` and `inputs`: hand-written inputs (`test/differential/port_seeds.py`)
+`port.golden` and `port.trees.golden` belong to the TS port of `errors`,
+`lock`, `inputs`, `archive` and `config`: hand-written inputs (`test/differential/port_seeds.py`)
 with the outcome the oracle gave for each, written by `test/differential/ts_port.py build`.
 A row names its file tree by digest; a string the publication gate would refuse
 is stored in pieces (`$join`) and large inputs as a generator (`$generate`).
+`port-divergences.golden` names every input on which the port deliberately
+answers differently from the oracle, with both outcomes and the reason.

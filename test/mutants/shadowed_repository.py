@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Evidence for the two `repository` checks no vector can isolate (test/mutants/ts-unkilled.golden).
+"""Evidence for the `repository` and `registry_origin` checks no vector can isolate (test/mutants/ts-unkilled.golden).
 
 Each check is implied by another check of the same function. The implications
 are tested here on the oracle, on seeded random strings biased towards the
@@ -56,7 +56,27 @@ def main():
             if not lock.credential_shaped(value):
                 print(json.dumps({'counterexample': 'password', 'value': value}))
                 return 1
-    print(json.dumps({'strings': text_cases, 'refused_by_text': text_refused, 'urls': url_cases, 'urls_with_password_reaching_the_check': with_password, 'counterexamples': 0}))
+    # cook.provenance.origin-password, -query, -fragment (archive.py:39-46): the same three implications for a registry origin.
+    origin_password = origin_query = 0
+    for _ in range(count):
+        value = url() if rng.random() < 0.5 else 'https://' + text() + rng.choice(['', '?', '#', '?x', '#x', '/'])
+        if not lock.text(value) or any(c.isspace() or c in '%\\?#' for c in value):
+            continue  # refused before the URL is parsed
+        try:
+            parts = urlsplit(value)
+        except ValueError:
+            continue
+        if parts.password is not None:
+            origin_password += 1
+            if not lock.credential_shaped(value):
+                print(json.dumps({'counterexample': 'origin-password', 'value': value}))
+                return 1
+        if parts.query or parts.fragment:
+            origin_query += 1
+            print(json.dumps({'counterexample': 'origin-query-or-fragment', 'value': value}))
+            return 1
+    print(json.dumps({'strings': text_cases, 'refused_by_text': text_refused, 'urls': url_cases, 'urls_with_password_reaching_the_check': with_password,
+                      'origins_with_password_reaching_the_check': origin_password, 'origins_with_query_or_fragment_reaching_the_check': origin_query, 'counterexamples': 0}))
     return 0
 
 

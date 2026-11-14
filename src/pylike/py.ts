@@ -225,3 +225,33 @@ export class BytesIO {
     return this.#data.subarray(start, end);
   }
 }
+
+/** `copy.deepcopy(value)`. Numbers and strings are immutable and shared. */
+export function deepcopy(value: PyValue): PyValue {
+  if (Array.isArray(value)) return value.map(deepcopy);
+  if (isDict(value)) return new Map([...value].map(([key, entry]) => [key, deepcopy(entry)]));
+  return value;
+}
+
+/** `value.get(key, fallback)`: `AttributeError` on anything that is not a dict. */
+export function dictGet(value: PyValue, key: string, fallback: PyValue = null): PyValue {
+  if (!isDict(value)) throw new PyAttributeError("'" + typeName(value) + "' object has no attribute 'get'");
+  const found = value.get(key);
+  return found === undefined ? fallback : found;
+}
+
+/** `for x in value`: list items, dict keys, str characters; `TypeError` for anything else JSON can hold. */
+export function iterate(value: PyValue): PyValue[] {
+  if (Array.isArray(value)) return value;
+  if (isDict(value)) return [...value.keys()];
+  if (typeof value === 'string') return Array.from(value);
+  throw new PyTypeError("'" + typeName(value) + "' object is not iterable");
+}
+
+/** `len(value)`: items, keys or code points; `TypeError` for anything else JSON can hold. */
+export function len(value: PyValue): number {
+  if (Array.isArray(value)) return value.length;
+  if (isDict(value)) return value.size;
+  if (typeof value === 'string') return Array.from(value).length;
+  throw new PyTypeError("object of type '" + typeName(value) + "' has no len()");
+}

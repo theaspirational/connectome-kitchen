@@ -588,6 +588,11 @@ def hand():
         tree(**{'build/connectome.lock': {'text': json.dumps(lock())}}))
     add('lock.read.deps.config', 'connectome_lock.read_lock', [BUILD + '/connectome.lock'], {'config': dependency_config(), 'framework_pin': 'f' * 40},
         tree(**{'build/connectome.lock': {'text': json.dumps(dependency_lock())}}))
+    for name, value in {'string': 'x', 'list': [], 'number': 1, 'null': None, 'empty': {}}.items():
+        record = dict(dependency())
+        record['provenance'] = value
+        add('lock.read.deps.provenance.' + name, 'connectome_lock.read_lock', [BUILD + '/connectome.lock'], {},
+            tree(**{'build/connectome.lock': {'text': json.dumps(lock(hostDependencies=[record]))}}))
     add('lock.read.deps.config-differs', 'connectome_lock.read_lock', [BUILD + '/connectome.lock'], {'config': {}},
         tree(**{'build/connectome.lock': {'text': json.dumps(dependency_lock())}}))
     add('lock.read.unreadable-parent', 'connectome_lock.read_lock', [BUILD + '/connectome.lock'], {},
@@ -917,7 +922,445 @@ def hand():
     ins('invalid-config', T, {'activation': 1})
     ins('alias-build', T, build=R + '/alias')
     ins('missing-build', T, build=R + '/missing')
+    hand_archive(add)
+    hand_config(add)
     return rows.rows
+
+
+FRAMEWORK = '@' + 'animalabs/agent-framework'
+PIN = 'f' * 40
+
+
+def G(*members):
+    """A generated archive: `[name, text or None for a directory]` members (see `tgz` in ts_port.py)."""
+    return {'$generate': 'tgz', 'members': [list(member) for member in members]}
+
+
+def manifest(name='example-package', version='1.0.0', **more):
+    return json.dumps(dict({'name': name, 'version': version}, **more))
+
+
+def packed(name='example-package', version='1.0.0', **more):
+    return G(['package', None], ['package/package.json', manifest(name, version, **more)], ['package/index.js', 'module.exports = 1;\n'])
+
+
+def entry(spec, name='example-package', kind='artifact', file='example.tgz', **more):
+    """A dependency declaration for the archive `spec`, stored in the tree as archives/<file>."""
+    record = {'name': name, 'archive': R + '/archives/' + file, 'sha256': {'$sha256-of': spec}, 'kind': kind, 'version': '1.0.0'}
+    record.update(more)
+    return record
+
+
+def hand_archive(add):
+    base = packed()
+    A = {'archives/example.tgz': base, 'archives/dir.tgz': {'dir': 0o755}, 'archives/link.tgz': {'link': 'example.tgz'}}
+
+    def fn(ident, function, args, files=None):
+        add('archive.' + ident, 'connectome_archive.' + function, args, {}, files)
+    # ---- small predicates -------------------------------------------------------------------
+    for index, value in enumerate(('example', 'example-package', '@scope/name', '@s/n', 'a.b_c-d', '0', 'Example', '@Scope/name', '@scope/Name', '_name', '.name', '-name', '@scope/.name',
+                                   '@scope', '@scope/', 'scope/name', '@a/b/c', 'node_modules', 'favicon.ico', 'node_modules2', 'a' * 214, 'a' * 215, '@' + 'a' * 100 + '/' + 'b' * 112,
+                                   '@' + 'a' * 100 + '/' + 'b' * 113, 'name\n', 'na me', 'caf\u00e9', '', 1, None, ['example'], 'a~b', 'a%20b', 'name!', '@/name')):
+        fn('npm-name.%02d' % index, 'npm_name', [value])
+    origins = {
+        'plain': 'https://registry.example.invalid', 'slash': 'https://registry.example.invalid/', 'path': 'https://registry.example.invalid/npm', 'http': 'http://registry.example.invalid',
+        'port': 'https://registry.example.invalid:8443', 'port.zero': 'https://registry.example.invalid:0', 'port.over': 'https://registry.example.invalid:65536', 'port.text': 'https://registry.example.invalid:x',
+        'port.empty': 'https://registry.example.invalid:', 'user': 'https://user@registry.example.invalid', 'password': J('https://user', ':pw', '@registry.example.invalid'),
+        'query': 'https://registry.example.invalid?x', 'empty-query': 'https://registry.example.invalid?', 'fragment': 'https://registry.example.invalid#x', 'percent': 'https://registry.example.invalid/%2F',
+        'backslash': 'https://registry.example.invalid\\x', 'space': 'https://registry.example.invalid ', 'nbsp': 'https://registry.example.invalid\u00a0', 'upper': 'HTTPS://REGISTRY.EXAMPLE.invalid',
+        'no-host': 'https://', 'no-slashes': 'https:registry.example.invalid', 'underscore-host': 'https://regis_try.example.invalid', 'dash-first-host': 'https://-registry.example.invalid',
+        'unicode-host': 'https://caf\u00e9.example.invalid', 'kelvin-host': 'https://\u212aregistry.example.invalid', 'bracket-host': J('https://[', ':', ':1]'), 'bracket-word': 'https://[registry]',
+        'credential': J('https://registry.example.invalid/', 'to', 'ken=x'), 'credential-host': J('https://hv', 's.example.invalid'), 'empty': '', 'number': 1, 'none': None, 'double-slash-path': 'https://registry.example.invalid//', 'ssh': 'ssh://registry.example.invalid',
+        'two-ports': 'https://registry.example.invalid:1:2', 'trailing-dot': 'https://registry.example.invalid.', 'control': 'https://registry.example.invalid\u0001',
+    }
+    for name, value in origins.items():
+        fn('registry-origin.' + name, 'registry_origin', [value])
+    digest512 = base64.b64encode(hashlib.sha512(b'example').digest()).decode()
+    for name, value in {'valid': 'sha512-' + digest512, 'sha256': 'sha256-' + digest512, 'upper': 'SHA512-' + digest512, 'short': 'sha512-' + base64.b64encode(b'x' * 63).decode(),
+                        'long': 'sha512-' + base64.b64encode(b'x' * 65).decode(), 'no-padding': 'sha512-' + digest512.rstrip('='), 'extra-padding': 'sha512-' + digest512 + '=',
+                        'noncanonical-bits': 'sha512-' + digest512[:-3] + chr(ord(digest512[-3]) + 1) + '==', 'urlsafe': 'sha512-' + digest512.replace('+', '-').replace('/', '_'),
+                        'space': 'sha512-' + digest512 + ' ', 'newline': 'sha512-' + digest512 + '\n', 'empty-digest': 'sha512-', 'bare': digest512, 'non-ascii': 'sha512-' + digest512[:-4] + '\u00e9\u00e9==',
+                        'empty': '', 'number': 1, 'none': None, 'two': 'sha512-' + digest512 + ' sha512-' + digest512}.items():
+        fn('sha512-integrity.' + name, 'sha512_integrity', [value])
+    for index, args in enumerate(([True, 'm'], [False, 'refused'], [0, 'zero'], ['x', 'text'], [[], 'list'], [False, 'coded', 'E_ARCHIVE_HASH'], [False, 'unknown code', 'E_NOPE'], [None, 'none', None],
+                                  [False, 'lock', 'E_LOCK_INVALID'], [False, 'cook', 'E_COOK_FAILED'])):
+        fn('need.%02d' % index, 'need', args)
+    # ---- validate_dependency ---------------------------------------------------------------
+    dep = {'name': 'example-package', 'archive': '/fixture/archives/example.tgz', 'sha256': 'e' * 64, 'kind': 'artifact', 'version': '1.0.0'}
+    git = dict(dep, kind='git_commit', commit='a' * 40)
+    registry = dict(dep, kind='registry_release', registry_url='https://registry.example.invalid', registry_integrity='sha512-' + digest512)
+    deps = {
+        'valid.artifact': dep, 'valid.git': git, 'valid.registry': registry, 'valid.scoped': dict(dep, name='@scope/example'), 'not-mapping': 'example-package', 'none': None, 'list': [dep],
+        'extra': dict(dep, extra=1), 'name.upper': dict(dep, name='Example'), 'name.number': dict(dep, name=1), 'name.credential': dict(dep, name=J('s', 'k-', 'a' * 12)),
+        'version.range': dict(dep, version='^1.0.0'), 'version.number': dict(dep, version=1), 'version.none': dict(dep, version=None), 'version.credential': dict(dep, version=J('1.0.0-', 's', 'k-', 'a' * 12)),
+        'kind.other': dict(dep, kind='tarball'), 'kind.number': dict(dep, kind=1), 'kind.list': dict(dep, kind=['artifact']), 'kind.none': dict(dep, kind=None),
+        'git.no-commit': dict(dep, kind='git_commit'), 'git.short': dict(git, commit='a' * 39), 'git.zero': dict(git, commit='0' * 40), 'git.upper': dict(git, commit='A' * 40), 'git.number': dict(git, commit=1),
+        'artifact.commit': dict(dep, commit='a' * 40), 'artifact.commit-null': dict(dep, commit=None), 'registry.commit': dict(registry, commit='a' * 40),
+        'registry.no-url': edit(registry, ['registry_url'], DROP), 'registry.no-integrity': edit(registry, ['registry_integrity'], DROP), 'registry.bad-url': dict(registry, registry_url='http://registry.example.invalid'),
+        'registry.bad-integrity': dict(registry, registry_integrity='sha512-x'), 'artifact.registry-url': dict(dep, registry_url='https://registry.example.invalid'),
+        'artifact.registry-integrity': dict(dep, registry_integrity='sha512-' + digest512), 'git.registry-url': dict(git, registry_url=None),
+        'archive.relative': dict(dep, archive='archives/example.tgz'), 'archive.empty': dict(dep, archive=''), 'archive.number': dict(dep, archive=1), 'archive.query': dict(dep, archive='/fixture/a.tgz?x'),
+        'archive.fragment': dict(dep, archive='/fixture/a.tgz#x'), 'archive.control': dict(dep, archive='/fixture/a\u0001.tgz'), 'archive.credential': dict(dep, archive=J('/fixture/', 's', 'k-', 'a' * 12)),
+        'archive.dotdot': dict(dep, archive='/fixture/../a.tgz'), 'archive.double-slash': dict(dep, archive='//fixture/a.tgz'), 'sha.short': dict(dep, sha256='e' * 63), 'sha.upper': dict(dep, sha256='E' * 64),
+        'sha.number': dict(dep, sha256=1), 'two-defects.identity-first': dict(dep, name='Example', kind='tarball'), 'two-defects.kind-first': dict(dep, kind='tarball', sha256='x'),
+        'two-defects.archive-first': dict(dep, archive='relative', sha256='x'),
+    }
+    for key in ('name', 'archive', 'sha256', 'kind', 'version'):
+        deps['missing.' + key] = edit(dep, [key], DROP)
+    for name, value in deps.items():
+        fn('validate-dependency.' + name, 'validate_dependency', [value])
+    # ---- legacy_dependency, dependency_inputs ---------------------------------------------------
+    plain = {'path': '/fixture/archives/framework.tgz', 'sha256': 'e' * 64}
+    marked = dict(plain, registry_release=True, name=FRAMEWORK, version='1.2.3')
+    legacy = {
+        'valid.unmarked': plain, 'valid.marked': marked, 'not-mapping': '/fixture/a.tgz', 'none': None, 'missing-sha': {'path': plain['path']}, 'extra': dict(plain, extra=1),
+        'marked.false': dict(marked, registry_release=False), 'marked.one': dict(marked, registry_release=1), 'marked.string': dict(marked, registry_release='true'), 'marked.null': dict(marked, registry_release=None),
+        'marked.other-name': dict(marked, name='other'), 'marked.no-name': edit(marked, ['name'], DROP), 'marked.no-version': edit(marked, ['version'], DROP), 'marked.range': dict(marked, version='^1.2.3'),
+        'marked.credential-version': dict(marked, version=J('1.2.3-', 's', 'k-', 'a' * 12)), 'unmarked.name': dict(plain, name=FRAMEWORK), 'unmarked.version': dict(plain, version='1.2.3'),
+        'unmarked.empty-version': dict(plain, version=''), 'path.relative': dict(plain, path='framework.tgz'), 'path.number': dict(plain, path=1), 'sha.bad': dict(plain, sha256='x'),
+        'marked.path.relative': dict(marked, path='framework.tgz'),
+    }
+    for name, value in legacy.items():
+        fn('legacy.' + name, 'legacy_dependency', [{'cook': {'framework_archive': value}}, PIN])
+    fn('legacy.pin.short', 'legacy_dependency', [{'cook': {'framework_archive': plain}}, 'f' * 39])
+    fn('legacy.pin.zero', 'legacy_dependency', [{'cook': {'framework_archive': plain}}, '0' * 40])
+    fn('legacy.pin.none', 'legacy_dependency', [{'cook': {'framework_archive': plain}}, None])
+    fn('legacy.pin.none.marked', 'legacy_dependency', [{'cook': {'framework_archive': marked}}, None])
+    for name, value in {'no-cook': {}, 'cook-list': {'cook': []}, 'cook-string': {'cook': 'x'}, 'cook-none': {'cook': None}, 'no-framework': {'cook': {}}, 'config-list': [], 'config-none': None}.items():
+        fn('legacy.config.' + name, 'legacy_dependency', [value, PIN])
+        fn('inputs.config.' + name, 'dependency_inputs', [value, PIN])
+        fn('records-metadata.config.' + name, 'records_metadata', [value])
+    other = dict(dep, name='other-package', archive='/fixture/archives/other.tgz')
+    inputs_ = {
+        'none': {'cook': {}}, 'empty': {'cook': {'host_dependencies': []}}, 'one': {'cook': {'host_dependencies': [dep]}}, 'two': {'cook': {'host_dependencies': [dep, other]}},
+        'framework': {'cook': {'framework_archive': plain}}, 'framework-and-one': {'cook': {'framework_archive': plain, 'host_dependencies': [dep]}}, 'framework.marked': {'cook': {'framework_archive': marked}},
+        'duplicate': {'cook': {'host_dependencies': [dep, dict(dep)]}}, 'duplicate.framework': {'cook': {'framework_archive': plain, 'host_dependencies': [dict(dep, name=FRAMEWORK)]}},
+        'not-list': {'cook': {'host_dependencies': {}}}, 'null': {'cook': {'host_dependencies': None}}, 'string': {'cook': {'host_dependencies': 'x'}}, 'bad-item': {'cook': {'host_dependencies': [dep, dict(other, kind='x')]}},
+        'bad-framework-first': {'cook': {'framework_archive': {}, 'host_dependencies': [{}]}}, 'not-list-before-framework': {'cook': {'framework_archive': {}, 'host_dependencies': 1}},
+        'order-kept': {'cook': {'host_dependencies': [other, dep]}},
+    }
+    for name, value in inputs_.items():
+        fn('inputs.' + name, 'dependency_inputs', [value, PIN])
+        fn('records-metadata.' + name, 'records_metadata', [value])
+    for name, value in {'marked': {'cook': {'framework_archive': marked}}, 'marked.one': {'cook': {'framework_archive': dict(marked, registry_release=1)}}, 'framework-list': {'cook': {'framework_archive': []}},
+                        'framework-none': {'cook': {'framework_archive': None}}, 'cook-contains-name': {'cook': ['host_dependencies']}, 'cook-number': {'cook': 1},
+                        'cook-string-contains': {'cook': 'no host_dependencies here'}}.items():
+        fn('records-metadata.x.' + name, 'records_metadata', [value])
+    # ---- provenance_record, validate_dependency_record ---------------------------------------------
+    for name, value in {'artifact': dep, 'git': git, 'registry': registry, 'unknown-kind': dict(dep, kind='x'), 'no-kind': edit(dep, ['kind'], DROP), 'list': [], 'none': None, 'string': 'kind', 'kind-list': dict(dep, kind=[])}.items():
+        fn('provenance-record.' + name, 'provenance_record', [value])
+    import connectome_archive
+    good = connectome_archive.provenance_record(dep)
+    good_git = connectome_archive.provenance_record(git)
+    good_registry = connectome_archive.provenance_record(registry)
+    records = {
+        'valid.artifact': good, 'valid.git': good_git, 'valid.registry': good_registry, 'not-mapping': 'x', 'none': None, 'list': [good], 'no-flag': edit(good, ['commit_verifiable'], DROP),
+        'flag.one': dict(good, commit_verifiable=0), 'flag.wrong': dict(good, commit_verifiable=True), 'flag.git-false': dict(good_git, commit_verifiable=False), 'flag.null': dict(good, commit_verifiable=None),
+        'no-payload': edit(good, ['payload'], DROP), 'payload.other': dict(good, payload='other'), 'payload.on-git': dict(good_git, payload=good['payload']),
+        'comparison.missing': edit(good_registry, ['registry_comparison'], DROP), 'comparison.other': dict(good_registry, registry_comparison='compared'),
+        'comparison.on-artifact': dict(good, registry_comparison=good_registry['registry_comparison']), 'payload.on-registry': dict(good_registry, payload=good['payload']),
+        'extra': dict(good, extra=1), 'bad-dependency': dict(good, sha256='x'), 'kind.unknown': dict(good, kind='x'), 'kind.missing': edit(good, ['kind'], DROP), 'empty': {},
+        'kind.list': dict(good, kind=[]),
+    }
+    for name, value in records.items():
+        fn('dependency-record.' + name, 'validate_dependency_record', [value])
+    # ---- check_dependencies -------------------------------------------------------------------------
+    locked = {'name': dep['name'], 'version': '1.0.0', 'sha256': dep['sha256'], 'provenance': good}
+    conf = {'cook': {'host_dependencies': [dep]}}
+
+    def cd(ident, data, config=conf, pin=PIN, *more):
+        fn('check.' + ident, 'check_dependencies', [data, config, pin, *more])
+    cd('valid', {'hostDependencies': [locked]})
+    cd('valid.none', {}, {})
+    cd('valid.none.cook', {'hostDependencies': []}, {'cook': {}})
+    cd('valid.extra-keys-ignored', {'hostDependencies': [dict(locked, size=1, anything=[1])], 'other': 1})
+    cd('missing-in-lock', {})
+    cd('missing-in-config', {'hostDependencies': [locked]}, {})
+    cd('other-name', {'hostDependencies': [dict(locked, name='other-package')]})
+    cd('order', {'hostDependencies': [dict(locked, name='other-package', sha256=other['sha256'], provenance=connectome_archive.provenance_record(other)), locked]}, {'cook': {'host_dependencies': [dep, other]}})
+    cd('two.valid', {'hostDependencies': [locked, dict(locked, name='other-package', provenance=connectome_archive.provenance_record(other))]}, {'cook': {'host_dependencies': [dep, other]}})
+    cd('sha-differs', {'hostDependencies': [dict(locked, sha256='f' * 64)]})
+    cd('version-differs', {'hostDependencies': [dict(locked, version='1.0.1')]})
+    cd('no-provenance.generic', {'hostDependencies': [edit(locked, ['provenance'], DROP)]})
+    cd('provenance.invalid', {'hostDependencies': [dict(locked, provenance={})]})
+    cd('provenance.other-archive', {'hostDependencies': [dict(locked, provenance=dict(good, archive='/fixture/archives/moved.tgz'))]})
+    cd('provenance.reordered', {'hostDependencies': [dict(locked, provenance=dict(reversed(list(good.items()))))]})
+    cd('no-sha', {'hostDependencies': [edit(locked, ['sha256'], DROP)]})
+    cd('no-version', {'hostDependencies': [edit(locked, ['version'], DROP)]})
+    cd('no-name', {'hostDependencies': [edit(locked, ['name'], DROP)]})
+    cd('item.string', {'hostDependencies': ['example-package']})
+    cd('inventory.mapping', {'hostDependencies': {'example-package': locked}})
+    cd('inventory.string', {'hostDependencies': 'x'})
+    cd('inventory.number', {'hostDependencies': 1})
+    cd('inventory.none', {'hostDependencies': None})
+    cd('data.list', [])
+    cd('data.none', None)
+    cd('config.invalid', {'hostDependencies': [locked]}, {'cook': {'host_dependencies': [{}]}})
+    cd('config.list', {'hostDependencies': [locked]}, [])
+    legacy_conf = {'cook': {'framework_archive': plain}}
+    framework = {'name': FRAMEWORK, 'version': '1.2.3', 'sha256': plain['sha256']}
+    cd('legacy.valid', {'hostDependencies': [framework]}, legacy_conf)
+    cd('legacy.any-version', {'hostDependencies': [dict(framework, version='9.9.9')]}, legacy_conf)
+    cd('legacy.record-version', {'hostDependencies': [framework]}, legacy_conf, PIN, {'version': '1.2.3'})
+    cd('legacy.record-version-differs', {'hostDependencies': [framework]}, legacy_conf, PIN, {'version': '1.2.4'})
+    cd('legacy.record-without-version', {'hostDependencies': [framework]}, legacy_conf, PIN, {})
+    cd('legacy.record-list', {'hostDependencies': [framework]}, legacy_conf, PIN, [])
+    cd('legacy.sha-differs', {'hostDependencies': [dict(framework, sha256='0' * 64)]}, legacy_conf)
+    legacy_record = connectome_archive.provenance_record(dict(connectome_archive.legacy_dependency(legacy_conf, PIN), version='1.2.3'))
+    cd('legacy.provenance.valid', {'hostDependencies': [dict(framework, provenance=legacy_record)]}, legacy_conf)
+    cd('legacy.provenance.other-pin', {'hostDependencies': [dict(framework, provenance=legacy_record)]}, legacy_conf, 'e' * 40)
+    cd('legacy.provenance.version-differs', {'hostDependencies': [dict(framework, version='1.2.4', provenance=legacy_record)]}, legacy_conf)
+    cd('legacy.marked.valid', {'hostDependencies': [framework]}, {'cook': {'framework_archive': marked}})
+    cd('legacy.marked.version-differs', {'hostDependencies': [dict(framework, version='1.2.4')]}, {'cook': {'framework_archive': marked}})
+    add('archive.check.keyword', 'connectome_archive.check_dependencies', [{'hostDependencies': [framework]}, legacy_conf, PIN], {'framework_record': {'version': '1.2.4'}})
+    # ---- validate_provenance -------------------------------------------------------------------------
+    sidecar = {'schema': 'connectome.framework-archive/v1', 'sha256': plain['sha256'], 'name': FRAMEWORK, 'version': '1.2.3', 'requested_commit': PIN, 'registry_release': False, 'commit_verifiable': True}
+    released = dict(sidecar, registry_release=True, commit_verifiable=False)
+
+    def vp(ident, record, artifact=plain, pin=PIN):
+        fn('validate-provenance.' + ident, 'validate_provenance', [record, {'cook': {'framework_archive': artifact}}, pin])
+    vp('valid', sidecar)
+    vp('valid.marked', released, marked)
+    vp('valid.marked.verifiable', dict(released, commit_verifiable=True), marked)
+    vp('not-mapping', 'x')
+    vp('none', None)
+    vp('extra', dict(sidecar, extra=1))
+    for key in sidecar:
+        vp('missing.' + key, edit(sidecar, [key], DROP))
+    vp('schema', dict(sidecar, schema='connectome.framework-archive/v2'))
+    vp('sha', dict(sidecar, sha256='0' * 64))
+    vp('name', dict(sidecar, name='other'))
+    vp('version.range', dict(sidecar, version='^1.2.3'))
+    vp('version.credential', dict(sidecar, version=J('1.2.3-', 's', 'k-', 'a' * 12)))
+    vp('pin', dict(sidecar, requested_commit='e' * 40))
+    vp('release.one', dict(sidecar, registry_release=0))
+    vp('verifiable.one', dict(sidecar, commit_verifiable=1))
+    vp('release.claimed', released)
+    vp('release.denied', sidecar, marked)
+    vp('neither', dict(sidecar, commit_verifiable=False))
+    vp('marked.other-version', dict(released, version='1.2.4'), marked)
+    vp('marked.artifact-one', released, dict(marked, registry_release=1))
+    vp('artifact.list', sidecar, [])
+    vp('artifact.none', sidecar, None)
+    vp('artifact.no-sha', sidecar, {'path': plain['path']})
+    fn('validate-provenance.no-cook', 'validate_provenance', [sidecar, {}, PIN])
+    fn('validate-provenance.config-list', 'validate_provenance', [sidecar, [], PIN])
+    # ---- archive_manifest, dependency_provenance, framework_provenance (files) ----------------------------
+    def am(ident, spec, record=None, files=None, **more):
+        tree_ = dict(A, **{'archives/case.tgz': spec}) if files is None else files
+        fn('manifest.' + ident, 'archive_manifest', [entry(spec, file='case.tgz', **more) if record is None else record], tree_)
+    am('valid', base)
+    am('valid.version-none', base, version=None)
+    am('valid.git-head', packed(gitHead='a' * 40))
+    am('valid.extra-members', G(['package/README.md', 'x'], ['package/package.json', manifest()], ['package/lib/package.json', '{}'], ['other.json', '{}']))
+    am('valid.other-root', G(['pkg-root/package.json', manifest()]))
+    am('valid.dot-is-wildcard', G(['package/packageXjson', manifest()]))
+    am('valid.directory-entry-ignored', G(['other/package.json', None], ['package/package.json', manifest()]))
+    am('hash-differs', base, entry(base, file='case.tgz', sha256='0' * 64))
+    am('registry.valid', base, kind='registry_release', registry_url='https://registry.example.invalid', registry_integrity={'$sha512-integrity-of': base})
+    am('registry.integrity-differs', base, kind='registry_release', registry_url='https://registry.example.invalid', registry_integrity='sha512-' + digest512)
+    am('missing', base, entry(base, file='absent.tgz'))
+    am('directory', base, entry(base, file='dir.tgz'))
+    am('link', base, entry(base, file='link.tgz'))
+    am('no-manifest', G(['package/index.js', 'x']))
+    am('empty-archive', G())
+    am('two-manifests', G(['package/package.json', manifest()], ['other/package.json', manifest()]))
+    am('same-manifest-twice', G(['package/package.json', manifest()], ['package/package.json', manifest()]))
+    am('too-deep', G(['a/b/package.json', manifest()]))
+    am('top-level', G(['package.json', manifest()]))
+    am('manifest.one-mebibyte', G(['package/package.json', {'prefix': '{"name":"example-package","version":"1.0.0","pad":"', 'unit': 'x', 'count': 1048576 - 51, 'suffix': '"}'}]))
+    am('manifest.too-large', G(['package/package.json', {'prefix': '{"name":"example-package","version":"1.0.0","pad":"', 'unit': 'x', 'count': 1048576 - 50, 'suffix': '"}'}]))
+    am('manifest.not-json', G(['package/package.json', 'not json']))
+    am('manifest.empty', G(['package/package.json', '']))
+    am('manifest.list', G(['package/package.json', '[]']))
+    am('manifest.duplicate-keys', G(['package/package.json', '{"name":"other","name":"example-package","version":"1.0.0"}']))
+    am('manifest.nan', G(['package/package.json', '{"name":"example-package","version":"1.0.0","x":NaN}']))
+    am('manifest.utf16', G(['package/package.json', manifest()]), files=dict(A, **{'archives/case.tgz': {'file': b64(_tgz_bytes([('package/package.json', manifest().encode('utf-16'))]))}}),
+       record={'name': 'example-package', 'archive': R + '/archives/case.tgz', 'sha256': hashlib.sha256(_tgz_bytes([('package/package.json', manifest().encode('utf-16'))])).hexdigest(), 'kind': 'artifact', 'version': '1.0.0'})
+    am('name-differs', packed('other-package'))
+    am('name-missing', G(['package/package.json', '{"version":"1.0.0"}']))
+    am('version-differs', packed(version='1.0.1'))
+    am('version-range', packed(version='^1.0.0'), version=None)
+    am('version-missing', G(['package/package.json', '{"name":"example-package"}']), version=None)
+    am('version-credential', packed(version=J('1.0.0-', 's', 'k-', 'a' * 12)), version=None)
+    am('version-number', G(['package/package.json', '{"name":"example-package","version":1}']), version=None)
+    am('not-gzip', {'text': 'plain text, not an archive'}, record={'name': 'example-package', 'archive': R + '/archives/case.tgz', 'sha256': hashlib.sha256(b'plain text, not an archive').hexdigest(), 'kind': 'artifact', 'version': '1.0.0'})
+    am('empty-file', {'text': ''}, record={'name': 'example-package', 'archive': R + '/archives/case.tgz', 'sha256': hashlib.sha256(b'').hexdigest(), 'kind': 'artifact', 'version': '1.0.0'})
+    am('gzip-of-text', {'file': b64(_gz(b'not a tar archive at all'))}, record={'name': 'example-package', 'archive': R + '/archives/case.tgz', 'sha256': hashlib.sha256(_gz(b'not a tar archive at all')).hexdigest(), 'kind': 'artifact', 'version': '1.0.0'})
+    am('entry.no-archive', base, {'name': 'example-package'})
+    am('entry.archive-number', base, {'archive': 1})
+    am('entry.no-sha', base, {'name': 'example-package', 'archive': R + '/archives/case.tgz', 'kind': 'artifact', 'version': '1.0.0'})
+    am('entry.list', base, [])
+    am('unreadable-parent', base, {'name': 'example-package', 'archive': R + '/closed/case.tgz', 'sha256': 'e' * 64, 'kind': 'artifact', 'version': '1.0.0'}, files=dict(A, closed={'dir': 0o000}))
+    am('unreadable-file', base, files=dict(A, **{'archives/case.tgz': dict(base, mode=0o000)}))
+
+    def dp(ident, config, files, pin=PIN, function='dependency_provenance'):
+        fn(('provenance.' if function == 'dependency_provenance' else 'framework.') + ident, function, [config, pin], files)
+    one = entry(base)
+    dp('one', {'cook': {'host_dependencies': [one]}}, A)
+    dp('none', {'cook': {}}, A)
+    dp('git.valid', {'cook': {'host_dependencies': [entry(packed(gitHead='a' * 40), kind='git_commit', commit='a' * 40, file='git.tgz')]}}, dict(A, **{'archives/git.tgz': packed(gitHead='a' * 40)}))
+    dp('git.other-head', {'cook': {'host_dependencies': [entry(packed(gitHead='b' * 40), kind='git_commit', commit='a' * 40, file='git.tgz')]}}, dict(A, **{'archives/git.tgz': packed(gitHead='b' * 40)}))
+    dp('git.no-head', {'cook': {'host_dependencies': [entry(base, kind='git_commit', commit='a' * 40)]}}, A)
+    dp('artifact.head', {'cook': {'host_dependencies': [entry(packed(gitHead='a' * 40), file='git.tgz')]}}, dict(A, **{'archives/git.tgz': packed(gitHead='a' * 40)}))
+    dp('artifact.bad-head', {'cook': {'host_dependencies': [entry(packed(gitHead='main'), file='git.tgz')]}}, dict(A, **{'archives/git.tgz': packed(gitHead='main')}))
+    dp('artifact.null-head', {'cook': {'host_dependencies': [entry(packed(gitHead=None), file='git.tgz')]}}, dict(A, **{'archives/git.tgz': packed(gitHead=None)}))
+    dp('second-bad', {'cook': {'host_dependencies': [one, entry(packed('other-package'), name='wrong-name', file='other.tgz')]}}, dict(A, **{'archives/other.tgz': packed('other-package')}))
+    dp('two', {'cook': {'host_dependencies': [one, entry(packed('other-package'), name='other-package', file='other.tgz')]}}, dict(A, **{'archives/other.tgz': packed('other-package')}))
+    fw = packed(FRAMEWORK, '1.2.3', gitHead=PIN)
+    fw_no_head = packed(FRAMEWORK, '1.2.3')
+    F = dict(A, **{'archives/framework.tgz': fw, 'archives/nohead.tgz': fw_no_head})
+    unmarked = {'path': R + '/archives/framework.tgz', 'sha256': {'$sha256-of': fw}}
+    unmarked_no_head = {'path': R + '/archives/nohead.tgz', 'sha256': {'$sha256-of': fw_no_head}}
+    for function in ('dependency_provenance', 'framework_provenance'):
+        dp('legacy.valid', {'cook': {'framework_archive': unmarked}}, F, function=function)
+        dp('legacy.other-pin', {'cook': {'framework_archive': unmarked}}, F, 'e' * 40, function=function)
+        dp('legacy.no-head', {'cook': {'framework_archive': unmarked_no_head}}, F, function=function)
+        dp('legacy.marked', {'cook': {'framework_archive': dict(unmarked, registry_release=True, name=FRAMEWORK, version='1.2.3')}}, F, function=function)
+        dp('legacy.marked.no-head', {'cook': {'framework_archive': dict(unmarked_no_head, registry_release=True, name=FRAMEWORK, version='1.2.3')}}, F, function=function)
+        dp('legacy.marked.other-version', {'cook': {'framework_archive': dict(unmarked, registry_release=True, name=FRAMEWORK, version='1.2.4')}}, F, function=function)
+        dp('legacy.marked.other-pin', {'cook': {'framework_archive': dict(unmarked, registry_release=True, name=FRAMEWORK, version='1.2.3')}}, F, 'e' * 40, function=function)
+        dp('legacy.with-dependency', {'cook': {'framework_archive': unmarked, 'host_dependencies': [one]}}, F, function=function)
+        dp('legacy.hash-differs', {'cook': {'framework_archive': dict(unmarked, sha256='0' * 64)}}, F, function=function)
+        dp('legacy.invalid', {'cook': {'framework_archive': {}}}, F, function=function)
+    dp('no-framework', {'cook': {}}, F, function='framework_provenance')
+    dp('no-cook', {}, F, function='framework_provenance')
+
+
+def _gz(data):
+    import zlib
+    out = bytearray(b'\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff')
+    out += b'\x01' + len(data).to_bytes(2, 'little') + (len(data) ^ 0xffff).to_bytes(2, 'little') + data
+    return bytes(out) + zlib.crc32(data).to_bytes(4, 'little') + len(data).to_bytes(4, 'little')
+
+
+def _tgz_bytes(members):
+    """Like `tgz` in ts_port.py, for members whose content is raw bytes (stored as a blob in the tree)."""
+    tar = b''
+    for name, data in members:
+        head = bytearray(512)
+        head[0:len(name)] = name.encode()
+        head[100:108], head[108:116], head[116:124] = b'0000644\0', b'0000000\0', b'0000000\0'
+        head[124:136] = b'%011o\0' % len(data)
+        head[136:148] = b'00000000000\0'
+        head[148:156] = b' ' * 8
+        head[156:157] = b'0'
+        head[257:265] = b'ustar\x0000'
+        head[148:156] = b'%06o\0 ' % sum(head)
+        tar += bytes(head) + data + b'\0' * (-len(data) % 512)
+    return _gz(tar + b'\0' * 1024)
+
+
+def hand_config(add):
+    def ml(ident, layers):
+        add('config.merge.' + ident, 'connectome_config.merge_layers', [layers])
+    base = {'name': 'example', 'agent': {'systemPrompt': 'x', 'tools': ['a', 'b']}, 'connectors': {'alpha': {'kind': 'x', 'enabled': True}, 'beta': {'enabled': False}}, 'modules': {'m': {}}}
+    ml('valid', [base, {}, {}, {}])
+    ml('empty', [{}, {}, {}, {}])
+    ml('override', [base, {'name': 'other'}, {'agent': {'systemPrompt': 'y'}}, {'connectors': {'alpha': {'kind': 'z'}}}])
+    ml('lists-replaced', [base, {'agent': {'tools': ['c']}}, {}, {}])
+    ml('mapping-replaces-scalar', [{'a': 1}, {'a': {'b': 1}}, {}, {}])
+    ml('scalar-replaces-mapping', [{'a': {'b': 1}}, {'a': 1}, {}, {}])
+    ml('tombstone', [{'a': {'b': 1, 'c': 2}}, {'a': {'b': None}}, {}, {}])
+    ml('tombstone.whole', [{'a': {'b': 1}}, {'a': None}, {}, {}])
+    ml('tombstone.not-resurrected', [{'a': {'b': 1, 'c': 2}}, {'a': None}, {'a': {'d': 3}}, {}])
+    ml('tombstone.then-scalar', [{'a': {'b': 1}}, {'a': None}, {'a': 5}, {}])
+    ml('tombstone.last-layer', [{'a': 1}, {}, {}, {'a': None}])
+    ml('tombstone.in-list-kept', [{'a': [1, None, {'b': None, 'c': 1}]}, {}, {}, {}])
+    ml('tombstone.keeps-position', [{'a': 1, 'b': 2}, {'a': None}, {'a': 3}, {}])
+    ml('tombstone.keeps-position.nested', [{'x': {'a': 1, 'b': 2}}, {'x': {'a': None}}, {'x': {'a': {'c': 1}}}, {}])
+    ml('tombstone.connector', [base, {'connectors': {'alpha': None}}, {}, {}])
+    ml('tombstone.section', [base, {'connectors': None}, {}, {}])
+    ml('key-order', [{'b': 1, 'a': 2}, {'c': 3, 'a': 4}, {'10': 5, '9': 6}, {'b': 7}])
+    ml('enabled.false-then-true', [base, {'connectors': {'beta': {'enabled': True}}}, {}, {}])
+    ml('enabled.true-then-false', [base, {'connectors': {'alpha': {'enabled': False}}}, {}, {}])
+    ml('enabled.missing', [{'connectors': {'a': {}}, 'modules': {'b': {'x': 1}}}, {}, {}, {}])
+    for name, value in {'string': 'yes', 'one': 1, 'zero': 0, 'null': None, 'list': []}.items():
+        ml('enabled.' + name, [{'connectors': {'a': {'enabled': value}}}, {}, {}, {}])
+        ml('enabled.module.' + name, [{'modules': {'a': {'enabled': value}}}, {}, {}, {}])
+    ml('entry.not-mapping', [{'connectors': {'a': 'x'}}, {}, {}, {}])
+    ml('entry.list', [{'modules': {'a': []}}, {}, {}, {}])
+    ml('section.list', [{'connectors': []}, {}, {}, {}])
+    ml('section.string', [{'modules': 'x'}, {}, {}, {}])
+    ml('section.number', [{'connectors': 1}, {}, {}, {}])
+    ml('catalog.absent', [{'connectors': {}}, {}, {}, {}])
+    ml('catalog.entries', [{'catalog': {'node': {'kind': 'runtime'}, 'old': {'enabled': False}}}, {}, {}, {}])
+    ml('catalog.all-disabled', [{'catalog': {'old': {'enabled': False}}}, {}, {}, {}])
+    ml('catalog.empty', [{'catalog': {}}, {}, {}, {}])
+    ml('catalog.list', [{'catalog': []}, {}, {}, {}])
+    ml('catalog.bad-entry', [{'catalog': {'a': 1}}, {}, {}, {}])
+    ml('catalog.bad-enabled', [{'catalog': {'a': {'enabled': 'no'}}}, {}, {}, {}])
+    ml('catalog.null', [{'catalog': {'a': {}}}, {'catalog': None}, {}, {}])
+    ml('sections-order', [{'modules': {}, 'x': 1}, {}, {}, {}])
+    ml('modules-before-connectors-error', [{'modules': 1, 'connectors': 2}, {}, {}, {}])
+    ml('deep', [{'a': {'b': {'c': {'d': 1, 'e': [1, {'f': None}]}}}}, {'a': {'b': {'c': {'d': None, 'g': 2}}}}, {'a': {'b': {'h': 3}}}, {'a': {'i': 4}}])
+    for name, value in {'three': [{}, {}, {}], 'five': [{}, {}, {}, {}, {}], 'none': [], 'list-layer': [{}, [], {}, {}], 'null-layer': [{}, {}, None, {}], 'string-layer': [{}, {}, {}, 'x'],
+                        'mapping': {'a': {}, 'b': {}, 'c': {}, 'd': {}}, 'string': 'abcd', 'number': 4, 'null': None, 'nested-list': [[{}, {}, {}, {}]]}.items():
+        ml('count.' + name, value)
+
+    for name, (layers, kwargs) in {'two': ([{'a': {'b': 1}, 'l': [1]}, {'a': {'c': 2}, 'l': [2]}], {'recursive': True}), 'flat': ([{'a': {'b': 1}}, {'a': {'c': 2}}], {}),
+                                   'flat.explicit': ([{'a': {'b': 1}}, {'a': {'c': 2}}], {'recursive': False}), 'three': ([{'a': {'b': {'c': 1}}}, {'a': {'b': None}}, {'a': {'b': {'d': 2}}}], {'recursive': True}),
+                                   'none': ([], {}), 'one': ([{'a': None}], {'recursive': True}), 'list-layer': ([{}, []], {'recursive': True}), 'null-layer': ([None], {}),
+                                   'string-layer': (['ab'], {})}.items():
+        add('config.combine.' + name, 'connectome_config.combine', layers, kwargs)
+
+    def pc(ident, defaults, catalog):
+        add('config.public.' + ident, 'connectome_config.public_catalog', [defaults, catalog])
+    cat = {'slack': {'kind': 'connector', 'repo': 'x'}, 'plain': {'repo': 'y'}, 'node': {'kind': 'runtime'}, 'host': {'kind': 'host'}}
+    pc('valid', {'agent': {'name': 'x'}}, cat)
+    pc('valid.no-artifacts', {}, {'plain': {}})
+    pc('valid.empty', {}, {})
+    pc('valid.only-artifacts', {'x': 1}, {'node': {'kind': 'runtime'}})
+    pc('connectors-present', {'connectors': {}}, cat)
+    pc('connectors-null', {'connectors': None}, cat)
+    pc('catalog-overwritten', {'catalog': {'old': 1}}, cat)
+    pc('catalog-kept', {'catalog': {'old': 1}}, {'plain': {}})
+    pc('kind.null', {}, {'a': {'kind': None}})
+    pc('kind.number', {}, {'a': {'kind': 1}})
+    pc('entry.string', {}, {'a': 'connector'})
+    pc('entry.null', {}, {'a': None})
+    pc('catalog.list', {}, [])
+    pc('catalog.null', {}, None)
+    pc('defaults.list', [], cat)
+    pc('defaults.list-with-name', ['connectors'], cat)
+    pc('defaults.string', 'no', cat)
+    pc('defaults.string-with-name', 'my connectors', cat)
+    pc('defaults.null', None, cat)
+    pc('defaults.number', 1, cat)
+    pc('defaults.list.catalog-list', [], [])
+    pc('copies', {'a': {'b': [1]}}, {'plain': {'deep': {'x': [1]}}})
+
+    def rn(ident, config):
+        add('config.names.' + ident, 'connectome_config.required_names', [config])
+    rn('empty', {})
+    rn('all', {'required_secrets': ['B', 'A'], 'secret_files': [{'secret': 'C', 'env': 'C_FILE'}], 'connectors': {'x': {'required_secrets': ['D', 'A']}}, 'modules': {'y': {'required_secrets': ['E']}, 'z': {}}})
+    rn('sorted-by-code-point', {'required_secrets': ['b', 'B', '_', 'a', 'Z', '\u00e9', '\U0001f600', '\uffff']})
+    rn('duplicates', {'required_secrets': ['A', 'A'], 'secret_files': [{'secret': 'A'}]})
+    rn('numbers', {'required_secrets': [3, 1, 2, 1]})
+    rn('number-and-bool', {'required_secrets': [1, True, 0]})
+    rn('mixed', {'required_secrets': ['A', 1]})
+    rn('null-and-string', {'required_secrets': [None, 'A']})
+    rn('single-null', {'required_secrets': [None]})
+    rn('unhashable', {'required_secrets': [['A']]})
+    rn('string-secrets', {'required_secrets': 'AB'})
+    rn('mapping-secrets', {'required_secrets': {'B': 1, 'A': 2}})
+    rn('number-secrets', {'required_secrets': 1})
+    rn('null-secrets', {'required_secrets': None})
+    rn('secret-files.no-secret', {'secret_files': [{'env': 'X'}]})
+    rn('secret-files.string-item', {'secret_files': ['x']})
+    rn('secret-files.mapping', {'secret_files': {'a': 1}})
+    rn('secret-files.number', {'secret_files': 1})
+    rn('connectors.list', {'connectors': []})
+    rn('connectors.null', {'connectors': None})
+    rn('modules.string', {'modules': 'x'})
+    rn('entry.string', {'connectors': {'x': 'y'}})
+    rn('entry.null', {'modules': {'x': None}})
+    rn('entry.names-string', {'connectors': {'x': {'required_secrets': 'AB'}}})
+    rn('entry.names-number', {'connectors': {'x': {'required_secrets': 1}}})
+    rn('order-of-errors', {'required_secrets': [['A']], 'secret_files': [{}]})
+    rn('order-of-errors.connectors-first', {'connectors': [], 'required_secrets': 1})
+    rn('config.list', [])
+    rn('config.null', None)
 
 
 VALUES = [None, False, True, 0, -1, 2, 10000001, {'$float': '0.5'}, {'$float': '2.0'}, '', 'invalid', '../escape', '/outside', 'a\n', '${UNDECLARED}', '0' * 40, '0' * 64, [], {}, ['duplicate', 'duplicate'], [[]], {'1': 0, 'a': 1}]
@@ -951,6 +1394,37 @@ def generated():
         ('connectome_inputs.collect', [recipe_config()], {}, T),
         ('connectome_errors.diagnostic', ['E_COOK_FAILED', 'E_HOST_UNIT'], {}, None),
         ('connectome_lock.names_only', [lock()], {}, None),
+    ]
+    import connectome_archive
+    dep = {'name': 'example-package', 'archive': '/fixture/archives/example.tgz', 'sha256': 'e' * 64, 'kind': 'artifact', 'version': '1.0.0'}
+    git = dict(dep, name='git-package', kind='git_commit', commit='a' * 40)
+    registry = dict(dep, name='registry-package', kind='registry_release', registry_url='https://registry.example.invalid',
+                    registry_integrity='sha512-' + base64.b64encode(hashlib.sha512(b'example').digest()).decode())
+    plain = {'path': '/fixture/archives/framework.tgz', 'sha256': 'e' * 64}
+    marked = dict(plain, registry_release=True, name=FRAMEWORK, version='1.2.3')
+    locked = [{'name': d['name'], 'version': '1.0.0', 'sha256': d['sha256'], 'provenance': connectome_archive.provenance_record(d)} for d in (dep, git, registry)]
+    sidecar = {'schema': 'connectome.framework-archive/v1', 'sha256': plain['sha256'], 'name': FRAMEWORK, 'version': '1.2.3', 'requested_commit': PIN, 'registry_release': True, 'commit_verifiable': False}
+    base = packed()
+    fw = packed(FRAMEWORK, '1.2.3', gitHead=PIN)
+    A = {'archives/example.tgz': base, 'archives/framework.tgz': fw}
+    layers = [{'name': 'example', 'agent': {'tools': ['a']}, 'connectors': {'alpha': {'enabled': True, 'x': {'y': 1}}, 'beta': {'enabled': False}}, 'modules': {'m': {}}, 'catalog': {'node': {'kind': 'runtime'}}},
+              {'connectors': {'alpha': {'x': {'y': None, 'z': 2}}}}, {'agent': None}, {'modules': {'m': {'enabled': True}}}]
+    seeds += [
+        ('connectome_archive.validate_dependency', [dep], {}, None), ('connectome_archive.validate_dependency', [git], {}, None), ('connectome_archive.validate_dependency', [registry], {}, None),
+        ('connectome_archive.dependency_inputs', [{'cook': {'framework_archive': plain, 'host_dependencies': [dep, git, registry]}}, PIN], {}, None),
+        ('connectome_archive.legacy_dependency', [{'cook': {'framework_archive': marked}}, PIN], {}, None),
+        ('connectome_archive.validate_dependency_record', [connectome_archive.provenance_record(registry)], {}, None),
+        ('connectome_archive.check_dependencies', [{'hostDependencies': locked}, {'cook': {'host_dependencies': [dep, git, registry]}}, PIN], {}, None),
+        ('connectome_archive.check_dependencies', [{'hostDependencies': [{'name': FRAMEWORK, 'version': '1.2.3', 'sha256': plain['sha256']}]}, {'cook': {'framework_archive': plain}}, PIN, {'version': '1.2.3'}], {}, None),
+        ('connectome_archive.validate_provenance', [sidecar, {'cook': {'framework_archive': marked}}, PIN], {}, None),
+        ('connectome_archive.records_metadata', [{'cook': {'framework_archive': marked}}], {}, None),
+        ('connectome_archive.provenance_record', [registry], {}, None),
+        ('connectome_archive.archive_manifest', [entry(base)], {}, A),
+        ('connectome_archive.dependency_provenance', [{'cook': {'framework_archive': {'path': R + '/archives/framework.tgz', 'sha256': {'$sha256-of': fw}}, 'host_dependencies': [entry(base)]}}, PIN], {}, A),
+        ('connectome_archive.framework_provenance', [{'cook': {'framework_archive': {'path': R + '/archives/framework.tgz', 'sha256': {'$sha256-of': fw}}}}, PIN], {}, A),
+        ('connectome_config.merge_layers', [layers], {}, None),
+        ('connectome_config.public_catalog', [{'agent': {'name': 'x'}}, {'slack': {'kind': 'connector'}, 'plain': {}, 'node': {'kind': 'runtime'}}], {}, None),
+        ('connectome_config.required_names', [{'required_secrets': ['B', 'A'], 'secret_files': [{'secret': 'C', 'env': 'C_FILE'}], 'connectors': {'x': {'required_secrets': ['D']}}, 'modules': {'y': {}}}], {}, None),
     ]
     rows, seen = [], set()
 

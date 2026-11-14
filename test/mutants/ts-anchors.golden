@@ -1,5 +1,415 @@
 [
  {
+  "id": "archive.L62.4",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(isDict(entry) && keysInclude(entry, DEPENDENCY_REQUIRED)\n    && keysWithin(entry, DEPENDENCY_ALLOWED),",
+  "after": "need(true,",
+  "oracle_line": 62,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L66.4",
+  "rows": [
+   1,
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(npm_name(item(record, 'name')) && !credential_shaped(item(record, 'name'))\n    && version(item(record, 'version')) && !credential_shaped(item(record, 'version')),\n    'invalid host dependency identity',",
+  "after": "need(true,",
+  "oracle_line": 66,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L69.4",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(isStr(kind) && KINDS.has(kind),",
+  "after": "need(true,",
+  "oracle_line": 69,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L82.4",
+  "rows": [
+   1,
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(text(value) && !credential_shaped(value) && !/[?#]/u.test(value)\n    && pathlib.isAbsolute(value),",
+  "after": "need(true,",
+  "oracle_line": 82,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L84.4",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(digest(item(record, 'sha256')), 'invalid archive hash',",
+  "after": "need(true,",
+  "oracle_line": 84,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L90.4",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(isDict(artifact) && keysInclude(artifact, PATH_SHA256)\n    && keysWithin(artifact, ARTIFACT_FIELDS),",
+  "after": "need(true,",
+  "oracle_line": 90,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L112.4",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(isList(entries),",
+  "after": "need(true,",
+  "oracle_line": 112,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L117.4",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(names.length === new Set(names).size,",
+  "after": "need(true,",
+  "oracle_line": 117,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L123.4",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(pathlib.isFile(path) && !pathlib.isSymlink(path),",
+  "after": "need(true,",
+  "oracle_line": 123,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L140.4",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(isDict(manifest),",
+  "after": "need(true,",
+  "oracle_line": 140,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L141.4",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(eq(dictGet(manifest, 'name'), item(record, 'name')) && version(dictGet(manifest, 'version'))\n    && !credential_shaped(subscript(manifest, 'version'))\n    && (item(record, 'version') === null || eq(subscript(manifest, 'version'), item(record, 'version'))),\n    'archive package identity mismatch',",
+  "after": "need(true,",
+  "oracle_line": 141,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L193.4",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(isDict(record), 'invalid dependency provenance',",
+  "after": "need(true,",
+  "oracle_line": 193,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L198.4",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(typeof get(entry, 'commit_verifiable') === 'boolean'\n    && item(entry, 'commit_verifiable') === eq(item(entry, 'kind'), 'git_commit')\n    && (eq(kind, 'artifact') ? eq(get(entry, 'payload'), ARTIFACT_PAYLOAD) : !entry.has('payload'))\n    && (eq(kind, 'registry_release') ? eq(get(entry, 'registry_comparison'), REGISTRY_COMPARISON) : !entry.has('registry_comparison')),\n    'invalid dependency provenance',",
+  "after": "need(true,",
+  "oracle_line": 198,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L210.4",
+  "rows": [
+   9
+  ],
+  "file": "src/archive.ts",
+  "before": "need(eq(present.map(dependency => subscript(dependency, 'name')), expected.map(entry => item(entry, 'name'))),\n    'host dependency inventory mismatch',",
+  "after": "need(true,",
+  "oracle_line": 210,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L243.8",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "throw new ArchiveError('framework provenance lock mismatch', 'E_LOCK_INVALID');",
+  "after": ";",
+  "oracle_line": 243,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L71.8",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(digest(get(record, 'commit'), 40) && !eq(item(record, 'commit'), '0'.repeat(40)),",
+  "after": "need(true,",
+  "oracle_line": 71,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L74.8",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(!record.has('commit'),",
+  "after": "need(true,",
+  "oracle_line": 74,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L76.8",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(registry_origin(get(record, 'registry_url')) && sha512_integrity(get(record, 'registry_integrity')),",
+  "after": "need(true,",
+  "oracle_line": 76,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L79.8",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(!(record.has('registry_url') || record.has('registry_integrity')),",
+  "after": "need(true,",
+  "oracle_line": 79,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L95.8",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(item(record, 'registry_release') === true && eq(get(record, 'name'), FRAMEWORK)\n      && version(get(record, 'version')) && !credential_shaped(item(record, 'version')),\n      'registry release requires explicit name and version',",
+  "after": "need(true,",
+  "oracle_line": 95,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L99.8",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(keysEqual(record, PATH_SHA256),",
+  "after": "need(true,",
+  "oracle_line": 99,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L126.8",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(eq(sha256(data), item(record, 'sha256')),\n      'archive hash mismatch',",
+  "after": "need(true,",
+  "oracle_line": 126,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L137.8",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "archive.py:136-137\n      throw error;",
+  "after": "archive.py:136-137\n      throw new ArchiveError('unreadable archive or manifest');",
+  "oracle_line": 137,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L139.8",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "throw new ArchiveError('unreadable archive or manifest');",
+  "after": "manifest = new Map();",
+  "oracle_line": 139,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L219.8",
+  "rows": [
+   9
+  ],
+  "file": "src/archive.ts",
+  "before": "need(eq(item(dependency, 'sha256'), item(entry, 'sha256'))\n      && (expectedVersion === null || eq(item(dependency, 'version'), expectedVersion)),\n      'host dependency identity mismatch',",
+  "after": "need(true,",
+  "oracle_line": 219,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L130.12",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(eq(observed, item(record, 'registry_integrity')), 'registry integrity mismatch',",
+  "after": "need(true,",
+  "oracle_line": 130,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L134.12",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(manifests.length === 1 && manifests[0]!.size <= 1024n * 1024n,",
+  "after": "need(true,",
+  "oracle_line": 134,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L155.12",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(manifest.has('gitHead') ? eq(head, pin) : eq(item(entry, 'kind'), 'artifact'),\n        'framework archive gitHead differs from requested pin',",
+  "after": "need(true,",
+  "oracle_line": 155,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L158.12",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "need(eq(item(entry, 'kind'), 'git_commit') ? eq(head, item(entry, 'commit'))\n        : (!manifest.has('gitHead') || digest(head, 40)),\n        'archive gitHead missing or invalid',",
+  "after": "need(true,",
+  "oracle_line": 158,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "archive.L226.12",
+  "rows": [
+   9
+  ],
+  "file": "src/archive.ts",
+  "before": "need(eq(record, wanted), 'host dependency provenance mismatch',",
+  "after": "need(true,",
+  "oracle_line": 226,
+  "note": "",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "config.L33.8",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "throw new PyValueError('exactly four mapping layers required');",
+  "after": ";",
+  "oracle_line": 33,
+  "note": "",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
+  "id": "config.L60.8",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "throw new PyValueError('public connectors belong in the catalog');",
+  "after": ";",
+  "oracle_line": 60,
+  "note": "",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
+  "id": "config.L46.12",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "throw new PyValueError('connectors and modules must be mappings');",
+  "after": ";",
+  "oracle_line": 46,
+  "note": "",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
+  "id": "config.L49.16",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "throw new PyValueError('entries must be mappings with boolean enabled');",
+  "after": ";",
+  "oracle_line": 49,
+  "note": "",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
   "id": "inputs.L58.8",
   "rows": [
    63
@@ -9,7 +419,7 @@
   "after": ";",
   "oracle_line": 58,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L63.4",
@@ -21,7 +431,7 @@
   "after": "need(true,",
   "oracle_line": 63,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L67.4",
@@ -33,7 +443,7 @@
   "after": "need(true,",
   "oracle_line": 67,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L103.4",
@@ -46,7 +456,7 @@
   "after": "need(true,",
   "oracle_line": 103,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L111.8",
@@ -59,7 +469,7 @@
   "after": "return null;",
   "oracle_line": 111,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L144.4",
@@ -71,7 +481,7 @@
   "after": "need(true,",
   "oracle_line": 144,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L70.8",
@@ -83,7 +493,7 @@
   "after": "need(true,",
   "oracle_line": 70,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L72.8",
@@ -95,7 +505,7 @@
   "after": "need(true,",
   "oracle_line": 72,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L77.8",
@@ -107,7 +517,7 @@
   "after": "need(true,",
   "oracle_line": 77,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L81.8",
@@ -119,7 +529,7 @@
   "after": "need(true,",
   "oracle_line": 81,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L83.8",
@@ -131,7 +541,7 @@
   "after": "need(true,",
   "oracle_line": 83,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L86.8",
@@ -143,7 +553,7 @@
   "after": "need(true,",
   "oracle_line": 86,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L87.8",
@@ -155,7 +565,7 @@
   "after": "need(true,",
   "oracle_line": 87,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L91.8",
@@ -167,7 +577,7 @@
   "after": "need(true,",
   "oracle_line": 91,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L114.8",
@@ -180,7 +590,7 @@
   "after": "need(true,",
   "oracle_line": 114,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L116.8",
@@ -193,7 +603,7 @@
   "after": ";",
   "oracle_line": 116,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L123.8",
@@ -205,7 +615,7 @@
   "after": "need(true,",
   "oracle_line": 123,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L127.8",
@@ -217,7 +627,7 @@
   "after": "return Buffer.alloc(0);",
   "oracle_line": 127,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L150.8",
@@ -229,7 +639,7 @@
   "after": "return new Map();",
   "oracle_line": 150,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L161.8",
@@ -241,7 +651,7 @@
   "after": "need(true,",
   "oracle_line": 161,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L94.12",
@@ -253,7 +663,7 @@
   "after": "need(true,",
   "oracle_line": 94,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L95.12",
@@ -266,7 +676,7 @@
   "after": "need(true,",
   "oracle_line": 95,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L97.12",
@@ -279,7 +689,7 @@
   "after": "need(true,",
   "oracle_line": 97,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.L107.12",
@@ -292,7 +702,7 @@
   "after": "need(true,",
   "oracle_line": 107,
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "lock.L108.4",
@@ -304,7 +714,7 @@
   "after": "require(true,",
   "oracle_line": 108,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L110.4",
@@ -316,7 +726,7 @@
   "after": "require(true,",
   "oracle_line": 110,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L111.4",
@@ -328,7 +738,7 @@
   "after": "require(true,",
   "oracle_line": 111,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L122.4",
@@ -340,7 +750,7 @@
   "after": "require(true,",
   "oracle_line": 122,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L124.4",
@@ -352,7 +762,7 @@
   "after": "require(true,",
   "oracle_line": 124,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L129.4",
@@ -364,7 +774,7 @@
   "after": "require(true,",
   "oracle_line": 129,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L130.4",
@@ -376,7 +786,7 @@
   "after": "require(true,",
   "oracle_line": 130,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L132.4",
@@ -388,7 +798,7 @@
   "after": "require(true,",
   "oracle_line": 132,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L134.4",
@@ -400,7 +810,7 @@
   "after": "require(true,",
   "oracle_line": 134,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L137.4",
@@ -412,7 +822,7 @@
   "after": "require(true,",
   "oracle_line": 137,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L142.4",
@@ -424,7 +834,7 @@
   "after": "require(true,",
   "oracle_line": 142,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L165.4",
@@ -436,7 +846,7 @@
   "after": "require(true,",
   "oracle_line": 165,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L170.4",
@@ -448,7 +858,7 @@
   "after": "require(true,",
   "oracle_line": 170,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L177.4",
@@ -460,7 +870,7 @@
   "after": "require(true,",
   "oracle_line": 177,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L181.4",
@@ -472,7 +882,7 @@
   "after": "require(true,",
   "oracle_line": 181,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L182.4",
@@ -484,7 +894,7 @@
   "after": "require(true,",
   "oracle_line": 182,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L294.4",
@@ -497,7 +907,7 @@
   "after": "require(true,",
   "oracle_line": 294,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L324.8",
@@ -509,7 +919,7 @@
   "after": "return null;",
   "oracle_line": 324,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L140.8",
@@ -521,7 +931,7 @@
   "after": "require(true,",
   "oracle_line": 140,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L160.8",
@@ -533,7 +943,7 @@
   "after": "require(true,",
   "oracle_line": 160,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L163.8",
@@ -545,7 +955,7 @@
   "after": ";",
   "oracle_line": 163,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L185.8",
@@ -557,7 +967,7 @@
   "after": "require(true,",
   "oracle_line": 185,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L199.8",
@@ -569,7 +979,7 @@
   "after": "require(true,",
   "oracle_line": 199,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L201.8",
@@ -581,7 +991,7 @@
   "after": "require(true,",
   "oracle_line": 201,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L204.8",
@@ -593,7 +1003,7 @@
   "after": "require(true,",
   "oracle_line": 204,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L205.8",
@@ -605,7 +1015,7 @@
   "after": "require(true,",
   "oracle_line": 205,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L208.8",
@@ -617,7 +1027,7 @@
   "after": "require(true,",
   "oracle_line": 208,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L211.8",
@@ -629,7 +1039,7 @@
   "after": "require(true,",
   "oracle_line": 211,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L214.8",
@@ -641,7 +1051,7 @@
   "after": "require(true,",
   "oracle_line": 214,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L221.8",
@@ -653,7 +1063,7 @@
   "after": "require(true,",
   "oracle_line": 221,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L233.8",
@@ -665,7 +1075,7 @@
   "after": "require(true,",
   "oracle_line": 233,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L238.8",
@@ -677,7 +1087,7 @@
   "after": "require(true,",
   "oracle_line": 238,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L240.8",
@@ -689,7 +1099,7 @@
   "after": "require(true,",
   "oracle_line": 240,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L246.8",
@@ -701,7 +1111,7 @@
   "after": "require(true,",
   "oracle_line": 246,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L290.8",
@@ -713,7 +1123,7 @@
   "after": "require(true,",
   "oracle_line": 290,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L299.8",
@@ -726,7 +1136,7 @@
   "after": "require(true,",
   "oracle_line": 299,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L301.8",
@@ -738,7 +1148,7 @@
   "after": "require(true,",
   "oracle_line": 301,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L305.8",
@@ -750,7 +1160,7 @@
   "after": "require(true,",
   "oracle_line": 305,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L331.8",
@@ -762,7 +1172,7 @@
   "after": "lock.py:330-331\n      return new Map();",
   "oracle_line": 331,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L333.8",
@@ -774,7 +1184,7 @@
   "after": "return new Map();",
   "oracle_line": 333,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L85.12",
@@ -786,7 +1196,7 @@
   "after": "require(true,",
   "oracle_line": 85,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L155.12",
@@ -798,7 +1208,7 @@
   "after": "require(true,",
   "oracle_line": 155,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L158.12",
@@ -810,7 +1220,7 @@
   "after": ";",
   "oracle_line": 158,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L188.12",
@@ -822,7 +1232,7 @@
   "after": "require(true,",
   "oracle_line": 188,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L193.12",
@@ -834,7 +1244,7 @@
   "after": "require(true,",
   "oracle_line": 193,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L216.12",
@@ -846,7 +1256,7 @@
   "after": "require(true,",
   "oracle_line": 216,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L226.12",
@@ -858,7 +1268,7 @@
   "after": "require(true,",
   "oracle_line": 226,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L243.12",
@@ -870,7 +1280,7 @@
   "after": "require(true,",
   "oracle_line": 243,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L249.12",
@@ -882,7 +1292,7 @@
   "after": "require(true,",
   "oracle_line": 249,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L259.12",
@@ -894,7 +1304,7 @@
   "after": "require(true,",
   "oracle_line": 259,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L271.12",
@@ -906,7 +1316,7 @@
   "after": "require(true,",
   "oracle_line": 271,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L287.12",
@@ -918,7 +1328,7 @@
   "after": ";",
   "oracle_line": 287,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L307.12",
@@ -930,7 +1340,7 @@
   "after": "require(true,",
   "oracle_line": 307,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L310.12",
@@ -942,7 +1352,7 @@
   "after": "require(true,",
   "oracle_line": 310,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L319.12",
@@ -954,7 +1364,7 @@
   "after": "require(true,",
   "oracle_line": 319,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L93.8",
@@ -966,7 +1376,7 @@
   "after": "require(true,",
   "oracle_line": 93,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L94.8",
@@ -978,7 +1388,7 @@
   "after": "require(true,",
   "oracle_line": 94,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L275.16",
@@ -990,7 +1400,7 @@
   "after": "require(true,",
   "oracle_line": 275,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L266.20",
@@ -1002,7 +1412,7 @@
   "after": "require(true,",
   "oracle_line": 266,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.L269.20",
@@ -1014,7 +1424,7 @@
   "after": ";",
   "oracle_line": 269,
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.recipe",
@@ -1026,7 +1436,7 @@
   "after": "require(true,",
   "oracle_line": 142,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.timestamp",
@@ -1038,7 +1448,7 @@
   "after": "require(true,",
   "oracle_line": 160,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.requirements",
@@ -1050,7 +1460,7 @@
   "after": "require(true,",
   "oracle_line": 170,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.credentials",
@@ -1062,7 +1472,7 @@
   "after": "require(true,",
   "oracle_line": 177,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.extensions",
@@ -1074,7 +1484,7 @@
   "after": "require(true,",
   "oracle_line": 208,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.state",
@@ -1086,7 +1496,7 @@
   "after": "require(true,",
   "oracle_line": 211,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.health",
@@ -1098,7 +1508,7 @@
   "after": "require(true,",
   "oracle_line": 290,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.launch",
@@ -1110,7 +1520,7 @@
   "after": "require(true,",
   "oracle_line": 294,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.units-ambiguous",
@@ -1122,7 +1532,7 @@
   "after": "require(true,",
   "oracle_line": 299,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "inputs.record.activation",
@@ -1134,7 +1544,7 @@
   "after": "need(true,",
   "oracle_line": 63,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "lock.schema.cook#1",
@@ -1146,7 +1556,7 @@
   "after": "require(true,",
   "oracle_line": 137,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.cook#2",
@@ -1158,7 +1568,7 @@
   "after": "require(true,",
   "oracle_line": 140,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.components#1",
@@ -1170,7 +1580,7 @@
   "after": "require(true,",
   "oracle_line": 185,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.components#2",
@@ -1182,7 +1592,7 @@
   "after": "require(true,",
   "oracle_line": 188,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.components#3",
@@ -1194,7 +1604,7 @@
   "after": "require(true,",
   "oracle_line": 193,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.components#4",
@@ -1206,7 +1616,7 @@
   "after": "require(true,",
   "oracle_line": 199,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.outputs#1",
@@ -1218,7 +1628,7 @@
   "after": "require(true,",
   "oracle_line": 201,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.outputs#2",
@@ -1230,7 +1640,7 @@
   "after": "require(true,",
   "oracle_line": 204,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.outputs#3",
@@ -1242,7 +1652,7 @@
   "after": "require(true,",
   "oracle_line": 205,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.engines#1",
@@ -1254,7 +1664,7 @@
   "after": "require(true,",
   "oracle_line": 214,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.engines#2",
@@ -1266,7 +1676,7 @@
   "after": "require(true,",
   "oracle_line": 216,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.layout#1",
@@ -1278,7 +1688,7 @@
   "after": "require(true,",
   "oracle_line": 221,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.layout#2",
@@ -1290,7 +1700,7 @@
   "after": "require(true,",
   "oracle_line": 226,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.units-ambiguous#1",
@@ -1302,7 +1712,7 @@
   "after": "require(true,",
   "oracle_line": 299,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "inputs.record.activation#1",
@@ -1314,7 +1724,7 @@
   "after": "need(true,",
   "oracle_line": 63,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.exclusive#1",
@@ -1326,7 +1736,7 @@
   "after": "need(true,",
   "oracle_line": 67,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.exclusive#2",
@@ -1338,7 +1748,7 @@
   "after": "need(true,",
   "oracle_line": 70,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.exclusive#3",
@@ -1350,7 +1760,7 @@
   "after": "need(true,",
   "oracle_line": 72,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.exclusive#4",
@@ -1362,7 +1772,7 @@
   "after": "need(true,",
   "oracle_line": 77,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.recipe-file#1",
@@ -1374,7 +1784,7 @@
   "after": "need(true,",
   "oracle_line": 81,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.recipe-file#2",
@@ -1386,7 +1796,7 @@
   "after": "need(true,",
   "oracle_line": 87,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.recipe-path#1",
@@ -1398,7 +1808,7 @@
   "after": "need(true,",
   "oracle_line": 83,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.recipe-path#2",
@@ -1410,7 +1820,7 @@
   "after": "need(true,",
   "oracle_line": 86,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.secret-files#1",
@@ -1422,7 +1832,7 @@
   "after": "need(true,",
   "oracle_line": 91,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.secret-files#2",
@@ -1434,7 +1844,7 @@
   "after": "need(true,",
   "oracle_line": 94,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.transport#1",
@@ -1446,7 +1856,7 @@
   "after": "need(true,",
   "oracle_line": 144,
   "note": "named check; whole guard, as in the oracle",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "secrets.reserved.file-env#1",
@@ -1457,7 +1867,7 @@
   "before": "!RESERVED.has(item(entry, 'env') as string)",
   "after": "true",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.secret-files#3",
@@ -1468,7 +1878,7 @@
   "before": "isStr(value) && NAME.test(value)",
   "after": "true",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.secret-files#4",
@@ -1479,7 +1889,7 @@
   "before": "!seen.has(item(entry, 'env'))",
   "after": "true",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "lock.schema.operator-recipe#1",
@@ -1490,7 +1900,7 @@
   "before": "inputs.read_file(path, item(config as PyDict, 'recipe_file'));",
   "after": ";",
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.operator-recipe#2",
@@ -1501,7 +1911,7 @@
   "before": "eq(item(recipe as PyDict, 'sha256'), subscript(item(config as PyDict, 'recipe_file'), 'sha256'))",
   "after": "true",
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.schema.operator-recipe#3",
@@ -1512,7 +1922,7 @@
   "before": "eq(item(recipe as PyDict, 'path'), path)",
   "after": "true",
   "note": "",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "inputs.record.data-args#1",
@@ -1523,7 +1933,7 @@
   "before": "let valid = isList(records);",
   "after": "let valid = true;",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-args#2",
@@ -1534,7 +1944,7 @@
   "before": "keysWithin(record, DATA_ALLOWED)",
   "after": "true",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-args#3",
@@ -1545,7 +1955,7 @@
   "before": "SERVER.test(item(record, 'server') as string)",
   "after": "true",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-args#4",
@@ -1556,7 +1966,7 @@
   "before": "isList(item(record, 'args'))",
   "after": "true",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-args#5",
@@ -1567,7 +1977,7 @@
   "before": "Array.from(item(record, 'args') as Iterable<PyValue>).every(arg => isStr(arg))",
   "after": "true",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-args#6",
@@ -1578,7 +1988,7 @@
   "before": "isStr(item(record, 'kind')) && (item(record, 'kind') === 'file' || item(record, 'kind') === 'dir')",
   "after": "true",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-args#7",
@@ -1589,7 +1999,7 @@
   "before": "if (seen.has(key)) {",
   "after": "if (false) {",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-path#1",
@@ -1600,7 +2010,7 @@
   "before": "isStr(value) && value.startsWith('/') && !value.startsWith('//')",
   "after": "isStr(value) && !value.startsWith('//')",
   "note": "the type test stays: without it the mutant does not compile",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-path#2",
@@ -1611,7 +2021,7 @@
   "before": "&& !value.startsWith('//')",
   "after": "",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-path#3",
@@ -1622,7 +2032,7 @@
   "before": "&& value !== '/' && value === pathlib.pathStr(value)",
   "after": "&& value === pathlib.pathStr(value)",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-path#4",
@@ -1633,7 +2043,7 @@
   "before": "&& value !== '/' && value === pathlib.pathStr(value)",
   "after": "&& value !== '/'",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-path#5",
@@ -1644,7 +2054,7 @@
   "before": "&& !pathlib.pathParts(value).includes('..')\n    && !hasControl(value);",
   "after": "&& !hasControl(value);",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-path#6",
@@ -1655,7 +2065,7 @@
   "before": "&& !pathlib.pathParts(value).includes('..')\n    && !hasControl(value);",
   "after": "&& !pathlib.pathParts(value).includes('..');",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-flag#1",
@@ -1666,7 +2076,7 @@
   "before": "if (!FLAG.test(value)) return null;",
   "after": "",
   "note": "the type test stays: without it the mutant does not compile",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-flag#2",
@@ -1677,7 +2087,7 @@
   "before": "if (DENIED_FLAGS.has(value)) return false;",
   "after": "",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.data-flag#3",
@@ -1688,7 +2098,7 @@
   "before": "return !DENIED_PREFIXES.some(prefix => value.startsWith(prefix));",
   "after": "return true;",
   "note": "",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
  },
  {
   "id": "inputs.record.transport#2",
@@ -1699,7 +2109,493 @@
   "before": "b64decodeStrict((transport as ReadonlyMap<string, unknown>).get('cook-recipe.json'))",
   "after": "Buffer.from(String((transport as ReadonlyMap<string, unknown>).get('cook-recipe.json')), 'base64')",
   "note": "strict decoding replaced by a lenient one, as validate=False in the oracle mutant",
-  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+  "source_sha256": "7671bf2fe0bef928f548e0bff48d3d46312d6f7166ac4a973b901b129a54678c"
+ },
+ {
+  "id": "config.layers.count",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "len(layers) !== 4 || iterate(layers).some(layer => !isDict(layer))",
+  "after": "false",
+  "note": "",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
+  "id": "config.layers.enabled-type",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "!isDict(entry) || typeof dictGet(entry, 'enabled', true) !== 'boolean'",
+  "after": "false",
+  "note": "",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
+  "id": "config.layers.public-connectors",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "if (strIn('connectors', result)) {",
+  "after": "if (false) {",
+  "note": "",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
+  "id": "config.layers.public-connectors#1",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "if (strIn('connectors', result)) {",
+  "after": "if (false) {",
+  "note": "same mutation as the name without a site number, as in the oracle lists",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
+  "id": "config.layers.fold#1",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "for (const layer of layers as PyDict[]) merged = combine([merged, layer], true);",
+  "after": "merged = (layers as PyDict[]).reduceRight((upper, lower) => combine([lower, upper], true));",
+  "note": "the reversed fold of Ansible's multi-argument combine, as in the oracle mutant",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
+  "id": "config.layers.prune#1",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "filter(([, entry]) => dictGet(entry, 'enabled', true) === true)",
+  "after": "filter(() => true)",
+  "note": "",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
+  "id": "config.layers.tombstones",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "const result = prune(merged) as PyDict;",
+  "after": "const result = merged;",
+  "note": "TS only; nulls survive the merge",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
+  "id": "config.layers.tombstones-last",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "if (recursive && isDict(value) && isDict(present)) result.set(key, combine([present, value], true));\n      else result.set(key, deepcopy(value));",
+  "after": "if (recursive && isDict(value) && isDict(present)) result.set(key, combine([present, value], true));\n      else if (value === null) result.delete(key);\n      else result.set(key, deepcopy(value));",
+  "note": "TS only; a null applied while merging instead of after it lets a lower layer come back",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
+  "id": "config.layers.recursive",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "result.set(key, combine([present, value], true));",
+  "after": "result.set(key, deepcopy(value));",
+  "note": "TS only; an upper mapping replaces a lower one instead of merging into it",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
+  "id": "config.layers.empty-catalog",
+  "rows": [
+   69
+  ],
+  "file": "src/config.ts",
+  "before": "if (!truthy(dictGet(result, 'catalog', null))) result.delete('catalog');",
+  "after": ";",
+  "note": "TS only",
+  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+ },
+ {
+  "id": "cook.provenance.npm-name-length",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "Array.from(value).length <= 214",
+  "after": "true",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.npm-name-reserved",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "value !== 'node_modules' && value !== 'favicon.ico'",
+  "after": "true",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.npm-name-grammar",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "&& NPM_NAME.test(value);",
+  "after": ";",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.origin-characters",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "credential_shaped(value) || REGISTRY_REFUSED.test(value)) return false;",
+  "after": "credential_shaped(value)) return false;",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.origin-credential",
+  "rows": [
+   39,
+   1
+  ],
+  "file": "src/archive.ts",
+  "before": "if (!text(value) || credential_shaped(value) || REGISTRY_REFUSED.test(value)) return false;",
+  "after": "if (!text(value) || REGISTRY_REFUSED.test(value)) return false;",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.origin-scheme",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "if (!(parts.scheme === 'https' && url.username",
+  "after": "if (!(url.username",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.origin-user",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "url.username(parts.netloc) === null && url.password(parts.netloc) === null",
+  "after": "url.password(parts.netloc) === null",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.origin-password",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "url.username(parts.netloc) === null && url.password(parts.netloc) === null",
+  "after": "url.username(parts.netloc) === null",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.origin-path",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "&& (parts.path === '' || parts.path === '/') && !parts.query",
+  "after": "&& !parts.query",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.origin-query",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "&& !parts.query && !parts.fragment",
+  "after": "&& !parts.fragment",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.origin-fragment",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "&& !parts.query && !parts.fragment",
+  "after": "&& !parts.query",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.origin-host",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "&& host !== null && REGISTRY_HOST.test(host))) return false;",
+  "after": "&& host !== null)) return false;",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.origin-port",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "return port === null || (0 < port && port <= 65535);\n  } catch (error) {\n    if (error instanceof PyValueError) return false;\n    throw error;\n  }\n}\n\n/** archive.py:51-58 */",
+  "after": "return true;\n  } catch (error) {\n    if (error instanceof PyValueError) return false;\n    throw error;\n  }\n}\n\n/** archive.py:51-58 */",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.origin-malformed",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "return port === null || (0 < port && port <= 65535);\n  } catch (error) {\n    if (error instanceof PyValueError) return false;",
+  "after": "return port === null || (0 < port && port <= 65535);\n  } catch (error) {\n    if (error instanceof PyValueError) return true;",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.integrity-prefix",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "if (!text(value) || !value.startsWith('sha512-')) return false;",
+  "after": "if (!text(value)) return false;",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.integrity-length",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "return decoded.length === 64 && b64encode(decoded) === value.slice(7);",
+  "after": "return b64encode(decoded) === value.slice(7);",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.integrity-canonical",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "return decoded.length === 64 && b64encode(decoded) === value.slice(7);",
+  "after": "return decoded.length === 64;",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.record-verifiable",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "record.set('commit_verifiable', eq(kind, 'git_commit'));",
+  "after": "record.set('commit_verifiable', true);",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.record-payload",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "if (eq(kind, 'artifact')) record.set('payload', ARTIFACT_PAYLOAD);",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.record-comparison",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "if (eq(kind, 'registry_release')) record.set('registry_comparison', REGISTRY_COMPARISON);",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.metadata-dependencies",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "return strIn('host_dependencies', settings)\n    || ",
+  "after": "return ",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.metadata-release",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "dictGet(dictGet(settings, 'framework_archive', new Map()), 'registry_release', null) === true;",
+  "after": "dictGet(dictGet(settings, 'framework_archive', new Map()), 'registry_release', null) !== null;",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.sidecar-fields",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "const valid = isDict(record) && keysEqual(record, PROVENANCE_FIELDS)",
+  "after": "const valid = isDict(record) && keysInclude(record, PROVENANCE_FIELDS)",
+  "note": "TS only; extra fields pass",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.sidecar-schema",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "    && eq(field('schema'), 'connectome.framework-archive/v1')\n",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.sidecar-digest",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "&& eq(field('sha256'), subscript(artifact, 'sha256')) && eq(field('name'), FRAMEWORK)",
+  "after": "&& eq(field('name'), FRAMEWORK)",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.sidecar-name",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "&& eq(field('sha256'), subscript(artifact, 'sha256')) && eq(field('name'), FRAMEWORK)",
+  "after": "&& eq(field('sha256'), subscript(artifact, 'sha256'))",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.sidecar-version",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "&& version(field('version')) && !credential_shaped(field('version')) && eq(field('requested_commit'), pin)",
+  "after": "&& isStr(field('version')) && !credential_shaped(field('version')) && eq(field('requested_commit'), pin)",
+  "note": "TS only; the type test stays",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.sidecar-version-credential",
+  "rows": [
+   39,
+   1
+  ],
+  "file": "src/archive.ts",
+  "before": "&& version(field('version')) && !credential_shaped(field('version')) && eq(field('requested_commit'), pin)",
+  "after": "&& version(field('version')) && eq(field('requested_commit'), pin)",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.sidecar-pin",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "&& version(field('version')) && !credential_shaped(field('version')) && eq(field('requested_commit'), pin)",
+  "after": "&& version(field('version')) && !credential_shaped(field('version'))",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.sidecar-release",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "    && field('registry_release') === (dictGet(artifact, 'registry_release', null) === true)\n",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.sidecar-verifiable",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "    && (field('commit_verifiable') === true || field('registry_release') === true)\n",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.sidecar-release-identity",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "    && (field('registry_release') !== true || (eq(field('name'), dictGet(artifact, 'name', null))\n      && eq(field('version'), dictGet(artifact, 'version', null))));",
+  "after": ";",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.manifest-name-pattern",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "filter(member => MANIFEST_NAME.test(member.name) && member.isfile)",
+  "after": "filter(member => member.isfile)",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
+ },
+ {
+  "id": "cook.provenance.manifest-regular-file",
+  "rows": [
+   39
+  ],
+  "file": "src/archive.ts",
+  "before": "filter(member => MANIFEST_NAME.test(member.name) && member.isfile)",
+  "after": "filter(member => MANIFEST_NAME.test(member.name))",
+  "note": "TS only",
+  "source_sha256": "cbd4e1101d5f0ec523861eeea4f470f950d4aeb153df81fb01a947c3701c748b"
  },
  {
   "id": "lock.names-only.call",
@@ -1710,7 +2606,7 @@
   "before": "namesOnly(lock, frame + 1);",
   "after": ";",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.provider-token",
@@ -1721,7 +2617,7 @@
   "before": "'(?:gh[oprsu]_|github_pat_|glpat[-_]|xox[baprs]-|sk-)[A-Za-z0-9_-]{12,}',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.vault-token",
@@ -1732,7 +2628,7 @@
   "before": "BOUNDARY + 'hvs\\\\.[A-Za-z0-9_-]+',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.bot-token",
@@ -1743,7 +2639,7 @@
   "before": "BOUNDARY + '[0-9]{8,10}:[A-Za-z0-9_-]{30,}',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.private-key",
@@ -1754,7 +2650,7 @@
   "before": "'-----' + 'BEGIN [^\\\\n]*PRIVATE KEY-----',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.jwt",
@@ -1765,7 +2661,7 @@
   "before": "BOUNDARY + 'eyJ[' + W + '-]+\\\\.[' + W + '-]+\\\\.[' + W + '-]+',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.assignment",
@@ -1776,7 +2672,7 @@
   "before": "[TOKEN_SHAPES.join('|'), ASSIGNMENT, URL_SHAPES.join('|'), STORE_PATH]",
   "after": "[TOKEN_SHAPES.join('|'), '(?!)', URL_SHAPES.join('|'), STORE_PATH]",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.url-userinfo",
@@ -1787,7 +2683,7 @@
   "before": "'://[^/' + S + ']*:[^/' + S + ']*@',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.query",
@@ -1798,7 +2694,7 @@
   "before": "'[?&](?:' + ['token', 'password', 'secret', 'api_key'].map(insensitive).join('|') + ')=',",
   "after": "'(?!)',",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.store-path",
@@ -1809,7 +2705,7 @@
   "before": "[TOKEN_SHAPES.join('|'), ASSIGNMENT, URL_SHAPES.join('|'), STORE_PATH]",
   "after": "[TOKEN_SHAPES.join('|'), ASSIGNMENT, URL_SHAPES.join('|'), '(?!)']",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.word-boundary",
@@ -1820,7 +2716,7 @@
   "before": "const BOUNDARY = '(?<![' + W + '])';",
   "after": "const BOUNDARY = '';",
   "note": "TS only; \\b",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.unicode-boundary",
@@ -1831,7 +2727,7 @@
   "before": "const BOUNDARY = '(?<![' + W + '])';",
   "after": "const BOUNDARY = '(?<![A-Za-z0-9_])';",
   "note": "TS only; \\b is Unicode-aware",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.unicode-word",
@@ -1842,7 +2738,7 @@
   "before": "BOUNDARY + 'eyJ[' + W + '-]+\\\\.[' + W + '-]+\\\\.[' + W + '-]+',",
   "after": "BOUNDARY + 'eyJ[A-Za-z0-9_-]+\\\\.[A-Za-z0-9_-]+\\\\.[A-Za-z0-9_-]+',",
   "note": "TS only; \\w is Unicode-aware",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.unicode-space",
@@ -1853,7 +2749,7 @@
   "before": "[' + S + ']*[:=][' + S + ']*[^' + S + ']+';",
   "after": "\\\\s*[:=]\\\\s*\\\\S+';",
   "note": "TS only; \\s differs between the two engines",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.ignore-case",
@@ -1864,7 +2760,7 @@
   "before": "const lower = letter.toLowerCase(), upper = letter.toUpperCase();",
   "after": "const lower = letter, upper = letter;",
   "note": "TS only; re.I",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.case-equivalents",
@@ -1875,7 +2771,7 @@
   "before": "(lower === 'i' ? '\\\\u0130\\\\u0131' : lower === 's' ? '\\\\u017f' : lower === 'k' ? '\\\\u212a' : '')",
   "after": "''",
   "note": "TS only; CPython case equivalences under re.I",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.class-equivalents",
@@ -1886,7 +2782,7 @@
   "before": "const LETTER = 'A-Za-z\\\\u0130\\\\u0131\\\\u017f\\\\u212a';",
   "after": "const LETTER = 'A-Za-z';",
   "note": "TS only; the same equivalences inside a class",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.credential.dot",
@@ -1897,7 +2793,7 @@
   "before": "'-----' + 'BEGIN [^\\\\n]*PRIVATE KEY-----',",
   "after": "'-----' + 'BEGIN .*PRIVATE KEY-----',",
   "note": "TS only; \".\" excludes only a newline in Python",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.text",
@@ -1908,7 +2804,7 @@
   "before": "  if (!text(value)) return false;\n  if (credential_shaped(value)) return false;",
   "after": "  if (!isStr(value)) return false;\n  if (credential_shaped(value)) return false;",
   "note": "TS only; the type test stays",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.credential",
@@ -1919,7 +2815,7 @@
   "before": "  if (credential_shaped(value)) return false;\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.decoded-text",
@@ -1930,7 +2826,7 @@
   "before": "  if (!text(decoded)) return false;\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.decoded-credential",
@@ -1941,7 +2837,7 @@
   "before": "  if (credential_shaped(decoded)) return false;\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.delimiters",
@@ -1952,7 +2848,7 @@
   "before": "  if (/[?#\\\\]/u.test(decoded)) return false;\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.whitespace",
@@ -1963,7 +2859,7 @@
   "before": "  if (SPACE.test(decoded)) return false;\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.scheme",
@@ -1974,7 +2870,7 @@
   "before": "if (parts.scheme === 'https' || parts.scheme === 'ssh') {",
   "after": "if (parts.scheme) {",
   "note": "TS only; any scheme accepted as a URL",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.host",
@@ -1985,7 +2881,7 @@
   "before": "const host = url.hostname(parts.netloc), user",
   "after": "const host = url.hostname(parts.netloc) ?? 'host', user",
   "note": "TS only; an absent host passes",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.path",
@@ -1996,7 +2892,7 @@
   "before": "return Boolean(host\n        && parts.path",
   "after": "return Boolean(host",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.password",
@@ -2007,7 +2903,7 @@
   "before": "        && url.password(parts.netloc) === null\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.ssh-option-host",
@@ -2018,7 +2914,7 @@
   "before": "        && (parts.scheme !== 'ssh' || !url.unquote(host).startsWith('-'))\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.port-range",
@@ -2029,7 +2925,7 @@
   "before": "        && (port === null || (0 < port && port <= 65535))\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.port-syntax",
@@ -2040,7 +2936,7 @@
   "before": "const port = url.port(parts.netloc);",
   "after": "const port = null as number | null;",
   "note": "TS only; the port is no longer read, so a malformed one no longer refuses",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.user",
@@ -2051,7 +2947,7 @@
   "before": "        && (user === null || (parts.scheme === 'ssh' && USER.test(url.unquote(user)))));",
   "after": ");",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.user-grammar",
@@ -2062,7 +2958,7 @@
   "before": "(parts.scheme === 'ssh' && USER.test(url.unquote(user)))",
   "after": "parts.scheme === 'ssh'",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.malformed-url",
@@ -2073,7 +2969,7 @@
   "before": "    if (error instanceof PyValueError) return false;\n    throw error;\n  }\n  // scp syntax",
   "after": "    if (error instanceof PyValueError) return true;\n    throw error;\n  }\n  // scp syntax",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.transport-prefix",
@@ -2084,7 +2980,7 @@
   "before": "  if (TRANSPORT_PREFIX.test(decoded)) return false;\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.prefix-ignore-case",
@@ -2095,7 +2991,7 @@
   "before": "/^(?:[hH][tT][tT][pP][sS\\u017f]?|[sS\\u017f][sS\\u017f][hH]|[gG][iI\\u0130\\u0131][tT]|[fF][iI\\u0130\\u0131][lL][eE]|[fF][tT][pP]|[eE][xX][tT]):/u",
   "after": "/^(?:https?|ssh|git|file|ftp|ext):/u",
   "note": "TS only; re.I on the prefix test",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.scp-shape",
@@ -2106,7 +3002,7 @@
   "before": "return SCP.test(decoded) && !decoded.includes('://');",
   "after": "return !decoded.includes('://');",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "lock.repository.scp-not-uri",
@@ -2117,7 +3013,7 @@
   "before": "return SCP.test(decoded) && !decoded.includes('://');",
   "after": "return SCP.test(decoded);",
   "note": "TS only",
-  "source_sha256": "081f0514338ceac29aa01afac2db6d9370210eb843332da8d616ff96b31cacab"
+  "source_sha256": "ac875da792107c538e4e57d31d80f560e68c66741d0053f925e29262a75228e4"
  },
  {
   "id": "errors.closed.cook-table",
@@ -2128,7 +3024,7 @@
   "before": "if (COOK_CODES.has(code)) return code;",
   "after": "return code;",
   "note": "TS only",
-  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+  "source_sha256": "08412be627deda970932f87539234ef4fa24c6d7a6b630d42a03d51c8bea87f7"
  },
  {
   "id": "errors.closed.left-boundary",
@@ -2139,7 +3035,7 @@
   "before": "/(?<![A-Za-z0-9_])(E_[A-Z_]+)(?![A-Za-z0-9_])/g",
   "after": "/(E_[A-Z_]+)(?![A-Za-z0-9_])/g",
   "note": "TS only",
-  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+  "source_sha256": "08412be627deda970932f87539234ef4fa24c6d7a6b630d42a03d51c8bea87f7"
  },
  {
   "id": "errors.closed.right-boundary",
@@ -2150,7 +3046,7 @@
   "before": "/(?<![A-Za-z0-9_])(E_[A-Z_]+)(?![A-Za-z0-9_])/g",
   "after": "/(?<![A-Za-z0-9_])(E_[A-Z_]+)/g",
   "note": "TS only",
-  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+  "source_sha256": "08412be627deda970932f87539234ef4fa24c6d7a6b630d42a03d51c8bea87f7"
  },
  {
   "id": "errors.closed.stream-window",
@@ -2161,7 +3057,7 @@
   "before": "tail = chunk.slice(Math.max(0, chunk.length - 128));",
   "after": "tail = new Uint8Array(0);",
   "note": "TS only",
-  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+  "source_sha256": "08412be627deda970932f87539234ef4fa24c6d7a6b630d42a03d51c8bea87f7"
  },
  {
   "id": "errors.closed.stream-rewind",
@@ -2172,7 +3068,7 @@
   "before": "  stream.seek(0);\n",
   "after": "",
   "note": "TS only",
-  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+  "source_sha256": "08412be627deda970932f87539234ef4fa24c6d7a6b630d42a03d51c8bea87f7"
  },
  {
   "id": "errors.closed.unknown-code",
@@ -2183,7 +3079,7 @@
   "before": "typeof code === 'string' && Object.hasOwn(MESSAGES, code) ? code : 'E_DEPLOY_FAILED'",
   "after": "typeof code === 'string' ? code : 'E_DEPLOY_FAILED'",
   "note": "TS only",
-  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+  "source_sha256": "08412be627deda970932f87539234ef4fa24c6d7a6b630d42a03d51c8bea87f7"
  },
  {
   "id": "errors.closed.upstream-only-cook",
@@ -2194,7 +3090,7 @@
   "before": "if (known === 'E_COOK_FAILED' && typeof upstream === 'string' && COOK_CODES.has(upstream)) {",
   "after": "if (typeof upstream === 'string' && COOK_CODES.has(upstream)) {",
   "note": "TS only",
-  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+  "source_sha256": "08412be627deda970932f87539234ef4fa24c6d7a6b630d42a03d51c8bea87f7"
  },
  {
   "id": "errors.closed.upstream-table",
@@ -2205,7 +3101,7 @@
   "before": "if (known === 'E_COOK_FAILED' && typeof upstream === 'string' && COOK_CODES.has(upstream)) {",
   "after": "if (known === 'E_COOK_FAILED' && typeof upstream === 'string') {",
   "note": "TS only",
-  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+  "source_sha256": "08412be627deda970932f87539234ef4fa24c6d7a6b630d42a03d51c8bea87f7"
  },
  {
   "id": "errors.closed.envelope-exact",
@@ -2216,7 +3112,7 @@
   "before": "return eq(data, new Map(Object.entries(safe))) ? safe : fallback;",
   "after": "return safe;",
   "note": "TS only",
-  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+  "source_sha256": "08412be627deda970932f87539234ef4fa24c6d7a6b630d42a03d51c8bea87f7"
  },
  {
   "id": "errors.closed.envelope-mapping",
@@ -2227,7 +3123,7 @@
   "before": "  if (!isDict(data)) return fallback;\n",
   "after": "",
   "note": "TS only; expected not to compile: the decoder is typed",
-  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+  "source_sha256": "08412be627deda970932f87539234ef4fa24c6d7a6b630d42a03d51c8bea87f7"
  },
  {
   "id": "errors.closed.envelope-type",
@@ -2238,6 +3134,6 @@
   "before": "  if (typeof output !== 'string' && !(output instanceof Uint8Array)) return fallback;\n",
   "after": "",
   "note": "TS only; expected not to compile: the decoder is typed",
-  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+  "source_sha256": "08412be627deda970932f87539234ef4fa24c6d7a6b630d42a03d51c8bea87f7"
  }
 ]

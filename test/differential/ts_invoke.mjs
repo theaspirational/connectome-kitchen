@@ -1,5 +1,5 @@
-// TS side of the module differential (errors, lock, inputs). No expected values
-// live here: a job is `{id, function, args, kwargs, seam?}` in the recorder's
+// TS side of the module differential (the ported engine modules). No expected values
+// live here: a job is `{id, function, args, kwargs}` in the recorder's
 // tagged encoding (test/differential/record.py `encode`), the answer is the
 // outcome in the same encoding. `ts_port.py` and the unit suite compare it with
 // the oracle's outcome byte for byte.
@@ -12,6 +12,7 @@ import * as errors from '../../dist/errors.js';
 import * as lock from '../../dist/lock.js';
 import * as inputs from '../../dist/inputs.js';
 import * as archive from '../../dist/archive.js';
+import * as config from '../../dist/config.js';
 
 /** A value the TS signature cannot take. The driver checks what the oracle did with it. */
 export class Unsupported extends Error {}
@@ -72,11 +73,12 @@ const deep = value => {
   if (Array.isArray(value)) value.forEach(deep); else if (value instanceof Map) for (const item of value.values()) deep(item);
   return value;
 };
-const anyPath = value => { if (value instanceof PathArg) return value.value; if (typeof value === 'string') return value; throw new Unsupported('path argument'); };
+// A path parameter takes a str or a Path; anything else goes through as it is, for the port's own runtime check to answer.
+const anyPath = value => value instanceof PathArg ? value.value : value instanceof py.BytesIO ? new Opaque('stream', '') : value;
 const pathOnly = value => { if (value instanceof PathArg) return value.value; throw new Unsupported('Path argument'); };
-const bytes = value => { if (value instanceof Uint8Array) return value; throw new Unsupported('bytes argument'); };
+const bytes = value => value instanceof PathArg ? new Opaque('path', value.value) : value;
 const string = value => { if (typeof value === 'string') return value; throw new Unsupported('str argument'); };
-const stream = value => { if (value instanceof py.BytesIO) return value; throw new Unsupported('stream argument'); };
+const stream = value => value instanceof PathArg ? new Opaque('path', value.value) : value;
 const size = value => { if (value instanceof py.Int) return Number(value.value); throw new Unsupported('int argument'); };
 const supplied = value => {
   if (value instanceof Map) return new Map([...value].map(([key, item]) => [key, item instanceof PathArg ? (() => { throw new Unsupported('Path in transport'); })() : item]));
@@ -87,12 +89,7 @@ function lockOptions(kwargs) {
   const options = {};
   for (const [key, value] of kwargs) {
     if (!['host_pin', 'required_names', 'config', 'framework_pin', 'framework_record'].includes(key)) throw new Unsupported('keyword ' + key);
-    if (key === 'required_names') {
-      if (typeof value === 'string') options[key] = Array.from(value);
-      else if (Array.isArray(value)) options[key] = value.map(deep);
-      else if (value instanceof Map) options[key] = [...value.keys()]; // iterating a dict yields its keys
-      else throw new Unsupported('required_names');
-    } else options[key] = deep(value);
+    options[key] = deep(value);
   }
   return options;
 }
@@ -141,68 +138,54 @@ const CALLS = {
     return inputs.payloads(deep(a[0]), supplied(transport));
   },
   'connectome_inputs.installed': (a, k) => { arity(a, 2); none(k); return inputs.installed(anyPath(a[0]), deep(a[1])); },
+  'connectome_archive.need': (a, k) => { arity(a, 2, 3); none(k); return archive.need(deep(a[0]), string(a[1]), ...a.slice(2).map(deep)); },
+  'connectome_archive.npm_name': (a, k) => { arity(a, 1); none(k); return archive.npm_name(data(a[0])); },
+  'connectome_archive.registry_origin': (a, k) => { arity(a, 1); none(k); return archive.registry_origin(data(a[0])); },
+  'connectome_archive.sha512_integrity': (a, k) => { arity(a, 1); none(k); return archive.sha512_integrity(data(a[0])); },
+  'connectome_archive.validate_dependency': (a, k) => { arity(a, 1); none(k); return archive.validate_dependency(deep(a[0])); },
+  'connectome_archive.legacy_dependency': (a, k) => { arity(a, 2); none(k); return archive.legacy_dependency(deep(a[0]), deep(a[1])); },
+  'connectome_archive.dependency_inputs': (a, k) => { arity(a, 2); none(k); return archive.dependency_inputs(deep(a[0]), deep(a[1])); },
+  'connectome_archive.archive_manifest': (a, k) => { arity(a, 1); none(k); return archive.archive_manifest(deep(a[0])); },
+  'connectome_archive.dependency_provenance': (a, k) => { arity(a, 2); none(k); return archive.dependency_provenance(deep(a[0]), deep(a[1])); },
+  'connectome_archive.provenance_record': (a, k) => { arity(a, 1); none(k); return archive.provenance_record(deep(a[0])); },
+  'connectome_archive.records_metadata': (a, k) => { arity(a, 1); none(k); return archive.records_metadata(deep(a[0])); },
+  'connectome_archive.framework_provenance': (a, k) => { arity(a, 2); none(k); return archive.framework_provenance(deep(a[0]), deep(a[1])); },
+  'connectome_archive.validate_dependency_record': (a, k) => { arity(a, 1); none(k); return archive.validate_dependency_record(deep(a[0])); },
+  'connectome_archive.check_dependencies': (a, k) => {
+    arity(a, 3, 4); for (const key of k.keys()) if (key !== 'framework_record' || a.length > 3) throw new Unsupported('keyword ' + key);
+    return archive.check_dependencies(deep(a[0]), deep(a[1]), deep(a[2]), deep(a.length > 3 ? a[3] : k.has('framework_record') ? k.get('framework_record') : null));
+  },
+  'connectome_archive.validate_provenance': (a, k) => { arity(a, 3); none(k); return archive.validate_provenance(deep(a[0]), deep(a[1]), deep(a[2])); },
+  'connectome_config.combine': (a, k) => {
+    for (const key of k.keys()) if (key !== 'recursive') throw new Unsupported('keyword ' + key);
+    const recursive = k.has('recursive') ? k.get('recursive') : false;
+    if (typeof recursive !== 'boolean') throw new Unsupported('recursive');
+    return config.combine(a.map(deep), recursive);
+  },
+  'connectome_config.merge_layers': (a, k) => { arity(a, 1); none(k); return config.merge_layers(deep(a[0])); },
+  'connectome_config.public_catalog': (a, k) => { arity(a, 2); none(k); return config.public_catalog(deep(a[0]), deep(a[1])); },
+  'connectome_config.required_names': (a, k) => { arity(a, 1); none(k); return config.required_names(deep(a[0])); },
 };
 export const FUNCTIONS = Object.keys(CALLS);
-
-class Replayed extends py.PyValueError { constructor(name, message) { super(message); this.replayed = name; } get pyName() { return this.replayed ?? 'ValueError'; } }
-class SeamMismatch extends Error {}
-const CRASHES = { TypeError: py.PyTypeError, KeyError: py.PyKeyError, AttributeError: py.PyAttributeError };
-
-/**
- * The archive seam, answered from the oracle's own call log. Each call must be
- * the next recorded one, with byte-identical arguments; then it returns or
- * raises what the oracle's archive module returned or raised.
- */
-function replaySeam(log) {
-  let next = 0;
-  const call = (name, args) => {
-    const expected = log[next++];
-    const actual = json.canonical({ function: name, args: args.map(encode) });
-    if (!expected || json.canonical({ function: expected.get('function'), args: plain(expected.get('args')) }) !== actual) throw new SeamMismatch('archive seam call ' + next + ' differs from the oracle');
-    const outcome = expected.get('outcome');
-    if (outcome.has('exception')) throw new Replayed(outcome.get('exception'), outcome.get('message'));
-    if (outcome.has('crash')) throw new (CRASHES[outcome.get('crash')] ?? SeamMismatch)('replayed ' + outcome.get('crash'));
-    return decode(outcome.get('result'));
-  };
-  return {
-    seam: {
-      npm_name: value => py.truthy(call('npm_name', [value])),
-      validate_dependency_record: record => { call('validate_dependency_record', [record]); },
-      check_dependencies: (lockData, config, pin, record) => { call('check_dependencies', [lockData, config, pin, record]); },
-    },
-    done: () => { if (next !== log.length) throw new SeamMismatch('archive seam: ' + next + ' calls made, the oracle made ' + log.length); },
-  };
-}
-/** A parsed job value back to something `json.canonical` takes (Maps -> objects). */
-function plain(value) {
-  if (Array.isArray(value)) return value.map(plain);
-  if (value instanceof Map) return Object.fromEntries([...value].map(([key, item]) => [key, plain(item)]));
-  return value;
-}
 
 /** Runs one parsed job and returns its outcome as a canonical JSON line. */
 export function run(job) {
   const name = job.get('function');
   let outcome;
-  // No log means the oracle asked the archive module nothing; then neither may the port.
-  const replay = replaySeam(job.has('seam') ? job.get('seam') : []);
-  archive.bind_seam(replay.seam);
   try {
     const call = CALLS[name];
     if (!call) throw new Unsupported('function');
     const args = decode(job.get('args')), kwargs = decode(job.get('kwargs'));
-    const result = call(args, kwargs);
-    replay.done();
-    outcome = { result: encode(result) };
+    outcome = { result: encode(call(args, kwargs)) };
+    json.canonical(outcome); // a value outside the model (possible only in a mutant) must count as a crash, not stop the run
   } catch (error) {
     if (error instanceof Unsupported) outcome = { unsupported: error.message };
-    else if (error instanceof SeamMismatch) outcome = { seam_mismatch: error.message };
     else if (error instanceof py.PyValueError) {
       outcome = { exception: error.pyName, message: error.message };
       if (typeof error.public === 'function') outcome.public = encode(error.public());
     } else if (error instanceof py.PyError) outcome = { crash: error.pyName };
     else outcome = { crash: 'JS:' + (error?.constructor?.name ?? 'unknown') + ':' + String(error?.message).slice(0, 120) };
-  } finally { archive.bind_seam(null); }
+  }
   return json.canonical(outcome);
 }
 
@@ -210,11 +193,11 @@ export function run(job) {
 export const parse = line => loads(line);
 
 /**
- * Creates a fixture tree: `{relative path: {dir: mode} | {file: base64, mode} | {text: str, mode} | {link: target}}`.
+ * Creates a fixture tree: `{relative path: {dir: mode} | {file: base64, mode} | {$bytes: base64} | {text: str, mode} | {link: target}}`.
  * Parents are created 0755. `${ROOT}` inside a link target or a text is the tree root.
  */
 export function materialize(root, tree) {
-  fs.rmSync(root, { recursive: true, force: true });
+  remove(root); // also clears what an interrupted run left behind without permissions
   fs.mkdirSync(root, { recursive: true, mode: 0o755 });
   const later = [];
   for (const [relative, spec] of Object.entries(tree)) {
@@ -222,7 +205,10 @@ export function materialize(root, tree) {
     fs.mkdirSync(path.dirname(target), { recursive: true, mode: 0o755 });
     if ('link' in spec) fs.symlinkSync(spec.link.replaceAll('${ROOT}', root), target);
     else if ('dir' in spec) { fs.mkdirSync(target, { recursive: true }); later.push([target, spec.dir]); }
-    else { fs.writeFileSync(target, 'file' in spec ? Buffer.from(spec.file, 'base64') : spec.text.replaceAll('${ROOT}', root)); later.push([target, spec.mode ?? 0o644]); }
+    else {
+      const binary = spec.file ?? spec.$bytes;
+      fs.writeFileSync(target, binary !== undefined ? Buffer.from(binary, 'base64') : spec.text.replaceAll('${ROOT}', root)); later.push([target, spec.mode ?? 0o644]);
+    }
   }
   // Modes last and deepest first, so that an unreadable directory can still be filled.
   for (const [target, mode] of later.sort((a, b) => b[0].length - a[0].length)) fs.chmodSync(target, mode);

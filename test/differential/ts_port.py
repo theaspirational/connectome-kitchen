@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Module differential for errors, lock and inputs: live Python oracle against the TS port.
+"""Module differential for the ported engine modules: live Python oracle against the TS port.
 
 Every vector is an input only. The oracle is called here, now, on that input;
 the TS port is called on the same input, at the same paths, on the same files;
@@ -12,11 +12,6 @@ Outcome classes of the oracle:
              class name, message and, for SafeError, the public diagnostic
   crash      any other exception: class name only. CPython's own message text
              is not part of the engine. Counted and compared separately.
-
-The archive seam (plan 3.1: `archive` is the next module) is not ported. The
-oracle's three lazily imported archive functions are wrapped here; their calls
-and answers are logged and the TS side replays that log, refusing any call
-that is not the next logged one with identical arguments.
 
 Nothing is fetched; nothing outside .cache is written.
 """
@@ -31,15 +26,16 @@ ROOT = Path(__file__).resolve().parents[2]
 SCRATCH = ROOT / '.cache/ts-port'
 FIXTURE = SCRATCH / 'lock-files-v1'
 TREES = SCRATCH / 'trees'
-MODULES = ('connectome_errors', 'connectome_lock', 'connectome_inputs')
-PORT = ROOT / 'test/vectors/port-m1-3.golden'
-PORT_TREES = ROOT / 'test/vectors/port-m1-3.trees.golden'
-SEAM = ('npm_name', 'validate_dependency_record', 'check_dependencies')
+MODULES = ('connectome_errors', 'connectome_lock', 'connectome_inputs', 'connectome_archive', 'connectome_config')
+PORT = ROOT / 'test/vectors/port.golden'
+PORT_TREES = ROOT / 'test/vectors/port.trees.golden'
+# Inputs on which the port deliberately answers differently: both outcomes are recorded and both are checked.
+DIVERGENCES = ROOT / 'test/vectors/port-divergences.golden'
 
 
 def initialize(modules=ROOT / 'oracle/module_utils'):
     sys.path.insert(0, str(modules.resolve()))
-    for name in MODULES + ('connectome_archive',):
+    for name in MODULES:
         importlib.import_module(name)
 
 
@@ -57,7 +53,8 @@ def materialize(root, tree):
             target.mkdir(parents=True, exist_ok=True)
             later.append((target, spec['dir']))
         else:
-            target.write_bytes(base64.b64decode(spec['file']) if 'file' in spec else spec['text'].replace('${ROOT}', str(root)).encode())
+            binary = spec.get('file', spec.get('$bytes'))
+            target.write_bytes(base64.b64decode(binary) if binary is not None else spec['text'].replace('${ROOT}', str(root)).encode())
             later.append((target, spec.get('mode', 0o644)))
     for target, mode in sorted(later, key=lambda item: -len(str(item[0]))):
         os.chmod(target, mode)
@@ -96,58 +93,26 @@ def bind(value, old, new):
 
 
 def invoke(name, args, kwargs):
-    """Call the oracle. Returns (outcome, seam log)."""
+    """Call the oracle. Returns its outcome."""
     module, _, method = name.partition('.')
     loaded = importlib.import_module(module)
-    archive = importlib.import_module('connectome_archive')
-    originals = {key: getattr(archive, key) for key in SEAM}
-    log = []
-
-    inside = []
-
-    def wrap(key):
-        def call(*a):
-            if inside:  # the archive module calling itself; only lock.py's own calls cross the seam
-                return originals[key](*a)
-            entry = {'function': key, 'args': encode(list(a))}
-            log.append(entry)
-            inside.append(key)
-            try:
-                result = originals[key](*a)
-            except ValueError as error:
-                entry['outcome'] = {'exception': type(error).__name__, 'message': str(error)}
-                raise
-            except Exception as error:
-                entry['outcome'] = {'crash': type(error).__name__}
-                raise
-            finally:
-                inside.pop()
-            entry['outcome'] = {'result': encode(result)}
-            return result
-        return call
+    if name == 'connectome_errors.SafeError.public':
+        target = lambda *a: loaded.SafeError(*a).public()
+    else:
+        target = loaded
+        for part in method.split('.'):
+            target = getattr(target, part)
     try:
-        for key in SEAM:
-            setattr(archive, key, wrap(key))
-        if name == 'connectome_errors.SafeError.public':
-            target = lambda *a: loaded.SafeError(*a).public()
-        else:
-            target = loaded
-            for part in method.split('.'):
-                target = getattr(target, part)
-        try:
-            result = target(*copy.deepcopy(args), **copy.deepcopy(kwargs))
-        except ValueError as error:
-            outcome = {'exception': type(error).__name__, 'message': str(error)}
-            if hasattr(error, 'public'):
-                outcome['public'] = encode(error.public())
-        except Exception as error:  # a runtime error of the interpreter, not a declared refusal
-            outcome = {'crash': type(error).__name__}
-        else:
-            outcome = {'result': encode(result)}
-    finally:
-        for key in SEAM:
-            setattr(archive, key, originals[key])
-    return outcome, log
+        result = target(*copy.deepcopy(args), **copy.deepcopy(kwargs))
+    except ValueError as error:
+        outcome = {'exception': type(error).__name__, 'message': str(error)}
+        if hasattr(error, 'public'):
+            outcome['public'] = encode(error.public())
+    except Exception as error:  # a runtime error of the interpreter, not a declared refusal
+        outcome = {'crash': type(error).__name__}
+    else:
+        outcome = {'result': encode(result)}
+    return outcome
 
 
 BARE = r'''
@@ -162,7 +127,9 @@ module, _, method = job['function'].partition('.')
 target = getattr(importlib.import_module(module), method)
 args = decode(job['args']); kwargs = decode(job['kwargs'])
 try: result = target(*args, **kwargs)
-except ValueError as error: outcome = {'exception': type(error).__name__, 'message': str(error)}
+except ValueError as error:
+    outcome = {'exception': type(error).__name__, 'message': str(error)}
+    if hasattr(error, 'public'): outcome['public'] = encode(error.public())
 except Exception as error: outcome = {'crash': type(error).__name__}
 else: outcome = {'result': encode(result)}
 print(json.dumps(outcome))
@@ -176,7 +143,7 @@ def invoke_bare(name, args, kwargs):
                           input=job, capture_output=True, text=True, timeout=120, cwd=ROOT)
     if done.returncode:
         raise RuntimeError('bare oracle run failed')
-    return json.loads(done.stdout), []
+    return json.loads(done.stdout)
 
 
 def generated(spec, root):
@@ -189,7 +156,40 @@ def generated(spec, root):
         return {'$bytes': base64.b64encode((spec['open'] * spec['depth'] + spec['leaf'] + spec['close'] * spec['depth']).encode()).decode()}
     if kind == 'repeat':  # prefix + unit * count + suffix, as bytes
         return {'$bytes': base64.b64encode((spec.get('prefix', '') + spec['unit'] * spec['count'] + spec.get('suffix', '')).encode('latin-1')).decode()}
+    if kind == 'tgz':  # a gzip container (stored blocks) around a ustar archive; byte-identical in ts_corpus.mjs
+        return {'$bytes': base64.b64encode(tgz(spec['members'])).decode()}
     raise ValueError('unknown generator')
+
+
+def content(spec):
+    if isinstance(spec, str):
+        return spec.encode()
+    return (spec.get('prefix', '') + spec['unit'] * spec['count'] + spec.get('suffix', '')).encode()
+
+
+def tgz(members):
+    """`[[name, content or None for a directory], ...]` -> bytes. No clock, no compressor: reproducible anywhere."""
+    tar = b''
+    for name, spec in members:
+        data = b'' if spec is None else content(spec)
+        head = bytearray(512)
+        head[0:len(name)] = name.encode()
+        head[100:108], head[108:116], head[116:124] = b'0000644\0', b'0000000\0', b'0000000\0'
+        head[124:136] = b'%011o\0' % len(data)
+        head[136:148] = b'00000000000\0'
+        head[148:156] = b' ' * 8
+        head[156:157] = b'5' if spec is None else b'0'
+        head[257:265] = b'ustar\x0000'
+        head[329:337], head[337:345] = b'0000000\0', b'0000000\0'
+        head[148:156] = b'%06o\0 ' % sum(head)
+        tar += bytes(head) + data + b'\0' * (-len(data) % 512)
+    tar += b'\0' * 1024
+    out = bytearray(b'\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff')
+    for start in range(0, len(tar), 65535):
+        chunk = tar[start:start + 65535]
+        out += bytes([int(start + 65535 >= len(tar))]) + len(chunk).to_bytes(2, 'little') + (len(chunk) ^ 0xffff).to_bytes(2, 'little') + chunk
+    import zlib
+    return bytes(out) + zlib.crc32(tar).to_bytes(4, 'little') + (len(tar) & 0xffffffff).to_bytes(4, 'little')
 
 
 def expand(value, root):
@@ -206,12 +206,14 @@ def expand(value, root):
 
 
 def sha256_arg(value):
-    """`{"$sha256-of": <generated bytes spec>}` -> hex digest, so a record can name the digest of generated content."""
+    """`{"$sha256-of": <bytes>}` -> hex digest, `{"$sha512-integrity-of": <bytes>}` -> `sha512-<base64>`, so a record can name generated content."""
     if isinstance(value, list):
         return [sha256_arg(item) for item in value]
     if isinstance(value, dict):
         if '$sha256-of' in value:
             return hashlib.sha256(base64.b64decode(sha256_arg(value['$sha256-of'])['$bytes'])).hexdigest()
+        if '$sha512-integrity-of' in value:
+            return 'sha512-' + base64.b64encode(hashlib.sha512(base64.b64decode(sha256_arg(value['$sha512-integrity-of'])['$bytes'])).digest()).decode()
         return {key: sha256_arg(item) for key, item in value.items()}
     return value
 
@@ -235,7 +237,8 @@ class Vector:
             # Nothing under test writes, so vectors with the same tree share one directory.
             self.root = TREES / hashlib.sha256(canonical(self.row['tree']).encode()).hexdigest()[:16]
             if self.root not in Vector.made:
-                tree = {key: expand(spec, self.root) if '$generate' in spec else spec for key, spec in self.row['tree'].items()}
+                tree = {key: dict(expand(spec, self.root), **({'mode': spec['mode']} if 'mode' in spec else {})) if '$generate' in spec else spec
+                        for key, spec in self.row['tree'].items()}
                 materialize(self.root, tree)
                 Vector.made.add(self.root)
         root = str(self.root) if self.root else str(TREES / 'none')
@@ -265,6 +268,8 @@ def committed():
             vectors.append(Vector('crash-only', row['id'], dict(row, outcome=outcome)))
     for row in port_rows():
         vectors.append(Vector('port', row['id'], row))
+    for row in json.loads(DIVERGENCES.read_text()):
+        vectors.append(Vector('divergence', row['id'], row))
     return vectors
 
 
@@ -341,14 +346,10 @@ def evaluate(vectors, node='node'):
                 record['skipped'] = 'undecodable arguments (opaque object or fake)'
                 records.append(record)
                 continue
-            outcome, log = invoke_bare(vector.function, args, kwargs) if vector.row.get('bare') else invoke(vector.function, call_args, call_kwargs)
+            outcome = invoke_bare(vector.function, args, kwargs) if vector.row.get('bare') else invoke(vector.function, call_args, call_kwargs)
             record['oracle'] = vector.unbind(canonical(outcome))
-            record['seam'] = log
             records.append(record)
-            job = {'id': vector.id, 'function': vector.function, 'args': args, 'kwargs': kwargs}
-            if log:
-                job['seam'] = log
-            jobs.append(job)
+            jobs.append({'id': vector.id, 'function': vector.function, 'args': args, 'kwargs': kwargs})
         lines = node_outcomes(jobs, node)
         if len(lines) != len(jobs):
             raise RuntimeError('TS runner returned %d outcomes for %d jobs' % (len(lines), len(jobs)))
@@ -367,6 +368,9 @@ def classify(record):
     if 'skipped' in record:
         return 'skipped'
     oracle, ts = json.loads(record['oracle']), json.loads(record['ts'])
+    if record['vector'].source == 'divergence':
+        row = record['vector'].row
+        return 'named-divergence' if oracle == row['oracle'] and ts == row['port'] else 'mismatch'
     if 'unsupported' in ts:
         return 'outside-signature-oracle-crash' if 'crash' in oracle else 'outside-signature-oracle-declared'
     if 'crash' in oracle:
@@ -378,7 +382,7 @@ def summarize(records):
     report = {}
     for record in records:
         source = record['vector'].source
-        entry = report.setdefault(source, {'vectors': 0, 'equal': 0, 'mismatch': 0, 'crash-equal': 0, 'crash-mismatch': 0,
+        entry = report.setdefault(source, {'vectors': 0, 'equal': 0, 'mismatch': 0, 'crash-equal': 0, 'crash-mismatch': 0, 'named-divergence': 0,
                                            'outside-signature-oracle-crash': 0, 'outside-signature-oracle-declared': 0, 'skipped': 0,
                                            'recorded-outcome-differs-from-live-oracle': 0, 'witnesses': [], 'by_function': {}})
         kind = classify(record)
@@ -390,7 +394,7 @@ def summarize(records):
             entry['witnesses'].append({'id': record['vector'].id, 'function': record['vector'].function, 'kind': kind,
                                        'oracle': record['oracle'][:300], 'ts': record['ts'][:300]})
         recorded = record['vector'].recorded
-        if recorded is not None and 'oracle' in record and source != 'recording':
+        if recorded is not None and 'oracle' in record and source not in ('recording', 'divergence'):
             if canonical(recorded) != record['oracle']:
                 entry['recorded-outcome-differs-from-live-oracle'] += 1
     return report
@@ -402,7 +406,7 @@ def failed(report):
 
 
 def port_text():
-    """The committed corpus as text: each hand-written input with the oracle's outcome and seam log. TS is not consulted."""
+    """The committed corpus as text: each hand-written input with the oracle's outcome. TS is not consulted."""
     import port_seeds
     initialize()
     fixture()
@@ -411,10 +415,8 @@ def port_text():
     for row in port_seeds.hand():
         vector = Vector('port', row['id'], row)
         args, kwargs = vector.prepare()
-        outcome, log = invoke_bare(row['function'], args, kwargs) if row.get('bare') else invoke(row['function'], decode(args), decode(kwargs))
+        outcome = invoke_bare(row['function'], args, kwargs) if row.get('bare') else invoke(row['function'], decode(args), decode(kwargs))
         row = dict(row, outcome=json.loads(vector.unbind(canonical(outcome))))
-        if log:
-            row['seam'] = json.loads(vector.unbind(canonical(log)))
         if 'tree' in row:
             digest = hashlib.sha256(canonical(row['tree']).encode()).hexdigest()[:16]
             trees[digest] = row['tree']

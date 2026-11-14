@@ -321,6 +321,45 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "0e2f8d3a4d9b1a6e": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/package.json",
+     {
+      "count": 1048526,
+      "prefix": "{\"name\":\"example-package\",\"version\":\"1.0.0\",\"pad\":\"",
+      "suffix": "\"}",
+      "unit": "x"
+     }
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "0fefb71c36786dd0": {
   "alias": {
    "link": "${ROOT}/build"
@@ -487,6 +526,184 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "17a22fec4a5305cb": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "pkg-root/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
+ "18a37be6d7fbb151": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": []
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
+ "1c99487922536b57": {
+  "alias": {
+   "link": "${ROOT}/build"
+  },
+  "build/.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "build/connectome.lock": {
+   "text": "{\"version\": 2, \"backend\": \"host\", \"cook\": {\"version\": \"0.0.1\", \"commit\": \"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\"}, \"recipe\": {\"path\": \"/fixture/recipe.json\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}, \"recipePath\": \"/fixture/recipe.json\", \"createdAt\": \"2026-11-09T00:00:00.000Z\", \"build\": {\"id\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"dir\": \"${ROOT}/build\"}, \"connectomeHost\": {\"url\": \"https://example.invalid/host.git\", \"ref\": \"main\", \"commit\": \"cccccccccccccccccccccccccccccccccccccccc\", \"path\": \"${ROOT}/build/app\"}, \"components\": [{\"kind\": \"git\", \"key\": \"example\", \"role\": \"mcp\", \"url\": \"/fixture/repo\", \"ref\": \"main\", \"commit\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"path\": \"/app\", \"install\": \"\"}, {\"kind\": \"npm\", \"key\": \"package\", \"role\": \"extension\", \"name\": \"example\", \"spec\": \"1.0.0\", \"version\": \"1.0.0\", \"integrity\": \"sha512-YWJj\"}], \"localExtensions\": [{\"name\": \"example\", \"hostDir\": \"/fixture/extension\", \"path\": \"/app/extension\"}], \"requirements\": [{\"name\": \"EXAMPLE_NAME\", \"envName\": \"EXAMPLE_NAME\", \"origin\": \"unresolved\"}], \"credentials\": [\"EXAMPLE_NAME\", \"store/example#field\"], \"outputs\": [{\"path\": \"run.sh\", \"mode\": 448, \"sha256\": \"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"}, {\"path\": \"env\", \"mode\": 384, \"sha256Omitted\": \"contains-requirement-value\"}], \"launch\": {\"kind\": \"script\", \"script\": \"run.sh\"}, \"state\": {\"path\": \"/fixture/state\"}, \"engines\": {\"bun\": {\"path\": \"/fixture/bin/bun\", \"realPath\": \"/fixture/bin/bun\", \"version\": \"1.0.0\"}, \"node\": {\"path\": \"/fixture/bin/node\", \"realPath\": \"/fixture/bin/node\", \"version\": \"1.0.0\"}}, \"layout\": {\"schema\": \"connectome.host-layout/v1\", \"runtime\": \"/fixture/runtime\", \"config\": \"/fixture/config\", \"state\": \"/fixture/state\", \"workspace\": \"/fixture/workspace\", \"credentials\": \"/fixture/credentials\", \"connectorState\": {\"example\": {\"DATA_DIR\": \"/fixture/state/example\"}}}, \"health\": {\"command\": [\"/fixture/bin/health\", \"--once\"]}, \"external\": [{\"name\": \"alpha\", \"command\": \"/fixture/bin/alpha\"}, {\"name\": \"beta\", \"command\": \"/fixture/bin/beta\"}], \"hostDependencies\": [{\"name\": \"example-package\", \"originalRange\": \"^1.0.0\", \"version\": \"1.0.0\", \"sha256\": \"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"size\": 1, \"snapshot\": \"snapshots/example.tgz\", \"packageJsonDelta\": {\"direct\": {\"section\": \"dependencies\", \"name\": \"example-package\", \"before\": \"^1.0.0\", \"after\": \"file:snapshots/example.tgz\"}, \"override\": {\"section\": \"overrides\", \"name\": \"example-package\", \"before\": null, \"after\": \"file:snapshots/example.tgz\"}}, \"provenance\": []}]}"
+  },
+  "build/cook-recipe.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 384
+  },
+  "build/dangling": {
+   "link": "missing-target"
+  },
+  "build/escape.service": {
+   "link": "${ROOT}/outside/evil.service"
+  },
+  "build/example.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "build/inside": {
+   "link": "${ROOT}/build/units"
+  },
+  "build/link.service": {
+   "link": "example.service"
+  },
+  "build/loop-a": {
+   "link": "loop-b"
+  },
+  "build/loop-b": {
+   "link": "loop-a"
+  },
+  "build/out": {
+   "link": "${ROOT}/outside"
+  },
+  "build/plain.txt": {
+   "text": "plain\n"
+  },
+  "build/run.sh": {
+   "mode": 448,
+   "text": "#!/bin/sh\nexit 0\n"
+  },
+  "build/sub": {
+   "dir": 493
+  },
+  "build/units/nested.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "closed": {
+   "dir": 0
+  },
+  "operator/array.json": {
+   "text": "[]"
+  },
+  "operator/dir.json": {
+   "dir": 493
+  },
+  "operator/link.json": {
+   "link": "recipe.json"
+  },
+  "operator/open.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 420
+  },
+  "operator/recipe.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 384
+  },
+  "operator/via": {
+   "link": "${ROOT}/operator"
+  },
+  "outside/evil.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "outside/run.sh": {
+   "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "1d7fed05d0559e8b": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/index.js",
+     "x"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "25fbfb448fff4b9d": {
   "alias": {
    "link": "${ROOT}/build"
@@ -568,6 +785,96 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "2bbde9b88de2b820": {
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  },
+  "closed": {
+   "dir": 0
+  }
+ },
+ "333ecb2e147f8cd2": {
+  "archives/case.tgz": {
+   "file": "H4sIAAAAAAAA/wEYAOf/bm90IGEgdGFyIGFyY2hpdmUgYXQgYWxsphgx7hgAAAA="
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
+ "361ce83b16f56375": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/packageXjson",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "368c374ba5f6d969": {
   "alias": {
    "link": "${ROOT}/build"
@@ -647,6 +954,44 @@
   },
   "outside/run.sh": {
    "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "39f702e7780a0b47": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "other/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
   }
  },
  "3b9fbddbc6bbb3e9": {
@@ -810,6 +1155,40 @@
   },
   "outside/run.sh": {
    "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "3d91d4bc37e2c2ec": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
   }
  },
  "3dc042777a0e4386": {
@@ -1074,6 +1453,87 @@
    "leaf": "",
    "prefix": "{\"version\": 2, \"backend\": \"host\", \"cook\": {\"version\": \"0.0.1\", \"commit\": \"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\"}, \"recipe\": {\"path\": \"/fixture/recipe.json\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}, \"recipePath\": \"/fixture/recipe.json\", \"createdAt\": \"2026-11-09T00:00:00.000Z\", \"build\": {\"id\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"dir\": \"${ROOT}/build\"}, \"connectomeHost\": {\"url\": \"https://example.invalid/host.git\", \"ref\": \"main\", \"commit\": \"cccccccccccccccccccccccccccccccccccccccc\", \"path\": \"${ROOT}/build/app\"}, \"components\": ",
    "suffix": ", \"localExtensions\": [{\"name\": \"example\", \"hostDir\": \"/fixture/extension\", \"path\": \"/app/extension\"}], \"requirements\": [{\"name\": \"EXAMPLE_NAME\", \"envName\": \"EXAMPLE_NAME\", \"origin\": \"unresolved\"}], \"credentials\": [\"EXAMPLE_NAME\", \"store/example#field\"], \"outputs\": [{\"path\": \"run.sh\", \"mode\": 448, \"sha256\": \"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"}, {\"path\": \"env\", \"mode\": 384, \"sha256Omitted\": \"contains-requirement-value\"}], \"launch\": {\"kind\": \"script\", \"script\": \"run.sh\"}, \"state\": {\"path\": \"/fixture/state\"}, \"engines\": {\"bun\": {\"path\": \"/fixture/bin/bun\", \"realPath\": \"/fixture/bin/bun\", \"version\": \"1.0.0\"}, \"node\": {\"path\": \"/fixture/bin/node\", \"realPath\": \"/fixture/bin/node\", \"version\": \"1.0.0\"}}, \"layout\": {\"schema\": \"connectome.host-layout/v1\", \"runtime\": \"/fixture/runtime\", \"config\": \"/fixture/config\", \"state\": \"/fixture/state\", \"workspace\": \"/fixture/workspace\", \"credentials\": \"/fixture/credentials\", \"connectorState\": {\"example\": {\"DATA_DIR\": \"/fixture/state/example\"}}}, \"health\": {\"command\": [\"/fixture/bin/health\", \"--once\"]}, \"external\": [{\"name\": \"alpha\", \"command\": \"/fixture/bin/alpha\"}, {\"name\": \"beta\", \"command\": \"/fixture/bin/beta\"}]}"
+  },
+  "build/cook-recipe.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 384
+  },
+  "build/dangling": {
+   "link": "missing-target"
+  },
+  "build/escape.service": {
+   "link": "${ROOT}/outside/evil.service"
+  },
+  "build/example.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "build/inside": {
+   "link": "${ROOT}/build/units"
+  },
+  "build/link.service": {
+   "link": "example.service"
+  },
+  "build/loop-a": {
+   "link": "loop-b"
+  },
+  "build/loop-b": {
+   "link": "loop-a"
+  },
+  "build/out": {
+   "link": "${ROOT}/outside"
+  },
+  "build/plain.txt": {
+   "text": "plain\n"
+  },
+  "build/run.sh": {
+   "mode": 448,
+   "text": "#!/bin/sh\nexit 0\n"
+  },
+  "build/sub": {
+   "dir": 493
+  },
+  "build/units/nested.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "closed": {
+   "dir": 0
+  },
+  "operator/array.json": {
+   "text": "[]"
+  },
+  "operator/dir.json": {
+   "dir": 493
+  },
+  "operator/link.json": {
+   "link": "recipe.json"
+  },
+  "operator/open.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 420
+  },
+  "operator/recipe.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 384
+  },
+  "operator/via": {
+   "link": "${ROOT}/operator"
+  },
+  "outside/evil.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "outside/run.sh": {
+   "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "4573d9b491e45aa9": {
+  "alias": {
+   "link": "${ROOT}/build"
+  },
+  "build/.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "build/connectome.lock": {
+   "text": "{\"version\": 2, \"backend\": \"host\", \"cook\": {\"version\": \"0.0.1\", \"commit\": \"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\"}, \"recipe\": {\"path\": \"/fixture/recipe.json\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}, \"recipePath\": \"/fixture/recipe.json\", \"createdAt\": \"2026-11-09T00:00:00.000Z\", \"build\": {\"id\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"dir\": \"${ROOT}/build\"}, \"connectomeHost\": {\"url\": \"https://example.invalid/host.git\", \"ref\": \"main\", \"commit\": \"cccccccccccccccccccccccccccccccccccccccc\", \"path\": \"${ROOT}/build/app\"}, \"components\": [{\"kind\": \"git\", \"key\": \"example\", \"role\": \"mcp\", \"url\": \"/fixture/repo\", \"ref\": \"main\", \"commit\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"path\": \"/app\", \"install\": \"\"}, {\"kind\": \"npm\", \"key\": \"package\", \"role\": \"extension\", \"name\": \"example\", \"spec\": \"1.0.0\", \"version\": \"1.0.0\", \"integrity\": \"sha512-YWJj\"}], \"localExtensions\": [{\"name\": \"example\", \"hostDir\": \"/fixture/extension\", \"path\": \"/app/extension\"}], \"requirements\": [{\"name\": \"EXAMPLE_NAME\", \"envName\": \"EXAMPLE_NAME\", \"origin\": \"unresolved\"}], \"credentials\": [\"EXAMPLE_NAME\", \"store/example#field\"], \"outputs\": [{\"path\": \"run.sh\", \"mode\": 448, \"sha256\": \"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"}, {\"path\": \"env\", \"mode\": 384, \"sha256Omitted\": \"contains-requirement-value\"}], \"launch\": {\"kind\": \"script\", \"script\": \"run.sh\"}, \"state\": {\"path\": \"/fixture/state\"}, \"engines\": {\"bun\": {\"path\": \"/fixture/bin/bun\", \"realPath\": \"/fixture/bin/bun\", \"version\": \"1.0.0\"}, \"node\": {\"path\": \"/fixture/bin/node\", \"realPath\": \"/fixture/bin/node\", \"version\": \"1.0.0\"}}, \"layout\": {\"schema\": \"connectome.host-layout/v1\", \"runtime\": \"/fixture/runtime\", \"config\": \"/fixture/config\", \"state\": \"/fixture/state\", \"workspace\": \"/fixture/workspace\", \"credentials\": \"/fixture/credentials\", \"connectorState\": {\"example\": {\"DATA_DIR\": \"/fixture/state/example\"}}}, \"health\": {\"command\": [\"/fixture/bin/health\", \"--once\"]}, \"external\": [{\"name\": \"alpha\", \"command\": \"/fixture/bin/alpha\"}, {\"name\": \"beta\", \"command\": \"/fixture/bin/beta\"}], \"hostDependencies\": [{\"name\": \"example-package\", \"originalRange\": \"^1.0.0\", \"version\": \"1.0.0\", \"sha256\": \"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"size\": 1, \"snapshot\": \"snapshots/example.tgz\", \"packageJsonDelta\": {\"direct\": {\"section\": \"dependencies\", \"name\": \"example-package\", \"before\": \"^1.0.0\", \"after\": \"file:snapshots/example.tgz\"}, \"override\": {\"section\": \"overrides\", \"name\": \"example-package\", \"before\": null, \"after\": \"file:snapshots/example.tgz\"}}, \"provenance\": 1}]}"
   },
   "build/cook-recipe.json": {
    "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
@@ -1470,6 +1930,87 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "4ae42d2391d30fe0": {
+  "alias": {
+   "link": "${ROOT}/build"
+  },
+  "build/.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "build/connectome.lock": {
+   "text": "{\"version\": 2, \"backend\": \"host\", \"cook\": {\"version\": \"0.0.1\", \"commit\": \"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\"}, \"recipe\": {\"path\": \"/fixture/recipe.json\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}, \"recipePath\": \"/fixture/recipe.json\", \"createdAt\": \"2026-11-09T00:00:00.000Z\", \"build\": {\"id\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"dir\": \"${ROOT}/build\"}, \"connectomeHost\": {\"url\": \"https://example.invalid/host.git\", \"ref\": \"main\", \"commit\": \"cccccccccccccccccccccccccccccccccccccccc\", \"path\": \"${ROOT}/build/app\"}, \"components\": [{\"kind\": \"git\", \"key\": \"example\", \"role\": \"mcp\", \"url\": \"/fixture/repo\", \"ref\": \"main\", \"commit\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"path\": \"/app\", \"install\": \"\"}, {\"kind\": \"npm\", \"key\": \"package\", \"role\": \"extension\", \"name\": \"example\", \"spec\": \"1.0.0\", \"version\": \"1.0.0\", \"integrity\": \"sha512-YWJj\"}], \"localExtensions\": [{\"name\": \"example\", \"hostDir\": \"/fixture/extension\", \"path\": \"/app/extension\"}], \"requirements\": [{\"name\": \"EXAMPLE_NAME\", \"envName\": \"EXAMPLE_NAME\", \"origin\": \"unresolved\"}], \"credentials\": [\"EXAMPLE_NAME\", \"store/example#field\"], \"outputs\": [{\"path\": \"run.sh\", \"mode\": 448, \"sha256\": \"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"}, {\"path\": \"env\", \"mode\": 384, \"sha256Omitted\": \"contains-requirement-value\"}], \"launch\": {\"kind\": \"script\", \"script\": \"run.sh\"}, \"state\": {\"path\": \"/fixture/state\"}, \"engines\": {\"bun\": {\"path\": \"/fixture/bin/bun\", \"realPath\": \"/fixture/bin/bun\", \"version\": \"1.0.0\"}, \"node\": {\"path\": \"/fixture/bin/node\", \"realPath\": \"/fixture/bin/node\", \"version\": \"1.0.0\"}}, \"layout\": {\"schema\": \"connectome.host-layout/v1\", \"runtime\": \"/fixture/runtime\", \"config\": \"/fixture/config\", \"state\": \"/fixture/state\", \"workspace\": \"/fixture/workspace\", \"credentials\": \"/fixture/credentials\", \"connectorState\": {\"example\": {\"DATA_DIR\": \"/fixture/state/example\"}}}, \"health\": {\"command\": [\"/fixture/bin/health\", \"--once\"]}, \"external\": [{\"name\": \"alpha\", \"command\": \"/fixture/bin/alpha\"}, {\"name\": \"beta\", \"command\": \"/fixture/bin/beta\"}], \"hostDependencies\": [{\"name\": \"example-package\", \"originalRange\": \"^1.0.0\", \"version\": \"1.0.0\", \"sha256\": \"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"size\": 1, \"snapshot\": \"snapshots/example.tgz\", \"packageJsonDelta\": {\"direct\": {\"section\": \"dependencies\", \"name\": \"example-package\", \"before\": \"^1.0.0\", \"after\": \"file:snapshots/example.tgz\"}, \"override\": {\"section\": \"overrides\", \"name\": \"example-package\", \"before\": null, \"after\": \"file:snapshots/example.tgz\"}}, \"provenance\": {}}]}"
+  },
+  "build/cook-recipe.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 384
+  },
+  "build/dangling": {
+   "link": "missing-target"
+  },
+  "build/escape.service": {
+   "link": "${ROOT}/outside/evil.service"
+  },
+  "build/example.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "build/inside": {
+   "link": "${ROOT}/build/units"
+  },
+  "build/link.service": {
+   "link": "example.service"
+  },
+  "build/loop-a": {
+   "link": "loop-b"
+  },
+  "build/loop-b": {
+   "link": "loop-a"
+  },
+  "build/out": {
+   "link": "${ROOT}/outside"
+  },
+  "build/plain.txt": {
+   "text": "plain\n"
+  },
+  "build/run.sh": {
+   "mode": 448,
+   "text": "#!/bin/sh\nexit 0\n"
+  },
+  "build/sub": {
+   "dir": 493
+  },
+  "build/units/nested.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "closed": {
+   "dir": 0
+  },
+  "operator/array.json": {
+   "text": "[]"
+  },
+  "operator/dir.json": {
+   "dir": 493
+  },
+  "operator/link.json": {
+   "link": "recipe.json"
+  },
+  "operator/open.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 420
+  },
+  "operator/recipe.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 384
+  },
+  "operator/via": {
+   "link": "${ROOT}/operator"
+  },
+  "outside/evil.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "outside/run.sh": {
+   "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
  "4b19656a532cda47": {
   "alias": {
    "link": "${ROOT}/build"
@@ -1551,6 +2092,45 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "4b9b2e8508c5a3e1": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/package.json",
+     {
+      "count": 1048525,
+      "prefix": "{\"name\":\"example-package\",\"version\":\"1.0.0\",\"pad\":\"",
+      "suffix": "\"}",
+      "unit": "x"
+     }
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "4c08353b0f9fc2e3": {
   "alias": {
    "link": "${ROOT}/build"
@@ -1627,6 +2207,74 @@
   },
   "outside/run.sh": {
    "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "4cefdb9111844354": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/package.json",
+     "not json"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
+ "4dfae63e56786050": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/package.json",
+     "[]"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
   }
  },
  "4ee89b9898f41e9d": {
@@ -1791,6 +2439,87 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "50f06c4fcf0c2996": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ],
+   "mode": 0
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
+ "510cece71922a4cd": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "other/package.json",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "544b19358ed4565a": {
   "alias": {
    "link": "${ROOT}/build"
@@ -1867,6 +2596,90 @@
   },
   "outside/run.sh": {
    "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "5fc8f9f1f09af51b": {
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  },
+  "archives/other.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"other-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  }
+ },
+ "60cdcaaa1b5a8361": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\", \"gitHead\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
   }
  },
  "65b1b5ed19660ff6": {
@@ -1950,6 +2763,40 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "65c99f0c38d27dde": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/package.json",
+     "{\"version\":\"1.0.0\"}"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "67eb7850666328aa": {
   "alias": {
    "link": "${ROOT}/build"
@@ -2029,6 +2876,48 @@
   },
   "outside/run.sh": {
    "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "6881176cb3c984d1": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
   }
  },
  "6c689cdafdefccbb": {
@@ -2274,6 +3163,40 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "7053a067c50f8ce7": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/package.json",
+     "{\"name\":\"example-package\",\"version\":\"1.0.0\",\"x\":NaN}"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "707c57865e4fe9c2": {
   "alias": {
    "link": "${ROOT}/build"
@@ -2357,6 +3280,34 @@
   },
   "outside/run.sh": {
    "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "71911fb139367371": {
+  "archives/case.tgz": {
+   "text": ""
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
   }
  },
  "734a7104f06e70a3": {
@@ -2521,6 +3472,48 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "7866c6d092228a6e": {
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/git.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\", \"gitHead\": null}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "79f564c9fa0877e3": {
   "alias": {
    "link": "${ROOT}/build"
@@ -2683,6 +3676,48 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "8081f0d38b7270a4": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"^1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "83c4d2aace6ae1b8": {
   "alias": {
    "link": "${ROOT}/build"
@@ -2762,6 +3797,235 @@
   },
   "outside/run.sh": {
    "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "85062e59635e109d": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/package.json",
+     "{\"name\":\"example-package\",\"version\":1}"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
+ "85394e807c78a340": {
+  "alias": {
+   "link": "${ROOT}/build"
+  },
+  "build/.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "build/connectome.lock": {
+   "text": "{\"version\": 2, \"backend\": \"host\", \"cook\": {\"version\": \"0.0.1\", \"commit\": \"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\"}, \"recipe\": {\"path\": \"/fixture/recipe.json\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}, \"recipePath\": \"/fixture/recipe.json\", \"createdAt\": \"2026-11-09T00:00:00.000Z\", \"build\": {\"id\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"dir\": \"${ROOT}/build\"}, \"connectomeHost\": {\"url\": \"https://example.invalid/host.git\", \"ref\": \"main\", \"commit\": \"cccccccccccccccccccccccccccccccccccccccc\", \"path\": \"${ROOT}/build/app\"}, \"components\": [{\"kind\": \"git\", \"key\": \"example\", \"role\": \"mcp\", \"url\": \"/fixture/repo\", \"ref\": \"main\", \"commit\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"path\": \"/app\", \"install\": \"\"}, {\"kind\": \"npm\", \"key\": \"package\", \"role\": \"extension\", \"name\": \"example\", \"spec\": \"1.0.0\", \"version\": \"1.0.0\", \"integrity\": \"sha512-YWJj\"}], \"localExtensions\": [{\"name\": \"example\", \"hostDir\": \"/fixture/extension\", \"path\": \"/app/extension\"}], \"requirements\": [{\"name\": \"EXAMPLE_NAME\", \"envName\": \"EXAMPLE_NAME\", \"origin\": \"unresolved\"}], \"credentials\": [\"EXAMPLE_NAME\", \"store/example#field\"], \"outputs\": [{\"path\": \"run.sh\", \"mode\": 448, \"sha256\": \"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"}, {\"path\": \"env\", \"mode\": 384, \"sha256Omitted\": \"contains-requirement-value\"}], \"launch\": {\"kind\": \"script\", \"script\": \"run.sh\"}, \"state\": {\"path\": \"/fixture/state\"}, \"engines\": {\"bun\": {\"path\": \"/fixture/bin/bun\", \"realPath\": \"/fixture/bin/bun\", \"version\": \"1.0.0\"}, \"node\": {\"path\": \"/fixture/bin/node\", \"realPath\": \"/fixture/bin/node\", \"version\": \"1.0.0\"}}, \"layout\": {\"schema\": \"connectome.host-layout/v1\", \"runtime\": \"/fixture/runtime\", \"config\": \"/fixture/config\", \"state\": \"/fixture/state\", \"workspace\": \"/fixture/workspace\", \"credentials\": \"/fixture/credentials\", \"connectorState\": {\"example\": {\"DATA_DIR\": \"/fixture/state/example\"}}}, \"health\": {\"command\": [\"/fixture/bin/health\", \"--once\"]}, \"external\": [{\"name\": \"alpha\", \"command\": \"/fixture/bin/alpha\"}, {\"name\": \"beta\", \"command\": \"/fixture/bin/beta\"}], \"hostDependencies\": [{\"name\": \"example-package\", \"originalRange\": \"^1.0.0\", \"version\": \"1.0.0\", \"sha256\": \"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"size\": 1, \"snapshot\": \"snapshots/example.tgz\", \"packageJsonDelta\": {\"direct\": {\"section\": \"dependencies\", \"name\": \"example-package\", \"before\": \"^1.0.0\", \"after\": \"file:snapshots/example.tgz\"}, \"override\": {\"section\": \"overrides\", \"name\": \"example-package\", \"before\": null, \"after\": \"file:snapshots/example.tgz\"}}, \"provenance\": null}]}"
+  },
+  "build/cook-recipe.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 384
+  },
+  "build/dangling": {
+   "link": "missing-target"
+  },
+  "build/escape.service": {
+   "link": "${ROOT}/outside/evil.service"
+  },
+  "build/example.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "build/inside": {
+   "link": "${ROOT}/build/units"
+  },
+  "build/link.service": {
+   "link": "example.service"
+  },
+  "build/loop-a": {
+   "link": "loop-b"
+  },
+  "build/loop-b": {
+   "link": "loop-a"
+  },
+  "build/out": {
+   "link": "${ROOT}/outside"
+  },
+  "build/plain.txt": {
+   "text": "plain\n"
+  },
+  "build/run.sh": {
+   "mode": 448,
+   "text": "#!/bin/sh\nexit 0\n"
+  },
+  "build/sub": {
+   "dir": 493
+  },
+  "build/units/nested.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "closed": {
+   "dir": 0
+  },
+  "operator/array.json": {
+   "text": "[]"
+  },
+  "operator/dir.json": {
+   "dir": 493
+  },
+  "operator/link.json": {
+   "link": "recipe.json"
+  },
+  "operator/open.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 420
+  },
+  "operator/recipe.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 384
+  },
+  "operator/via": {
+   "link": "${ROOT}/operator"
+  },
+  "outside/evil.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "outside/run.sh": {
+   "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "88a7d669e1b21a57": {
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/git.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\", \"gitHead\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
+ "88b78697ff3c08ba": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/package.json",
+     ""
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
+ "89212f4529fee3e4": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
   }
  },
  "8a0186a2b0214bec": {
@@ -3088,6 +4352,48 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "8d7240e95f15e123": {
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/git.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\", \"gitHead\": \"main\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "8e4b80cda81796ad": {
   "alias": {
    "link": "${ROOT}/build"
@@ -3169,6 +4475,74 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "8e9f03fb652d84b4": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/package.json",
+     "{\"name\":\"other\",\"name\":\"example-package\",\"version\":\"1.0.0\"}"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
+ "8ff871b573f60edc": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "a/b/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "949bcdbd851a946a": {
   "alias": {
    "link": "${ROOT}/build"
@@ -3248,6 +4622,48 @@
   },
   "outside/run.sh": {
    "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "95b7f75e85be15c8": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": {\"$join\": [\"1.0.0-\", \"s\", \"k-\", \"aaaaaaaaaaaa\"]}}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
   }
  },
  "962512c2e98e4271": {
@@ -3567,6 +4983,87 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "9d9b49f3d5814c0e": {
+  "alias": {
+   "link": "${ROOT}/build"
+  },
+  "build/.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "build/connectome.lock": {
+   "text": "{\"version\": 2, \"backend\": \"host\", \"cook\": {\"version\": \"0.0.1\", \"commit\": \"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\"}, \"recipe\": {\"path\": \"/fixture/recipe.json\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}, \"recipePath\": \"/fixture/recipe.json\", \"createdAt\": \"2026-11-09T00:00:00.000Z\", \"build\": {\"id\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"dir\": \"${ROOT}/build\"}, \"connectomeHost\": {\"url\": \"https://example.invalid/host.git\", \"ref\": \"main\", \"commit\": \"cccccccccccccccccccccccccccccccccccccccc\", \"path\": \"${ROOT}/build/app\"}, \"components\": [{\"kind\": \"git\", \"key\": \"example\", \"role\": \"mcp\", \"url\": \"/fixture/repo\", \"ref\": \"main\", \"commit\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"path\": \"/app\", \"install\": \"\"}, {\"kind\": \"npm\", \"key\": \"package\", \"role\": \"extension\", \"name\": \"example\", \"spec\": \"1.0.0\", \"version\": \"1.0.0\", \"integrity\": \"sha512-YWJj\"}], \"localExtensions\": [{\"name\": \"example\", \"hostDir\": \"/fixture/extension\", \"path\": \"/app/extension\"}], \"requirements\": [{\"name\": \"EXAMPLE_NAME\", \"envName\": \"EXAMPLE_NAME\", \"origin\": \"unresolved\"}], \"credentials\": [\"EXAMPLE_NAME\", \"store/example#field\"], \"outputs\": [{\"path\": \"run.sh\", \"mode\": 448, \"sha256\": \"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"}, {\"path\": \"env\", \"mode\": 384, \"sha256Omitted\": \"contains-requirement-value\"}], \"launch\": {\"kind\": \"script\", \"script\": \"run.sh\"}, \"state\": {\"path\": \"/fixture/state\"}, \"engines\": {\"bun\": {\"path\": \"/fixture/bin/bun\", \"realPath\": \"/fixture/bin/bun\", \"version\": \"1.0.0\"}, \"node\": {\"path\": \"/fixture/bin/node\", \"realPath\": \"/fixture/bin/node\", \"version\": \"1.0.0\"}}, \"layout\": {\"schema\": \"connectome.host-layout/v1\", \"runtime\": \"/fixture/runtime\", \"config\": \"/fixture/config\", \"state\": \"/fixture/state\", \"workspace\": \"/fixture/workspace\", \"credentials\": \"/fixture/credentials\", \"connectorState\": {\"example\": {\"DATA_DIR\": \"/fixture/state/example\"}}}, \"health\": {\"command\": [\"/fixture/bin/health\", \"--once\"]}, \"external\": [{\"name\": \"alpha\", \"command\": \"/fixture/bin/alpha\"}, {\"name\": \"beta\", \"command\": \"/fixture/bin/beta\"}], \"hostDependencies\": [{\"name\": \"example-package\", \"originalRange\": \"^1.0.0\", \"version\": \"1.0.0\", \"sha256\": \"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\", \"size\": 1, \"snapshot\": \"snapshots/example.tgz\", \"packageJsonDelta\": {\"direct\": {\"section\": \"dependencies\", \"name\": \"example-package\", \"before\": \"^1.0.0\", \"after\": \"file:snapshots/example.tgz\"}, \"override\": {\"section\": \"overrides\", \"name\": \"example-package\", \"before\": null, \"after\": \"file:snapshots/example.tgz\"}}, \"provenance\": \"x\"}]}"
+  },
+  "build/cook-recipe.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 384
+  },
+  "build/dangling": {
+   "link": "missing-target"
+  },
+  "build/escape.service": {
+   "link": "${ROOT}/outside/evil.service"
+  },
+  "build/example.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "build/inside": {
+   "link": "${ROOT}/build/units"
+  },
+  "build/link.service": {
+   "link": "example.service"
+  },
+  "build/loop-a": {
+   "link": "loop-b"
+  },
+  "build/loop-b": {
+   "link": "loop-a"
+  },
+  "build/out": {
+   "link": "${ROOT}/outside"
+  },
+  "build/plain.txt": {
+   "text": "plain\n"
+  },
+  "build/run.sh": {
+   "mode": 448,
+   "text": "#!/bin/sh\nexit 0\n"
+  },
+  "build/sub": {
+   "dir": 493
+  },
+  "build/units/nested.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "closed": {
+   "dir": 0
+  },
+  "operator/array.json": {
+   "text": "[]"
+  },
+  "operator/dir.json": {
+   "dir": 493
+  },
+  "operator/link.json": {
+   "link": "recipe.json"
+  },
+  "operator/open.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 420
+  },
+  "operator/recipe.json": {
+   "file": "eyJuYW1lIjogImV4YW1wbGUifQo=",
+   "mode": 384
+  },
+  "operator/via": {
+   "link": "${ROOT}/operator"
+  },
+  "outside/evil.service": {
+   "file": "W1NlcnZpY2VdCkV4ZWNTdGFydD0vYmluL3RydWUK"
+  },
+  "outside/run.sh": {
+   "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
  "a14ab9d6961ad96d": {
   "alias": {
    "link": "${ROOT}/build"
@@ -3652,6 +5149,31 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "a1a3b814e439ef20": {
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "a60f922954685606": {
   "alias": {
    "link": "${ROOT}/build"
@@ -3727,6 +5249,94 @@
   },
   "outside/run.sh": {
    "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "a973c038dfc06858": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.1\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
+ "ab61c30a9ab50005": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/README.md",
+     "x"
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/lib/package.json",
+     "{}"
+    ],
+    [
+     "other.json",
+     "{}"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
   }
  },
  "ad14b367205305a5": {
@@ -4790,6 +6400,48 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "c34b09818a58d6df": {
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/git.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\", \"gitHead\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "c47743c52514f373": {
   "alias": {
    "link": "${ROOT}/build"
@@ -5033,6 +6685,93 @@
    "text": "#!/bin/sh\nexit 0\n"
   }
  },
+ "c75cb4a2acd01e73": {
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/framework.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"@animalabs/agent-framework\", \"version\": \"1.2.3\", \"gitHead\": \"ffffffffffffffffffffffffffffffffffffffff\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  },
+  "archives/nohead.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"@animalabs/agent-framework\", \"version\": \"1.2.3\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  }
+ },
+ "cd7bcad5fe40cbed": {
+  "archives/case.tgz": {
+   "file": "H4sIAAAAAAAA/wEACP/3cGFja2FnZS9wYWNrYWdlLmpzb24AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAwMDA2NDQAMDAwMDAwMAAwMDAwMDAwADAwMDAwMDAwMTQwADAwMDAwMDAwMDAwADAxMTYyMQAgMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB1c3RhcgAwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//nsAIgBuAGEAbQBlACIAOgAgACIAZQB4AGEAbQBwAGwAZQAtAHAAYQBjAGsAYQBnAGUAIgAsACAAIgB2AGUAcgBzAGkAbwBuACIAOgAgACIAMQAuADAALgAwACIAfQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD6xbXlAAgAAA=="
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
+  }
+ },
  "cd9dd1ed51efc63f": {
   "alias": {
    "link": "${ROOT}/build"
@@ -5116,6 +6855,34 @@
   },
   "outside/run.sh": {
    "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "d550ae1df71461dc": {
+  "archives/case.tgz": {
+   "text": "plain text, not an archive"
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
   }
  },
  "d945047a1a8f18e6": {
@@ -5452,6 +7219,40 @@
   },
   "outside/run.sh": {
    "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "e7d6fab94f35d209": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package/package.json",
+     "{\"name\":\"example-package\"}"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
   }
  },
  "e8f480d18c436976": {
@@ -6026,6 +7827,48 @@
   },
   "outside/run.sh": {
    "text": "#!/bin/sh\nexit 0\n"
+  }
+ },
+ "fd7c4c6d78c457ee": {
+  "archives/case.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"other-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/dir.tgz": {
+   "dir": 493
+  },
+  "archives/example.tgz": {
+   "$generate": "tgz",
+   "members": [
+    [
+     "package",
+     null
+    ],
+    [
+     "package/package.json",
+     "{\"name\": \"example-package\", \"version\": \"1.0.0\"}"
+    ],
+    [
+     "package/index.js",
+     "module.exports = 1;\n"
+    ]
+   ]
+  },
+  "archives/link.tgz": {
+   "link": "example.tgz"
   }
  }
 }

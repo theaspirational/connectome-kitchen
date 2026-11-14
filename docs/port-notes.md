@@ -1,15 +1,17 @@
-# Modules 1–3 in TypeScript: `errors`, `lock`, `inputs`
+# Modules 1–5 in TypeScript: `errors`, `lock`, `inputs`, `archive`, `config`
 
-Plan section 3.1, modules 1–3, ported from the frozen oracle at `a49b5dc`.
-This note says how the port keeps the oracle's behaviour, what the oracle does
-that the plan's divergence table (section 3.2) did not list, how the lazy
-imports and the unported archive module are handled, and which points are left
-for review. Counts are in the dispatch report, not here.
+Plan section 3.1, modules 1–5 (plan phase 3), ported from the frozen oracle at
+`a49b5dc`. This note says how the port keeps the oracle's behaviour, what the
+oracle does that the plan's divergence table (section 3.2) did not list, how
+the lazy imports are kept, where the port deliberately differs from the oracle,
+and which points are left for review. Counts are in the dispatch report, not
+here.
 
 ## Shape of the port
 
 - One oracle module is one TS module with the same public names:
-  `src/errors.ts`, `src/lock.ts`, `src/inputs.ts`. `lock` owns
+  `src/errors.ts`, `src/lock.ts`, `src/inputs.ts`, `src/archive.ts`,
+  `src/config.ts`. `lock` owns
   `credential_shaped`, `repository` and `names_only`, as in the oracle and in
   plan section 3.1. (The inventory table names `pylike/credential.ts` as TS
   owner of row 1; that file does not exist. Row 1 is marked at `src/lock.ts`.)
@@ -49,8 +51,13 @@ for review. Counts are in the dispatch report, not here.
 | 16 whitespace sets | `\s`/`\S` in the patterns, `isspace` in `repository` | class from the oracle's table (JavaScript `\s` has U+FEFF and lacks U+001C–U+001F and U+0085) | mutant `lock.credential.unicode-space`; vectors `assign.nbsp`, `assign.fs`, `assign.bom` |
 | 17 exception class decides | `read_lock` collapses six classes into one refusal; four `except ValueError` blocks in `map_lock` | modelled classes, see above | vectors `lock.read.unhashable-*`, `lock.read.config-number`, `lock.read.loop`, `operator.config-*` |
 
-Rows 4 (path sort), 11–15 (shlex, tar, YAML, `openat`, flock) do not occur in
-these modules.
+| 12 tar | `archive_manifest` lists a `.tgz` and reads one member | `pylike/tarfile.ts`: the read path of the installed `tarfile` on the decompressed bytes (formats, pax and GNU extensions, sparse members, its termination rules). The gzip container is read strictly, which is a deliberate divergence, see below | `tar` and `targz` kinds in `port_primitives.py`; vectors `archive.manifest.*` |
+
+Rows 4 (path sort), 11 (shlex) and 13–15 (YAML, `openat`, flock) do not occur
+in these modules. The phase-0 `pylike/tar.ts` is a different thing: a strict
+reader for extraction (row 16) that refuses what it does not know. A listing
+that refused a member type the oracle merely skips would refuse archives the
+oracle accepts, so `archive` does not use it.
 
 ## Oracle behaviour the plan did not list
 
@@ -135,49 +142,99 @@ low one as two characters, JavaScript reads the pair as one. Only bytes decoded
 with `surrogatepass` can produce that (`verify_bytes`), where nothing but "is it
 an object" is observed.
 
-## Lazy imports and the archive seam
+## Lazy imports
 
 `lock.py` imports `connectome_inputs` (lock.py:149-152) and
 `connectome_archive` (lock.py:256-258, :282-284) inside `map_lock`, and the
-archive module imports `lock`. The port keeps both properties. `lock.ts` has no
-static import of either module, only type imports, which leave no trace in the
-compiled file. At the same three places it loads the module through
-`createRequire(import.meta.url)`. Node 22.12 and later load an ES module
-synchronously this way and return the same module instance an `import` gets;
-`test/unit/port-seam.test.js` asserts that on the compiled files. A bundler has
-to be told about these three edges (phase 7).
+archive module imports `lock` at its top. The port keeps both properties.
+`lock.ts` has no static import of either module, only type imports, which
+leave no trace in the compiled file. At the same three places it loads the
+module through `createRequire(import.meta.url)`. Node 22.12 and later load an
+ES module synchronously this way and return the same module instance an
+`import` gets; `test/unit/port-lazy.test.js` asserts that on the compiled
+files. `archive.ts` imports `lock.ts` statically. A bundler has to be told
+about the three lazy edges (phase 7).
 
-The archive module is the next slice. `src/archive.ts` is a stub of the seam
-only: the three names `lock.py` imports, nothing else.
+The first slice shipped `src/archive.ts` as a stub of the three names
+`lock.py` imports, with the differential replaying the oracle's own archive
+calls. The archive port replaced the stub; `lock.ts` did not change.
 
-- Unbound, each of the three raises `ArchiveNotPorted`, an `ImportError`-class
-  error, which is what the oracle would raise if its module were missing. It is
-  not a `ValueError`, so no handler in `lock.ts` turns it into a refusal with a
-  lock message or into an acceptance. A lock with host dependencies, and any
-  call with a `config`, fails loudly.
-- `bind_seam` installs an implementation. The differential harness binds a
-  replay of the oracle's own archive calls for the same input: the port must
-  make the same calls with byte-identical arguments in the same order and gets
-  the oracle's answers back; any other call is reported as a mismatch.
-  `test/unit/port-seam.test.js` binds a named permissive fake.
-- The archive port replaces the whole file, `bind_seam` included. `lock.ts`
-  does not change.
+## Where the port deliberately differs from the oracle
+
+Each entry is a named, tested record in `test/vectors/port-divergences.golden`
+(the oracle's outcome and the port's outcome for the same input, with the
+reason). None is reviewed yet; `scripts/check-port-ready` blocks on that.
+
+**D1. The gzip container of an archive is read strictly** (`archive_manifest`,
+archive.py:131-135; seven entries `gzip.*`).
+
+- *Oracle.* `tarfile.open(path, 'r:gz')` reads the compressed stream lazily, in
+  8 KiB steps, and only as far as the tar listing and the one manifest need.
+  It never checks a CRC-32 or length trailer it does not reach, never sees
+  bytes after the point where it stops, and lets a truncated stream escape as
+  `EOFError` or `zlib.error`, which archive.py:138 does not name. So an archive
+  with a wrong checksum, with junk after the stream or cut short behind the
+  manifest is accepted, and one cut short earlier is a runtime error instead of
+  a refusal.
+- *Port.* `pylike/tarfile.ts` decompresses and checks the whole container
+  first (every member header, the deflate data, CRC-32 and length; concatenated
+  members and zero padding as `gzip.py` allows them) and reports any damage as
+  an `OSError`, which `archive_manifest` turns into its closed refusal,
+  "unreadable archive or manifest", code `E_ADAPTER_INPUT`.
+- *Why not reproduce it.* Reproducing the oracle would mean modelling CPython's
+  buffer sizes and read pattern to decide which damaged bytes it happens not to
+  look at. The archive is an input the operator pinned by digest; an archive
+  whose own integrity trailer is wrong is damaged whatever the pin says, and
+  "not looked at" is not a property worth freezing into a contract.
+- *Direction.* Fail closed only. In the helper fuzz (`targz` kind, 4,000
+  containers) the port accepts no container the oracle's gzip module rejects on
+  a full read; for a valid container the two agree on every case. On the
+  damaged ones the oracle accepted 1,788, let an uncaught class escape on 376
+  and refused 1,009; the port refused all of them.
+- *Consequence for adoption.* An archive that today's engine accepts despite a
+  damaged container is refused by kitchen. `plan` in shadow mode shows it
+  before any window.
+
+The tar level is not part of D1: on the decompressed bytes the port follows
+the oracle, including its leniency (a bad header after the first member ends
+the listing silently, data after the end marker is ignored).
+
+Two smaller limits of the same reader, not divergences on any realistic
+input: the decompressed stream is held in memory (the oracle streams), and
+the recursion bound for a chain of several hundred pax or long-name headers is
+exact for `archive_manifest` called directly, shifting with the caller's depth
+as it does in the oracle.
+
+## `config` and Ansible's `combine` (plan risk R6)
+
+`config.py` merges layers with `ansible.plugins.filter.core.combine` when
+ansible-core is importable and with a stand-in of its own otherwise, which its
+docstring calls test-only. ansible-core is not installed on the machine all
+vectors were produced on, so the oracle that was recorded and replayed is the
+stand-in, and `config.ts` is a port of the stand-in. Whether real `combine`
+agrees with it (list handling, copying, non-mapping operands) is exactly R6
+and is still open: it needs a host with ansible-core. Until then the merge is
+verified against the stand-in only.
 
 ## Open points for review
 
 Nothing below was decided in this slice.
 
-- The two `repository` checks no input can isolate, and the two errors checks
-  the compiler enforces: `test/mutants/ts-unkilled.golden`.
-- Rows 1, 3 and 28 have no oracle mutant (no `require`, `need` or `raise` in
-  `credential_shaped`, `repository` or the errors module). The TS mutants for
+- The mutants that are not killed: checks no input can isolate because another
+  check implies them, two the compiler enforces, one that only a runtime error
+  distinguishes. `test/mutants/ts-unkilled.golden` has the analysis of each.
+- A function without a `require`, `need` or `raise` has no oracle mutant:
+  `credential_shaped`, `repository`, the errors module, the archive
+  predicates, the clauses inside one-`raise` functions. The TS mutants for
   them carry new ids (`lock.credential.*`, `lock.repository.*`,
-  `errors.closed.*`); the oracle side has no counterpart to share an id with.
+  `errors.closed.*`, `cook.provenance.*`, some `config.layers.*`); the oracle
+  side has no counterpart to share an id with.
+- Plan risk R6 (above).
 - Items 2, 5 and 12 above: keep the oracle's behaviour, or refuse earlier in
   both engines by a reviewed waiver; for item 12, which `urlsplit` is the
   reference.
-- `scripts/check-port-ready` stays red until these mutants are ruled on and
-  the archive module replaces its stub.
+- `scripts/check-port-ready` stays red until these mutants and the deliberate
+  divergences are ruled on.
 - Oracle runtime errors on malformed arguments are compared by class only and
   counted separately, in line with the open phase-1 question about crash-only
   evidence; the report gives the counts.

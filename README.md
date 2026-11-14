@@ -1,8 +1,8 @@
 # connectome-kitchen — private incubation
 
-Offline phase-0/1/2 seed at Python baseline `a49b5dc`, plus the first porting
-slice: `errors`, `lock` and `inputs` in strict TypeScript (see "Modules 1–3"
-below). **Not deployable. Phase 1 is incomplete and its acceptance gate is red.**
+Offline phase-0/1/2 seed at Python baseline `a49b5dc`, plus plan phase 3:
+`errors`, `lock`, `inputs`, `archive` and `config` in strict TypeScript (see
+"Modules 1–5" below). **Not deployable. Phase 1 is incomplete and its acceptance gate is red.**
 The other engine modules are not ported; no acquisition, remotes or publication
 are included. The only runtime imports are Node builtins
 and in-tree modules; Python/PyYAML are development/oracle tools already present
@@ -15,16 +15,16 @@ dependencies.
 - `src/`: TypeScript, `strict`. `tsc` emits ESM JavaScript and declarations to
   ignored `dist/`; `bin` and `exports` name `dist` only. The unit tests import
   the compiled output, never the sources.
-- `src/errors.ts`, `src/lock.ts`, `src/inputs.ts`: ports of the oracle modules
-  of the same name, one to one. `src/archive.ts` is a documented stub of the
-  three names `lock.py` imports lazily; the archive module is the next slice.
+- `src/errors.ts`, `src/lock.ts`, `src/inputs.ts`, `src/archive.ts`,
+  `src/config.ts`: ports of the oracle modules of the same name, one to one.
 - `src/pylike/`: typed strict JSON, Python encoders, Unicode tables, text,
   component-wise paths, limited regex helpers, shlex, URL split/unquote, bounded
   tar reader. Added with the first ported modules: `py.ts` (the Python value
   model, insertion-ordered dicts, modelled exception classes), `pyjson.ts`
   (`json.loads` with hooks and CPython's limits), `pathlib.ts`, `codec.ts`
-  (UTF-8 error handlers, UTF-16/32, filesystem encoding, strict base64) and
-  `datetime.ts`. USTAR and a conservative per-file PAX subset are supported;
+  (UTF-8 error handlers, UTF-16/32, filesystem encoding, strict base64),
+  `datetime.ts` and `tarfile.ts` (the read path of Python's `tarfile`; the
+  older `tar.ts` stays the strict reader for extraction). USTAR and a conservative per-file PAX subset are supported;
   unsupported tar extensions refuse. YAML belongs to the later spawn phase.
 - `src/io/`: Linux descriptor-pinned no-follow reads, private atomic writes,
   fsync and tree manifests; explicit platform-flock child runner; redacting
@@ -141,7 +141,7 @@ JS and the oracle shim. Fuzzing is evidence, not proof of full Python float
 formatting parity. Node 24 production runtime, actual platform tool digests,
 real Ansible `combine`, cook execution, independent replay of every scenario,
 complete named-check mutants, and review approval remain unverified/unmet.
-Of the engine, only modules 1–3 are ported.
+Of the engine, only modules 1–5 are ported.
 
 ## Phase-1 continuation
 
@@ -273,18 +273,18 @@ hashing. `scenario_calls.py` re-observes all 279 recorded test methods and
 takes about two minutes; methods that skip on the host are reported as not
 compared.
 
-## Modules 1–3: errors, lock, inputs
+## Modules 1–5: errors, lock, inputs, archive, config
 
-Plan section 3.1, modules 1–3, ported from the oracle at `a49b5dc`.
-`docs/port-modules-1-3.md` has the details: how each Python/JavaScript
-divergence of plan section 3.2 is handled, what the oracle does that the plan
-did not list, the lazy imports and the archive stub, and the open points for
-review.
+Plan section 3.1, modules 1–5, ported from the oracle at `a49b5dc`.
+`docs/port-notes.md` has the details: how each Python/JavaScript divergence of
+plan section 3.2 is handled, what the oracle does that the plan did not list,
+the lazy imports, where the port deliberately differs from the oracle, and the
+open points for review.
 
 - **Differential.** `test/differential/ts_port.py run` calls the oracle live on
   every vector and the TS port on the same input at the same paths, and compares
   canonical outcomes. Vectors: the committed guard-negative and crash-only
-  vectors of these modules, `test/vectors/port-m1-3.golden` (hand-written
+  vectors of these modules, `test/vectors/port.golden` (hand-written
   inputs, outcomes written by the oracle through `ts_port.py build`) and a
   generated perturbation corpus that is not stored. `--recording` and
   `--exploratory` add the private recorded calls and the phase-1 exploratory
@@ -292,10 +292,10 @@ review.
   Python-semantics helper against CPython.
 - **Unit suite.** `test/unit/port.test.js` replays the committed vectors on the
   compiled port, one test per vector, without Python.
-  `test/unit/port-seam.test.js` covers the archive stub, a named fake of the
-  archive module and the lazy imports. `test/unit/test_ts_port.py` checks that
-  the committed corpus, the mutant anchors, the recorded results and
-  `PORTING.md` are current.
+  `test/unit/port-lazy.test.js` covers the lazy imports.
+  `test/unit/test_ts_port.py` checks that the committed corpus, the mutant
+  anchors, the recorded results, the named divergences and `PORTING.md` are
+  current.
 - **Mutants.** `test/mutants/ts_mutants.py run --check` applies every anchor of
   `test/mutants/ts-anchors.golden` to a scratch copy of `src/`, compiles it and
   replays the committed vectors; `ts-results.golden` records the outcome per
@@ -314,4 +314,5 @@ python3 scripts/check-port-ready
 
 The last command fails on purpose until a review has ruled on the mutants that
 are not killed (their ids then go into `test/mutants/ts-reviewed.golden`, which
-is empty) and until the archive module replaces its stub.
+is empty) and on the deliberate divergences from the oracle
+(`test/vectors/port-divergences.golden`).

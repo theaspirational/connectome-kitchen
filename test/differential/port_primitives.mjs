@@ -12,8 +12,8 @@ Error.stackTraceLimit = 0;
 const here = path.dirname(fileURLToPath(import.meta.url));
 const dist = process.env.KITCHEN_DIST ? path.resolve(process.env.KITCHEN_DIST) : path.resolve(here, '../../dist');
 const load = name => import(pathToFileURL(path.join(dist, name)).href);
-const [url, codec, datetime, pyjson, json, pathlib, py, text, lock, errors] = await Promise.all(
-  ['pylike/url.js', 'pylike/codec.js', 'pylike/datetime.js', 'pylike/pyjson.js', 'pylike/json.js', 'pylike/pathlib.js', 'pylike/py.js', 'pylike/text.js', 'lock.js', 'errors.js'].map(load));
+const [url, codec, datetime, pyjson, json, pathlib, py, text, lock, errors, tarfile] = await Promise.all(
+  ['pylike/url.js', 'pylike/codec.js', 'pylike/datetime.js', 'pylike/pyjson.js', 'pylike/json.js', 'pylike/pathlib.js', 'pylike/py.js', 'pylike/text.js', 'lock.js', 'errors.js', 'pylike/tarfile.js'].map(load));
 
 /** Tagged transport value -> engine value (see `tag` in port_primitives.py). */
 function untag(value) {
@@ -70,7 +70,52 @@ function streamBytes(job) {
   return (job.clip ?? true) ? data.subarray(0, job.size) : data;
 }
 
+const TAR_READ_LIMIT = 16n * 1024n * 1024n;
+const SUPPORTED_TYPES = new Set([0x30, 0x00, 0x31, 0x32, 0x35, 0x36, 0x37, 0x33, 0x34, 0x4c, 0x4b, 0x53]);
+/** As `tar_listing` in port_primitives.py. */
+function tarListing(data) {
+  let members;
+  try { members = tarfile.gzipMembers(data); } catch (error) { return failure(error); }
+  return { members: members.map(member => {
+    const entry = [member.name, member.isfile, member.size.toString(), member.type];
+    if ((member.isfile || !SUPPORTED_TYPES.has(member.type)) && member.size <= TAR_READ_LIMIT) {
+      try { entry.push(createHash('sha256').update(member.read()).digest('hex')); } catch (error) { entry.push(failure(error)); }
+    }
+    return entry;
+  }) };
+}
+const MANIFEST_NAME = /^[^/]+\/package[^\n]json$/u;
+/** As `manifest_flow` in port_primitives.py: archive.py:131-139. */
+function manifestFlow(data) {
+  try {
+    const manifests = tarfile.gzipMembers(data).filter(member => MANIFEST_NAME.test(member.name) && member.isfile);
+    if (!(manifests.length === 1 && manifests[0].size <= 1024n * 1024n)) return ['refused', 'archive manifest required'];
+    const manifest = pyjson.loads(manifests[0].read());
+    return ['accepted', createHash('sha256').update(sortedJson(manifest)).digest('hex')];
+  } catch (error) {
+    if (error instanceof py.PyOSError || error instanceof py.PyValueError || error instanceof tarfile.TarError) return ['caught', error.pyName];
+    if (error instanceof py.PyError) return ['uncaught', error.pyName];
+    throw error;
+  }
+}
+/** `json.dumps(value, sort_keys=True)` for what `json.load` returned: default separators, ASCII, keys by code point. */
+function sortedJson(value) {
+  if (value instanceof py.NonFinite) return Number.isNaN(value.value) ? 'NaN' : value.value > 0 ? 'Infinity' : '-Infinity';
+  if (Array.isArray(value)) return '[' + value.map(sortedJson).join(', ') + ']';
+  if (value instanceof Map) return '{' + [...value.keys()].sort(json.compare).map(key => json.dumps(key) + ': ' + sortedJson(value.get(key))).join(', ') + '}';
+  return json.dumps(value);
+}
+
 const KINDS = {
+  tar: job => tarListing(bytes(job)),
+  tardepth: job => { try { return 'members:' + tarfile.gzipMembers(bytes(job)).length; } catch (error) { return failure(error).error; } },
+  targz: job => {
+    const data = bytes(job);
+    let container = 'valid';
+    try { tarfile.gunzip(data); } catch (error) { container = failure(error).error; }
+    return { container, flow: manifestFlow(data) };
+  },
+  pyint: job => { const value = 's' in job ? tarfile.pyIntStr(job.s) : tarfile.pyIntBytes(bytes(job)); return value === null ? 'ValueError' : value.toString(); },
   unquote: job => url.unquote(job.s),
   url: job => {
     let parts;

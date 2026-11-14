@@ -2,7 +2,7 @@
  * Closed, value-free diagnostics crossing subprocess and wrapper boundaries.
  * Port of `oracle/module_utils/connectome_errors.py` (a49b5dc), one to one.
  */
-import { PyRecursionError, PyValueError, eq, get, isDict } from './pylike/py.js';
+import { PyAttributeError, PyRecursionError, PyTypeError, PyValueError, eq, get, isDict } from './pylike/py.js';
 import type { PyValue } from './pylike/py.js';
 import { loads } from './pylike/pyjson.js';
 
@@ -61,6 +61,8 @@ const CODE = /(?<![A-Za-z0-9_])(E_[A-Z_]+)(?![A-Za-z0-9_])/g;
 
 /** errors.py:47-52 */
 export function cook_code(output: Uint8Array): string | null {
+  // A bytes pattern on anything but bytes is a TypeError in the oracle; say so to an untyped caller too.
+  if (!(output instanceof Uint8Array)) throw new PyTypeError('cannot use a bytes pattern on a string-like object');
   const view = Buffer.from(output.buffer, output.byteOffset, output.byteLength).toString('latin1');
   for (const match of view.matchAll(CODE)) {
     const code = match[1]!;
@@ -72,6 +74,7 @@ export function cook_code(output: Uint8Array): string | null {
 
 /** errors.py:55-65 */
 export function cook_code_from_stream(stream: ByteStream): string | null {
+  if (typeof (stream as Partial<ByteStream> | null)?.seek !== 'function' || typeof stream.read !== 'function') throw new PyAttributeError("object has no attribute 'seek'");
   stream.seek(0);
   let tail: Uint8Array = new Uint8Array(0);
   for (;;) {

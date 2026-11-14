@@ -176,6 +176,8 @@ const sha256hex = (content: Uint8Array): string => createHash('sha256').update(c
 
 /** inputs.py:102-117 */
 export function verify_bytes<Bytes extends Uint8Array>(content: Bytes, record: PyValue): Bytes {
+  // `hashlib.sha256` takes bytes only. Without this an untyped caller's string would be hashed as UTF-8 and judged.
+  if (!(content instanceof Uint8Array)) throw new PyTypeError('Strings must be encoded before hashing');
   // row 23 inputs.recipe: the bytes have the declared digest. inputs.py:103
   need(eq(sha256hex(content), subscript(record, 'sha256')), 'recipe digest mismatch');
   const unique = (pairs: Pair[]): PyValue => {
@@ -205,7 +207,7 @@ export function verify_bytes<Bytes extends Uint8Array>(content: Bytes, record: P
 
 /** inputs.py:120-127 */
 export function read_file(path: string, record: PyValue): Buffer {
-  const file = pathlib.pathStr(path);
+  const file = pathlib.pathStr(pathlib.fspath(path));
   try {
     // row 23 inputs.recipe: no symlink alias anywhere in the path, and a regular file. inputs.py:123-124
     need(pathlib.resolve(file) === file && pathlib.lstat(file).isFile(),
@@ -254,7 +256,7 @@ export function installed(build: string, config: PyValue): void {
   validate(config);
   const settings = config as PyDict;
   if (settings.has('recipe_file')) {
-    const path = pathlib.joinPath(pathlib.pathStr(build), 'cook-recipe.json');
+    const path = pathlib.joinPath(pathlib.pathStr(pathlib.fspath(build)), 'cook-recipe.json');
     read_file(path, item(settings, 'recipe_file'));
     const info = pathlib.lstat(path);
     // row 23 inputs.recipe: the installed copy is 0600 and owned by this account. inputs.py:161-162

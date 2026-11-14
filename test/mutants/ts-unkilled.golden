@@ -22,5 +22,29 @@
   "status": "compiler",
   "class": "enforced by a type",
   "analysis": "`adapter_diagnostic` takes `unknown`, because the oracle accepts any object and answers the fallback for whatever `json.loads` rejects with a TypeError (errors.py:96). Deleting the test that narrows the argument to text or bytes leaves the decoder with an `unknown`, which the strict compiler rejects (TS2345)."
+ },
+ {
+  "id": "cook.provenance.origin-password",
+  "status": "survived",
+  "class": "shadowed by an earlier check",
+  "analysis": "The mutant deletes `url.password is None` in `registry_origin` (archive.py:43). The argument is the one for `lock.repository.password`: a value with whitespace is refused at archive.py:39, so a password in the URL means the raw value holds `://`, non-slash non-space characters, `:`, more of them and `@`, which is the third credential shape, refused in the same statement at archive.py:39. test/mutants/shadowed_repository.py: 13,198 seeded origins reach the password test with a password, every one credential-shaped. The oracle has no mutant for any clause of `registry_origin`."
+ },
+ {
+  "id": "cook.provenance.origin-query",
+  "status": "survived",
+  "class": "shadowed by an earlier check",
+  "analysis": "The mutant deletes `not url.query` in `registry_origin` (archive.py:44). `urlsplit` yields a non-empty query only from text after a `?`, and archive.py:39 refuses every value that contains `?` before the URL is parsed. So when the query test runs, the query is empty. test/mutants/shadowed_repository.py found no origin that reaches the test with a query among 200,000 seeded values. The vector `archive.registry-origin.empty-query` shows that even a bare trailing `?` is refused by the character test."
+ },
+ {
+  "id": "cook.provenance.origin-fragment",
+  "status": "survived",
+  "class": "shadowed by an earlier check",
+  "analysis": "The mutant deletes `not url.fragment` in `registry_origin` (archive.py:44). A fragment needs a `#` in the value, and archive.py:39 refuses every value that contains `#` before the URL is parsed. Same evidence as for the query test: no seeded origin reaches the test with a fragment."
+ },
+ {
+  "id": "archive.L140.4",
+  "status": "crash-only",
+  "class": "only a runtime error distinguishes it, in both engines",
+  "analysis": "The mutant deletes `need(isinstance(manifest, dict), ...)` in `archive_manifest` (archive.py:140). The next statement calls `manifest.get`, which exists only on a mapping, so for every other JSON value (list, string, number, null) the oracle mutant raises AttributeError and the TS mutant raises the modelled AttributeError: a refusal becomes a runtime error and nothing else changes. No function in the five ported modules catches that class around `archive_manifest`; the callers that do (`cook.main`, the deployment boundary) are not ported, and there the public code would differ. Vector: `archive.manifest.manifest.list`. This is the phase-1 crash-only category; it is not counted as killed."
  }
 ]
