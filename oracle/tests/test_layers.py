@@ -3,7 +3,7 @@ from pathlib import Path
 import sys
 import unittest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'roles/connectome_agent/module_utils'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'module_utils'))
 from connectome_config import merge_layers
 
 

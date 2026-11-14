@@ -13,7 +13,7 @@ import unittest
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / 'roles/connectome_agent/module_utils'))
+sys.path.insert(0, str(ROOT / 'module_utils'))
 from connectome_spawn import (FileIdentityProvider, Lifecycle, SpawnError, name_record,
                               read_name_record, template)
 from connectome_spawn.lifecycle import STATES
@@ -39,11 +39,6 @@ class FakeAdapter:
             assert (Path(context['store']).parent / 'seed.consumed').is_file()
         if step == self.fail:
             raise RuntimeError('simulated crash after effect')
-
-    def verify(self, context, operation_id, checkpoint):
-        health = checkpoint('service-health', lambda: {
-            'state': 'applied', 'evidence': {'fixture': operation_id}, 'result': {'ready': True}})
-        return {'serviceReady': {'state': 'success', 'evidence': {'health': health, 'mcp': {}}}}
 
 
 class FakeImporter:
@@ -106,11 +101,11 @@ class LifecycleTests(unittest.TestCase):
         (repo / 'names/agent.json').write_text(json.dumps(record))
         (repo / 'link.json').symlink_to('names/agent.json')
         git('add', '.')
-        git('-c', 'user.name=Fixture Committer', '-c', 'user.email=noreply@users.noreply.github.com',
-            'commit', '-qm', 'Name record', '--author=Fixture Initiator <contributors@users.noreply.github.com>')
+        git('-c', 'user.name=Fixture Committer', '-c', 'user.email=committer@users.noreply.github.com',
+            'commit', '-qm', 'Name record', '--author=Fixture Initiator <initiator@users.noreply.github.com>')
         commit = git('rev-parse', 'HEAD')
         git('update-index', '--add', '--cacheinfo', '160000,' + commit + ',submodule')
-        git('-c', 'user.name=Fixture Committer', '-c', 'user.email=noreply@users.noreply.github.com',
+        git('-c', 'user.name=Fixture Committer', '-c', 'user.email=committer@users.noreply.github.com',
             'commit', '-qm', 'Gitlink refusal fixture')
         return {'kind': 'repo', 'repo': str(repo), 'commit': git('rev-parse', 'HEAD'), 'path': 'names/agent.json'}
 
@@ -126,13 +121,13 @@ class LifecycleTests(unittest.TestCase):
         self.assertEqual(named['recordHash'], file_named['recordHash'])
         self.assertEqual(named['source'], dict(source, blob=expected_blob,
             author=named['source']['author'], committer=named['source']['committer']))
-        self.assertTrue(named['source']['author'].startswith('Fixture Committer <noreply@users.noreply.github.com>'))
-        self.assertTrue(named['source']['committer'].startswith('Fixture Committer <noreply@users.noreply.github.com>'))
+        self.assertTrue(named['source']['author'].startswith('Fixture Committer <committer@users.noreply.github.com>'))
+        self.assertTrue(named['source']['committer'].startswith('Fixture Committer <committer@users.noreply.github.com>'))
         # Author is informational, not an identity/permission check. Use the
         # first commit to exercise a distinct initiator author and committer.
         first = subprocess.check_output(['git', '-C', str(repo), 'rev-parse', 'HEAD^']).decode().strip()
         authored = read_name_record(dict(source, commit=first), with_provenance=True)['source']
-        self.assertTrue(authored['author'].startswith('Fixture Initiator <contributors@users.noreply.github.com>'))
+        self.assertTrue(authored['author'].startswith('Fixture Initiator <initiator@users.noreply.github.com>'))
         self.assertNotEqual(authored['author'], authored['committer'])
         (repo / source['path']).write_text('uncommitted invalid input')
         subprocess.run(['git', '-C', str(repo), 'update-ref', 'HEAD', first], check=True)

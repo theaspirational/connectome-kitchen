@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+"""Fail closed on uncited refusal sites; glob every engine file, including adapters."""
+import argparse, ast, json, re, sys
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+
+def inventory(plan):
+ rows=[]
+ section=plan.read_text().split('### 4.1 Inventory',1)[1].split('### 4.2',1)[0]
+ for line in section.splitlines():
+  if not re.match(r'^\| \d+ \|',line):continue
+  fields=line.split('|'); number=int(fields[1]); source=fields[3]; ids=re.findall(r'`([^`]+)`',fields[5])
+  refs=[];current=None
+  if not re.search(r'\[[ST]\]',source):
+   for m in re.finditer(r'`(?:(?P<file>[\w/]+\.py))?:(?P<start>\d+)(?:-(?P<end>\d+))?`',source):
+    current=m['file'] or current
+    if current:refs.append((current,int(m['start']),int(m['end'] or m['start'])))
+  rows.append({'row':number,'guarantee':fields[2].strip(),'ids':ids,'refs':refs,'future':not bool(refs)})
+ return rows
+
+def files(root):
+ result={}
+ # There is deliberately no hard-coded list of individual engine modules.
+ for p in (root/'module_utils').rglob('*.py'):
+  name=p.relative_to(root/'module_utils').as_posix().replace('connectome_spawn/','spawn/')
+  if name.startswith('connectome_'):name=name[len('connectome_'):]
+  result[name]=p
+ for prefix in ('library','lookup_plugins','filter_plugins','scripts'):
+  for p in (root/prefix).rglob('*'):
+   if p.is_file() and (p.suffix=='.py' or p.name=='connectome-spawn'):
+    result[prefix+'/'+p.relative_to(root/prefix).as_posix()]=p
+ return result
+HELPERS={('catalog.py',27),('cook.py',31),('lock.py',16),('archive.py',29),('inputs.py',13),('spawn/data.py',19),('spawn/data.py',23)}
+def sites(content):
+ # Preserve the plan's line-based definition, but parse first to reject broken code.
+ ast.parse(content)
+ return [n for n,line in enumerate(content.splitlines(),1) if re.match(r'^\s*(?:(?:need|require|unsafe)\(|raise\b|(?:if|except)\b.*\braise\b)',line)]
+def main():
+ parser=argparse.ArgumentParser();parser.add_argument('--root',type=Path,default=ROOT/'oracle');parser.add_argument('--plan',type=Path,default=ROOT/'docs/approved-plan.md');parser.add_argument('--json',action='store_true');args=parser.parse_args()
+ rows=inventory(args.plan);engine=files(args.root);uncovered=[];count=0;invalid=[]
+ for row in rows:
+  for file,a,b in row['refs']:
+   if file not in engine or not 1<=a<=b<=len(engine[file].read_text().splitlines()):invalid.append({'row':row['row'],'file':file,'start':a,'end':b})
+ for file,p in sorted(engine.items()):
+  for n in sites(p.read_text()):
+   count+=1
+   if (file,n) not in HELPERS and not any(f==file and a<=n<=b for row in rows for f,a,b in row['refs']):uncovered.append({'file':file,'line':n})
+ report={'rows':len(rows),'files':len(engine),'sites':count,'helper_exemptions':len(HELPERS),'uncovered':uncovered,'invalid_ranges':invalid,'future_rows':[r['row'] for r in rows if r['future']]}
+ print(json.dumps(report,sort_keys=True));return int(bool(uncovered or invalid or len(rows)!=74))
+if __name__=='__main__':sys.exit(main())

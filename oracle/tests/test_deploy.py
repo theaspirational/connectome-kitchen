@@ -13,7 +13,7 @@ from types import SimpleNamespace
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / 'roles/connectome_agent/module_utils'))
+sys.path.insert(0, str(ROOT / 'module_utils'))
 from connectome_config import merge_layers, public_catalog
 from connectome_deploy import Deployment, DeployError, make_directory
 from deploy_fixtures import private_scratch
@@ -394,7 +394,7 @@ class DeployTests(unittest.TestCase):
             'ansible.module_utils.connectome_errors': sys.modules['connectome_errors'],
         }
         spec = importlib.util.spec_from_file_location(
-            'active_boundary', ROOT / 'roles/connectome_agent/library/connectome_release.py')
+            'active_boundary', ROOT / 'library/connectome_release.py')
         boundary = importlib.util.module_from_spec(spec)
         before = self.snapshot()
         with patch.dict(sys.modules, modules):
@@ -1031,7 +1031,7 @@ class DeployTests(unittest.TestCase):
                 'ansible.module_utils.connectome_errors': sys.modules['connectome_errors'],
             }
             spec = importlib.util.spec_from_file_location(
-                'release_boundary', ROOT / 'roles/connectome_agent/library/connectome_release.py')
+                'release_boundary', ROOT / 'library/connectome_release.py')
             boundary = importlib.util.module_from_spec(spec)
             with patch.dict(sys.modules, modules):
                 spec.loader.exec_module(boundary)

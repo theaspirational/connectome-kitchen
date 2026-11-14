@@ -1,0 +1,15 @@
+name: example
+# Set a real external path on the agent host; never under the deployment root.
+state_dir: /absolute/persistent/example/data
+# Optional secrets_file overrides the target account default (see layering docs).
+budgets:
+  max_cost: 2.0
+connectors:
+  # No connector builds or secret lookups in the minimal example.
+  slack-mcpl: {enabled: false}
+  telegram-bot-mcpl: {enabled: false}
+  zulip_mcp: {enabled: false}
+  github-mcpl: {enabled: false}
+  terminal-sessions-mcp: {enabled: false}
+modules:
+  memory: {enabled: false}

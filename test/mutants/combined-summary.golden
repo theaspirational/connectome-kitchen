@@ -1,0 +1,1045 @@
+{
+  "guard_site_mutants": 573,
+  "test_killed": 162,
+  "pure_A_killed": 9,
+  "combined_killed": 165,
+  "remaining_unreviewed": 408,
+  "invisible_mutants": 22,
+  "invisible_killed": 22,
+  "rows": [
+    {
+      "row": 1,
+      "named_ids": [
+        "lock.credential"
+      ],
+      "generated": 5,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 1,
+      "combined_killed": 1
+    },
+    {
+      "row": 2,
+      "named_ids": [
+        "lock.names-only"
+      ],
+      "generated": 3,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 3,
+      "combined_killed": 3
+    },
+    {
+      "row": 3,
+      "named_ids": [
+        "lock.repository"
+      ],
+      "generated": 1,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 4,
+      "named_ids": [
+        "lock.schema.top"
+      ],
+      "generated": 4,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 5,
+      "named_ids": [
+        "lock.incomplete"
+      ],
+      "generated": 1,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 6,
+      "named_ids": [
+        "lock.build-identity"
+      ],
+      "generated": 1,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 1
+    },
+    {
+      "row": 7,
+      "named_ids": [
+        "json.strict"
+      ],
+      "generated": 9,
+      "killed": 7,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 7
+    },
+    {
+      "row": 8,
+      "named_ids": [
+        "lock.pin-names-external"
+      ],
+      "generated": 6,
+      "killed": 6,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 6
+    },
+    {
+      "row": 9,
+      "named_ids": [
+        "lock.host-deps"
+      ],
+      "generated": 11,
+      "killed": 6,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 6
+    },
+    {
+      "row": 10,
+      "named_ids": [
+        "lock.launch-units"
+      ],
+      "generated": 9,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 1
+    },
+    {
+      "row": 11,
+      "named_ids": [
+        "deploy.state-path"
+      ],
+      "generated": 10,
+      "killed": 2,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 2
+    },
+    {
+      "row": 12,
+      "named_ids": [
+        "catalog.seal"
+      ],
+      "generated": 8,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 13,
+      "named_ids": [
+        "catalog.exec-env"
+      ],
+      "generated": 0,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 14,
+      "named_ids": [
+        "catalog.engine-links"
+      ],
+      "generated": 0,
+      "killed": 0,
+      "future": true,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 15,
+      "named_ids": [
+        "catalog.shebang"
+      ],
+      "generated": 3,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 16,
+      "named_ids": [
+        "catalog.extract"
+      ],
+      "generated": 4,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 17,
+      "named_ids": [
+        "catalog.audit.abs"
+      ],
+      "generated": 9,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 1
+    },
+    {
+      "row": 18,
+      "named_ids": [
+        "catalog.audit.argv"
+      ],
+      "generated": 7,
+      "killed": 2,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 2
+    },
+    {
+      "row": 19,
+      "named_ids": [
+        "catalog.audit.env"
+      ],
+      "generated": 7,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 1
+    },
+    {
+      "row": 20,
+      "named_ids": [
+        "catalog.audit.unit"
+      ],
+      "generated": 12,
+      "killed": 4,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 4
+    },
+    {
+      "row": 21,
+      "named_ids": [
+        "catalog.pins"
+      ],
+      "generated": 11,
+      "killed": 6,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 6
+    },
+    {
+      "row": 22,
+      "named_ids": [
+        "catalog.verify"
+      ],
+      "generated": 10,
+      "killed": 2,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 2
+    },
+    {
+      "row": 23,
+      "named_ids": [
+        "inputs.recipe"
+      ],
+      "generated": 9,
+      "killed": 5,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 5
+    },
+    {
+      "row": 24,
+      "named_ids": [
+        "fs.read-file"
+      ],
+      "generated": 7,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 25,
+      "named_ids": [
+        "spawn.git-reader"
+      ],
+      "generated": 3,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 1
+    },
+    {
+      "row": 26,
+      "named_ids": [
+        "spawn.commit-pin"
+      ],
+      "generated": 6,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 1
+    },
+    {
+      "row": 27,
+      "named_ids": [
+        "spawn.decode"
+      ],
+      "generated": 12,
+      "killed": 2,
+      "future": false,
+      "pure_A_killed": 2,
+      "combined_killed": 3
+    },
+    {
+      "row": 28,
+      "named_ids": [
+        "errors.closed"
+      ],
+      "generated": 7,
+      "killed": 4,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 4
+    },
+    {
+      "row": 29,
+      "named_ids": [
+        "role.boundary"
+      ],
+      "generated": 4,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 30,
+      "named_ids": [
+        "deploy.ownership"
+      ],
+      "generated": 11,
+      "killed": 4,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 4
+    },
+    {
+      "row": 31,
+      "named_ids": [
+        "deploy.path-safety"
+      ],
+      "generated": 6,
+      "killed": 5,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 5
+    },
+    {
+      "row": 32,
+      "named_ids": [
+        "deploy.systemd-path"
+      ],
+      "generated": 3,
+      "killed": 2,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 2
+    },
+    {
+      "row": 33,
+      "named_ids": [
+        "deploy.external"
+      ],
+      "generated": 20,
+      "killed": 12,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 12
+    },
+    {
+      "row": 34,
+      "named_ids": [
+        "deploy.no-implicit-stop"
+      ],
+      "generated": 5,
+      "killed": 2,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 2
+    },
+    {
+      "row": 35,
+      "named_ids": [
+        "deploy.secrets"
+      ],
+      "generated": 7,
+      "killed": 4,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 4
+    },
+    {
+      "row": 36,
+      "named_ids": [
+        "deploy.rollback"
+      ],
+      "generated": 2,
+      "killed": 2,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 2
+    },
+    {
+      "row": 37,
+      "named_ids": [
+        "io.single-writer"
+      ],
+      "generated": 0,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 38,
+      "named_ids": [
+        "cook.adapter-fresh"
+      ],
+      "generated": 7,
+      "killed": 3,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 3
+    },
+    {
+      "row": 39,
+      "named_ids": [
+        "cook.provenance"
+      ],
+      "generated": 33,
+      "killed": 8,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 8
+    },
+    {
+      "row": 40,
+      "named_ids": [
+        "spawn.lifecycle.intent"
+      ],
+      "generated": 10,
+      "killed": 4,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 4
+    },
+    {
+      "row": 41,
+      "named_ids": [
+        "spawn.plan-not-auth"
+      ],
+      "generated": 2,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 1
+    },
+    {
+      "row": 42,
+      "named_ids": [
+        "spawn.template-data"
+      ],
+      "generated": 4,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 1,
+      "combined_killed": 1
+    },
+    {
+      "row": 43,
+      "named_ids": [
+        "s.reconcile-hold"
+      ],
+      "generated": 0,
+      "killed": 0,
+      "future": true,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 44,
+      "named_ids": [
+        "s.cutover-intent"
+      ],
+      "generated": 0,
+      "killed": 0,
+      "future": true,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 45,
+      "named_ids": [
+        "s.probe-status"
+      ],
+      "generated": 0,
+      "killed": 0,
+      "future": true,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 46,
+      "named_ids": [
+        "t.receipt-binding"
+      ],
+      "generated": 0,
+      "killed": 0,
+      "future": true,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 47,
+      "named_ids": [
+        "gate.rules"
+      ],
+      "generated": 0,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 48,
+      "named_ids": [
+        "catalog.unit",
+        ".reset",
+        ":845",
+        ".unset",
+        ":846",
+        ".envfile",
+        ":849",
+        ".overlap",
+        ":842",
+        ".base-env",
+        ":825",
+        ":843",
+        ".escape",
+        ":810",
+        ".exec-clear",
+        ":851",
+        ".preflights",
+        ":844",
+        ".wrap",
+        ":854",
+        ".payload-names",
+        ":802"
+      ],
+      "generated": 2,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 49,
+      "named_ids": [
+        "secrets.reserved",
+        ".file-env",
+        ".catalog",
+        ".catalog-code-env",
+        "catalog.py:327-328",
+        ".grammar",
+        "deploy.py:408-409",
+        ".direct",
+        ".collision",
+        ".adapter"
+      ],
+      "generated": 8,
+      "killed": 3,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 3
+    },
+    {
+      "row": 50,
+      "named_ids": [
+        "recipe.secret-ref",
+        ".token",
+        ".catalog-token",
+        ".env",
+        ".audit",
+        ".spawn-token",
+        ".spawn-env"
+      ],
+      "generated": 7,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 1
+    },
+    {
+      "row": 51,
+      "named_ids": [
+        "cook.argv",
+        ".dash",
+        ".flag-position",
+        ".validate-first",
+        ":317",
+        ".stdin",
+        "cook.git",
+        ".safe-directory",
+        ".fsmonitor",
+        ".hooks",
+        ".optional-locks"
+      ],
+      "generated": 2,
+      "killed": 2,
+      "future": false,
+      "pure_A_killed": 1,
+      "combined_killed": 2
+    },
+    {
+      "row": 52,
+      "named_ids": [
+        "deploy.private",
+        ".state-kind",
+        ".state-mode",
+        ".state-owner",
+        ".state-recheck",
+        ".secret-dir",
+        ".secret-entry",
+        ".canonical"
+      ],
+      "generated": 4,
+      "killed": 3,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 3
+    },
+    {
+      "row": 53,
+      "named_ids": [
+        "catalog.build",
+        ".env",
+        ".path",
+        ".offline",
+        ".audit",
+        ".executable",
+        ".output",
+        ".status",
+        ".export",
+        "deploy.adapter-env"
+      ],
+      "generated": 3,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 54,
+      "named_ids": [
+        "catalog.stage",
+        ".inventory",
+        ".staged-exec",
+        "catalog.contained",
+        ".archive",
+        ".inputs",
+        ".checkout"
+      ],
+      "generated": 6,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 1
+    },
+    {
+      "row": 55,
+      "named_ids": [
+        "catalog.preflight",
+        ".chars",
+        ".absolute",
+        ".audit"
+      ],
+      "generated": 2,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 56,
+      "named_ids": [
+        "spawn.lifecycle",
+        ".state-schema",
+        ".store-binding",
+        ".target",
+        ".input-for-target",
+        ".table",
+        ".adapter-required"
+      ],
+      "generated": 19,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 57,
+      "named_ids": [
+        "spawn.identity",
+        ".no-reuse",
+        ".tombstone",
+        ".duplicate-active",
+        ".op-digest",
+        ".rename",
+        ".handle",
+        ".no-truncate",
+        ".capability"
+      ],
+      "generated": 20,
+      "killed": 9,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 9
+    },
+    {
+      "row": 58,
+      "named_ids": [
+        "spawn.persist",
+        ".traversal",
+        ".symlink",
+        ".bound",
+        ".fsync-file",
+        ".fsync-dir",
+        ".atomic",
+        ".lock-nofollow"
+      ],
+      "generated": 4,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 59,
+      "named_ids": [
+        "lock.schema",
+        ".cook",
+        ".recipe",
+        ".operator-recipe",
+        ".timestamp",
+        ".requirements",
+        ".credentials",
+        ".components",
+        ".outputs",
+        ".extensions",
+        ".state",
+        ".engines",
+        ".layout",
+        ".health",
+        ".launch",
+        ".units-ambiguous"
+      ],
+      "generated": 26,
+      "killed": 13,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 13
+    },
+    {
+      "row": 60,
+      "named_ids": [
+        "catalog.descriptor",
+        ".duplicate",
+        ".name",
+        ".keys",
+        ".kind",
+        ".deps",
+        ".exports",
+        ".argv",
+        ".preflight-run",
+        ".pin-ref",
+        ".cycle",
+        ".reference",
+        ".runtimes"
+      ],
+      "generated": 15,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 61,
+      "named_ids": [
+        "catalog.data-args",
+        ".flag",
+        ".state",
+        ".command",
+        ".conflict",
+        ".binding",
+        ".spawn"
+      ],
+      "generated": 11,
+      "killed": 3,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 3
+    },
+    {
+      "row": 62,
+      "named_ids": [
+        "catalog.audit-site",
+        ".plan",
+        ".pre-build",
+        ".post-build",
+        ".separate",
+        ".verify-tree",
+        ".verify-lock",
+        ".verify-units",
+        ".launch-cwd",
+        ".cook-argv"
+      ],
+      "generated": 11,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 63,
+      "named_ids": [
+        "inputs.record",
+        ".activation",
+        ".exclusive",
+        ".recipe-file",
+        ".recipe-path",
+        ".secret-files",
+        ".data-args",
+        ".data-path",
+        ".data-flag",
+        ".transport"
+      ],
+      "generated": 19,
+      "killed": 10,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 10
+    },
+    {
+      "row": 64,
+      "named_ids": [
+        "name.grammar",
+        ".agent",
+        ".connector",
+        ".unit",
+        ".spawn-agent"
+      ],
+      "generated": 4,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 1
+    },
+    {
+      "row": 65,
+      "named_ids": [
+        "deploy.prepare",
+        ".marker",
+        ".no-adapter",
+        ".active",
+        ".owned-units",
+        ".unmanaged-build",
+        ".ownership-first"
+      ],
+      "generated": 4,
+      "killed": 2,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 2
+    },
+    {
+      "row": 66,
+      "named_ids": [
+        "deploy.units",
+        ".launcher",
+        ".name",
+        ".digest",
+        ".own-copy",
+        ".empty",
+        ".conflict",
+        ".dropin-symlink"
+      ],
+      "generated": 7,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 1
+    },
+    {
+      "row": 67,
+      "named_ids": [
+        "deploy.retained",
+        ".config",
+        ".pins",
+        ".recipe",
+        ".previous-first",
+        ".sidecar"
+      ],
+      "generated": 5,
+      "killed": 1,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 1
+    },
+    {
+      "row": 68,
+      "named_ids": [
+        "deploy.activate",
+        ".preflight",
+        ".exclusive-recheck",
+        ".reverify",
+        ".marker",
+        ".install-only-health",
+        ".health-argv",
+        ".health-env"
+      ],
+      "generated": 5,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    },
+    {
+      "row": 69,
+      "named_ids": [
+        "config.layers",
+        ".count",
+        ".fold",
+        ".enabled-type",
+        ".prune",
+        ".public-connectors",
+        "cook.disabled",
+        "catalog.disabled"
+      ],
+      "generated": 6,
+      "killed": 3,
+      "future": false,
+      "pure_A_killed": 2,
+      "combined_killed": 3
+    },
+    {
+      "row": 70,
+      "named_ids": [
+        "cook.input",
+        ".spec",
+        ".pins",
+        ".pin-ref",
+        ".budgets",
+        ".settings",
+        ".module-source",
+        ".catalog-connector",
+        ".paths",
+        ".staged-recipe",
+        ".cook-settings",
+        ".connector-state"
+      ],
+      "generated": 26,
+      "killed": 4,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 4
+    },
+    {
+      "row": 71,
+      "named_ids": [
+        "spawn.schema",
+        ".template",
+        ".template-v1",
+        ".instance",
+        ".name-record",
+        ".name-receipt",
+        ".home",
+        ".seed",
+        ".identity-policy"
+      ],
+      "generated": 38,
+      "killed": 5,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 5
+    },
+    {
+      "row": 72,
+      "named_ids": [
+        "spawn.catalog",
+        ".descriptor",
+        ".versions",
+        ".file-name",
+        ".pin",
+        ".select",
+        ".cycle",
+        ".reference",
+        ".connector-settings",
+        ".home-transport",
+        ".ingress",
+        ".one-source"
+      ],
+      "generated": 42,
+      "killed": 5,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 5
+    },
+    {
+      "row": 73,
+      "named_ids": [
+        "spawn.artifact",
+        ".store",
+        ".payload-path",
+        ".digest",
+        ".tree-entries",
+        ".limit",
+        ".provenance"
+      ],
+      "generated": 16,
+      "killed": 3,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 3
+    },
+    {
+      "row": 74,
+      "named_ids": [
+        "spawn.cli",
+        ".parser",
+        ".combos",
+        ".refusal",
+        ".status-readonly"
+      ],
+      "generated": 5,
+      "killed": 0,
+      "future": false,
+      "pure_A_killed": 0,
+      "combined_killed": 0
+    }
+  ],
+  "acceptance": "BLOCKED: surviving/uncovered mutants and unenumerated named checks"
+}

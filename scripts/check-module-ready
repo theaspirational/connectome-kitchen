@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+"""Never report module completion while oracle coverage gaps remain."""
+import json,sys
+from pathlib import Path
+summary=json.loads((Path(__file__).resolve().parents[1]/'test/mutants/combined-summary.golden').read_text())
+if summary['remaining_unreviewed']:
+ print('BLOCKED: unreviewed oracle guard-site mutants',summary['remaining_unreviewed']);sys.exit(1)
+print('BLOCKED: named independent-check enumeration and complete B/C replay require review')
+sys.exit(1)

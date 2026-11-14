@@ -22,7 +22,7 @@ from connectome_deploy import (DeployError, check_external_command, check_extern
                                ExternalCommandUnsafe, external_paths)
 
 ROOT = Path(__file__).resolve().parents[1]
-MODULES = ROOT / 'roles/connectome_agent/module_utils'
+MODULES = ROOT / 'module_utils'
 EXTERNAL = [{'name': 'alpha', 'command': '/opt/alpha/bin/server'},
             {'name': 'beta_2', 'command': '/usr/local/bin/beta'}]
 

@@ -1,0 +1,282 @@
+{
+  "builtins.frozenset": {
+    "calls": 2,
+    "tests": [
+      "test_catalog.CatalogTests.test_spawn_reader_loads_role_fixtures_and_matches_catalog_recipe",
+      "test_spawn.SpawnTests.test_unsafe_template_refusals"
+    ]
+  },
+  "builtins.set": {
+    "calls": 36,
+    "tests": [
+      "test_catalog.CatalogTests.test_spawn_reader_loads_role_fixtures_and_matches_catalog_recipe",
+      "test_spawn.SpawnTests.test_archive_connector_symbols_are_explicit_and_refused_as_apply_input",
+      "test_spawn.SpawnTests.test_hashes_bind_intent_catalog_target_and_observation",
+      "test_spawn.SpawnTests.test_preflight_dependency_closure_is_recorded_not_executed"
+    ]
+  },
+  "connectome_archive.ArchiveError": {
+    "calls": 47,
+    "tests": [
+      "test_catalog.CatalogTests.test_argv_executable_exports_symlinks_and_ambiguous_forms",
+      "test_cook.AdapterTests.test_argv_provenance_fields_rejected_before_any_subprocess",
+      "test_cook.AdapterTests.test_framework_hash_and_commit_verified",
+      "test_cook.AdapterTests.test_generic_archive_identity_hash_file_and_githead_rules",
+      "test_cook.AdapterTests.test_generic_plan_lock_exact_binding_and_retention",
+      "test_cook.AdapterTests.test_lock_state_mismatch_has_typed_code",
+      "test_cook.AdapterTests.test_nonempty_budgets_fail_closed_at_host_schema_boundary",
+      "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
+      "test_errors.ErrorTests.test_untyped_unknown_or_forged_output_is_redacted"
+    ]
+  },
+  "connectome_deploy.ActivationFailed": {
+    "calls": 7,
+    "tests": [
+      "test_deploy.DeployTests.test_activation_cause_survives_failed_recovery_without_private_context",
+      "test_deploy.DeployTests.test_apply_recreates_disabled_unit_links_without_rebuild",
+      "test_deploy.DeployTests.test_verifier_failure_reports_step_tool_status_without_output"
+    ]
+  },
+  "connectome_deploy.AncestorWritable": {
+    "calls": 8,
+    "tests": [
+      "test_deploy.DeployTests.test_writable_ancestors_are_named_and_never_modified",
+      "test_deploy_fixtures.FixtureTests.test_private_root_is_real_and_host_metadata_is_restored",
+      "test_errors.ErrorTests.test_ansible_boundary_displays_each_code_and_fixed_message",
+      "test_operator_inputs.OperatorTests.test_secret_file_symlinks_modes_and_unmanaged_names_refused"
+    ]
+  },
+  "connectome_deploy.DeployError": {
+    "calls": 58,
+    "tests": [
+      "test_cook.AdapterTests.test_argv_provenance_fields_rejected_before_any_subprocess",
+      "test_cook.AdapterTests.test_real_adapter_cli_failure_is_forwarded_without_paths_or_values",
+      "test_deploy.DeployTests.test_activation_cause_survives_failed_recovery_without_private_context",
+      "test_deploy.DeployTests.test_artifact_escape_refused",
+      "test_deploy.DeployTests.test_failed_cook_preserves_active_and_retry_is_fresh",
+      "test_deploy.DeployTests.test_late_state_symlink_and_wrong_lock_state_fail_closed",
+      "test_deploy.DeployTests.test_secrets_permissions_owner_and_symlinks_fail_closed_before_start",
+      "test_errors.ErrorTests.test_each_closed_code_survives_cli_and_deployment_command",
+      "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output"
+    ]
+  },
+  "connectome_deploy.Deployment": {
+    "calls": 427,
+    "tests": [
+      "test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin",
+      "test_catalog.CatalogTests.test_state_and_workspace_code_refused_at_plan_install_and_verify",
+      "test_deploy.DeployTests.test_activation_cause_survives_failed_recovery_without_private_context",
+      "test_deploy.DeployTests.test_apply_recreates_disabled_unit_links_without_rebuild",
+      "test_deploy.DeployTests.test_artifact_escape_refused",
+      "test_deploy.DeployTests.test_check_mode_existing_is_unchanged",
+      "test_deploy.DeployTests.test_check_mode_has_no_writes_or_provider_calls",
+      "test_deploy.DeployTests.test_contained_builds_alias_refused_before_cleanup",
+      "test_deploy.DeployTests.test_contained_dropin_directory_alias_over_other_unit_refused",
+      "test_deploy.DeployTests.test_directory_modes_ignore_umask_without_repairing_existing_dirs",
+      "test_deploy.DeployTests.test_environment_file_health_requires_exact_nonoptional_manager_path",
+      "test_deploy.DeployTests.test_exclusive_inspection_failure_is_informational_only_when_staging",
+      "test_deploy.DeployTests.test_exclusive_refusal_rechecked_before_activation",
+      "test_deploy.DeployTests.test_exclusive_units_refuse_start_in_both_scopes",
+      "test_deploy.DeployTests.test_exclusive_units_report_only_during_staging",
+      "test_deploy.DeployTests.test_failed_cook_preserves_active_and_retry_is_fresh",
+      "test_deploy.DeployTests.test_failed_first_activation_leaves_no_current_or_units",
+      "test_deploy.DeployTests.test_first_activation_env_file_rejection_removes_units",
+      "test_deploy.DeployTests.test_generic_archive_check_plan_is_complete_and_mutation_free",
+      "test_deploy.DeployTests.test_identifier_boundaries_allowed",
+      "test_deploy.DeployTests.test_install_only_active_refused_before_any_changes",
+      "test_deploy.DeployTests.test_install_only_check_never_queries_or_writes",
+      "test_deploy.DeployTests.test_install_only_first_failure_never_starts",
+      "test_deploy.DeployTests.test_install_only_refuses_late_activation_before_env_or_pointer_changes",
+      "test_deploy.DeployTests.test_install_only_rollback_and_operator_rollback_never_start",
+      "test_deploy.DeployTests.test_install_only_runs_static_verify_when_available",
+      "test_deploy.DeployTests.test_install_only_static_health_and_status",
+      "test_deploy.DeployTests.test_install_only_then_start_reuses_release_and_lock",
+      "test_deploy.DeployTests.test_install_only_then_start_without_install_section",
+      "test_deploy.DeployTests.test_invalid_parent_files_and_corrupt_manifest_refused_before_mutation",
+      "test_deploy.DeployTests.test_late_state_symlink_and_wrong_lock_state_fail_closed",
+      "test_deploy.DeployTests.test_late_symlink_escape_refused_before_prepare",
+      "test_deploy.DeployTests.test_managed_retired_unit_is_removed_on_rename",
+      "test_deploy.DeployTests.test_manifest_drift_never_repaired_or_disabled_even_in_check_mode",
+      "test_deploy.DeployTests.test_manifest_records_exact_installed_paths_and_survives_rollback",
+      "test_deploy.DeployTests.test_module_active_guard_precedes_root_and_serialization_lock",
+      "test_deploy.DeployTests.test_no_secret_values_in_spec_or_lock",
+      "test_deploy.DeployTests.test_operator_reapply_previous_recorded_request_without_rebuild_or_state_changes",
+      "test_deploy.DeployTests.test_optional_health_command_rolls_back",
+      "test_deploy.DeployTests.test_owned_builds_alias_refused_before_cleanup",
+      "test_deploy.DeployTests.test_planned_install_links_and_unsupported_directives",
+      "test_deploy.DeployTests.test_planned_units_digest_and_health_contract",
+      "test_deploy.DeployTests.test_preexisting_units_links_dropins_and_enable_links_are_not_adopted",
+      "test_deploy.DeployTests.test_prepare_cannot_delete_retained_manifest_owned_unit_files",
+      "test_deploy.DeployTests.test_real_shaped_split_layout_lock_accepts_only_exact_external_state",
+      "test_deploy.DeployTests.test_rebuild_and_rollback_leave_external_state_untouched",
+      "test_deploy.DeployTests.test_registry_archive_plan_and_retained_sidecar",
+      "test_deploy.DeployTests.test_rendered_systemd_paths_are_bare_literals",
+      "test_deploy.DeployTests.test_required_env_file_manager_rejection_rolls_back",
+      "test_deploy.DeployTests.test_retired_link_retargeted_to_never_installed_build_file_refused",
+      "test_deploy.DeployTests.test_retired_unmanaged_unit_is_not_disabled_or_deleted_on_rename",
+      "test_deploy.DeployTests.test_reused_build_recreates_missing_state_directory_only",
+      "test_deploy.DeployTests.test_rollback_across_runtime_pin_change",
+      "test_deploy.DeployTests.test_secret_rotation_restarts_without_rebuilding",
+      "test_deploy.DeployTests.test_secrets_default_uses_agent_account_home_not_environment",
+      "test_deploy.DeployTests.test_secrets_permissions_owner_and_symlinks_fail_closed_before_start",
+      "test_deploy.DeployTests.test_secrets_permissions_report_typed_code",
+      "test_deploy.DeployTests.test_state_is_created_private_and_not_owned_as_an_artifact",
+      "test_deploy.DeployTests.test_switch_rollback_idempotency_and_exact_secrets",
+      "test_deploy.DeployTests.test_symlinked_bases_and_derived_escapes_refused",
+      "test_deploy.DeployTests.test_symlinked_dropin_escape_refused",
+      "test_deploy.DeployTests.test_symlinked_unit_and_enable_directories_refused",
+      "test_deploy.DeployTests.test_target_file_lookup_exact_names_and_check_plan",
+      "test_deploy.DeployTests.test_unknown_build_directory_is_refused_unchanged",
+      "test_deploy.DeployTests.test_unknown_lock_and_secret_value_records_refused",
+      "test_deploy.DeployTests.test_unmanaged_unit_is_not_overwritten",
+      "test_deploy.DeployTests.test_unowned_alias_and_fixed_temporary_name_are_untouched",
+      "test_deploy.DeployTests.test_verifier_failure_reports_step_tool_status_without_output",
+      "test_deploy.DeployTests.test_writable_ancestors_are_named_and_never_modified",
+      "test_external.ExternalDataDeploymentTests.test_changed_invocation_refused_before_prepared_marker_or_units",
+      "test_external.ExternalDataDeploymentTests.test_dash_private_script_probe_refused",
+      "test_external.ExternalDataDeploymentTests.test_env_shell_private_script_probe_refused",
+      "test_external.ExternalDataDeploymentTests.test_find_exec_private_python_probe_refused",
+      "test_external.ExternalDataDeploymentTests.test_interpreter_target_is_rechecked_before_activation",
+      "test_external.ExternalDataDeploymentTests.test_opt_in_does_not_exempt_command_or_other_args",
+      "test_external.ExternalDataDeploymentTests.test_positive_lock_plan_status_and_recheck",
+      "test_external.ExternalDataDeploymentTests.test_python_option_value_private_script_probe_refused",
+      "test_external.ExternalDataDeploymentTests.test_python_state_directory_flag_prepare_activate_and_recheck",
+      "test_external.ExternalDataDeploymentTests.test_unknown_nonexternal_and_stale_before_activation",
+      "test_external.ExternalDeploymentTests.test_root_owned_external_command_activates_and_is_rechecked",
+      "test_external.ExternalDeploymentTests.test_unsafe_external_command_refused_before_activation",
+      "test_external.ExternalDeploymentTests.test_unsafe_or_relative_path_argument_refused_before_activation",
+      "test_operator_inputs.OperatorTests.test_check_mode_file_secret_has_no_writes_or_provider_calls",
+      "test_operator_inputs.OperatorTests.test_file_lock_binds_destination_name_and_source_lookup_is_exact",
+      "test_operator_inputs.OperatorTests.test_file_only_canary_rewrite_rotation_removal_and_no_leaks",
+      "test_operator_inputs.OperatorTests.test_first_failed_file_activation_removes_created_files",
+      "test_operator_inputs.OperatorTests.test_recipe_closed_shape_and_transport_refusals",
+      "test_operator_inputs.OperatorTests.test_recipe_file_refusals_before_commands_or_writes",
+      "test_operator_inputs.OperatorTests.test_secret_file_health_failure_restores_prior_declarations_and_values",
+      "test_operator_inputs.OperatorTests.test_secret_file_symlinks_modes_and_unmanaged_names_refused",
+      "test_operator_inputs.OperatorTests.test_verbatim_controller_transport_plan_lock_and_retention"
+    ]
+  },
+  "connectome_deploy.ExternalCommandUnsafe": {
+    "calls": 8,
+    "tests": [
+      "test_external.ExternalDataArgTests.test_ancestor_owner_mode_symlink_and_access_refusals",
+      "test_external.ExternalDataArgTests.test_binding_is_raw_argv_exact_server_and_path",
+      "test_external.ExternalDataArgTests.test_first_script_must_pass_normal_checks_and_be_regular_file"
+    ]
+  },
+  "connectome_deploy.UnitActive": {
+    "calls": 5,
+    "tests": [
+      "test_deploy.DeployTests.test_exclusive_refusal_rechecked_before_activation",
+      "test_deploy.DeployTests.test_exclusive_units_refuse_start_in_both_scopes",
+      "test_deploy.DeployTests.test_install_only_active_refused_before_any_changes"
+    ]
+  },
+  "connectome_deploy.UnitVerificationFailed": {
+    "calls": 2,
+    "tests": [
+      "test_deploy.DeployTests.test_verifier_failure_reports_step_tool_status_without_output"
+    ]
+  },
+  "connectome_errors.SafeError": {
+    "calls": 20,
+    "tests": [
+      "test_errors.ErrorTests.test_ansible_boundary_displays_each_code_and_fixed_message"
+    ]
+  },
+  "connectome_spawn.catalog.RoleCatalog": {
+    "calls": 35,
+    "tests": [
+      "test_catalog.CatalogTests.test_spawn_reader_loads_role_fixtures_and_matches_catalog_recipe",
+      "test_catalog.CatalogTests.test_spawn_reader_matches_role_archive_pin_validation",
+      "test_spawn.SpawnTests.test_archive_connector_symbols_are_explicit_and_refused_as_apply_input",
+      "test_spawn.SpawnTests.test_archive_symlinks_and_digest_mismatch_refused",
+      "test_spawn.SpawnTests.test_catalog_fail_closed_and_template_cannot_supply_executables",
+      "test_spawn.SpawnTests.test_hashes_bind_intent_catalog_target_and_observation",
+      "test_spawn.SpawnTests.test_identity_and_computed_digests",
+      "test_spawn.SpawnTests.test_inline_file_repo_have_identical_hashes_and_plans",
+      "test_spawn.SpawnTests.test_plan_and_dry_run_show_pinned_name_record",
+      "test_spawn.SpawnTests.test_preflight_dependency_closure_is_recorded_not_executed",
+      "test_spawn.SpawnTests.test_role_catalog_single_source_and_future_kind",
+      "test_spawn.SpawnTests.test_same_package_under_ansible_namespace",
+      "test_spawn.SpawnTests.test_temporary_name_template_plans_and_capability_branches"
+    ]
+  },
+  "connectome_spawn.identity.FileIdentityProvider": {
+    "calls": 89,
+    "tests": [
+      "test_spawn_lifecycle.LifecycleTests.test_all_external_crash_points_refuse_replay",
+      "test_spawn_lifecycle.LifecycleTests.test_changed_capability_and_invalid_provider_handles_refused",
+      "test_spawn_lifecycle.LifecycleTests.test_clean_lifecycle_restart_and_idempotence",
+      "test_spawn_lifecycle.LifecycleTests.test_hard_linked_name_record_refused_before_named_transition",
+      "test_spawn_lifecycle.LifecycleTests.test_identity_effect_crashes_report_recovery_without_replay",
+      "test_spawn_lifecycle.LifecycleTests.test_missing_provider_and_retire_never_reuses_temporary",
+      "test_spawn_lifecycle.LifecycleTests.test_name_convention_capability_validation_and_no_truncation",
+      "test_spawn_lifecycle.LifecycleTests.test_name_ingress_component_boundary",
+      "test_spawn_lifecycle.LifecycleTests.test_provider_constraints_refuse_name_before_named_state",
+      "test_spawn_lifecycle.LifecycleTests.test_provider_restart_idempotence_unique_ownership_and_concurrency",
+      "test_spawn_lifecycle.LifecycleTests.test_refuse_placeholders_unsafe_records_and_operation_conflicts",
+      "test_spawn_lifecycle.LifecycleTests.test_rename_preserves_handle_without_retiring_it",
+      "test_spawn_lifecycle.LifecycleTests.test_repo_name_pinned_provenance_and_identical_file_hash",
+      "test_spawn_lifecycle.LifecycleTests.test_repo_name_refusals_leave_lifecycle_unchanged",
+      "test_spawn_lifecycle.LifecycleTests.test_repo_name_without_prompt_remains_absent_through_activation"
+    ]
+  },
+  "connectome_spawn.lifecycle.Lifecycle": {
+    "calls": 264,
+    "tests": [
+      "test_spawn_lifecycle.LifecycleTests.test_all_external_crash_points_refuse_replay",
+      "test_spawn_lifecycle.LifecycleTests.test_all_local_reads_refuse_traversal_symlinks_and_nonregular",
+      "test_spawn_lifecycle.LifecycleTests.test_changed_capability_and_invalid_provider_handles_refused",
+      "test_spawn_lifecycle.LifecycleTests.test_clean_lifecycle_restart_and_idempotence",
+      "test_spawn_lifecycle.LifecycleTests.test_crash_after_marker_and_before_final_state_commit",
+      "test_spawn_lifecycle.LifecycleTests.test_existing_store_is_recovery_not_import",
+      "test_spawn_lifecycle.LifecycleTests.test_hard_linked_name_record_refused_before_named_transition",
+      "test_spawn_lifecycle.LifecycleTests.test_hard_linked_seed_and_lifecycle_refused",
+      "test_spawn_lifecycle.LifecycleTests.test_identity_effect_crashes_report_recovery_without_replay",
+      "test_spawn_lifecycle.LifecycleTests.test_illegal_transition_matrix_and_failure_retirement",
+      "test_spawn_lifecycle.LifecycleTests.test_marker_write_crash_and_missing_adapters",
+      "test_spawn_lifecycle.LifecycleTests.test_missing_provider_and_retire_never_reuses_temporary",
+      "test_spawn_lifecycle.LifecycleTests.test_name_convention_capability_validation_and_no_truncation",
+      "test_spawn_lifecycle.LifecycleTests.test_name_ingress_component_boundary",
+      "test_spawn_lifecycle.LifecycleTests.test_optional_seeded_lifecycle_and_seeded_transition_refusals",
+      "test_spawn_lifecycle.LifecycleTests.test_process_death_releases_lock_but_never_replays_import",
+      "test_spawn_lifecycle.LifecycleTests.test_provider_constraints_refuse_name_before_named_state",
+      "test_spawn_lifecycle.LifecycleTests.test_refuse_placeholders_unsafe_records_and_operation_conflicts",
+      "test_spawn_lifecycle.LifecycleTests.test_rename_preserves_handle_without_retiring_it",
+      "test_spawn_lifecycle.LifecycleTests.test_repo_name_pinned_provenance_and_identical_file_hash",
+      "test_spawn_lifecycle.LifecycleTests.test_repo_name_refusals_leave_lifecycle_unchanged",
+      "test_spawn_lifecycle.LifecycleTests.test_repo_name_without_prompt_remains_absent_through_activation",
+      "test_spawn_lifecycle.LifecycleTests.test_required_seed_order_receipt_and_no_reingest",
+      "test_spawn_lifecycle.LifecycleTests.test_seed_ingest_crash_is_not_retried",
+      "test_spawn_lifecycle.LifecycleTests.test_seed_refusals_and_explicit_optional_branches",
+      "test_spawn_lifecycle.LifecycleTests.test_status_cli_read_only_and_missing_state",
+      "test_spawn_lifecycle.LifecycleTests.test_store_created_during_build_refuses_ingest_and_bad_receipt",
+      "test_spawn_lifecycle.LifecycleTests.test_symlinks_corrupt_state_and_migration_refused"
+    ]
+  },
+  "datetime.date": {
+    "calls": 4,
+    "tests": [
+      "test_spawn.SpawnTests.test_strict_decode_refusals"
+    ]
+  },
+  "datetime.datetime": {
+    "calls": 3,
+    "tests": [
+      "test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin",
+      "test_spawn_lifecycle.LifecycleTests.test_name_convention_capability_validation_and_no_truncation"
+    ]
+  },
+  "re.Match": {
+    "calls": 7,
+    "tests": [
+      "test_catalog.CatalogTests.test_argv_executable_exports_symlinks_and_ambiguous_forms",
+      "test_catalog.CatalogTests.test_bare_environment_paths_and_lists_refused_fresh_and_digest_valid_reuse",
+      "test_catalog.CatalogTests.test_explicit_state_data_argument_is_lowered_and_verified",
+      "test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin",
+      "test_cook.AdapterTests.test_operator_recipe_skips_connector_module_and_agent_generation",
+      "test_cook.LockTests.test_every_lock_scalar_has_an_exact_type"
+    ]
+  }
+}

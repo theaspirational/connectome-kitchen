@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+"""Phase-0 artifact publication smoke test, not a production engine bundle."""
+from pathlib import Path
+root=Path(__file__).resolve().parents[1];target=root/'dist/kitchen-scaffold.mjs';target.parent.mkdir(exist_ok=True)
+target.write_text("// Incubation scaffold only; operational build is phase 7.\nprocess.stdout.write(JSON.stringify({core:{error_code:'E_CONTRACT',msg:'engine unavailable'}})+'\\n');\nprocess.exitCode=2;\n")
+print('Built scaffold publication fixture (not deployable)')

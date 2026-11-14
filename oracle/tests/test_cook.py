@@ -16,7 +16,7 @@ import unittest
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / 'roles/connectome_agent/module_utils'))
+sys.path.insert(0, str(ROOT / 'module_utils'))
 import connectome_cook as adapter
 from connectome_lock import read_lock, LockError, names_only
 from connectome_archive import validate_provenance, dependency_provenance, dependency_inputs
@@ -823,7 +823,7 @@ class AdapterTests(ScratchTest):
         script = ('chown -R 4242:4242 "$1" && ! git -C "$1" rev-parse HEAD 2>/dev/null && '
                   'exec "$2" -I -c "$3" "$4" "$1" "$5" "$6"')
         subprocess.run(['fakeroot', 'sh', '-c', script, 'sh', str(source), sys.executable, program,
-                        str(ROOT / 'roles/connectome_agent/module_utils'), commit, str(home)],
+                        str(ROOT / 'module_utils'), commit, str(home)],
                        env=env, check=True, stdout=subprocess.DEVNULL)
         self.assertFalse((home / '.gitconfig').exists())
 

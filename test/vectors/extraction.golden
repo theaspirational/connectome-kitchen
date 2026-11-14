@@ -1,0 +1,48 @@
+{
+  "recording": {
+    "A": 34189,
+    "B": 279,
+    "C": 60,
+    "errors": 0,
+    "failures": 0,
+    "gid": 1002,
+    "patch_dependent_tests": 62,
+    "python": "3.12.3",
+    "skipped": 12,
+    "subprocess": 576,
+    "tests": 294,
+    "uid": 1002
+  },
+  "files": {
+    "cli.jsonl": {
+      "sha256": "ce76f75895b6e8a5d5bc7fe09cac0bee34f7b9877ac1fd075fffb86b887a26b7",
+      "bytes": 854184
+    },
+    "coverage.golden": {
+      "sha256": "d1361f5103d738d3bcddcc28712ef3f5ea7f6bee870dbdfe6161fce0b372dc1f",
+      "bytes": 2870232
+    },
+    "functions.jsonl": {
+      "sha256": "b2187ddecfa6a3801cf20d611ebc9117eba454fd6b06eb982e839d834bafd428",
+      "bytes": 41764463
+    },
+    "patch-dependent.golden": {
+      "sha256": "94ff956ad3b6de3574e237e5dd208b56d8126617ed10decef96558a232af2b59",
+      "bytes": 12068
+    },
+    "scenarios.jsonl": {
+      "sha256": "927645cb221dfde786c36c23e1a094c0feff296c442a4d6341bdb91912bba174",
+      "bytes": 82236440
+    },
+    "suite.log": {
+      "sha256": "7cb9a04eb9744b0b99c92c9fdd3164290cdddd0301ceffaa246a8066a8716921",
+      "bytes": 43742
+    },
+    "summary.golden": {
+      "sha256": "3752f95cf7348e34262fc6a15538a8ccd9bc99acbb72f00e4fa855595a8ab17a",
+      "bytes": 160
+    }
+  },
+  "portable_vectors": 284,
+  "raw_recordings": "private ignored scratch; not publication-cleared"
+}

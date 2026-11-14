@@ -1,0 +1,11 @@
+{
+  "name": "connectome-kitchen",
+  "version": "0.0.0-incubation",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {"node": ">=24"},
+  "bin": {"kitchen": "src/cli.js"},
+  "exports": {".": "./src/index.js", "./contract": "./src/contract.js"},
+  "scripts": {"test": "node --test test/unit/*.test.js", "check:public": "python3 scripts/check_public.py"}
+}

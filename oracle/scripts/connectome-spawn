@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 
 sys.dont_write_bytecode = True
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'roles/connectome_agent/module_utils'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'module_utils'))
 from connectome_spawn.cli import main
 
 sys.exit(main())

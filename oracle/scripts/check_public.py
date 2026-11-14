@@ -11,21 +11,9 @@ import sys
 import yaml
 
 NOREPLY_DOMAIN = 'users.noreply.github.com'
-# RFC 2606 / RFC 6761 names, matched only at whole DNS-label boundaries.
-RESERVED_EMAIL_DOMAINS = ('example.com', 'example.net', 'example.org',
-                          'invalid', 'example', 'test', 'localhost')
-# A final alphabetic or punycode label excludes package versions; do not accept
-# a prefix of a longer DNS label/domain. Trailing punctuation is not a label.
-EMAIL_DOMAIN = (r"(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)*"
-                r"(?:[A-Za-z]{2,}|xn--[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)"
-                r"(?![A-Za-z0-9]|-[A-Za-z0-9]|\.[A-Za-z0-9-])")
-# Slash and apostrophe delimit paths/package scopes and quoted imports, rather
-# than supplying a local part for an otherwise bare at-sign.
-EMAIL = re.compile(r"[A-Za-z0-9.!#$%&*+=?^_`{|}~-]+@" + EMAIL_DOMAIN)
-EMAIL_TOKEN = re.compile(r"[A-Za-z0-9.!#$%&*+=?^_`{|}~@-]+")
-# Require something before the first at-sign and after the second, plus an
-# address-like domain: version/revision chains are not email addresses.
-EMAIL_CHAIN = re.compile(r"[^@]@[^@]*@" + EMAIL_DOMAIN)
+# Explicit neutral locals only; includes the repository's legacy Git identity.
+EXAMPLE_EMAIL_LOCALS = {'noreply', 'contributors'}
+EMAIL = re.compile(r"[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)*[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?")
 ALLOWED_REPOS = {
     'anima-research': {'connectome-host', 'agent-framework', 'connectome-cook',
                        'slack-mcpl', 'github-mcpl', 'terminal-sessions-mcp', 'heartbeat-mcpl'},
@@ -36,13 +24,9 @@ ALLOWED_REPOS = {
 
 
 def private_email(content):
-    # Allowances must never hide another address in a malformed multi-at-sign chain.
-    if any(EMAIL_CHAIN.search(token.group()) for token in EMAIL_TOKEN.finditer(content)):
-        return True
-    return any(domain != NOREPLY_DOMAIN and not any(
-               domain == reserved or domain.endswith('.' + reserved)
-               for reserved in RESERVED_EMAIL_DOMAINS) for domain in
-               (match.group().lower().rsplit('@', 1)[1] for match in EMAIL.finditer(content)))
+    return any(domain != NOREPLY_DOMAIN and not (domain == 'example.invalid' and
+               local in EXAMPLE_EMAIL_LOCALS) for local, domain in
+               (match.group().lower().rsplit('@', 1) for match in EMAIL.finditer(content)))
 
 
 def unreviewed_repo(content):

@@ -18,7 +18,7 @@ from unittest.mock import patch
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / 'roles/connectome_agent/module_utils'))
+sys.path.insert(0, str(ROOT / 'module_utils'))
 import connectome_catalog as catalog
 import connectome_cook as cook
 from connectome_config import merge_layers, public_catalog
@@ -942,9 +942,10 @@ class CatalogTests(unittest.TestCase):
         # Compare against the task's public baseline, not a newly generated golden.
         baseline = self.work / 'baseline'
         baseline.mkdir()
-        prefix = 'roles/connectome_agent/module_utils/'
-        revision = '0ec19aaeee84c09d3bd3dda06eaf2300ebbde4de'
-        paths = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', revision, prefix], cwd=ROOT).decode().splitlines()
+        prefix = 'oracle/module_utils/'
+        from history_baseline import mapped
+        revision = mapped('0ec19aaeee84c09d3bd3dda06eaf2300ebbde4de')
+        paths = subprocess.check_output(['git', 'ls-tree', '--full-tree', '-r', '--name-only', revision, prefix], cwd=ROOT).decode().splitlines()
         for path in paths:
             (baseline / Path(path).name).write_bytes(subprocess.check_output(['git', 'show', revision + ':' + path], cwd=ROOT))
         content = b'{ "name":"example-agent", "mcpServers":{"extra":{"command":"/bin/true","source":{"external":true}}} }\r\n'
@@ -980,7 +981,7 @@ for name in ('cook-recipe.json', 'cook-layout.json'):
 print(json.dumps(result, sort_keys=True))
 """
         outputs = []
-        for source in (baseline, ROOT / 'roles/connectome_agent/module_utils'):
+        for source in (baseline, ROOT / 'module_utils'):
             outputs.append(subprocess.check_output([sys.executable, '-c', driver, str(spec_path)],
                            env=dict(os.environ, PYTHONPATH=str(source))))
             shutil.rmtree(self.work / 'golden')

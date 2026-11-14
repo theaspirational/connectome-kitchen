@@ -11,7 +11,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / 'roles/connectome_agent/module_utils'))
+sys.path.insert(0, str(ROOT / 'module_utils'))
 import connectome_cook as adapter
 import connectome_deploy as deploy
 import connectome_errors as errors
@@ -119,7 +119,7 @@ class ErrorTests(unittest.TestCase):
                     'ansible.module_utils.connectome_errors': errors,
                 }
                 spec = importlib.util.spec_from_file_location(
-                    'release_errors', ROOT / 'roles/connectome_agent/library/connectome_release.py')
+                    'release_errors', ROOT / 'library/connectome_release.py')
                 boundary = importlib.util.module_from_spec(spec)
                 with patch.dict(sys.modules, modules):
                     spec.loader.exec_module(boundary)

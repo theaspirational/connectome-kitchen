@@ -1,0 +1,16 @@
+# Reviewed source; payload contains vendored dependencies. No install at deployment.
+# Repository identity retained from the prior descriptor; archives have no git remotes.
+# Authentication is instance-selected: App or private token file, not GITHUB_TOKEN.
+github-mcpl:
+  repo: https://github.com/anima-research/github-mcpl.git
+  pin_ref: connectors.github-mcpl
+  enabled: true
+  build:
+  - - '{artifact:node}/bin/node'
+    - node_modules/typescript/bin/tsc
+  settings:
+    command: '{artifact:node}/bin/node'
+    args:
+    - '{artifact:github-mcpl}/dist/src/index.js'
+    - --stdio
+  required_secrets: []

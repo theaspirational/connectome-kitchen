@@ -1,7 +1,7 @@
 """Per-agent identity-provider lifecycle contract and offline durable file fake.
 
 No pooled identities: retired identities are retained as tombstones, never reused.
-The Zulip implementation is in zulip.py; no provider is selected implicitly.
+Real Zulip provisioning/renaming belongs to T4.
 """
 from copy import deepcopy
 from datetime import datetime, timezone
@@ -65,7 +65,6 @@ class IdentityProvider(Protocol):
     def provision_permanent(self, agent: str, name_record: dict, operation_id: str) -> dict: ...
     def rename(self, handle: dict, name_record: dict, operation_id: str) -> dict: ...
     def retire(self, handle: dict, operation_id: str) -> None: ...
-    def list(self) -> list: ...
 
 
 class FileIdentityProvider:

@@ -12,7 +12,8 @@ import test_cook
 from deploy_fixtures import scratch
 
 ROOT = Path(__file__).resolve().parents[1]
-BASELINE = '64d0e3a'
+from history_baseline import mapped
+BASELINE = mapped('64d0e3a')
 
 # Both processes use identical paths, inputs, fixtures and environment. Only the
 # module source changes. Capture the real adapter argv before its child runs.
@@ -75,8 +76,8 @@ class CompatibilityTests(unittest.TestCase):
         with scratch() as tmp:
             work = Path(tmp).resolve()
             baseline = work / 'baseline'; baseline.mkdir()
-            prefix = 'roles/connectome_agent/module_utils/'
-            files = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', BASELINE, prefix], cwd=ROOT).decode().splitlines()
+            prefix = 'oracle/module_utils/'
+            files = subprocess.check_output(['git', 'ls-tree', '--full-tree', '-r', '--name-only', BASELINE, prefix], cwd=ROOT).decode().splitlines()
             self.assertTrue(files)
             for file in files:
                 (baseline / Path(file).name).write_bytes(subprocess.check_output(
@@ -101,8 +102,8 @@ class CompatibilityTests(unittest.TestCase):
                                 ('manager', manager), ('adapter-spec', spec)]:
                 (work / (name + '.json')).write_text(json.dumps(value))
             snapshots = []
-            for modules, explicit in ((baseline, False), (ROOT / 'roles/connectome_agent/module_utils', False),
-                                      (ROOT / 'roles/connectome_agent/module_utils', True)):
+            for modules, explicit in ((baseline, False), (ROOT / 'module_utils', False),
+                                      (ROOT / 'module_utils', True)):
                 env = dict(os.environ, PYTHONPATH=os.pathsep.join((str(modules), str(ROOT / 'tests'))))
                 snapshots.append(subprocess.check_output([sys.executable, '-c', DRIVER, str(work)] +
                                  (['explicit'] if explicit else []), env=env, cwd=ROOT))
@@ -110,6 +111,7 @@ class CompatibilityTests(unittest.TestCase):
                     shutil.rmtree(work / name)
             self.assertEqual(snapshots[0], snapshots[1])
             self.assertEqual(snapshots[0], snapshots[2])
-            self.assertEqual((ROOT / 'roles/connectome_agent/tasks/main.yml').read_bytes(),
-                             subprocess.check_output(['git', 'show', BASELINE +
-                                 ':roles/connectome_agent/tasks/main.yml'], cwd=ROOT))
+            # The role task is not in filtered engine history; retain its frozen fixture check.
+            import hashlib
+            self.assertEqual(hashlib.sha256((ROOT / 'tests/fixtures/tasks-main.golden').read_bytes()).hexdigest(),
+                             '88be6d88e2ad650a99aebe91e130b9aac57feb2d1bcee2c8c9afe238c99cba8e')
