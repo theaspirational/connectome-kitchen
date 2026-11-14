@@ -1,0 +1,185 @@
+{
+ "named_sites": {
+  "deploy.adapter-env": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "options['env'] = {'PATH'",
+    "after": "{'PATH'",
+    "why": "the fixed four-name environment (PATH, HOME, LANG, NO_UPDATE_NOTIFIER) is still built but no longer stored in the options of the catalog-mode cook adapter call, so the adapter inherits the engine's process environment"
+   }
+  ],
+  "deploy.prepare.marker": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "marker.is_file() and marker.read_text() == self.request_id",
+    "after": "marker.is_file()",
+    "why": "removes the comparison of the .prepared marker with this request id; any marker file makes the build count as prepared and reused"
+   }
+  ],
+  "deploy.units.own-copy": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "installed = inside(build, 'managed-units/' + path.name)",
+    "after": "installed = path",
+    "why": "line 850: the installed unit is no longer the role's own copy under managed-units/; cook's original output file is adopted as the installed unit"
+   },
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "self.rendered_units[installed] = path.read_bytes().decode('utf-8')",
+    "after": "pass",
+    "why": "line 851: the role no longer renders (and so never writes or manifest-records) its own copy of the unit body; whatever file sits at the install path is linked as is"
+   }
+  ],
+  "deploy.retained.config": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "validate_config(config)",
+    "after": "pass",
+    "why": "line 820 (third occurrence of this text, inside _config): removes the re-validation of a build's recorded deployment.json config; the recorded config is used as read",
+    "occurrence": 2
+   }
+  ],
+  "deploy.retained.recipe": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "inputs.installed(build, config)",
+    "after": "pass",
+    "why": "removes the re-verification of the installed operator recipe (bytes, mode 0600 and owner) for the build being judged"
+   }
+  ],
+  "deploy.retained.previous-first": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "previous_lock = self._lock(previous) if previous else None",
+    "after": "previous_lock = json.loads(inside(previous, 'connectome.lock').read_text()) if previous else None",
+    "why": "the previous release's lock is only parsed, not verified by _lock(previous), before the activation plan goes on; the later uses of previous_lock stay defined"
+   }
+  ],
+  "deploy.retained.sidecar": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "config['cook']['framework_archive'].get('registry_release') is True",
+    "after": "False",
+    "why": "line 731 only reads the sidecar; the check that forces that read for a registry-release build without a sidecar is this sub-expression on line 725. With it False a registry_release build is accepted without any provenance record"
+   }
+  ],
+  "deploy.activate.preflight": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "self._preflight(artifacts | {",
+    "after": "(artifacts | {",
+    "why": "the artifact set plus release pointer is still computed but no longer passed to _preflight at the end of the activation plan, i.e. nothing is preflighted before the environment file, pointer or units change"
+   }
+  ],
+  "deploy.activate.exclusive-recheck": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "self._exclusive_status(refuse=True)",
+    "after": "pass",
+    "why": "line 1160: removes the exclusivity re-check at the start of unit installation",
+    "occurrence": 1
+   },
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "self._exclusive_status(refuse=True)",
+    "after": "pass",
+    "why": "line 1182: removes the exclusivity re-check after daemon-reload, immediately before the restarts",
+    "occurrence": 2
+   }
+  ],
+  "deploy.activate.reverify": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "self._lock(build)",
+    "after": "pass",
+    "why": "line 1185 (third occurrence of this text, inside _install): removes the catalog-mode re-verification of lock and tree before each restart",
+    "occurrence": 2
+   }
+  ],
+  "deploy.activate.install-only-health": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "if self.activation == 'install_only':",
+    "after": "if False:",
+    "why": "line 898 (second occurrence of this text, the head of _health): the install-only health branch is never taken, so pointer, unit file, environment file, inactivity and unit-verifier checks are replaced by the runtime health of start mode",
+    "occurrence": 1
+   }
+  ],
+  "deploy.activate.health-env": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "options['env'] = catalog.environment(config, pins, build, create=False)",
+    "after": "pass",
+    "why": "removes the constructed catalog environment from the health command, which then inherits the engine's process environment"
+   }
+  ]
+ },
+ "kills": {
+  "deploy.L705.12": "test_guard_deploy_b.Guards.test_deploy_L705_12",
+  "deploy.L713.12": "test_guard_deploy_b.Guards.test_deploy_L713_12",
+  "deploy.L721.16": "test_guard_deploy_b.Guards.test_deploy_L721_16",
+  "deploy.L733.16": "test_guard_deploy_b.Guards.test_deploy_L733_16_and_retained_sidecar",
+  "deploy.retained.sidecar#1": "test_guard_deploy_b.Guards.test_deploy_L733_16_and_retained_sidecar",
+  "deploy.L738.16": "test_guard_deploy_b.Guards.test_deploy_L738_16",
+  "deploy.L766.12": "test_guard_deploy_b.Guards.test_deploy_L766_12",
+  "deploy.L770.12": "test_guard_deploy_b.Guards.test_deploy_L770_12_and_no_adapter",
+  "deploy.prepare.no-adapter#1": "test_guard_deploy_b.Guards.test_deploy_L770_12_and_no_adapter",
+  "deploy.L774.12": "test_guard_deploy_b.Guards.test_deploy_L774_12_and_prepare_active",
+  "deploy.prepare.active#1": "test_guard_deploy_b.Guards.test_deploy_L774_12_and_prepare_active",
+  "deploy.L828.16": "test_guard_deploy_b.Guards.test_deploy_L828_16_and_launcher_kind",
+  "deploy.units.launcher#1": "test_guard_deploy_b.Guards.test_deploy_L828_16_and_launcher_kind",
+  "deploy.L831.16": "test_guard_deploy_b.Guards.test_deploy_L831_16_and_launcher_file",
+  "deploy.units.launcher#2": "test_guard_deploy_b.Guards.test_deploy_L831_16_and_launcher_file",
+  "deploy.L845.16": "test_guard_deploy_b.Guards.test_deploy_L845_16_and_units_name",
+  "deploy.units.name#1": "test_guard_deploy_b.Guards.test_deploy_L845_16_and_units_name",
+  "deploy.L847.16": "test_guard_deploy_b.Guards.test_deploy_L847_16_and_units_digest",
+  "deploy.units.digest#1": "test_guard_deploy_b.Guards.test_deploy_L847_16_and_units_digest",
+  "deploy.L854.12": "test_guard_deploy_b.Guards.test_deploy_L854_12_and_units_empty",
+  "deploy.units.empty#1": "test_guard_deploy_b.Guards.test_deploy_L854_12_and_units_empty",
+  "deploy.L870.12": "test_guard_deploy_b.Guards.test_deploy_L870_12",
+  "deploy.L889.12": "test_guard_deploy_b.Guards.test_deploy_L889_12",
+  "deploy.L901.16": "test_guard_deploy_b.Guards.test_deploy_L901_16",
+  "deploy.L904.20": "test_guard_deploy_b.Guards.test_deploy_L904_20",
+  "deploy.L922.16": "test_guard_deploy_b.Guards.test_deploy_L922_16_and_health_argv",
+  "deploy.activate.health-argv#1": "test_guard_deploy_b.Guards.test_deploy_L922_16_and_health_argv",
+  "deploy.L973.12": "test_guard_deploy_b.Guards.test_deploy_L973_12_and_unit_grammar",
+  "name.grammar.unit#1": "test_guard_deploy_b.Guards.test_deploy_L973_12_and_unit_grammar",
+  "deploy.L1012.12": "test_guard_deploy_b.Guards.test_deploy_L1012_12",
+  "deploy.L1016.12": "test_guard_deploy_b.Guards.test_deploy_L1016_12",
+  "deploy.L1021.16": "test_guard_deploy_b.Guards.test_deploy_L1021_16",
+  "deploy.L1036.20": "test_guard_deploy_b.Guards.test_deploy_L1036_20",
+  "deploy.L1081.12": "test_guard_deploy_b.Guards.test_deploy_L1081_12",
+  "deploy.L1114.20": "test_guard_deploy_b.Guards.test_deploy_L1114_20",
+  "deploy.L1146.20": "test_guard_deploy_b.Guards.test_deploy_L1146_20_and_units_conflict",
+  "deploy.units.conflict#1": "test_guard_deploy_b.Guards.test_deploy_L1146_20_and_units_conflict",
+  "deploy.L1197.16": "test_guard_deploy_b.Guards.test_deploy_L1197_16",
+  "deploy.L1229.12": "test_guard_deploy_b.Guards.test_deploy_L1229_12",
+  "deploy.prepare.marker#1": "test_guard_deploy_b.Guards.test_prepare_marker",
+  "deploy.units.own-copy#1": "test_guard_deploy_b.Guards.test_units_own_copy_location",
+  "deploy.units.own-copy#2": "test_guard_deploy_b.Guards.test_units_own_copy_content",
+  "deploy.retained.config#1": "test_guard_deploy_b.Guards.test_retained_config",
+  "deploy.retained.recipe#1": "test_guard_deploy_b.Guards.test_retained_recipe",
+  "deploy.retained.previous-first#1": "test_guard_deploy_b.Guards.test_retained_previous_first",
+  "deploy.activate.preflight#1": "test_guard_deploy_b.Guards.test_activate_preflight",
+  "deploy.activate.exclusive-recheck#1": "test_guard_deploy_b.Guards.test_activate_exclusive_recheck_before_install",
+  "deploy.activate.exclusive-recheck#2": "test_guard_deploy_b.Guards.test_activate_exclusive_recheck_before_restart",
+  "deploy.activate.install-only-health#1": "test_guard_deploy_b.Guards.test_activate_install_only_health",
+  "deploy.adapter-env#1": "test_guard_deploy_b.Guards.test_adapter_env",
+  "deploy.activate.reverify#1": "test_guard_deploy_b.Guards.test_activate_reverify",
+  "deploy.activate.health-env#1": "test_guard_deploy_b.Guards.test_activate_health_env"
+ },
+ "waivers": [
+  {
+   "id": "deploy.L1024.20",
+   "class": "equivalent",
+   "justification": "The `raise ValueError()` at module_utils/connectome_deploy.py:1024 runs only when an element of data['entries'] is not a dict. `data` comes from one place only, json.loads(self.manifest_path.read_text()) at connectome_deploy.py:1018 (_load_ownership takes no argument and line 1020 has already required 'entries' to be a list), so such an element is a JSON list, string, number, boolean or null. With the raise replaced by `pass` the very next statement, `path = Path(entry['path'])` at connectome_deploy.py:1025, subscripts that element with the string 'path', which raises TypeError for every one of those types (list and str indices must be integers; int, float, bool and None are not subscriptable). Nothing is changed in between: self.owned is first assigned at connectome_deploy.py:1037. ValueError and TypeError are caught by the same handler at connectome_deploy.py:1038 and replaced by the same DeployError('invalid ownership manifest; operator recovery required') `from None` at connectome_deploy.py:1039. Tried before waiving: manifests whose entries hold 'text', '', [], ['path'], [1,2], 7, 0, 1.5, true, false and null, alone and before/after valid entries, through prepare() and activate() on the original and on the mutant: class, message, code, cause and the number of entries loaded so far were the same in all 66 cases.",
+   "no_observable_difference": "For every manifest file content: a non-dict entry gives DeployError('invalid ownership manifest; operator recovery required'), code E_DEPLOY_FAILED, __cause__ None, with the same partially filled self.owned, on both versions; manifests without a non-dict entry never reach line 1024. The one difference is the suppressed (`from None`) __context__ attribute of that DeployError (ValueError on the original, TypeError on the mutant), which no caller, boundary or diagnostic reads."
+  }
+ ],
+ "unresolved": [
+  {
+   "id": "deploy.L1075.12",
+   "analysis": "Guard: Deployment._remove refuses a path that is not in the ownership manifest (connectome_deploy.py:1074-1075). With the raise replaced by pass the next line, self.owned[path] at :1076, always raises KeyError, so the mutant can never accept the input or reach another declared refusal: a direct dep._remove(unowned) call errors (tried; not a kill). It is not equivalent, because that direct call changes the exception class from DeployError to KeyError. It is reachable from the public API only through the rollback in activate() (self._remove(self.current) at :1296 after the release pointer could not be created; tried with a read-only deployment root), and there the blanket handler at :1298-1299 turns both the refusal and the KeyError into the identical ActivationFailed (same step, cause, message, code E_DEPLOY_FAILED, same file state); the other caller, the loop at :1171-1173, only passes owned paths. The Ansible boundary adds nothing, since the refusal already carries the default code. The only remaining difference is the suppressed __context__ of that ActivationFailed (DeployError with the guard's message on the oracle, KeyError on the mutant): test_rollback_refuses_unowned_pointer in test_guard_deploy_b.py asserts it and purpose.py try reports killed with it, but I did not map it because a context hidden by 'raise ... from cause' is not the engine's declared behaviour. A crash_only vector is not possible: the guard sits in a Deployment method and needs loaded instance state, not a plain module-level function."
+  }
+ ]
+}

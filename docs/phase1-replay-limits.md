@@ -99,6 +99,47 @@ supported contract commands at this freeze. These records must be split and
 reconstructed, not merely relabelled. `scenario-obligations.golden` accounts
 for every record; none is silently counted as an independent replay.
 
+### What each recorded B scenario actually reaches
+
+`test/vectors/scenario-classes.golden` classifies all 279 records by the entry
+points their test method executed in process (from the recorder's line
+coverage) and by whether the method patches engine internals. The status of
+every record is unchanged: pending.
+
+| Class | Records | Of these, patching internals | What stands between it and a contract request |
+| --- | ---: | ---: | --- |
+| `deployment-entry-point` (`Deployment.prepare` and/or `activate`) | 84 | 12 | Every one constructs `Deployment` with the fake adapter `tests/fixtures/cook.py` as `cook_command` and a fake `analyze_command`. Contract v1 has a closed `engines.cook` record and no key for either |
+| `adapter-only` (`connectome_cook.adapt` without a deployment) | 15 | 12 | The adapter is an internal stage, not a contract command; 12 patch `verify_cook` or `command` |
+| `spawn-lifecycle` (`Lifecycle.create`, `transition`, `status`) | 28 | 5 | `create` and `transition` have no command at this freeze; only `status` does |
+| `spawn-plan` (`make_plan`) | 13 | 1 | Expressible as `spawn` `plan`/`dry-run` requests, but each method issues several requests against one snapshot |
+| `publication-gate` (`test_public`) | 17 | 3 | Not engine behaviour; no contract command |
+| `no-entry-point` | 122 | 26 | The method calls individual functions (kind-A material) or a subprocess; it never reaches a contract entry point in process |
+
+So at most 125 of the 279 records (84 + 28 + 13) touch something a contract
+command stands for, and none of those is a single request. The 279 denominator
+counts unittest methods that own a scratch directory; it is not a count of
+kind-B scenarios in the plan's sense.
+
+Two further facts block a same-root replay on this checkout:
+
+- **Fakes.** Plan 3.3 says both engines call the same fake tools, addressed
+  through one fixed launcher path. Contract v1 replaces the free-form
+  `cook_command` by `engines.cook = {entrypoint, runtime, bun, node}` and has
+  no verifier key, so the recorded fake adapter and fake `systemd-analyze`
+  cannot be named in a request. The C replay below shows the alternative that
+  needs no contract change: the real adapter with a fake *runtime*. Scenarios
+  built that way are new vectors, not replays of these recordings.
+- **Ancestors.** The engine refuses a root with a group- or other-writable
+  ancestor. Every directory of this checkout is group-writable, and the frozen
+  suite passes only because it models the directories above its scratch root
+  as root-owned 0755 in process (`tests/deploy_fixtures.py`, `safe_ancestors`).
+  A second engine in another process cannot use that seam. A fixed scenario
+  root therefore needs a location with safe ancestry outside the checkout, or
+  an agreed harness seam.
+
+Deciding the denominator, the fake-tool route and the scenario root is a plan
+decision. Until then B stays 0/279.
+
 ## C audit: the 60 recorded C entries
 
 All 60 are in-process `connectome_cook.main` calls under patched `adapt`:
@@ -109,9 +150,67 @@ argv without reconstructing the named fake does not reproduce the recording.
 The other 576 entries in `cli.jsonl` are subprocess/tool captures, not
 classified independent C requests. Spawn CLI traffic is among those captures.
 
+### C replay through the unpatched adapter: 49 of 60
+
+`test/differential/replay_c.py` replays these entries without patching the
+engine, the adapter or the shim. One `apply` request (phase `prepare`) goes
+through the shim; the shim starts the real `scripts/cook-adapter.py`; the
+adapter verifies a detached checkout of the reviewed cook commit and runs the
+cook command line. The one fake is the named `runtime` executable. Its mode
+file makes it fail with a cook code, fail with none, exit without a lock, or
+write a lock with or without the requested layout. Request edits produce the
+archive, budget, adapter-input and catalog refusals.
+
+A fixed projection turns the receipt back into adapter output: drop the
+envelope and `phase`, restore the key order `error_code`, `msg`,
+`cook_error_code`, write one line to stderr, status 1, empty stdout. An entry
+counts as replayed only when both hold:
+
+1. the projected bytes, placed in the record with the entry's own synthetic
+   argv, test and function fields, hash to the committed `raw_sha256`;
+2. calling the unpatched `adapt` on the same build fails with the kind of
+   exception the frozen test injected: a `SafeError` with that code (and cook
+   code), a `LockError`, or another exception.
+
+| Recorded group | Entries | Replayed | How |
+| --- | ---: | ---: | --- |
+| cook code pass-through | 38 | 38 | fake runtime exits 1 with the code on stderr |
+| closed engine codes | 20 | 9 | `E_COOK_FAILED`, three `E_ARCHIVE_*`, `E_BUDGETS_UNSUPPORTED`, `E_ADAPTER_INPUT`, `E_LOCK_STATE_PATH`, `E_LOCK_INVALID`, `E_CATALOG_INVALID` |
+| fallbacks | 2 | 2 | no lock written (`LockError`); a connector `env` that is not a mapping (`AttributeError`) |
+
+The other 11 engine-code entries cannot be produced at the adapter stage by any
+contract request, so they stay pending:
+
+- `E_UNIT_VERIFY`, `E_UNIT_ACTIVE`, `E_UNIT_EXCLUSIVE`, `E_ANCESTOR_WRITABLE`,
+  `E_EXTERNAL_COMMAND`, `E_EXTERNAL_ACCESS`, `E_SYSTEMD_PATH`,
+  `E_ENVIRONMENT_FILE`, `E_SECRETS_MODE`: raised only by deployment-engine code
+  that the adapter never calls.
+- `E_EXTERNAL_DATA_ARG`, `E_DEPLOY_FAILED`: the adapter can raise them only
+  from `validate_config`, `resolve_pins` or `environment_names`, which the
+  engine has already applied to the same request before it starts the adapter.
+
+The frozen test reached those 11 only by patching `adapt`. They show that
+`main` forwards any closed code; no request can make it happen. Whether they
+leave the C denominator, or become a unit vector of `main`, is a plan decision.
+
+`shim.core` is in the mutant set: `replay_c.py shim-mutants` edits `core`
+between the engine call and the envelope in five ways (message, code, cook
+code, phase, an extra key) and each edit breaks the replay.
+
+Limits of this replay:
+
+- It needs a local clone holding the reviewed cook commit (`--cook-source`).
+  Nothing is fetched; without the clone the command exits 3 and counts nothing.
+- The shim is called in process under the frozen suite's `safe_ancestors` seam,
+  for the ancestor reason given in the B section. The adapter itself runs as a
+  real, unpatched subprocess.
+- The synthetic argv of the recording names no readable file. The replay does
+  not reproduce it; it reproduces the output triple and binds it to the record
+  by hash.
+
 The existing successful validate and refused status projection tests remain
 useful, but are not projection of these 60 entries. Injecting the recorded
 answer as shim `core`, or treating a patched whole Deployment as the oracle,
-would hide engine differences and is not a repair. Each source fake must be
-reconstructed at its actual boundary, with a fixed projection and shim.core
-mutation coverage, before a C entry can be marked replayed.
+would hide engine differences and is not a repair. The replay above follows
+that rule: the fake sits at the runtime boundary, the projection is fixed, and
+`shim.core` mutants break it.

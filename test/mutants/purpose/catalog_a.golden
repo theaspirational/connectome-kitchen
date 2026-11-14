@@ -1,0 +1,113 @@
+{
+  "named_sites": {
+    "secrets.reserved.catalog-code-env": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "before": "environment_name(name)",
+        "occurrence": 2,
+        "after": "pass",
+        "why": "Line 328: removes the call that applies the code-loading name refusal to every collected secret name in secret_environment_names; the loop header on line 327 and the overlap check on line 329 stay. Occurrence 2 is that call (0 is the def on line 277, 1 the catalog env audit on line 293, 3 the unit audit on line 509)."
+      }
+    ],
+    "recipe.secret-ref.audit": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "before": "name in secrets",
+        "after": "True",
+        "why": "Line 296, first half of the exemption: without it a ${NAME} self-reference is accepted for a name that was never declared as a secret."
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "before": "value == '${' + name + '}'",
+        "after": "True",
+        "why": "Line 296, second half of the exemption: without it a declared name is exempt whatever its value is, so it may carry another name's reference instead of only its own key's."
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "before": "need(not any(c in value for c in '$`{}",
+        "after": "need(True or any(c in value for c in '$`{}",
+        "why": "Line 298: makes the condition constantly true, so every other dollar, backtick, brace or backslash value is no longer refused as ambiguous. Same effect as replacing the whole condition with True; the anchor stops before the character set only to keep escape sequences out of this file."
+      }
+    ],
+    "catalog.descriptor.kind": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "before": "('runtime', 'connector', 'adapter', 'preflight')",
+        "after": "(kind(entry),)",
+        "why": "Lines 77-78 hold one need() shared with catalog.disabled. Only the known-kind half is removed: the membership test spans two lines, so its right-hand tuple is replaced by a tuple of the entry's own kind, which makes kind(entry) in (...) constantly true. The enabled half is untouched."
+      }
+    ],
+    "catalog.disabled": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "before": "entry.get('enabled', True) is True",
+        "after": "True",
+        "why": "Line 77, shared need() with catalog.descriptor.kind. Only the enabled half is removed, so a disabled entry that arrives anyway is no longer refused; the known-kind half is untouched."
+      }
+    ],
+    "catalog.data-args.state": [
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "before": "isinstance(value, str) and Path(value).is_absolute()",
+        "occurrence": 0,
+        "after": "True",
+        "why": "Line 347: removes the requirement that a data argument value is an absolute path string. Occurrence 0 is audit_data_args (occurrence 1 is input_paths on line 753)."
+      },
+      {
+        "file": "module_utils/connectome_catalog.py",
+        "before": "audit_path(value, state, Path(state), state, {})",
+        "after": "pass",
+        "why": "Line 348: removes the containment audit call, so a data argument value is no longer required to stay inside the state directory."
+      }
+    ]
+  },
+  "kills": {
+    "catalog.L55.4": "test_guard_catalog_a.Guards.test_catalog_L55_4",
+    "catalog.descriptor.duplicate#1": "test_guard_catalog_a.Guards.test_catalog_L55_4",
+    "catalog.L73.8": "test_guard_catalog_a.Guards.test_catalog_L73_8",
+    "catalog.descriptor.name#1": "test_guard_catalog_a.Guards.test_catalog_L73_8",
+    "catalog.descriptor.kind#1": "test_guard_catalog_a.Guards.test_named_catalog_descriptor_kind",
+    "catalog.disabled#1": "test_guard_catalog_a.Guards.test_named_catalog_disabled",
+    "catalog.L84.8": "test_guard_catalog_a.Guards.test_catalog_L84_8",
+    "catalog.descriptor.argv#1": "test_guard_catalog_a.Guards.test_catalog_L84_8",
+    "catalog.L109.8": "test_guard_catalog_a.Guards.test_catalog_L109_8",
+    "catalog.descriptor.runtimes#1": "test_guard_catalog_a.Guards.test_catalog_L109_8",
+    "catalog.L113.4": "test_guard_catalog_a.Guards.test_catalog_L113_4",
+    "catalog.L124.8": "test_guard_catalog_a.Guards.test_catalog_L124_8",
+    "catalog.descriptor.cycle#1": "test_guard_catalog_a.Guards.test_catalog_L124_8",
+    "catalog.L167.8": "test_guard_catalog_a.Guards.test_catalog_L167_8",
+    "catalog.L189.8": "test_guard_catalog_a.Guards.test_catalog_L189_8",
+    "catalog.L191.8": "test_guard_catalog_a.Guards.test_catalog_L191_8",
+    "catalog.L219.8": "test_guard_catalog_a.Guards.test_catalog_L219_8",
+    "catalog.L251.12": "test_guard_catalog_a.Guards.test_catalog_L251_12",
+    "catalog.L253.16": "test_guard_catalog_a.Guards.test_catalog_L253_16",
+    "catalog.data-args.binding#1": "test_guard_catalog_a.Guards.test_catalog_L253_16",
+    "catalog.L291.4": "test_guard_catalog_a.Guards.test_catalog_L291_4",
+    "catalog.L311.12": "test_guard_catalog_a.Guards.test_catalog_L311_12",
+    "recipe.secret-ref.audit#1": "test_guard_catalog_a.Guards.test_named_recipe_secret_ref_audit_declared",
+    "recipe.secret-ref.audit#2": "test_guard_catalog_a.Guards.test_named_recipe_secret_ref_audit_own_key",
+    "recipe.secret-ref.audit#3": "test_guard_catalog_a.Guards.test_named_recipe_secret_ref_audit_other_dollar",
+    "catalog.L329.4": "test_guard_catalog_a.Guards.test_catalog_L329_4",
+    "secrets.reserved.catalog#1": "test_guard_catalog_a.Guards.test_catalog_L329_4",
+    "secrets.reserved.catalog-code-env#1": "test_guard_catalog_a.Guards.test_named_secrets_reserved_catalog_code_env",
+    "catalog.L343.4": "test_guard_catalog_a.Guards.test_catalog_L343_4",
+    "catalog.data-args.state#1": "test_guard_catalog_a.Guards.test_named_catalog_data_args_state_absolute",
+    "catalog.data-args.state#2": "test_guard_catalog_a.Guards.test_named_catalog_data_args_state_containment",
+    "catalog.L359.16": "test_guard_catalog_a.Guards.test_catalog_L359_16",
+    "catalog.data-args.conflict#1": "test_guard_catalog_a.Guards.test_catalog_L359_16",
+    "catalog.L390.4": "test_guard_catalog_a.Guards.test_catalog_L390_4",
+    "catalog.L394.8": "test_guard_catalog_a.Guards.test_catalog_L394_8",
+    "catalog.L395.8": "test_guard_catalog_a.Guards.test_catalog_L395_8",
+    "catalog.L402.4": "test_guard_catalog_a.Guards.test_catalog_L402_4",
+    "catalog.L406.8": "test_guard_catalog_a.Guards.test_catalog_L406_8",
+    "catalog.L407.8": "test_guard_catalog_a.Guards.test_catalog_L407_8"
+  },
+  "waivers": [
+    {
+      "id": "catalog.L188.8",
+      "class": "equivalent",
+      "justification": "In audit() the str branch starts at module_utils/connectome_catalog.py:187, and the original condition of line 188 (value != '/') is false for exactly one string, the single character '/'. For that string the mutated code falls through to the next refusal with the same text: line 189 passes because the value holds no file:// prefix, line 190 leaves it unchanged, line 191 passes because it holds no file: text, line 192 removes no URL, the ABSOLUTE pattern of line 176 matches the whole string in the loop of line 193, line 194 strips it to the empty string, and line 195 need(bool(raw), 'root dependency refused') raises ArchiveError with the same message and the same code E_CATALOG_INVALID that line 188 raised. Nothing between lines 188 and 195 does IO or changes state. For every other string line 188 passes in both versions. Kill attempts before waiving: '/' as a value, as a mapping key, as a list element and nested were each run against the original and the mutated module and gave identical exception class, message, code and args; near misses such as a doubled slash or a slash with surrounding spaces do not make the original condition false, so they cannot tell the versions apart either.",
+      "no_observable_difference": "Every input of audit(): non-string values never reach line 188; every string other than '/' satisfies the original condition, so both versions run the same code; the string '/' is refused in both versions with ArchiveError('root dependency refused', code E_CATALOG_INVALID) and no side effect. Only the traceback line (188 or 195) differs. The argument assumes the built-in str comparison and methods, which holds for everything JSON, YAML, argv or a file can supply; an object that overrides its own inequality operator is outside it."
+    }
+  ]
+}

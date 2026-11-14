@@ -1,1 +1,3740 @@
-[]
+[
+  {
+    "id": "archive.L134.12",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_archive_L134_12",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_archive_L134_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "archive.L139.8",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_archive_L139_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_archive_L139_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "archive.L140.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_archive_L140_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_archive_L140_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "archive.L193.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_archive_L193_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_archive_L193_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "archive.L74.8",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_archive_L74_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_archive_L74_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "archive.L79.8",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_archive_L79_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_archive_L79_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "archive.L95.8",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_archive_L95_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_archive_L95_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "archive.L99.8",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_archive_L99_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_archive_L99_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L109.8",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L109_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L109_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L113.4",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L113_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L113_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L124.8",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L124_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L124_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L167.8",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L167_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L167_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L189.8",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L189_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L189_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L191.8",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L191_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L191_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L219.8",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L219_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L219_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L251.12",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L251_12",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L251_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L253.16",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L253_16",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L253_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L291.4",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L291_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L291_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L311.12",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L311_12",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L311_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L329.4",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L329_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L329_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L343.4",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L343_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L343_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L359.16",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L359_16",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L359_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L390.4",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L390_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L390_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L394.8",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L394_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L394_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L395.8",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L395_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L395_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L402.4",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L402_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L402_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L406.8",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L406_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L406_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L407.8",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L407_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L407_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L460.4",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L460_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L460_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L483.8",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L483_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L483_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L501.8",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L501_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L501_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L507.16",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L507_16",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L507_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L546.12",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L546_12",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L546_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L55.4",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L55_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L55_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L556.8",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L556_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L556_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L564.20",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L564_20",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L564_20",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L565.16",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L565_16",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L565_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L570.4",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L570_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L570_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L573.8",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L573_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L573_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L576.8",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L576_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L576_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L582.4",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L582_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L582_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L586.8",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L586_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L586_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L592.16",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L592_16",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L592_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L595.16",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L595_16",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L595_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L628.8",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L628_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L628_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L639.12",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L639_12",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L639_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L643.12",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L643_12",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L643_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L646.12",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L646_12",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L646_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L708.12",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L708_12",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L708_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L710.12",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L710_12",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L710_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L712.12",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L712_12",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L712_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L714.16",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L714_16",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L714_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L715.16",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L715_16",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L715_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L719.16",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L719_16",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L719_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L725.12",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L725_12",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L725_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L73.8",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L73_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L73_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L735.8",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L735_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L735_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L753.8",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L753_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L753_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L768.8",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L768_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L768_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L84.8",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L84_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L84_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.L842.4",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L842_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L842_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "config.L46.12",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_config_L46_12",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_config_L46_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "config.L60.8",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_config_L60_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_config_L60_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L117.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L117_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L117_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L123.8",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L123_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L123_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L134.12",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L134_12",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L134_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L136.8",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L136_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L136_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L140.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L140_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L140_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L150.12",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L150_12",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L150_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L157.16",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L157_16",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L157_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L168.8",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L168_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L168_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L172.16",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L172_16",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L172_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L174.16",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L174_16",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L174_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L188.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L188_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L188_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L208.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L208_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L208_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L223.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L223_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L223_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L225.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L225_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L225_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L226.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L226_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L226_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L228.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L228_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L228_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L235.8",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L235_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L235_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L251.16",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L251_16",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L251_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L257.16",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L257_16",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L257_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L261.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L261_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L261_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L264.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L264_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L264_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L268.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L268_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L268_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L336.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L336_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L336_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L349.8",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L349_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L349_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L355.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L355_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L355_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L360.8",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L360_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L360_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L374.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L374_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L374_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L52.12",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L52_12",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L52_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L67.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L67_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L67_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L70.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L70_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L70_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L76.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L76_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L76_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.L78.4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L78_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L78_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L1012.12",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L1012_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L1012_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L1016.12",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L1016_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L1016_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L1021.16",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L1021_16",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L1021_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L1036.20",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L1036_20",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L1036_20",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L1081.12",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L1081_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L1081_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L1114.20",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L1114_20",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L1114_20",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L1146.20",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L1146_20_and_units_conflict",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L1146_20_and_units_conflict",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L1197.16",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L1197_16",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L1197_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L1229.12",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L1229_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L1229_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L134.12",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L134_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L134_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L141.12",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L141_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L141_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L143.12",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L143_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L143_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L145.12",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L145_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L145_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L166.16",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L166_16",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L166_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L172.16",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L172_16",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L172_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L176.8",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L176_8",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L176_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L276.16",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L276_16",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L276_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L303.12",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L303_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L303_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L389.16",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L389_16",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L389_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L390.12",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L390_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L390_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L411.8",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_secrets_reserved_direct",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_secrets_reserved_direct",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L443.12",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L443_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L443_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L491.12",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L491_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L491_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L498.12",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_private_canonical",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_private_canonical",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L536.12",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L536_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L536_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L570.12",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L570_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L570_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L635.20",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L635_20",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L635_20",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L649.16",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L649_16",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L649_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L651.16",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L651_16",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L651_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L675.12",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_activate_marker",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_activate_marker",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L698.16",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_L698_16",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_L698_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L705.12",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L705_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L705_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L713.12",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L713_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L713_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L721.16",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L721_16",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L721_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L733.16",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L733_16_and_retained_sidecar",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L733_16_and_retained_sidecar",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L738.16",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L738_16",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L738_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L766.12",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L766_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L766_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L770.12",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L770_12_and_no_adapter",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L770_12_and_no_adapter",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L774.12",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L774_12_and_prepare_active",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L774_12_and_prepare_active",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L828.16",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L828_16_and_launcher_kind",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L828_16_and_launcher_kind",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L831.16",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L831_16_and_launcher_file",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L831_16_and_launcher_file",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L845.16",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L845_16_and_units_name",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L845_16_and_units_name",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L847.16",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L847_16_and_units_digest",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L847_16_and_units_digest",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L854.12",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L854_12_and_units_empty",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L854_12_and_units_empty",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L870.12",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L870_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L870_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L889.12",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L889_12",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L889_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L901.16",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L901_16",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L901_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L904.20",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L904_20",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L904_20",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L922.16",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L922_16_and_health_argv",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L922_16_and_health_argv",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.L973.12",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L973_12_and_unit_grammar",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L973_12_and_unit_grammar",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.L123.8",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L123_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L123_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.L127.8",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L127_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L127_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.L144.4",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L144_4",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L144_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.L161.8",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L161_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L161_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.L63.4",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L63_4",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L63_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.L67.4",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L67_4",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L67_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.L70.8",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L70_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L70_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.L81.8",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L81_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L81_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.L91.8",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L91_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L91_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.L94.12",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L94_12",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L94_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.L129.4",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_L129_4",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_L129_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.L132.4",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_L132_4",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_L132_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.L155.12",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_L155_12",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_L155_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.L246.8",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_L246_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_L246_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.L259.12",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_L259_12",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_L259_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.L266.20",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_L266_20",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_L266_20",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.L269.20",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_L269_20",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_L269_20",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.L271.12",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_L271_12",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_L271_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.L299.8",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_L299_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_L299_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.L301.8",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_L301_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_L301_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.L319.12",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_L319_12",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_L319_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.L324.8",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_L324_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_L324_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lookup_plugins.connectome_file.L14.16",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lookup_file_L14_16",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lookup_file_L14_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lookup_plugins.connectome_file.L17.12",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lookup_file_L17_12",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lookup_file_L17_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lookup_plugins.connectome_inputs.L18.12",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lookup_inputs_L18_12",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lookup_inputs_L18_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lookup_plugins.connectome_inputs.L20.12",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lookup_inputs_L20_12",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lookup_inputs_L20_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L103.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L103_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L103_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L114.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L114_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L114_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L116.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L116_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L116_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L125.12",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L125_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L125_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L128.12",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L128_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L128_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L136.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L136_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L136_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L137.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L137_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L137_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L154.12",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L154_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L154_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L161.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L161_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L161_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L163.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L163_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L163_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L174.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L174_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L174_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L175.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L175_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L175_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L183.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L183_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L183_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L204.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L204_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L204_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L208.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L208_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L208_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L210.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L210_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L210_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L48.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L48_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L48_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L74.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L74_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L74_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L81.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L81_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L81_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L84.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L84_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L84_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L85.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L85_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L85_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.L99.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L99_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L99_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.cli.L15.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_cli_L15_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_cli_L15_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.cli.L40.16",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_cli_L40_16",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_cli_L40_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.cli.L44.12",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_cli_L44_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_cli_L44_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.cli.L49.16",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_cli_L49_16",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_cli_L49_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.cli.L54.16",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_cli_L54_16",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_cli_L54_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.data.L34.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_data_L34_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_data_L34_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.data.L74.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_data_L74_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_data_L74_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.data.L76.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_data_L76_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_data_L76_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.data.L89.20",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_data_L89_20",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_data_L89_20",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.L107.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_L107_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_L107_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.L112.12",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_L112_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_L112_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.L118.16",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_L118_16",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_L118_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.L123.12",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_L123_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_L123_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.L132.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_L132_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_L132_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.L134.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_L134_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_L134_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.L178.12",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_L178_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_L178_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.L32.4",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_L32_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_L32_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.L131.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L131_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L131_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.L136.16",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L136_16",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L136_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.L151.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L151_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L151_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.L152.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L152_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L152_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.L161.12",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L161_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L161_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.L162.12",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L162_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L162_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.L186.16",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L186_16",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L186_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.L190.16",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L190_16",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L190_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.L192.16",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L192_16",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L192_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.L194.12",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L194_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L194_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.L252.24",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L252_24",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L252_24",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.L54.4",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L54_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L54_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.L96.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L96_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L96_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.persistence.L17.4",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L17_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L17_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.persistence.L19.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L19_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L19_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.persistence.L37.4",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L37_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L37_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.persistence.L49.4",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L49_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L49_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L108.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L108_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L108_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L132.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L132_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L132_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L134.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L134_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L134_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L148.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L148_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L148_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L42.12",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L42_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L42_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L58.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L58_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L58_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L61.12",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L61_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L61_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L64.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L64_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L64_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L80.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L80_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L80_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L83.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L83_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L83_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L87.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L87_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L87_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L90.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L90_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L90_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L94.12",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L94_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L94_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.planner.L99.12",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L99_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L99_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.L104.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_L104_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_L104_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.L191.4",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_L191_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_L191_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.L193.4",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_L193_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_L193_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.L196.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_L196_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_L196_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.L202.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_L202_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_L202_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.L204.8",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_L204_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_L204_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.L213.4",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_L213_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_L213_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.L35.4",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_L35_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_L35_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.L39.16",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_L39_16",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_L39_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.seed.L32.4",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_seed_L32_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_seed_L32_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L110.12",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L110_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L110_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L118.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L118_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L118_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L125.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L125_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L125_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L130.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L130_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L130_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L131.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L131_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L131_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L134.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L134_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L134_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L162.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L162_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L162_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L175.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L175_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L175_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L179.12",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L179_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L179_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L220.8",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L220_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L220_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L41.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L41_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L41_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L42.4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L42_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L42_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L55.12",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L55_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L55_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L56.12",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L56_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L56_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L58.12",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L58_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L58_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.sources.L61.12",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L61_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L61_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  }
+]

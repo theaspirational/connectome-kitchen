@@ -1,18 +1,17 @@
 {
   "guard_site_mutants": 573,
-  "combined_killed": 296,
-  "equivalent": 0,
-  "remaining_unreviewed": 277,
+  "combined_killed": 564,
+  "equivalent": 4,
+  "crash_only_kind_A": 3,
+  "remaining_unreviewed": 2,
   "remaining_categories": {
-    "survived": 249,
-    "not-pure-engine": 4,
-    "no-vectors": 23,
-    "runtime-error": 1
+    "survived": 2
   },
   "named_checks": 203,
-  "named_mutants_implemented": 136,
-  "named_killed": 73,
-  "named_remaining": 130,
+  "named_mutants_implemented": 203,
+  "named_killed": 200,
+  "named_crash_only_kind_A": 1,
+  "named_remaining": 2,
   "B_recorded": 279,
   "B_independent_replayed": 0,
   "C_recorded": 60,
@@ -24,5 +23,7 @@
     44,
     45,
     46
-  ]
+  ],
+  "C_unreachable_documented": 11,
+  "unreviewed_with_written_analysis": 2
 }

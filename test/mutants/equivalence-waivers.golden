@@ -1,1 +1,54 @@
-[]
+[
+  {
+    "id": "catalog.L188.8",
+    "class": "equivalent",
+    "justification": "In audit() the str branch starts at module_utils/connectome_catalog.py:187, and the original condition of line 188 (value != '/') is false for exactly one string, the single character '/'. For that string the mutated code falls through to the next refusal with the same text: line 189 passes because the value holds no file:// prefix, line 190 leaves it unchanged, line 191 passes because it holds no file: text, line 192 removes no URL, the ABSOLUTE pattern of line 176 matches the whole string in the loop of line 193, line 194 strips it to the empty string, and line 195 need(bool(raw), 'root dependency refused') raises ArchiveError with the same message and the same code E_CATALOG_INVALID that line 188 raised. Nothing between lines 188 and 195 does IO or changes state. For every other string line 188 passes in both versions. Kill attempts before waiving: '/' as a value, as a mapping key, as a list element and nested were each run against the original and the mutated module and gave identical exception class, message, code and args; near misses such as a doubled slash or a slash with surrounding spaces do not make the original condition false, so they cannot tell the versions apart either.",
+    "no_observable_difference": "Every input of audit(): non-string values never reach line 188; every string other than '/' satisfies the original condition, so both versions run the same code; the string '/' is refused in both versions with ArchiveError('root dependency refused', code E_CATALOG_INVALID) and no side effect. Only the traceback line (188 or 195) differs. The argument assumes the built-in str comparison and methods, which holds for everything JSON, YAML, argv or a file can supply; an object that overrides its own inequality operator is outside it.",
+    "area": "catalog_a",
+    "anchor": {
+      "file": "module_utils/connectome_catalog.py",
+      "line": 188,
+      "before": "value != '/'",
+      "after": "True"
+    }
+  },
+  {
+    "id": "catalog.L537.8",
+    "class": "unreachable",
+    "justification": "module_utils/connectome_catalog.py:537 need(bool(argv), 'empty launcher command') can never see a falsy argv. Line 530 strips each launcher line with str.strip() and line 534 skips it when it is empty or starts with '#', so line 536 calls literal_words on a string whose first character is not whitespace. literal_words (lines 477-483) either raises, on line 478 for a refused character or on line 483 when shlex.split raises ValueError for an unterminated quote (need(False, ...) always raises, so the function never returns None), or it returns shlex.split(value). shlex.split runs a POSIX lexer with whitespace_split set and no comment characters. Its whitespace set (space, tab, carriage return, line feed) is a subset of what str.strip removed, so the first character opens a word or a quoted section; the lexer emits a token for every opened word and for every closed quote (an empty quoted string yields the empty token), and the escape character that could swallow a character is refused on line 478. The returned list therefore has at least one element whenever line 537 runs. Kill attempts before waiving: a line of only quotes (it yields one empty word and is refused later by audit_argv as 'command must be nonempty argv' in both versions), lines of exotic whitespace and control characters, and a brute force over every one- and two-character line from U+0000 to U+00FF plus U+0085, U+00A0, U+2028 and U+3000, and every line of up to four characters from a quote, whitespace and control alphabet: none makes literal_words return an empty list.",
+    "no_observable_difference": "Every launcher body passed to audit_launcher (any str): the condition on line 537 is true each time it is evaluated, so both versions return the same list of working directories or raise the same ArchiveError with the same message and code.",
+    "area": "catalog_b",
+    "anchor": {
+      "file": "module_utils/connectome_catalog.py",
+      "line": 537,
+      "before": "bool(argv)",
+      "after": "True"
+    }
+  },
+  {
+    "id": "catalog.L679.8",
+    "class": "unreachable",
+    "justification": "module_utils/connectome_catalog.py:679 refuses a preflight word that holds a percent sign, dollar sign, line feed, carriage return, backslash or double quote. It is dominated by audit_argv on line 676, which preflight_unit calls without data_args. audit_argv requires every word to be a non-empty str (line 233). The executable goes through audit_path (line 237), whose line 205 requires a full match of [A-Za-z0-9_.+@/-]+. Every later word is exactly '--' (line 241), or an option without '=' that fully matches --[A-Za-z0-9][A-Za-z0-9-]*|-[A-Za-z0-9] (lines 246 and 249-250), or such an option followed by '=' and a value that goes through audit_path (lines 256-258; the data_args branch on line 252 is dead because the mapping is empty), or a plain word that goes through audit_path (line 258). A word that audit_argv accepts is therefore built only from letters, digits and the characters _ . + @ / = and -, none of which line 679 refuses, so its condition is true whenever it is evaluated. Kill attempts before waiving: option values, words after '--', attached short options and words ending in a line feed (a full match does not tolerate a trailing line feed); an exhaustive run over every word of up to four characters from an alphabet that includes the six refused characters, placed as executable, operand, operand after '--', long-option value and short option, found 6426 accepted argv lists and none that holds a refused character. The same mutation is the site mutant of the named check catalog.preflight.chars, which is recorded as unresolved because names cannot be waived.",
+    "no_observable_difference": "Every config whose preflight run words are str objects: a word that holds one of the six characters is already refused inside audit_argv on line 676, before line 679 runs, so preflight_unit returns the same unit text or raises the same ArchiveError in both versions. Only a str subclass that misreports its own contents could differ, and no JSON or YAML input produces one.",
+    "area": "catalog_b",
+    "anchor": {
+      "file": "module_utils/connectome_catalog.py",
+      "line": 679,
+      "before": "all(not any(c in arg for c in '%$\\n\\r\\\\\\\"') for arg in argv)",
+      "after": "True"
+    }
+  },
+  {
+    "id": "deploy.L1024.20",
+    "class": "equivalent",
+    "justification": "The `raise ValueError()` at module_utils/connectome_deploy.py:1024 runs only when an element of data['entries'] is not a dict. `data` comes from one place only, json.loads(self.manifest_path.read_text()) at connectome_deploy.py:1018 (_load_ownership takes no argument and line 1020 has already required 'entries' to be a list), so such an element is a JSON list, string, number, boolean or null. With the raise replaced by `pass` the very next statement, `path = Path(entry['path'])` at connectome_deploy.py:1025, subscripts that element with the string 'path', which raises TypeError for every one of those types (list and str indices must be integers; int, float, bool and None are not subscriptable). Nothing is changed in between: self.owned is first assigned at connectome_deploy.py:1037. ValueError and TypeError are caught by the same handler at connectome_deploy.py:1038 and replaced by the same DeployError('invalid ownership manifest; operator recovery required') `from None` at connectome_deploy.py:1039. Tried before waiving: manifests whose entries hold 'text', '', [], ['path'], [1,2], 7, 0, 1.5, true, false and null, alone and before/after valid entries, through prepare() and activate() on the original and on the mutant: class, message, code, cause and the number of entries loaded so far were the same in all 66 cases.",
+    "no_observable_difference": "For every manifest file content: a non-dict entry gives DeployError('invalid ownership manifest; operator recovery required'), code E_DEPLOY_FAILED, __cause__ None, with the same partially filled self.owned, on both versions; manifests without a non-dict entry never reach line 1024. The one difference is the suppressed (`from None`) __context__ attribute of that DeployError (ValueError on the original, TypeError on the mutant), which no caller, boundary or diagnostic reads.",
+    "area": "deploy_b",
+    "anchor": {
+      "file": "module_utils/connectome_deploy.py",
+      "line": 1024,
+      "before": "raise ValueError()",
+      "after": "pass"
+    }
+  }
+]

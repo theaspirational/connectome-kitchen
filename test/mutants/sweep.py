@@ -33,7 +33,9 @@ def names(s):
   else:yield t.id()
 listed=list(names(suite))
 with open(sys.argv[3]+'.log','w') as stream:r=unittest.TextTestRunner(stream=stream,verbosity=0).run(suite)
-Path(sys.argv[3]).write_text(json.dumps({'listed':listed,'failures':[t.id() for t,_ in r.failures],'errors':[str(t.id()) if hasattr(t,'id') else str(t) for t,_ in r.errors],'skipped':[t.id() for t,_ in r.skipped]}))
+# A failing subTest reports its own id; the test that owns it is what gets re-run alone.
+owner=lambda t:getattr(t,'test_case',t)
+Path(sys.argv[3]).write_text(json.dumps({'listed':listed,'failures':sorted({owner(t).id() for t,_ in r.failures}),'errors':sorted({str(owner(t).id()) if hasattr(owner(t),'id') else str(t) for t,_ in r.errors}),'skipped':[t.id() for t,_ in r.skipped]}))
 '''
 ENV=dict(os.environ,PYTHONDONTWRITEBYTECODE='1')
 
@@ -104,18 +106,26 @@ def search(args):
    tree=workers.tree();trials=[];status='survived';candidates=[]
    try:
     with Mutated(tree,mutant):
+     hung=[]
      for module in modules():
-      verdict=run(MODULE,tree,module,600)
+      verdict=run(MODULE,tree,module,300)
       if 'listed' not in verdict:
-       # A hung or crashed module is retried test by test below.
-       candidates+=[t for t in eligible if t.startswith(module+'.')];continue
+       # A hung or crashed module is retried test by test below, briefly.
+       hung+=[t for t in eligible if t.startswith(module+'.')];continue
       candidates+=[t for t in verdict['failures'] if t in allowed]
      for test in candidates:
       verdict=run(SOLO,tree,test,120);trials.append({'test':test,**verdict})
       if solo_kill(verdict):status='killed';break
+     timeouts=0
+     for test in hung if status!='killed' else ():
+      verdict=run(SOLO,tree,test,30);trials.append({'test':test,**verdict})
+      if solo_kill(verdict):status='killed';break
+      # A mutant that hangs the suite is not killed by hanging; stop after a few.
+      timeouts+=bool(verdict.get('timeout'))
+      if timeouts==3:status='timeout';break
    except ValueError:return {'id':mutant['id'],'status':'anchor-mismatch','trials':[]}
    if status=='killed':trials=[trials[-1]]
-   return {'id':mutant['id'],'status':status,'rows':mutant.get('rows',[]),'trials':trials,'eligible_tests':len(eligible),'scope':'every eligible frozen test'}
+   return {'id':mutant['id'],'status':status,'rows':mutant.get('rows',[]),'trials':trials,'eligible_tests':len(eligible),'scope':'every eligible frozen test' if status!='timeout' else 'stopped after three hung tests'}
   for result in pool.map(work,[m for m in anchors if m['id'] not in done]):
    results.append(result);temporary=checkpoint.with_suffix('.tmp');temporary.write_text(json.dumps(results,indent=2)+'\n');temporary.replace(checkpoint)
    print(json.dumps({'completed':len(results),'id':result['id'],'status':result['status']}),flush=True)

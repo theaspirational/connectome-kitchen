@@ -26,5 +26,15 @@ def build():
  texts=[w['justification'] for w in result]
  if len(set(texts))!=len(texts):raise ValueError('bulk waiver: identical justification used twice')
  return sorted(result,key=lambda w:w['id'])
+def unresolved():
+ """Written analysis of items that are neither killed nor waived. They stay blocking."""
+ anchors={a['id'] for a in json.loads((M/'guard-anchors.golden').read_text())}
+ names={c['id'] for c in json.loads((M/'named-checks.golden').read_text())};result=[];seen=set()
+ for area,data in fragments().items():
+  for row in data.get('unresolved',[]):
+   if set(row)!={'id','analysis'} or row['id'] in seen or row['id'] not in anchors|names or len(row['analysis'])<60:raise ValueError('invalid unresolved note: '+str(row.get('id')))
+   seen.add(row['id']);result.append({**row,'area':area,'kind':'guard-site' if row['id'] in anchors else 'named-check'})
+ return sorted(result,key=lambda r:r['id'])
 if __name__=='__main__':
- result=build();(M/'equivalence-waivers.golden').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({'waivers':len(result)}))
+ result=build();(M/'equivalence-waivers.golden').write_text(json.dumps(result,indent=2)+'\n')
+ notes=unresolved();(M/'unresolved.golden').write_text(json.dumps(notes,indent=2)+'\n');print(json.dumps({'waivers':len(result),'unresolved_notes':len(notes)}))

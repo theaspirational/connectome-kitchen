@@ -57,7 +57,7 @@ def unit_kill(row):
 def site_proof():
  """Names whose every site mutant (named-site-anchors.golden) has its own kill."""
  M=ROOT/'test/mutants';path=M/'named-site-anchors.golden'
- if not path.exists():return {},set()
+ if not path.exists():return {},set(),{}
  names={}
  for site in json.loads(path.read_text()):names.setdefault(site['name'],[]).append(site['id'])
  ids={i for group in names.values() for i in group}
@@ -72,7 +72,14 @@ def site_proof():
    elif row.get('status')=='killed' and row.get('witnesses'):
     if not set(row['witnesses'])<=witnesses:raise ValueError('missing committed killing witness')
     evidence.setdefault(row['id'],[]).append({'file':file,'site':row['id'],'vector':None,'witnesses':row['witnesses']})
- return {name:[evidence[i][0] for i in group] for name,group in names.items() if all(i in evidence for i in group)},set(names)
+ clean={name:[evidence[i][0] for i in group] for name,group in names.items() if all(i in evidence for i in group)}
+ # Separate category: every site killed, at least one only by a crash-only kind-A vector.
+ crash={};path=M/'crash-only-results.golden'
+ if path.exists():
+  for row in json.loads(path.read_text()):
+   if row['id'] in ids and row['status']=='killed-kind-A-crash-only':crash[row['id']]={'file':'crash-only-results.golden','site':row['id'],'vector':row['vector_sha256'],'witnesses':[]}
+ mixed={name:[evidence[i][0] if i in evidence else crash[i] for i in group] for name,group in names.items() if name not in clean and all(i in evidence or i in crash for i in group)}
+ return clean,set(names),mixed
 
 def build():
  files=inv.files(ROOT/'oracle');result=[];proof={};implemented=set()
@@ -86,7 +93,7 @@ def build():
    valid=r['status']=='killed'
    if file=='named-legacy-results.golden':valid=valid and any(t.get('tests')==1 and t.get('failures',0)>0 and t.get('errors')==0 and not t.get('timeout') and not t.get('driver_error') for t in r.get('trials',[]))
    if valid:proof.setdefault(r['id'],[]).append({'file':file,'vector':r.get('vector'),'witnesses':r.get('witnesses',[])})
- sites,site_names=site_proof()
+ sites,site_names,crash_only_names=site_proof()
  implemented|=site_names
  for name,evidence in sites.items():proof.setdefault(name,[]).extend(evidence)
  for row in inv.inventory(ROOT/'docs/approved-plan.md')[47:]:
@@ -97,8 +104,9 @@ def build():
    for file,line in parse(token):
     source=files[file].read_text();text=source.splitlines()[line-1]
     references.append({'file':str(files[file].relative_to(ROOT/'oracle')),'line':line,'text':text,'source_sha256':hashlib.sha256(source.encode()).hexdigest()})
-   status='killed' if name in proof else 'not-killed' if name in implemented else 'pending-semantic-mutant'
-   result.append({'id':name,'row':row['row'],'anchors':references,'status':status,'evidence':proof.get(name,[]),'reason':'independent mutation killed' if name in proof else 'source anchored; independent killing vector still required'})
+   status='killed' if name in proof else 'killed-kind-A-crash-only' if name in crash_only_names else 'not-killed' if name in implemented else 'pending-semantic-mutant'
+   reason='independent mutation killed' if name in proof else 'every site killed, at least one only by a crash-only kind-A vector; separate category pending acceptance' if name in crash_only_names else 'source anchored; independent killing vector still required'
+   result.append({'id':name,'row':row['row'],'anchors':references,'status':status,'evidence':proof.get(name,crash_only_names.get(name,[])),'reason':reason})
  if len(result)!=203 or len({x['id'] for x in result})!=203:raise ValueError('expected exactly 203 unique names')
  return result
 if __name__=='__main__':

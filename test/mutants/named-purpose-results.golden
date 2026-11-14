@@ -1,1 +1,2956 @@
-[]
+[
+  {
+    "id": "catalog.audit-site.cook-argv#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_catalog_audit_site_cook_argv_1",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_catalog_audit_site_cook_argv_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.cook-argv#2",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_catalog_audit_site_cook_argv_2",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_catalog_audit_site_cook_argv_2",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.cook-argv#3",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_catalog_audit_site_cook_argv_3",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_catalog_audit_site_cook_argv_3",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.launch-cwd#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_launch_cwd_recipe",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_launch_cwd_recipe",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.launch-cwd#2",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_launch_cwd_unit",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_launch_cwd_unit",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.plan#1",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_catalog_audit_site_plan_descriptors",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_catalog_audit_site_plan_descriptors",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.plan#2",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_catalog_audit_site_plan_recipe",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_catalog_audit_site_plan_recipe",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.post-build#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_post_build_descriptors",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_post_build_descriptors",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.post-build#2",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_post_build_recipe",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_post_build_recipe",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.pre-build#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_pre_build_descriptors",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_pre_build_descriptors",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.pre-build#2",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_pre_build_recipe",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_pre_build_recipe",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.separate#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L460_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L460_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.verify-lock#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_lock_health",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_lock_health",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.verify-lock#2",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_lock_paths",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_lock_paths",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.verify-tree#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_tree_code",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_tree_code",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.verify-tree#2",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_descriptors",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_descriptors",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.verify-tree#3",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_recipe",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_recipe",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.verify-tree#4",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_health",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_health",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.verify-tree#5",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_preflights",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_preflights",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.verify-units#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_unit_text",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_unit_text",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.verify-units#2",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_unit_directory",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_unit_directory",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.verify-units#3",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_unit_preflight",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_unit_preflight",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.verify-units#4",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_launcher_text",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_launcher_text",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.audit-site.verify-units#5",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_launcher_commands",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_launcher_commands",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.build.audit#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_build_audit",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_build_audit",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.build.executable#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L639_12",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L639_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.build.export#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L646_12",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L646_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.build.status#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L643_12",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L643_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.contained.archive#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L628_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L628_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.contained.checkout#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_catalog_contained_checkout_1",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_catalog_contained_checkout_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.contained.inputs#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L753_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L753_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.data-args.binding#1",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L253_16",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L253_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.data-args.conflict#1",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L359_16",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L359_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.data-args.state#1",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_named_catalog_data_args_state_absolute",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_named_catalog_data_args_state_absolute",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.data-args.state#2",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_named_catalog_data_args_state_containment",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_named_catalog_data_args_state_containment",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.descriptor.argv#1",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L84_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L84_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.descriptor.cycle#1",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L124_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L124_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.descriptor.duplicate#1",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L55_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L55_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.descriptor.kind#1",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_named_catalog_descriptor_kind",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_named_catalog_descriptor_kind",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.descriptor.name#1",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L73_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L73_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.descriptor.runtimes#1",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L109_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L109_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.disabled#1",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_named_catalog_disabled",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_named_catalog_disabled",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.preflight.audit#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_preflight_audit",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_preflight_audit",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.stage.inventory#1",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L570_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L570_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.stage.inventory#2",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L573_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L573_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.stage.inventory#3",
+    "status": "killed",
+    "test": "test_guard_catalog_b.Guards.test_catalog_L576_8",
+    "trials": [
+      {
+        "test": "test_guard_catalog_b.Guards.test_catalog_L576_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.stage.staged-exec#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_catalog_stage_staged_exec_1",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_catalog_stage_staged_exec_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "catalog.stage.staged-exec#2",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_catalog_stage_staged_exec_2",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_catalog_stage_staged_exec_2",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "config.layers.fold#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_config_layers_fold_1",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_config_layers_fold_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "config.layers.prune#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_config_layers_prune_1",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_config_layers_prune_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "config.layers.public-connectors#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_config_layers_public_connectors_1",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_config_layers_public_connectors_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.argv.dash#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_argv_dash_1",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_argv_dash_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.argv.flag-position#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_argv_flag_position_1",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_argv_flag_position_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.argv.validate-first#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_argv_validate_first_1",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_argv_validate_first_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.input.catalog-connector#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L172_16",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L172_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.input.cook-settings#2",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L264_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L264_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.input.cook-settings#3",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L268_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L268_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.input.paths#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_input_paths_1",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_input_paths_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.input.paths#2",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L70_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L70_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.input.paths#3",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L223_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L223_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.input.paths#4",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L225_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L225_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.input.paths#5",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L226_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L226_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.input.pin-ref#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L123_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L123_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.input.spec#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L117_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L117_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "cook.input.staged-recipe#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_input_staged_recipe_1",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_input_staged_recipe_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.activate.exclusive-recheck#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_activate_exclusive_recheck_before_install",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_activate_exclusive_recheck_before_install",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.activate.exclusive-recheck#2",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_activate_exclusive_recheck_before_restart",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_activate_exclusive_recheck_before_restart",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.activate.health-argv#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L922_16_and_health_argv",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L922_16_and_health_argv",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.activate.health-env#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_activate_health_env",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_activate_health_env",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.activate.install-only-health#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_activate_install_only_health",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_activate_install_only_health",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.activate.marker#1",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_activate_marker",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_activate_marker",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.activate.preflight#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_activate_preflight",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_activate_preflight",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.activate.reverify#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_activate_reverify",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_activate_reverify",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.adapter-env#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_adapter_env",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_adapter_env",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.prepare.active#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L774_12_and_prepare_active",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L774_12_and_prepare_active",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.prepare.marker#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_prepare_marker",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_prepare_marker",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.prepare.no-adapter#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L770_12_and_no_adapter",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L770_12_and_no_adapter",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.private.canonical#1",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_private_canonical",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_private_canonical",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.private.state-kind#1",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_private_state_kind",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_private_state_kind",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.private.state-mode#1",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_private_state_mode",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_private_state_mode",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.private.state-owner#1",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_private_state_owner",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_private_state_owner",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.private.state-recheck#1",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_private_state_recheck",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_private_state_recheck",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.retained.config#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_retained_config",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_retained_config",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.retained.pins#1",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_retained_pins_framework",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_retained_pins_framework",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.retained.pins#2",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_retained_pins_catalog",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_retained_pins_catalog",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.retained.pins#3",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_deploy_retained_pins_framework",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_deploy_retained_pins_framework",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.retained.previous-first#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_retained_previous_first",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_retained_previous_first",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.retained.recipe#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_retained_recipe",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_retained_recipe",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.retained.sidecar#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L733_16_and_retained_sidecar",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L733_16_and_retained_sidecar",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.units.conflict#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L1146_20_and_units_conflict",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L1146_20_and_units_conflict",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.units.digest#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L847_16_and_units_digest",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L847_16_and_units_digest",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.units.empty#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L854_12_and_units_empty",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L854_12_and_units_empty",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.units.launcher#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L828_16_and_launcher_kind",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L828_16_and_launcher_kind",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.units.launcher#2",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L831_16_and_launcher_file",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L831_16_and_launcher_file",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.units.name#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L845_16_and_units_name",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L845_16_and_units_name",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.units.own-copy#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_units_own_copy_location",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_units_own_copy_location",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "deploy.units.own-copy#2",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_units_own_copy_content",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_units_own_copy_content",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.activation#1",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L63_4",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L63_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-args#1",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_list",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_list",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-args#2",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_closed_keys",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_closed_keys",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-args#3",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_server",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_server",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-args#4",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_args_list",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_args_list",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-args#5",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_args_strings",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_args_strings",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-args#6",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_kind",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_kind",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-args#7",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_duplicate_server",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_args_duplicate_server",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-flag#1",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_flag_grammar",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_flag_grammar",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-flag#2",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_flag_denied",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_flag_denied",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-flag#3",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_flag_code_loading_prefix",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_flag_code_loading_prefix",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-path#1",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_path_absolute",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_path_absolute",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-path#2",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_path_double_slash",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_path_double_slash",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-path#3",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_path_root",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_path_root",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-path#4",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_path_normal",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_path_normal",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-path#5",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_path_parent",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_path_parent",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.data-path#6",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_data_path_control",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_data_path_control",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.exclusive#1",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L67_4",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L67_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.exclusive#2",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L70_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L70_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.recipe-file#1",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L81_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L81_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.secret-files#1",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L91_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L91_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.secret-files#2",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L94_12",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L94_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.secret-files#3",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_secret_file_names",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_secret_file_names",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.secret-files#4",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_secret_file_duplicate_env",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_secret_file_duplicate_env",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.transport#1",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_L144_4",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_L144_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "inputs.record.transport#2",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_transport_strict_base64",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_transport_strict_base64",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.schema.operator-recipe#1",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_operator_recipe_installed_bytes",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_operator_recipe_installed_bytes",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.schema.operator-recipe#2",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_operator_recipe_digest",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_operator_recipe_digest",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.schema.operator-recipe#3",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_operator_recipe_path",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_operator_recipe_path",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "lock.schema.units-ambiguous#1",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_lock_L299_8",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_lock_L299_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "name.grammar.unit#1",
+    "status": "killed",
+    "test": "test_guard_deploy_b.Guards.test_deploy_L973_12_and_unit_grammar",
+    "trials": [
+      {
+        "test": "test_guard_deploy_b.Guards.test_deploy_L973_12_and_unit_grammar",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "recipe.secret-ref.audit#1",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_named_recipe_secret_ref_audit_declared",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_named_recipe_secret_ref_audit_declared",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "recipe.secret-ref.audit#2",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_named_recipe_secret_ref_audit_own_key",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_named_recipe_secret_ref_audit_own_key",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "recipe.secret-ref.audit#3",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_named_recipe_secret_ref_audit_other_dollar",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_named_recipe_secret_ref_audit_other_dollar",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "recipe.secret-ref.catalog-token#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L174_16",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L174_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "recipe.secret-ref.spawn-env#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L94_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L94_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "recipe.secret-ref.spawn-token#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L87_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L87_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "recipe.secret-ref.token#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L157_16",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L157_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "secrets.reserved.adapter#1",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L136_8",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L136_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "secrets.reserved.adapter#2",
+    "status": "killed",
+    "test": "test_guard_cook.Guards.test_cook_L188_4",
+    "trials": [
+      {
+        "test": "test_guard_cook.Guards.test_cook_L188_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "secrets.reserved.catalog#1",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_catalog_L329_4",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_catalog_L329_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "secrets.reserved.catalog-code-env#1",
+    "status": "killed",
+    "test": "test_guard_catalog_a.Guards.test_named_secrets_reserved_catalog_code_env",
+    "trials": [
+      {
+        "test": "test_guard_catalog_a.Guards.test_named_secrets_reserved_catalog_code_env",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "secrets.reserved.direct#1",
+    "status": "killed",
+    "test": "test_guard_deploy_a.Guards.test_secrets_reserved_direct",
+    "trials": [
+      {
+        "test": "test_guard_deploy_a.Guards.test_secrets_reserved_direct",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "secrets.reserved.file-env#1",
+    "status": "killed",
+    "test": "test_guard_lock_inputs.Guards.test_inputs_secret_file_reserved_env",
+    "trials": [
+      {
+        "test": "test_guard_lock_inputs.Guards.test_inputs_secret_file_reserved_env",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.artifact.limit#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_sources_L220_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_sources_L220_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.artifact.payload-path#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_named_artifact_payload_path_1",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_named_artifact_payload_path_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.artifact.payload-path#2",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_named_artifact_payload_path_2",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_named_artifact_payload_path_2",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.artifact.payload-path#3",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L174_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L174_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.artifact.payload-path#4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L175_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L175_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.artifact.provenance#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_named_artifact_provenance_1",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_named_artifact_provenance_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.artifact.provenance#2",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_named_artifact_provenance_2",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_named_artifact_provenance_2",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.artifact.provenance#3",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_named_artifact_provenance_3",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_named_artifact_provenance_3",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.artifact.store#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L183_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L183_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.artifact.store#2",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L210_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L210_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.connector-settings#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L80_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L80_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.connector-settings#2",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L83_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L83_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.cycle#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L137_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L137_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.descriptor#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_named_catalog_descriptor_1",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_named_catalog_descriptor_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.file-name#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L103_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L103_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.home-transport#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L134_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L134_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.pin#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L114_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L114_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.pin#2",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L116_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L116_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.pin#3",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_named_catalog_pin_3",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_named_catalog_pin_3",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.pin#4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_named_catalog_pin_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_named_catalog_pin_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.pin#5",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L125_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L125_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.pin#6",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_named_catalog_pin_6",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_named_catalog_pin_6",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.pin#7",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L128_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L128_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.reference#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L61_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L61_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.reference#2",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_named_catalog_reference_2",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_named_catalog_reference_2",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.reference#3",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_planner_L64_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_planner_L64_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.reference#4",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_named_catalog_reference_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_named_catalog_reference_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.reference#5",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_named_catalog_reference_5",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_named_catalog_reference_5",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.select#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L154_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L154_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.versions#1",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_named_catalog_versions_1",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_named_catalog_versions_1",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.catalog.versions#2",
+    "status": "killed",
+    "test": "test_guard_spawn_sources.Guards.test_catalog_L84_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_sources.Guards.test_catalog_L84_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.cli.combos#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_cli_L40_16",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_cli_L40_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.cli.combos#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_cli_L44_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_cli_L44_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.cli.combos#3",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_cli_L49_16",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_cli_L49_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.cli.parser#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_cli_L15_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_cli_L15_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.cli.refusal#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_cli_refusal_fixed_message",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_cli_refusal_fixed_message",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.cli.refusal#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_cli_refusal_files_written_false",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_cli_refusal_files_written_false",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.cli.status-readonly#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_cli_status_readonly",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_cli_status_readonly",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.duplicate-active#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_L118_16",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_L118_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.handle#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_L132_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_L132_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.no-reuse#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_no_reuse",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_no_reuse",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.no-reuse#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_no_reuse",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_no_reuse",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.tombstone#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_tombstone_marks",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_tombstone_marks",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.identity.tombstone#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_identity_tombstone_keeps_row",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_identity_tombstone_keeps_row",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.adapter-required#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L190_16",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L190_16",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.adapter-required#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L194_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L194_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.input-for-target#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L161_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L161_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.input-for-target#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L162_12",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L162_12",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.state-schema#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_state_schema_closed_record",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_state_schema_closed_record",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.state-schema#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_state_schema_values",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_state_schema_values",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.store-binding#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L96_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L96_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.table#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_table_seeded_rows",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_table_seeded_rows",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.table#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_table_enforced",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_table_enforced",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.lifecycle.target#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L151_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L151_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.persist.bound#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L49_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L49_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.persist.lock-nofollow#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_persist_lock_nofollow_symlink",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_persist_lock_nofollow_symlink",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.persist.lock-nofollow#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_persist_lock_mode",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_persist_lock_mode",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.persist.symlink#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L19_8",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L19_8",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.persist.traversal#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L17_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_persistence_L17_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.home#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_home_closed",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_home_closed",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.home#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_L213_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_L213_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.instance#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_instance_closed",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_instance_closed",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.instance#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_instance_version",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_instance_version",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.name-receipt#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_name_receipt_closed",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_name_receipt_closed",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.name-receipt#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_L191_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_L191_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.name-record#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_name_record_closed",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_name_record_closed",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.name-record#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_name_record_concrete",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_name_record_concrete",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.seed#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_seed_L32_4",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_seed_L32_4",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.template#1",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_template_closed",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_template_closed",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  {
+    "id": "spawn.schema.template#2",
+    "status": "killed",
+    "test": "test_guard_spawn_state.Guards.test_spawn_schema_template_version",
+    "trials": [
+      {
+        "test": "test_guard_spawn_state.Guards.test_spawn_schema_template_version",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  }
+]

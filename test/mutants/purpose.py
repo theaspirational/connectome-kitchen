@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Run purpose-built killing tests (`test/unit/test_guard_*.py`) against exact mutants.
 
-The map of mutant id -> test id lives in `test/mutants/purpose/*.json` (`kills`).
+The map of mutant id -> test id lives in `test/mutants/purpose/*.golden` (`kills`).
 A mutant id is a guard-site id from `guard-anchors.golden` or a named site id
 (`<name>#<n>`) from `named-site-anchors.golden`.
 

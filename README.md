@@ -32,10 +32,10 @@ dependencies.
   apply and baseline spawn; verify/recover/cutover are unavailable at this freeze.
 - `test/mutants/`: exact-anchor guard-site mutation runners and results, plus
   named observable-effect mutants. `scripts/check-module-ready` refuses completion
-  while coverage gaps remain. The 203 semantic names are now individually source-anchored; 113 have
-  executable independent mutants and 69 are killed. Compound and uncovered
-  obligations remain blocking. `phase1-summary.golden` is authoritative; the
-  older `combined-summary.golden` preserves the previous slice baseline.
+  while coverage gaps remain. All 203 semantic names are source-anchored and have
+  independent mutants; 200 are killed, one is killed only with a crash-only
+  vector and two stay open. `phase1-summary.golden` is authoritative; the
+  older `combined-summary.golden` preserves the first slice baseline.
 - `scripts/inventory-sites`: globs all engine/adaptor files and checks all 74
   rows. Branch-only rows 14, 43–46 are unavailable on this baseline. The chosen
   line matcher finds 585 sites, seven reviewed helper exemptions, no uncovered
@@ -103,9 +103,11 @@ python3 test/mutants/invisible.py
 Recorder tests that patch internals are explicitly listed rather than silently
 promoted to independent A vectors. Full raw records and initial tar snapshots
 remain private ignored scratch; only the portable canonical subset is committed.
-All 279 recorded B scenarios and all 60 recorded C entries remain pending
-independent conversion/replay through the contract shim. The latter are patched
-cook-error calls, not independently runnable CLI requests. The precise audit
+All 279 recorded B scenarios remain pending independent conversion/replay
+through the contract shim. Of the 60 recorded C entries, which are patched
+cook-error calls, 49 are reproduced through the unpatched adapter and 11 cannot
+be produced by any contract request; `docs/phase1-unreachable.md` lists every
+B and C entry with its reason. The precise audit
 and residual raw nondeterminism are in `docs/phase1-replay-limits.md`.
 Tests and subprocess captures are not automatically conformance vectors.
 
@@ -162,3 +164,69 @@ run `test/mutants/extend.py --source ../baseline --anchors <anchors> --out
 .cache/legacy-reproduction --max-trials 8`. The committed guard anchors retain
 the original three candidates, not the full coverage-derived candidate list;
 see the dispatch report for the exact preparation command.
+
+## Phase-1 deficit slice
+
+`scripts/check-module-ready` is still red; `test/mutants/phase1-summary.golden`
+has the current counts:
+
+| Measurement | Count |
+| --- | ---: |
+| Guard-site mutants | 573 |
+| Killed (clean evidence) | 564 |
+| Waived as equivalent or unreachable, each with a written justification | 4 |
+| Killed only by a crash-only kind-A vector (separate category) | 3 |
+| Unreviewed, each with a written analysis | 2 |
+| Named checks killed | 200 of 203 |
+| Named checks killed only with a crash-only vector (separate category) | 1 |
+| Named checks open | 2 |
+| C entries replayed through the unpatched adapter | 49 of 60 (11 unreachable) |
+| B scenarios replayed | 0 of 279 |
+
+The two unreviewed guards sit in methods whose mutant can only crash and which
+no module-level function reaches, so no function-level vector exists for them.
+One open name has the same mutation as one of those guards; the other protects
+a check that an earlier audit on the same words always subsumes, and a name
+cannot be waived.
+
+What this slice added:
+
+- **Purpose-built killing tests** (`test/unit/test_guard_*.py`), one area per
+  file, mapped to exact mutants in `test/mutants/purpose/*.golden`. A kill is a
+  solo run that passes unmutated and fails, without an error, on the mutant.
+- **Site-level named mutants** (`test/mutants/named_sites.py`). A named check
+  is killed only when every one of its site mutants is, and two names may not
+  share a mutation. Names cannot be waived.
+- **Waivers** (`test/mutants/equivalence-waivers.golden`), one written
+  justification per guard-site mutant, class `equivalent` or `unreachable`
+  only. Repeated justification text is refused.
+- **Crash-only kind-A vectors** (`test/vectors/crash-only.golden`,
+  `test/mutants/crash_only.py`). Some mutants can only turn a declared refusal
+  into a Python runtime error. They are counted separately as
+  `killed-kind-A-crash-only`, never in the clean killed total, and the
+  readiness gate keeps its own blocking line for them until the category is
+  accepted in review.
+- **Unresolved notes** (`test/mutants/unresolved.golden`): written analysis for
+  what is neither killed, waived nor crash-only. These stay blocking.
+- **C replay** (`test/differential/replay_c.py`) and the per-entry B/C
+  accounting in `docs/phase1-unreachable.md`.
+
+```
+python3 test/mutants/named_sites.py
+python3 test/mutants/guard_vectors.py --anchors test/mutants/named-site-anchors.golden --vectors test/vectors/guard-negative.golden --out .cache/named-site-reproduction
+python3 test/mutants/purpose.py run --check
+python3 test/mutants/crash_only.py build --check
+python3 test/mutants/crash_only.py run --check
+python3 test/mutants/sweep.py verify --anchors test/mutants/guard-anchors.golden --results test/mutants/sweep-results.golden --out .cache/sweep-verify
+python3 test/mutants/sweep.py verify --anchors test/mutants/named-site-anchors.golden --results test/mutants/named-site-sweep-results.golden --out .cache/named-sweep-verify
+python3 test/mutants/assemble.py
+python3 test/differential/replay_c.py run --cook-source /path/to/local/cook/clone
+python3 test/differential/replay_c.py shim-mutants --cook-source /path/to/local/cook/clone
+python3 scripts/unreachable-note
+```
+
+`purpose.py try --area AREA --id MUTANT --test TEST` runs one pair without
+writing anything. `sweep.py search` runs every frozen test against a mutant and
+confirms each failing test on its own. The C replay needs a local clone that
+holds the reviewed cook commit; without it the command exits 3 and counts
+nothing.

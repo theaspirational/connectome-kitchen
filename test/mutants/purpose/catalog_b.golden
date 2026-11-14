@@ -1,0 +1,229 @@
+{
+ "named_sites": {
+  "catalog.build.audit": [
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit_argv(argv, directory / name, root, state, pins['platform'])",
+    "after": "pass",
+    "why": "line 637: removes the argv audit in front of each build command inside install; the executable check on line 638 and both descriptor audits (615, 647) stay"
+   }
+  ],
+  "catalog.preflight.audit": [
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit_argv(argv, cwd, build, state, platform)",
+    "after": "pass",
+    "why": "line 676: removes the argv audit of preflight_unit; the absolute-executable and character checks on lines 677 and 679 stay"
+   }
+  ],
+  "catalog.audit-site.pre-build": [
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit_descriptors(config, pins, build)",
+    "after": "pass",
+    "why": "line 615 (occurrence 0 is the def on line 457): removes the descriptor audit that install runs before extracting or building; the recipe audit on line 616 and the post-build audits stay",
+    "occurrence": 1
+   },
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit_recipe(json.loads(",
+    "after": "(lambda *args, **options: None)(json.loads(",
+    "why": "lines 616-617: the recipe audit that install runs before extracting or building is no longer called (its callee becomes a no-op, a single-line anchor for a two-line statement); the argument expressions are still evaluated, and the descriptor audit on line 615 and the post-build audits stay",
+    "occurrence": 0
+   }
+  ],
+  "catalog.audit-site.post-build": [
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit_descriptors(config, pins, build)",
+    "after": "pass",
+    "why": "line 647: removes the descriptor audit that install repeats after every build has run; the pre-build audits and the post-build recipe audit stay",
+    "occurrence": 2
+   },
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit_recipe(json.loads(",
+    "after": "(lambda *args, **options: None)(json.loads(",
+    "why": "lines 648-649: the recipe audit that install repeats after every build has run is no longer called (its callee becomes a no-op, a single-line anchor for a two-line statement); the argument expressions are still evaluated, and the pre-build audits and the post-build descriptor audit stay",
+    "occurrence": 1
+   }
+  ],
+  "catalog.audit-site.verify-tree": [
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit_tree_code(build, state, pins['platform'])",
+    "after": "pass",
+    "why": "line 698 (occurrences 0 and 1 are the install calls on lines 630 and 635): removes the interpreter-line audit of the installed tree in verify",
+    "occurrence": 2
+   },
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit_descriptors(config, pins, build)",
+    "after": "pass",
+    "why": "line 700: removes the descriptor re-audit in verify; the recipe, health and preflight audits stay",
+    "occurrence": 3
+   },
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit_recipe(recipe, build, state, pins['platform'], secrets=secret_environment_names(config), data_options=data_options_for(config, build))",
+    "after": "pass",
+    "why": "line 701: removes the recipe re-audit in verify from the build directory; the per-launch-directory repeat on line 729 runs only with a cook lock and stays"
+   },
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit(config.get('health', {}), root, state, pins['platform'])",
+    "after": "pass",
+    "why": "line 702: removes the path audit of the whole health configuration in verify; the health command argv audit inside audit_descriptors stays"
+   },
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit(preflight_unit(config, build, platform=pins['platform']), root, state, pins['platform'])",
+    "after": "pass",
+    "why": "line 703: removes the statement that renders the preflight unit from the build directory and audits its text; rendering is where the absolute-executable requirement is applied in verify"
+   }
+  ],
+  "catalog.audit-site.verify-lock": [
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit_argv(lock['health']['command'], build, build, state, pins['platform'])",
+    "after": "pass",
+    "why": "line 706: removes the argv audit of the health command recorded in the cook lock; the generic lock path audit on line 707 stays"
+   },
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit(lock, build.parent.parent, state, pins['platform'])",
+    "after": "pass",
+    "why": "line 707: removes the path audit of the whole cook lock against the agent tree, state and platform closure"
+   }
+  ],
+  "catalog.audit-site.verify-units": [
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit(path.read_text(), root, state, pins['platform'])",
+    "after": "pass",
+    "why": "line 720: removes the path audit of each unit file text; the Service classifier on line 721 stays",
+    "occurrence": 0
+   },
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "cwd = audit_unit(path.read_text(), root, state, pins['platform'])",
+    "after": "cwd = build",
+    "why": "line 721: the unit is no longer audited here nor asked for its working directory; the build root, verify's own default for a lock without units (line 727), keeps `cwd` defined"
+   },
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "preflight_unit(config, build, cwd, pins['platform'])",
+    "after": "pass",
+    "why": "line 722: removes the preflight audit from each unit's own working directory; the build-directory rendering on line 703 stays"
+   },
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit(path.read_text(), root, state, pins['platform'])",
+    "after": "pass",
+    "why": "line 726: removes the path audit of the launcher text; the launcher classifier on line 728 stays",
+    "occurrence": 1
+   },
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit_launcher(path.read_text(), cwd, root, state, pins['platform'])",
+    "after": "[cwd]",
+    "why": "line 728: the launcher is no longer classified; the loop keeps only the starting directory, so the per-directory audits on lines 729 and 731 still run once"
+   }
+  ],
+  "catalog.audit-site.launch-cwd": [
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit_recipe(recipe, build, state, pins['platform'], launch_cwd, secret_environment_names(config), data_options=data_options_for(config, build))",
+    "after": "pass",
+    "why": "line 729: removes the recipe audit repeated from each launch directory; the build-directory recipe audit on line 701 stays"
+   },
+   {
+    "file": "module_utils/connectome_catalog.py",
+    "before": "audit_unit(unit_body, root, state, pins['platform'], env_cwd=launch_cwd)",
+    "after": "pass",
+    "why": "line 731: removes the unit audit repeated with each launch directory as the environment base; the audit from the unit's own directory on line 721 stays"
+   }
+  ]
+ },
+ "kills": {
+  "catalog.L460.4": "test_guard_catalog_b.Guards.test_catalog_L460_4",
+  "catalog.audit-site.separate#1": "test_guard_catalog_b.Guards.test_catalog_L460_4",
+  "catalog.L483.8": "test_guard_catalog_b.Guards.test_catalog_L483_8",
+  "catalog.L501.8": "test_guard_catalog_b.Guards.test_catalog_L501_8",
+  "catalog.L507.16": "test_guard_catalog_b.Guards.test_catalog_L507_16",
+  "catalog.L546.12": "test_guard_catalog_b.Guards.test_catalog_L546_12",
+  "catalog.L556.8": "test_guard_catalog_b.Guards.test_catalog_L556_8",
+  "catalog.L564.20": "test_guard_catalog_b.Guards.test_catalog_L564_20",
+  "catalog.L565.16": "test_guard_catalog_b.Guards.test_catalog_L565_16",
+  "catalog.L570.4": "test_guard_catalog_b.Guards.test_catalog_L570_4",
+  "catalog.stage.inventory#1": "test_guard_catalog_b.Guards.test_catalog_L570_4",
+  "catalog.L573.8": "test_guard_catalog_b.Guards.test_catalog_L573_8",
+  "catalog.stage.inventory#2": "test_guard_catalog_b.Guards.test_catalog_L573_8",
+  "catalog.L576.8": "test_guard_catalog_b.Guards.test_catalog_L576_8",
+  "catalog.stage.inventory#3": "test_guard_catalog_b.Guards.test_catalog_L576_8",
+  "catalog.L582.4": "test_guard_catalog_b.Guards.test_catalog_L582_4",
+  "catalog.L586.8": "test_guard_catalog_b.Guards.test_catalog_L586_8",
+  "catalog.L592.16": "test_guard_catalog_b.Guards.test_catalog_L592_16",
+  "catalog.L595.16": "test_guard_catalog_b.Guards.test_catalog_L595_16",
+  "catalog.L628.8": "test_guard_catalog_b.Guards.test_catalog_L628_8",
+  "catalog.contained.archive#1": "test_guard_catalog_b.Guards.test_catalog_L628_8",
+  "catalog.L639.12": "test_guard_catalog_b.Guards.test_catalog_L639_12",
+  "catalog.build.executable#1": "test_guard_catalog_b.Guards.test_catalog_L639_12",
+  "catalog.L643.12": "test_guard_catalog_b.Guards.test_catalog_L643_12",
+  "catalog.build.status#1": "test_guard_catalog_b.Guards.test_catalog_L643_12",
+  "catalog.L646.12": "test_guard_catalog_b.Guards.test_catalog_L646_12",
+  "catalog.build.export#1": "test_guard_catalog_b.Guards.test_catalog_L646_12",
+  "catalog.L708.12": "test_guard_catalog_b.Guards.test_catalog_L708_12",
+  "catalog.L710.12": "test_guard_catalog_b.Guards.test_catalog_L710_12",
+  "catalog.L712.12": "test_guard_catalog_b.Guards.test_catalog_L712_12",
+  "catalog.L714.16": "test_guard_catalog_b.Guards.test_catalog_L714_16",
+  "catalog.L715.16": "test_guard_catalog_b.Guards.test_catalog_L715_16",
+  "catalog.L719.16": "test_guard_catalog_b.Guards.test_catalog_L719_16",
+  "catalog.L725.12": "test_guard_catalog_b.Guards.test_catalog_L725_12",
+  "catalog.L735.8": "test_guard_catalog_b.Guards.test_catalog_L735_8",
+  "catalog.L753.8": "test_guard_catalog_b.Guards.test_catalog_L753_8",
+  "catalog.contained.inputs#1": "test_guard_catalog_b.Guards.test_catalog_L753_8",
+  "catalog.L768.8": "test_guard_catalog_b.Guards.test_catalog_L768_8",
+  "catalog.L842.4": "test_guard_catalog_b.Guards.test_catalog_L842_4",
+  "catalog.build.audit#1": "test_guard_catalog_b.Guards.test_catalog_build_audit",
+  "catalog.preflight.audit#1": "test_guard_catalog_b.Guards.test_catalog_preflight_audit",
+  "catalog.audit-site.pre-build#1": "test_guard_catalog_b.Guards.test_catalog_audit_site_pre_build_descriptors",
+  "catalog.audit-site.pre-build#2": "test_guard_catalog_b.Guards.test_catalog_audit_site_pre_build_recipe",
+  "catalog.audit-site.post-build#1": "test_guard_catalog_b.Guards.test_catalog_audit_site_post_build_descriptors",
+  "catalog.audit-site.post-build#2": "test_guard_catalog_b.Guards.test_catalog_audit_site_post_build_recipe",
+  "catalog.audit-site.verify-tree#1": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_tree_code",
+  "catalog.audit-site.verify-tree#2": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_descriptors",
+  "catalog.audit-site.verify-tree#3": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_recipe",
+  "catalog.audit-site.verify-tree#4": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_health",
+  "catalog.audit-site.verify-tree#5": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_preflights",
+  "catalog.audit-site.verify-lock#1": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_lock_health",
+  "catalog.audit-site.verify-lock#2": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_lock_paths",
+  "catalog.audit-site.verify-units#1": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_unit_text",
+  "catalog.audit-site.verify-units#2": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_unit_directory",
+  "catalog.audit-site.verify-units#3": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_unit_preflight",
+  "catalog.audit-site.verify-units#4": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_launcher_text",
+  "catalog.audit-site.verify-units#5": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_launcher_commands",
+  "catalog.audit-site.launch-cwd#1": "test_guard_catalog_b.Guards.test_catalog_audit_site_launch_cwd_recipe",
+  "catalog.audit-site.launch-cwd#2": "test_guard_catalog_b.Guards.test_catalog_audit_site_launch_cwd_unit"
+ },
+ "waivers": [
+  {
+   "id": "catalog.L537.8",
+   "class": "unreachable",
+   "justification": "module_utils/connectome_catalog.py:537 need(bool(argv), 'empty launcher command') can never see a falsy argv. Line 530 strips each launcher line with str.strip() and line 534 skips it when it is empty or starts with '#', so line 536 calls literal_words on a string whose first character is not whitespace. literal_words (lines 477-483) either raises, on line 478 for a refused character or on line 483 when shlex.split raises ValueError for an unterminated quote (need(False, ...) always raises, so the function never returns None), or it returns shlex.split(value). shlex.split runs a POSIX lexer with whitespace_split set and no comment characters. Its whitespace set (space, tab, carriage return, line feed) is a subset of what str.strip removed, so the first character opens a word or a quoted section; the lexer emits a token for every opened word and for every closed quote (an empty quoted string yields the empty token), and the escape character that could swallow a character is refused on line 478. The returned list therefore has at least one element whenever line 537 runs. Kill attempts before waiving: a line of only quotes (it yields one empty word and is refused later by audit_argv as 'command must be nonempty argv' in both versions), lines of exotic whitespace and control characters, and a brute force over every one- and two-character line from U+0000 to U+00FF plus U+0085, U+00A0, U+2028 and U+3000, and every line of up to four characters from a quote, whitespace and control alphabet: none makes literal_words return an empty list.",
+   "no_observable_difference": "Every launcher body passed to audit_launcher (any str): the condition on line 537 is true each time it is evaluated, so both versions return the same list of working directories or raise the same ArchiveError with the same message and code."
+  },
+  {
+   "id": "catalog.L679.8",
+   "class": "unreachable",
+   "justification": "module_utils/connectome_catalog.py:679 refuses a preflight word that holds a percent sign, dollar sign, line feed, carriage return, backslash or double quote. It is dominated by audit_argv on line 676, which preflight_unit calls without data_args. audit_argv requires every word to be a non-empty str (line 233). The executable goes through audit_path (line 237), whose line 205 requires a full match of [A-Za-z0-9_.+@/-]+. Every later word is exactly '--' (line 241), or an option without '=' that fully matches --[A-Za-z0-9][A-Za-z0-9-]*|-[A-Za-z0-9] (lines 246 and 249-250), or such an option followed by '=' and a value that goes through audit_path (lines 256-258; the data_args branch on line 252 is dead because the mapping is empty), or a plain word that goes through audit_path (line 258). A word that audit_argv accepts is therefore built only from letters, digits and the characters _ . + @ / = and -, none of which line 679 refuses, so its condition is true whenever it is evaluated. Kill attempts before waiving: option values, words after '--', attached short options and words ending in a line feed (a full match does not tolerate a trailing line feed); an exhaustive run over every word of up to four characters from an alphabet that includes the six refused characters, placed as executable, operand, operand after '--', long-option value and short option, found 6426 accepted argv lists and none that holds a refused character. The same mutation is the site mutant of the named check catalog.preflight.chars, which is recorded as unresolved because names cannot be waived.",
+   "no_observable_difference": "Every config whose preflight run words are str objects: a word that holds one of the six characters is already refused inside audit_argv on line 676, before line 679 runs, so preflight_unit returns the same unit text or raises the same ArchiveError in both versions. Only a str subclass that misreports its own contents could differ, and no JSON or YAML input produces one."
+  }
+ ],
+ "unresolved": [
+  {
+   "id": "catalog.preflight.chars",
+   "analysis": "Its only site mutant (line 679, the all(...) condition replaced by True) is the same mutation as guard catalog.L679.8 and cannot be observed: audit_argv on line 676 already restricts every preflight word to letters, digits and _ . + @ / = -, so the character check never fails for any list of real strings (see the waiver of catalog.L679.8 for the line-by-line argument and the exhaustive run that found no accepted word with a refused character). It is not crash-only either: with the guard removed nothing raises, the unit text is simply the same. The check only becomes the deciding one when the audit on line 676 is itself removed, which is the separate site mutant catalog.preflight.audit#1 (killed). What was tried: option values, operands after '--', attached short options, trailing line feeds, and executable words; the only input that separates the versions is a str subclass whose __contains__ misreports its contents, which would be a fabricated kill and was not written. A name cannot be waived, so it stays open for a ruling."
+  }
+ ]
+}

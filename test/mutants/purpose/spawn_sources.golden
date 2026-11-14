@@ -1,0 +1,247 @@
+{
+ "named_sites": {
+  "spawn.catalog.descriptor": [
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "json_data(entry)",
+    "after": "pass",
+    "why": "line 47 call site: removes the JSON-data closure of a descriptor (nesting bound, string keys, finite scalars) and leaves every later descriptor check in place"
+   }
+  ],
+  "spawn.catalog.versions": [
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "fields(catalog.versions, ('runtime', 'connectors'), ('artifacts', 'platform'))",
+    "after": "pass",
+    "why": "line 82 call site: removes the closed set of version sections (required runtime/connectors, optional artifacts/platform) and keeps the per-section type check"
+   },
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "type(catalog.versions.get(section, {})) is dict",
+    "after": "True",
+    "why": "line 84: removes the object-type check of each version section (same mutation as guard site spawn.catalog.L84.8)"
+   }
+  ],
+  "spawn.catalog.pin": [
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "value is not None",
+    "after": "True",
+    "why": "line 114: removes the refusal of a selected descriptor without any pin (same mutation as guard site spawn.catalog.L114.4)"
+   },
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "kind == 'connector' and match(value, COMMIT) and value != '0' * 40",
+    "after": "True",
+    "why": "line 116: removes the string-pin shape, a full nonzero commit allowed for connectors only (same mutation as guard site spawn.catalog.L116.8)"
+   },
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "fields(value, ('archive', 'version', 'sha256', 'descriptor_sha256'),",
+    "after": "(",
+    "why": "line 119 call site: removes the closed field set of an archive pin object and keeps every per-field check; the call spans two lines, so only its first line is replaced and the remaining optional-field tuple is left as an expression without effect"
+   },
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "value['archive'].startswith('inputs/')",
+    "after": "True",
+    "why": "line 122: removes only the requirement that the archive path lies under inputs/ (same mutation as guard site spawn.catalog.L122.8)"
+   },
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "match(value[field], SHA) and value[field] != '0' * 64",
+    "after": "True",
+    "why": "line 124 is the loop header; the check it feeds is on line 125: removes the full nonzero digest shape of sha256 and descriptor_sha256 (same mutation as guard site spawn.catalog.L125.12)"
+   },
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "value['descriptor_sha256'] == descriptor_digest(entry)",
+    "after": "True",
+    "why": "line 126: removes the comparison of the pinned descriptor digest with the digest computed from the descriptor (same mutation as guard site spawn.catalog.L126.8)"
+   },
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "match(value.get('commit'), COMMIT) and value['commit'] != '0' * 40",
+    "after": "True",
+    "why": "line 128: removes the full nonzero commit required of an archive connector pin (same mutation as guard site spawn.catalog.L128.12)"
+   }
+  ],
+  "spawn.catalog.reference": [
+   {
+    "file": "module_utils/connectome_spawn/planner.py",
+    "before": "name in selected",
+    "occurrence": 0,
+    "after": "True",
+    "why": "line 59 is the header of the substitution callback; its check is on line 61: removes the refusal of an artifact reference to an entry that is not selected (same mutation as guard site spawn.planner.L61.12); occurrence 0 is the check, the later occurrences are loop headers"
+   },
+   {
+    "file": "module_utils/connectome_spawn/planner.py",
+    "before": "return BUILD_BINDING + '/catalog/' + name",
+    "after": "return BUILD_BINDING + '/' + name",
+    "why": "line 62 constructed effect: the reference no longer expands to the entry's own installed root under catalog/, only to the bare build directory"
+   },
+   {
+    "file": "module_utils/connectome_spawn/planner.py",
+    "before": "'{artifact:' not in result",
+    "after": "True",
+    "why": "line 64: removes the refusal of a malformed reference left unexpanded (same mutation as guard site spawn.planner.L64.8)"
+   },
+   {
+    "file": "module_utils/connectome_spawn/planner.py",
+    "before": "not any(part in ('.', '..') for part in result.split('/'))",
+    "after": "True",
+    "why": "line 67: removes only the dot-segment half of the escape check on an expanded reference path"
+   },
+   {
+    "file": "module_utils/connectome_spawn/planner.py",
+    "before": "not in result, 'artifact path escape'",
+    "after": "not in '', 'artifact path escape'",
+    "why": "line 68: removes only the backslash half of the escape check on an expanded reference path, by testing the empty string instead of the expanded path (the dot-segment half on line 67 is kept)"
+   }
+  ],
+  "spawn.artifact.payload-path": [
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "absolute(root)",
+    "after": "pass",
+    "why": "line 170 call site: removes the literal absolute-path check of the payload root"
+   },
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "artifact_relative(path)",
+    "after": "pass",
+    "why": "line 171 call site: removes the literal contained relative-path check of the payload path"
+   },
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "not component.is_symlink()",
+    "after": "True",
+    "why": "line 174: removes the refusal of a symlinked payload file or ancestor (same mutation as guard site spawn.catalog.L174.8)"
+   },
+   {
+    "file": "module_utils/connectome_spawn/catalog.py",
+    "before": "candidate.resolve().is_relative_to(Path(root).resolve())",
+    "after": "True",
+    "why": "line 175: removes the resolved containment of the payload under its root (same mutation as guard site spawn.catalog.L175.4)"
+   }
+  ],
+  "spawn.artifact.provenance": [
+   {
+    "file": "module_utils/connectome_spawn/sources.py",
+    "before": "fields(entry, ('repo', 'commit'), ('path',))",
+    "after": "pass",
+    "why": "line 208 call site: removes the closed request shape, so an operator digest field is no longer refused"
+   },
+   {
+    "file": "module_utils/connectome_spawn/sources.py",
+    "before": "sha256=hashlib.sha256(content).hexdigest()",
+    "after": "sha256=entry.get('sha256')",
+    "why": "line 211 constructed effect: the blob record's digest is no longer computed from the pinned bytes but taken from the request"
+   },
+   {
+    "file": "module_utils/connectome_spawn/sources.py",
+    "before": "sha256=digest(files)",
+    "after": "sha256=entry.get('sha256')",
+    "why": "line 223 constructed effect: the tree record's digest is no longer computed from the pinned file inventory but taken from the request"
+   }
+  ]
+ },
+ "kills": {
+  "spawn.catalog.L48.4": "test_guard_spawn_sources.Guards.test_catalog_L48_4",
+  "spawn.catalog.L74.4": "test_guard_spawn_sources.Guards.test_catalog_L74_4",
+  "spawn.catalog.L81.4": "test_guard_spawn_sources.Guards.test_catalog_L81_4",
+  "spawn.catalog.L85.4": "test_guard_spawn_sources.Guards.test_catalog_L85_4",
+  "spawn.catalog.L99.4": "test_guard_spawn_sources.Guards.test_catalog_L99_4",
+  "spawn.catalog.L114.4": "test_guard_spawn_sources.Guards.test_catalog_L114_4",
+  "spawn.catalog.L161.4": "test_guard_spawn_sources.Guards.test_catalog_L161_4",
+  "spawn.catalog.L175.4": "test_guard_spawn_sources.Guards.test_catalog_L175_4",
+  "spawn.catalog.L183.4": "test_guard_spawn_sources.Guards.test_catalog_L183_4",
+  "spawn.catalog.L204.4": "test_guard_spawn_sources.Guards.test_catalog_L204_4",
+  "spawn.catalog.L84.8": "test_guard_spawn_sources.Guards.test_catalog_L84_8",
+  "spawn.catalog.L103.8": "test_guard_spawn_sources.Guards.test_catalog_L103_8",
+  "spawn.catalog.L116.8": "test_guard_spawn_sources.Guards.test_catalog_L116_8",
+  "spawn.catalog.L136.8": "test_guard_spawn_sources.Guards.test_catalog_L136_8",
+  "spawn.catalog.L137.8": "test_guard_spawn_sources.Guards.test_catalog_L137_8",
+  "spawn.catalog.L163.8": "test_guard_spawn_sources.Guards.test_catalog_L163_8",
+  "spawn.catalog.L174.8": "test_guard_spawn_sources.Guards.test_catalog_L174_8",
+  "spawn.catalog.L208.8": "test_guard_spawn_sources.Guards.test_catalog_L208_8",
+  "spawn.catalog.L210.8": "test_guard_spawn_sources.Guards.test_catalog_L210_8",
+  "spawn.catalog.L125.12": "test_guard_spawn_sources.Guards.test_catalog_L125_12",
+  "spawn.catalog.L128.12": "test_guard_spawn_sources.Guards.test_catalog_L128_12",
+  "spawn.catalog.L154.12": "test_guard_spawn_sources.Guards.test_catalog_L154_12",
+  "spawn.planner.L80.4": "test_guard_spawn_sources.Guards.test_planner_L80_4",
+  "spawn.planner.L83.4": "test_guard_spawn_sources.Guards.test_planner_L83_4",
+  "spawn.planner.L90.4": "test_guard_spawn_sources.Guards.test_planner_L90_4",
+  "spawn.planner.L132.4": "test_guard_spawn_sources.Guards.test_planner_L132_4",
+  "spawn.planner.L134.4": "test_guard_spawn_sources.Guards.test_planner_L134_4",
+  "spawn.planner.L58.8": "test_guard_spawn_sources.Guards.test_planner_L58_8",
+  "spawn.planner.L64.8": "test_guard_spawn_sources.Guards.test_planner_L64_8",
+  "spawn.planner.L87.8": "test_guard_spawn_sources.Guards.test_planner_L87_8",
+  "spawn.planner.L108.8": "test_guard_spawn_sources.Guards.test_planner_L108_8",
+  "spawn.planner.L148.8": "test_guard_spawn_sources.Guards.test_planner_L148_8",
+  "spawn.planner.L42.12": "test_guard_spawn_sources.Guards.test_planner_L42_12",
+  "spawn.planner.L61.12": "test_guard_spawn_sources.Guards.test_planner_L61_12",
+  "spawn.planner.L94.12": "test_guard_spawn_sources.Guards.test_planner_L94_12",
+  "spawn.planner.L99.12": "test_guard_spawn_sources.Guards.test_planner_L99_12",
+  "spawn.sources.L41.4": "test_guard_spawn_sources.Guards.test_sources_L41_4",
+  "spawn.sources.L42.4": "test_guard_spawn_sources.Guards.test_sources_L42_4",
+  "spawn.sources.L125.4": "test_guard_spawn_sources.Guards.test_sources_L125_4",
+  "spawn.sources.L130.4": "test_guard_spawn_sources.Guards.test_sources_L130_4",
+  "spawn.sources.L131.4": "test_guard_spawn_sources.Guards.test_sources_L131_4",
+  "spawn.sources.L134.4": "test_guard_spawn_sources.Guards.test_sources_L134_4",
+  "spawn.sources.L162.4": "test_guard_spawn_sources.Guards.test_sources_L162_4",
+  "spawn.sources.L118.8": "test_guard_spawn_sources.Guards.test_sources_L118_8",
+  "spawn.sources.L175.8": "test_guard_spawn_sources.Guards.test_sources_L175_8",
+  "spawn.sources.L220.8": "test_guard_spawn_sources.Guards.test_sources_L220_8",
+  "spawn.sources.L55.12": "test_guard_spawn_sources.Guards.test_sources_L55_12",
+  "spawn.sources.L56.12": "test_guard_spawn_sources.Guards.test_sources_L56_12",
+  "spawn.sources.L58.12": "test_guard_spawn_sources.Guards.test_sources_L58_12",
+  "spawn.sources.L61.12": "test_guard_spawn_sources.Guards.test_sources_L61_12",
+  "spawn.sources.L110.12": "test_guard_spawn_sources.Guards.test_sources_L110_12",
+  "spawn.sources.L179.12": "test_guard_spawn_sources.Guards.test_sources_L179_12",
+  "recipe.secret-ref.spawn-token#1": "test_guard_spawn_sources.Guards.test_planner_L87_8",
+  "recipe.secret-ref.spawn-env#1": "test_guard_spawn_sources.Guards.test_planner_L94_12",
+  "spawn.catalog.descriptor#1": "test_guard_spawn_sources.Guards.test_named_catalog_descriptor_1",
+  "spawn.catalog.versions#1": "test_guard_spawn_sources.Guards.test_named_catalog_versions_1",
+  "spawn.catalog.versions#2": "test_guard_spawn_sources.Guards.test_catalog_L84_8",
+  "spawn.catalog.file-name#1": "test_guard_spawn_sources.Guards.test_catalog_L103_8",
+  "spawn.catalog.pin#1": "test_guard_spawn_sources.Guards.test_catalog_L114_4",
+  "spawn.catalog.pin#2": "test_guard_spawn_sources.Guards.test_catalog_L116_8",
+  "spawn.catalog.pin#3": "test_guard_spawn_sources.Guards.test_named_catalog_pin_3",
+  "spawn.catalog.pin#4": "test_guard_spawn_sources.Guards.test_named_catalog_pin_4",
+  "spawn.catalog.pin#5": "test_guard_spawn_sources.Guards.test_catalog_L125_12",
+  "spawn.catalog.pin#6": "test_guard_spawn_sources.Guards.test_named_catalog_pin_6",
+  "spawn.catalog.pin#7": "test_guard_spawn_sources.Guards.test_catalog_L128_12",
+  "spawn.catalog.select#1": "test_guard_spawn_sources.Guards.test_catalog_L154_12",
+  "spawn.catalog.cycle#1": "test_guard_spawn_sources.Guards.test_catalog_L137_8",
+  "spawn.catalog.reference#1": "test_guard_spawn_sources.Guards.test_planner_L61_12",
+  "spawn.catalog.reference#2": "test_guard_spawn_sources.Guards.test_named_catalog_reference_2",
+  "spawn.catalog.reference#3": "test_guard_spawn_sources.Guards.test_planner_L64_8",
+  "spawn.catalog.reference#4": "test_guard_spawn_sources.Guards.test_named_catalog_reference_4",
+  "spawn.catalog.reference#5": "test_guard_spawn_sources.Guards.test_named_catalog_reference_5",
+  "spawn.catalog.connector-settings#1": "test_guard_spawn_sources.Guards.test_planner_L80_4",
+  "spawn.catalog.connector-settings#2": "test_guard_spawn_sources.Guards.test_planner_L83_4",
+  "spawn.catalog.home-transport#1": "test_guard_spawn_sources.Guards.test_planner_L134_4",
+  "spawn.artifact.store#1": "test_guard_spawn_sources.Guards.test_catalog_L183_4",
+  "spawn.artifact.store#2": "test_guard_spawn_sources.Guards.test_catalog_L210_8",
+  "spawn.artifact.payload-path#1": "test_guard_spawn_sources.Guards.test_named_artifact_payload_path_1",
+  "spawn.artifact.payload-path#2": "test_guard_spawn_sources.Guards.test_named_artifact_payload_path_2",
+  "spawn.artifact.payload-path#3": "test_guard_spawn_sources.Guards.test_catalog_L174_8",
+  "spawn.artifact.payload-path#4": "test_guard_spawn_sources.Guards.test_catalog_L175_4",
+  "spawn.artifact.limit#1": "test_guard_spawn_sources.Guards.test_sources_L220_8",
+  "spawn.artifact.provenance#1": "test_guard_spawn_sources.Guards.test_named_artifact_provenance_1",
+  "spawn.artifact.provenance#2": "test_guard_spawn_sources.Guards.test_named_artifact_provenance_2",
+  "spawn.artifact.provenance#3": "test_guard_spawn_sources.Guards.test_named_artifact_provenance_3"
+ },
+ "waivers": [],
+ "crash_only": [
+  {
+   "id": "spawn.sources.L190.8",
+   "function": "connectome_spawn.sources.parse_repo_source",
+   "args": [
+    "local-repository-without-separators"
+   ],
+   "kwargs": {}
+  }
+ ]
+}

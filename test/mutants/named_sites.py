@@ -7,7 +7,7 @@ builder covers every name that those earlier results did not kill:
 - a name whose anchor lines each hold exactly one guard that no other name
   shares gets the standard site mutation (`need(X)` -> `need(True)`,
   `raise` -> `pass`, `if X: raise` -> `if False: raise`), one per anchor line;
-- every other name needs a hand-written entry in `test/mutants/purpose/*.json`
+- every other name needs a hand-written entry in `test/mutants/purpose/*.golden`
   (`named_sites`), each an exact, unique source substring and its replacement.
   A hand-written entry replaces the automatic ones for that name.
 
@@ -25,10 +25,10 @@ M=ROOT/'test/mutants'
 
 def fragments(only=None):
  result={}
- for path in sorted((M/'purpose').glob('*.json')):
+ for path in sorted((M/'purpose').glob('*.golden')):
   if only and path.stem!=only:continue
   data=json.loads(path.read_text())
-  if set(data)-{'named_sites','kills','waivers'}:raise ValueError('unknown fragment key: '+path.name)
+  if set(data)-{'named_sites','kills','waivers','unresolved','crash_only'}:raise ValueError('unknown fragment key: '+path.name)
   result[path.stem]=data
  return result
 

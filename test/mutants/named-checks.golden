@@ -226,9 +226,16 @@
         "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "secrets.reserved.file-env#1",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_secret_file_reserved_env",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "secrets.reserved.catalog",
@@ -241,9 +248,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "secrets.reserved.catalog#1",
+        "vector": "test_guard_catalog_a.Guards.test_catalog_L329_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "secrets.reserved.catalog-code-env",
@@ -256,9 +270,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "secrets.reserved.catalog-code-env#1",
+        "vector": "test_guard_catalog_a.Guards.test_named_secrets_reserved_catalog_code_env",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "secrets.reserved.grammar",
@@ -294,9 +315,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "secrets.reserved.direct#1",
+        "vector": "test_guard_deploy_a.Guards.test_secrets_reserved_direct",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "secrets.reserved.collision",
@@ -336,9 +364,22 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "secrets.reserved.adapter#1",
+        "vector": "test_guard_cook.Guards.test_cook_L136_8",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "secrets.reserved.adapter#2",
+        "vector": "test_guard_cook.Guards.test_cook_L188_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "recipe.secret-ref.token",
@@ -351,9 +392,16 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "recipe.secret-ref.token#1",
+        "vector": "test_guard_cook.Guards.test_cook_L157_16",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "recipe.secret-ref.catalog-token",
@@ -366,9 +414,16 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "recipe.secret-ref.catalog-token#1",
+        "vector": "test_guard_cook.Guards.test_cook_L174_16",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "recipe.secret-ref.env",
@@ -408,9 +463,30 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "recipe.secret-ref.audit#1",
+        "vector": "test_guard_catalog_a.Guards.test_named_recipe_secret_ref_audit_declared",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "recipe.secret-ref.audit#2",
+        "vector": "test_guard_catalog_a.Guards.test_named_recipe_secret_ref_audit_own_key",
+        "witnesses": []
+      },
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "recipe.secret-ref.audit#3",
+        "vector": null,
+        "witnesses": [
+          "853352479ea07685a776e79975271bbe560b157fc56ef6de53e270e081ce886a"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "recipe.secret-ref.spawn-token",
@@ -423,9 +499,16 @@
         "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "recipe.secret-ref.spawn-token#1",
+        "vector": "test_guard_spawn_sources.Guards.test_planner_L87_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "recipe.secret-ref.spawn-env",
@@ -438,9 +521,16 @@
         "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "recipe.secret-ref.spawn-env#1",
+        "vector": "test_guard_spawn_sources.Guards.test_planner_L94_12",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "cook.argv.dash",
@@ -453,9 +543,16 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.argv.dash#1",
+        "vector": "test_guard_cook.Guards.test_cook_argv_dash_1",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "cook.argv.flag-position",
@@ -468,9 +565,16 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.argv.flag-position#1",
+        "vector": "test_guard_cook.Guards.test_cook_argv_flag_position_1",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "cook.argv.validate-first",
@@ -483,9 +587,16 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.argv.validate-first#1",
+        "vector": "test_guard_cook.Guards.test_cook_argv_validate_first_1",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "cook.argv.stdin",
@@ -603,9 +714,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.private.state-kind#1",
+        "vector": "test_guard_deploy_a.Guards.test_deploy_private_state_kind",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.private.state-mode",
@@ -618,9 +736,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.private.state-mode#1",
+        "vector": "test_guard_deploy_a.Guards.test_deploy_private_state_mode",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.private.state-owner",
@@ -633,9 +758,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.private.state-owner#1",
+        "vector": "test_guard_deploy_a.Guards.test_deploy_private_state_owner",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.private.state-recheck",
@@ -648,9 +780,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.private.state-recheck#1",
+        "vector": "test_guard_deploy_a.Guards.test_deploy_private_state_recheck",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.private.secret-dir",
@@ -705,9 +844,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.private.canonical#1",
+        "vector": "test_guard_deploy_a.Guards.test_deploy_private_canonical",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.build.env",
@@ -789,9 +935,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.build.audit#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_build_audit",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.build.executable",
@@ -804,9 +957,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.build.executable#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_L639_12",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.build.output",
@@ -840,9 +1000,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.build.status#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_L643_12",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.build.export",
@@ -855,9 +1022,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.build.export#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_L646_12",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.adapter-env",
@@ -870,9 +1044,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.adapter-env#1",
+        "vector": "test_guard_deploy_b.Guards.test_adapter_env",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.stage.inventory",
@@ -897,9 +1078,28 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.stage.inventory#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_L570_4",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.stage.inventory#2",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_L573_8",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.stage.inventory#3",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_L576_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.stage.staged-exec",
@@ -918,9 +1118,22 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.stage.staged-exec#1",
+        "vector": "test_guard_cook.Guards.test_catalog_stage_staged_exec_1",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.stage.staged-exec#2",
+        "vector": "test_guard_cook.Guards.test_catalog_stage_staged_exec_2",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.contained.archive",
@@ -933,9 +1146,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.contained.archive#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_L628_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.contained.inputs",
@@ -954,9 +1174,22 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.contained.inputs#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_L753_8",
+        "witnesses": []
+      },
+      {
+        "file": "named-site-sweep-results.golden",
+        "site": "catalog.contained.inputs#2",
+        "vector": "test_catalog.CatalogTests.test_input_archives_and_checkout_must_belong_to_agent",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.contained.checkout",
@@ -969,9 +1202,16 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.contained.checkout#1",
+        "vector": "test_guard_cook.Guards.test_catalog_contained_checkout_1",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.preflight.chars",
@@ -1022,9 +1262,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.preflight.audit#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_preflight_audit",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.lifecycle.state-schema",
@@ -1043,9 +1290,24 @@
         "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.lifecycle.state-schema#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_lifecycle_state_schema_closed_record",
+        "witnesses": []
+      },
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "spawn.lifecycle.state-schema#2",
+        "vector": null,
+        "witnesses": [
+          "2ae3bfa29f05afddb0f329f4103d23675b46f3ccab510942e00bdef1c73b990e"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.lifecycle.store-binding",
@@ -1058,9 +1320,16 @@
         "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.lifecycle.store-binding#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L96_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.lifecycle.target",
@@ -1073,9 +1342,16 @@
         "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.lifecycle.target#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L151_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.lifecycle.input-for-target",
@@ -1094,9 +1370,22 @@
         "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.lifecycle.input-for-target#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L161_12",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.lifecycle.input-for-target#2",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L162_12",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.lifecycle.table",
@@ -1115,9 +1404,22 @@
         "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.lifecycle.table#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_lifecycle_table_seeded_rows",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.lifecycle.table#2",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_lifecycle_table_enforced",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.lifecycle.adapter-required",
@@ -1157,9 +1459,22 @@
         "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.identity.no-reuse#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_identity_no_reuse",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.identity.no-reuse#2",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_identity_no_reuse",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.identity.tombstone",
@@ -1172,9 +1487,22 @@
         "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.identity.tombstone#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_identity_tombstone_marks",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.identity.tombstone#2",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_identity_tombstone_keeps_row",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.identity.duplicate-active",
@@ -1193,9 +1521,22 @@
         "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.identity.duplicate-active#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_identity_L118_16",
+        "witnesses": []
+      },
+      {
+        "file": "named-site-sweep-results.golden",
+        "site": "spawn.identity.duplicate-active#2",
+        "vector": "test_spawn_lifecycle.LifecycleTests.test_provider_restart_idempotence_unique_ownership_and_concurrency",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.identity.op-digest",
@@ -1256,9 +1597,22 @@
         "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.identity.handle#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_identity_L132_8",
+        "witnesses": []
+      },
+      {
+        "file": "named-site-sweep-results.golden",
+        "site": "spawn.identity.handle#2",
+        "vector": "test_spawn_lifecycle.LifecycleTests.test_changed_capability_and_invalid_provider_handles_refused",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.identity.no-truncate",
@@ -1320,9 +1674,16 @@
         "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.persist.traversal#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_persistence_L17_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.persist.symlink",
@@ -1335,9 +1696,16 @@
         "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.persist.symlink#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_persistence_L19_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.persist.bound",
@@ -1350,9 +1718,16 @@
         "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.persist.bound#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_persistence_L49_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.persist.fsync-file",
@@ -1428,9 +1803,22 @@
         "source_sha256": "fef2a569db929c38f8fbdd88712d6658a1d10e09b5654ae8946608c69176ae7e"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.persist.lock-nofollow#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_persist_lock_nofollow_symlink",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.persist.lock-nofollow#2",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_persist_lock_mode",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "lock.schema.cook",
@@ -1510,9 +1898,28 @@
         "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "lock.schema.operator-recipe#1",
+        "vector": "test_guard_lock_inputs.Guards.test_lock_operator_recipe_installed_bytes",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "lock.schema.operator-recipe#2",
+        "vector": "test_guard_lock_inputs.Guards.test_lock_operator_recipe_digest",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "lock.schema.operator-recipe#3",
+        "vector": "test_guard_lock_inputs.Guards.test_lock_operator_recipe_path",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "lock.schema.timestamp",
@@ -1682,9 +2089,32 @@
         "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "lock.schema.outputs#1",
+        "vector": null,
+        "witnesses": [
+          "e7a2724ef3743e10ea80055ddbd418ead32698a0c3e66812236d7921a71668b8"
+        ]
+      },
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "lock.schema.outputs#2",
+        "vector": null,
+        "witnesses": [
+          "a7900d5aabb6263519ce3e2a89a3e7e082953ff7803130ab2313993f6d9d702d"
+        ]
+      },
+      {
+        "file": "named-site-sweep-results.golden",
+        "site": "lock.schema.outputs#3",
+        "vector": "test_cook.LockTests.test_every_lock_scalar_has_an_exact_type",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "lock.schema.extensions",
@@ -1875,9 +2305,16 @@
         "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "lock.schema.units-ambiguous#1",
+        "vector": "test_guard_lock_inputs.Guards.test_lock_L299_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.descriptor.duplicate",
@@ -1890,9 +2327,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.descriptor.duplicate#1",
+        "vector": "test_guard_catalog_a.Guards.test_catalog_L55_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.descriptor.name",
@@ -1905,9 +2349,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.descriptor.name#1",
+        "vector": "test_guard_catalog_a.Guards.test_catalog_L73_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.descriptor.keys",
@@ -1943,9 +2394,18 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "catalog.descriptor.kind#1",
+        "vector": null,
+        "witnesses": [
+          "526ecea27acc46676a9895f6f6b4f39c91f8095c730c5cc2991a0038569e2e04"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.descriptor.deps",
@@ -2010,9 +2470,24 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.descriptor.argv#1",
+        "vector": "test_guard_catalog_a.Guards.test_catalog_L84_8",
+        "witnesses": []
+      },
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "catalog.descriptor.argv#2",
+        "vector": null,
+        "witnesses": [
+          "8684612bfad19a458b943176b2e56df2ff17f0247212b500959864b075eeaf7a"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.descriptor.preflight-run",
@@ -2071,9 +2546,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.descriptor.cycle#1",
+        "vector": "test_guard_catalog_a.Guards.test_catalog_L124_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.descriptor.reference",
@@ -2109,9 +2591,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.descriptor.runtimes#1",
+        "vector": "test_guard_catalog_a.Guards.test_catalog_L109_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.data-args.flag",
@@ -2158,9 +2647,24 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "catalog.data-args.state#1",
+        "vector": null,
+        "witnesses": [
+          "c2d83da92c347ac9787821786d835393345d2d11fa1ba4f96060bb3b9eef1679"
+        ]
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.data-args.state#2",
+        "vector": "test_guard_catalog_a.Guards.test_named_catalog_data_args_state_containment",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.data-args.command",
@@ -2196,9 +2700,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.data-args.conflict#1",
+        "vector": "test_guard_catalog_a.Guards.test_catalog_L359_16",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.data-args.binding",
@@ -2211,9 +2722,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.data-args.binding#1",
+        "vector": "test_guard_catalog_a.Guards.test_catalog_L253_16",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.data-args.spawn",
@@ -2232,9 +2750,22 @@
         "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-site-sweep-results.golden",
+        "site": "catalog.data-args.spawn#1",
+        "vector": "test_catalog.CatalogTests.test_spawn_reader_loads_role_fixtures_and_matches_catalog_recipe",
+        "witnesses": []
+      },
+      {
+        "file": "named-site-sweep-results.golden",
+        "site": "catalog.data-args.spawn#2",
+        "vector": "test_catalog.CatalogTests.test_spawn_reader_loads_role_fixtures_and_matches_catalog_recipe",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.audit-site.plan",
@@ -2253,9 +2784,22 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.plan#1",
+        "vector": "test_guard_deploy_a.Guards.test_catalog_audit_site_plan_descriptors",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.plan#2",
+        "vector": "test_guard_deploy_a.Guards.test_catalog_audit_site_plan_recipe",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.audit-site.pre-build",
@@ -2274,9 +2818,22 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.pre-build#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_pre_build_descriptors",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.pre-build#2",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_pre_build_recipe",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.audit-site.post-build",
@@ -2295,9 +2852,22 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.post-build#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_post_build_descriptors",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.post-build#2",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_post_build_recipe",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.audit-site.separate",
@@ -2310,9 +2880,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.separate#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_L460_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.audit-site.verify-tree",
@@ -2349,9 +2926,40 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.verify-tree#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_tree_code",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.verify-tree#2",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_descriptors",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.verify-tree#3",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_recipe",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.verify-tree#4",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_health",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.verify-tree#5",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_preflights",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.audit-site.verify-lock",
@@ -2370,9 +2978,22 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.verify-lock#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_lock_health",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.verify-lock#2",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_lock_paths",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.audit-site.verify-units",
@@ -2409,9 +3030,40 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.verify-units#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_unit_text",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.verify-units#2",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_unit_directory",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.verify-units#3",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_unit_preflight",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.verify-units#4",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_launcher_text",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.verify-units#5",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_verify_launcher_commands",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.audit-site.launch-cwd",
@@ -2430,9 +3082,22 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.launch-cwd#1",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_launch_cwd_recipe",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.launch-cwd#2",
+        "vector": "test_guard_catalog_b.Guards.test_catalog_audit_site_launch_cwd_unit",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "catalog.audit-site.cook-argv",
@@ -2457,9 +3122,28 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.cook-argv#1",
+        "vector": "test_guard_cook.Guards.test_catalog_audit_site_cook_argv_1",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.cook-argv#2",
+        "vector": "test_guard_cook.Guards.test_catalog_audit_site_cook_argv_2",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.audit-site.cook-argv#3",
+        "vector": "test_guard_cook.Guards.test_catalog_audit_site_cook_argv_3",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "inputs.record.activation",
@@ -2472,9 +3156,16 @@
         "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.activation#1",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_L63_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "inputs.record.exclusive",
@@ -2505,9 +3196,34 @@
         "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.exclusive#1",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_L67_4",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.exclusive#2",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_L70_8",
+        "witnesses": []
+      },
+      {
+        "file": "named-site-sweep-results.golden",
+        "site": "inputs.record.exclusive#3",
+        "vector": "test_deploy.DeployTests.test_closed_activation_and_exclusive_schema",
+        "witnesses": []
+      },
+      {
+        "file": "named-site-sweep-results.golden",
+        "site": "inputs.record.exclusive#4",
+        "vector": "test_deploy.DeployTests.test_closed_activation_and_exclusive_schema",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "inputs.record.recipe-file",
@@ -2526,9 +3242,22 @@
         "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.recipe-file#1",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_L81_8",
+        "witnesses": []
+      },
+      {
+        "file": "named-site-sweep-results.golden",
+        "site": "inputs.record.recipe-file#2",
+        "vector": "test_operator_inputs.OperatorTests.test_recipe_closed_shape_and_transport_refusals",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "inputs.record.recipe-path",
@@ -2547,9 +3276,22 @@
         "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-site-sweep-results.golden",
+        "site": "inputs.record.recipe-path#1",
+        "vector": "test_operator_inputs.OperatorTests.test_recipe_closed_shape_and_transport_refusals",
+        "witnesses": []
+      },
+      {
+        "file": "named-site-sweep-results.golden",
+        "site": "inputs.record.recipe-path#2",
+        "vector": "test_operator_inputs.OperatorTests.test_recipe_closed_shape_and_transport_refusals",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "inputs.record.secret-files",
@@ -2580,9 +3322,34 @@
         "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.secret-files#1",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_L91_8",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.secret-files#2",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_L94_12",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.secret-files#3",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_secret_file_names",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.secret-files#4",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_secret_file_duplicate_env",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "inputs.record.data-args",
@@ -2595,9 +3362,52 @@
         "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-args#1",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_args_list",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-args#2",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_args_closed_keys",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-args#3",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_args_server",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-args#4",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_args_args_list",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-args#5",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_args_args_strings",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-args#6",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_args_kind",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-args#7",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_args_duplicate_server",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "inputs.record.data-path",
@@ -2610,9 +3420,46 @@
         "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-path#1",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_path_absolute",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-path#2",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_path_double_slash",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-path#3",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_path_root",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-path#4",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_path_normal",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-path#5",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_path_parent",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-path#6",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_path_control",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "inputs.record.data-flag",
@@ -2625,9 +3472,28 @@
         "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-flag#1",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_flag_grammar",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-flag#2",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_flag_denied",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.data-flag#3",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_data_flag_code_loading_prefix",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "inputs.record.transport",
@@ -2646,9 +3512,22 @@
         "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.transport#1",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_L144_4",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "inputs.record.transport#2",
+        "vector": "test_guard_lock_inputs.Guards.test_inputs_transport_strict_base64",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "name.grammar.agent",
@@ -2712,9 +3591,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "name.grammar.unit#1",
+        "vector": "test_guard_deploy_b.Guards.test_deploy_L973_12_and_unit_grammar",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "name.grammar.spawn-agent",
@@ -2750,9 +3636,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.prepare.marker#1",
+        "vector": "test_guard_deploy_b.Guards.test_prepare_marker",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.prepare.no-adapter",
@@ -2765,9 +3658,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.prepare.no-adapter#1",
+        "vector": "test_guard_deploy_b.Guards.test_deploy_L770_12_and_no_adapter",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.prepare.active",
@@ -2780,9 +3680,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.prepare.active#1",
+        "vector": "test_guard_deploy_b.Guards.test_deploy_L774_12_and_prepare_active",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.prepare.owned-units",
@@ -2864,9 +3771,22 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.units.launcher#1",
+        "vector": "test_guard_deploy_b.Guards.test_deploy_L828_16_and_launcher_kind",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.units.launcher#2",
+        "vector": "test_guard_deploy_b.Guards.test_deploy_L831_16_and_launcher_file",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.units.name",
@@ -2879,9 +3799,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.units.name#1",
+        "vector": "test_guard_deploy_b.Guards.test_deploy_L845_16_and_units_name",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.units.digest",
@@ -2894,9 +3821,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.units.digest#1",
+        "vector": "test_guard_deploy_b.Guards.test_deploy_L847_16_and_units_digest",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.units.own-copy",
@@ -2915,9 +3849,22 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.units.own-copy#1",
+        "vector": "test_guard_deploy_b.Guards.test_units_own_copy_location",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.units.own-copy#2",
+        "vector": "test_guard_deploy_b.Guards.test_units_own_copy_content",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.units.empty",
@@ -2930,9 +3877,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.units.empty#1",
+        "vector": "test_guard_deploy_b.Guards.test_deploy_L854_12_and_units_empty",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.units.conflict",
@@ -2945,9 +3899,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.units.conflict#1",
+        "vector": "test_guard_deploy_b.Guards.test_deploy_L1146_20_and_units_conflict",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.units.dropin-symlink",
@@ -2981,9 +3942,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.retained.config#1",
+        "vector": "test_guard_deploy_b.Guards.test_retained_config",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.retained.pins",
@@ -3008,9 +3976,28 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.retained.pins#1",
+        "vector": "test_guard_deploy_a.Guards.test_deploy_retained_pins_framework",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.retained.pins#2",
+        "vector": "test_guard_deploy_a.Guards.test_deploy_retained_pins_catalog",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.retained.pins#3",
+        "vector": "test_guard_deploy_a.Guards.test_deploy_retained_pins_framework",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.retained.recipe",
@@ -3023,9 +4010,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.retained.recipe#1",
+        "vector": "test_guard_deploy_b.Guards.test_retained_recipe",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.retained.previous-first",
@@ -3038,9 +4032,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.retained.previous-first#1",
+        "vector": "test_guard_deploy_b.Guards.test_retained_previous_first",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.retained.sidecar",
@@ -3053,9 +4054,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.retained.sidecar#1",
+        "vector": "test_guard_deploy_b.Guards.test_deploy_L733_16_and_retained_sidecar",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.activate.preflight",
@@ -3068,9 +4076,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.activate.preflight#1",
+        "vector": "test_guard_deploy_b.Guards.test_activate_preflight",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.activate.exclusive-recheck",
@@ -3089,9 +4104,22 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.activate.exclusive-recheck#1",
+        "vector": "test_guard_deploy_b.Guards.test_activate_exclusive_recheck_before_install",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.activate.exclusive-recheck#2",
+        "vector": "test_guard_deploy_b.Guards.test_activate_exclusive_recheck_before_restart",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.activate.reverify",
@@ -3104,9 +4132,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.activate.reverify#1",
+        "vector": "test_guard_deploy_b.Guards.test_activate_reverify",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.activate.marker",
@@ -3119,9 +4154,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.activate.marker#1",
+        "vector": "test_guard_deploy_a.Guards.test_deploy_activate_marker",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.activate.install-only-health",
@@ -3134,9 +4176,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.activate.install-only-health#1",
+        "vector": "test_guard_deploy_b.Guards.test_activate_install_only_health",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.activate.health-argv",
@@ -3149,9 +4198,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.activate.health-argv#1",
+        "vector": "test_guard_deploy_b.Guards.test_deploy_L922_16_and_health_argv",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "deploy.activate.health-env",
@@ -3164,9 +4220,16 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "deploy.activate.health-env#1",
+        "vector": "test_guard_deploy_b.Guards.test_activate_health_env",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "config.layers.count",
@@ -3207,9 +4270,16 @@
         "source_sha256": "4b8cb0c5bef5dc84a4813e37672c4918fd582d9027034256c0a158acc998324f"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "config.layers.fold#1",
+        "vector": "test_guard_cook.Guards.test_config_layers_fold_1",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "config.layers.enabled-type",
@@ -3250,9 +4320,16 @@
         "source_sha256": "4b8cb0c5bef5dc84a4813e37672c4918fd582d9027034256c0a158acc998324f"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "config.layers.prune#1",
+        "vector": "test_guard_cook.Guards.test_config_layers_prune_1",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "config.layers.public-connectors",
@@ -3265,9 +4342,16 @@
         "source_sha256": "4b8cb0c5bef5dc84a4813e37672c4918fd582d9027034256c0a158acc998324f"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "config.layers.public-connectors#1",
+        "vector": "test_guard_cook.Guards.test_config_layers_public_connectors_1",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "cook.disabled",
@@ -3301,9 +4385,16 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "catalog.disabled#1",
+        "vector": "test_guard_catalog_a.Guards.test_named_catalog_disabled",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "cook.input.spec",
@@ -3316,9 +4407,16 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.input.spec#1",
+        "vector": "test_guard_cook.Guards.test_cook_L117_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "cook.input.pins",
@@ -3352,9 +4450,16 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.input.pin-ref#1",
+        "vector": "test_guard_cook.Guards.test_cook_L123_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "cook.input.budgets",
@@ -3430,9 +4535,16 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.input.catalog-connector#1",
+        "vector": "test_guard_cook.Guards.test_cook_L172_16",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "cook.input.paths",
@@ -3463,9 +4575,40 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.input.paths#1",
+        "vector": "test_guard_cook.Guards.test_cook_input_paths_1",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.input.paths#2",
+        "vector": "test_guard_cook.Guards.test_cook_L70_4",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.input.paths#3",
+        "vector": "test_guard_cook.Guards.test_cook_L223_4",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.input.paths#4",
+        "vector": "test_guard_cook.Guards.test_cook_L225_4",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.input.paths#5",
+        "vector": "test_guard_cook.Guards.test_cook_L226_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "cook.input.staged-recipe",
@@ -3478,9 +4621,16 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.input.staged-recipe#1",
+        "vector": "test_guard_cook.Guards.test_cook_input_staged_recipe_1",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "cook.input.cook-settings",
@@ -3505,9 +4655,28 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed-kind-A-crash-only",
+    "evidence": [
+      {
+        "file": "crash-only-results.golden",
+        "site": "cook.input.cook-settings#1",
+        "vector": "5091bf62c63e5fdef07eeac6dc732fb7822de88240e75ac043e12d67469a5129",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.input.cook-settings#2",
+        "vector": "test_guard_cook.Guards.test_cook_L264_4",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "cook.input.cook-settings#3",
+        "vector": "test_guard_cook.Guards.test_cook_L268_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "every site killed, at least one only by a crash-only kind-A vector; separate category pending acceptance"
   },
   {
     "id": "cook.input.connector-state",
@@ -3547,9 +4716,24 @@
         "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.schema.template#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_schema_template_closed",
+        "witnesses": []
+      },
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "spawn.schema.template#2",
+        "vector": null,
+        "witnesses": [
+          "35224be93242b51522fe13f6d5b4f3acfb6bf71174ca9119660ccaeddfd8be21"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.schema.template-v1",
@@ -3589,9 +4773,24 @@
         "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.schema.instance#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_schema_instance_closed",
+        "witnesses": []
+      },
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "spawn.schema.instance#2",
+        "vector": null,
+        "witnesses": [
+          "6b63456dde0ff2a0507a4bc828f2387e8f47f12a4e6ff29b617df664b7c16b15"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.schema.name-record",
@@ -3610,9 +4809,22 @@
         "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.schema.name-record#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_schema_name_record_closed",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.schema.name-record#2",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_schema_name_record_concrete",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.schema.name-receipt",
@@ -3631,9 +4843,22 @@
         "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.schema.name-receipt#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_schema_name_receipt_closed",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.schema.name-receipt#2",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_schema_L191_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.schema.home",
@@ -3652,9 +4877,22 @@
         "source_sha256": "006c7fb662b80496b7cbaa4b4ea93f0db746b3d98b6757709a2e25ab7520f12a"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.schema.home#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_schema_home_closed",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.schema.home#2",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_schema_L213_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.schema.seed",
@@ -3673,9 +4911,24 @@
         "source_sha256": "b96f61dd54a447f116baf285c1ce353e600deb7f9af717027c6badc9c0e477cf"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "spawn.schema.seed#1",
+        "vector": null,
+        "witnesses": [
+          "1af8a3cbf4871819b644c94721034ce4832085de3fb3b972f9e0a7c51732cb05"
+        ]
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.schema.seed#2",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_seed_L32_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.schema.identity-policy",
@@ -3716,9 +4969,16 @@
         "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.descriptor#1",
+        "vector": "test_guard_spawn_sources.Guards.test_named_catalog_descriptor_1",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.catalog.versions",
@@ -3737,9 +4997,22 @@
         "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.versions#1",
+        "vector": "test_guard_spawn_sources.Guards.test_named_catalog_versions_1",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.versions#2",
+        "vector": "test_guard_spawn_sources.Guards.test_catalog_L84_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.catalog.file-name",
@@ -3752,9 +5025,16 @@
         "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.file-name#1",
+        "vector": "test_guard_spawn_sources.Guards.test_catalog_L103_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.catalog.pin",
@@ -3803,9 +5083,52 @@
         "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.pin#1",
+        "vector": "test_guard_spawn_sources.Guards.test_catalog_L114_4",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.pin#2",
+        "vector": "test_guard_spawn_sources.Guards.test_catalog_L116_8",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.pin#3",
+        "vector": "test_guard_spawn_sources.Guards.test_named_catalog_pin_3",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.pin#4",
+        "vector": "test_guard_spawn_sources.Guards.test_named_catalog_pin_4",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.pin#5",
+        "vector": "test_guard_spawn_sources.Guards.test_catalog_L125_12",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.pin#6",
+        "vector": "test_guard_spawn_sources.Guards.test_named_catalog_pin_6",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.pin#7",
+        "vector": "test_guard_spawn_sources.Guards.test_catalog_L128_12",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.catalog.select",
@@ -3818,9 +5141,16 @@
         "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.select#1",
+        "vector": "test_guard_spawn_sources.Guards.test_catalog_L154_12",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.catalog.cycle",
@@ -3833,9 +5163,16 @@
         "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.cycle#1",
+        "vector": "test_guard_spawn_sources.Guards.test_catalog_L137_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.catalog.reference",
@@ -3872,9 +5209,40 @@
         "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.reference#1",
+        "vector": "test_guard_spawn_sources.Guards.test_planner_L61_12",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.reference#2",
+        "vector": "test_guard_spawn_sources.Guards.test_named_catalog_reference_2",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.reference#3",
+        "vector": "test_guard_spawn_sources.Guards.test_planner_L64_8",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.reference#4",
+        "vector": "test_guard_spawn_sources.Guards.test_named_catalog_reference_4",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.reference#5",
+        "vector": "test_guard_spawn_sources.Guards.test_named_catalog_reference_5",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.catalog.connector-settings",
@@ -3893,9 +5261,22 @@
         "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.connector-settings#1",
+        "vector": "test_guard_spawn_sources.Guards.test_planner_L80_4",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.connector-settings#2",
+        "vector": "test_guard_spawn_sources.Guards.test_planner_L83_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.catalog.home-transport",
@@ -3908,9 +5289,16 @@
         "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.catalog.home-transport#1",
+        "vector": "test_guard_spawn_sources.Guards.test_planner_L134_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.catalog.ingress",
@@ -3971,9 +5359,22 @@
         "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.artifact.store#1",
+        "vector": "test_guard_spawn_sources.Guards.test_catalog_L183_4",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.artifact.store#2",
+        "vector": "test_guard_spawn_sources.Guards.test_catalog_L210_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.artifact.payload-path",
@@ -4004,9 +5405,34 @@
         "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.artifact.payload-path#1",
+        "vector": "test_guard_spawn_sources.Guards.test_named_artifact_payload_path_1",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.artifact.payload-path#2",
+        "vector": "test_guard_spawn_sources.Guards.test_named_artifact_payload_path_2",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.artifact.payload-path#3",
+        "vector": "test_guard_spawn_sources.Guards.test_catalog_L174_8",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.artifact.payload-path#4",
+        "vector": "test_guard_spawn_sources.Guards.test_catalog_L175_4",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.artifact.digest",
@@ -4061,9 +5487,16 @@
         "source_sha256": "29958c9f80020d83309f3506d6d758e86af7c6c75171853fc8ee357e155c6fbf"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.artifact.limit#1",
+        "vector": "test_guard_spawn_sources.Guards.test_sources_L220_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.artifact.provenance",
@@ -4088,9 +5521,28 @@
         "source_sha256": "29958c9f80020d83309f3506d6d758e86af7c6c75171853fc8ee357e155c6fbf"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.artifact.provenance#1",
+        "vector": "test_guard_spawn_sources.Guards.test_named_artifact_provenance_1",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.artifact.provenance#2",
+        "vector": "test_guard_spawn_sources.Guards.test_named_artifact_provenance_2",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.artifact.provenance#3",
+        "vector": "test_guard_spawn_sources.Guards.test_named_artifact_provenance_3",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.cli.parser",
@@ -4103,9 +5555,16 @@
         "source_sha256": "fa8efe31073cc3fcfb9bd99cbdd078746c572e813c56ad2de5463f0172f4c80c"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.cli.parser#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_cli_L15_8",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.cli.combos",
@@ -4130,9 +5589,28 @@
         "source_sha256": "fa8efe31073cc3fcfb9bd99cbdd078746c572e813c56ad2de5463f0172f4c80c"
       }
     ],
-    "status": "not-killed",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.cli.combos#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_cli_L40_16",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.cli.combos#2",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_cli_L44_12",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.cli.combos#3",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_cli_L49_16",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.cli.refusal",
@@ -4145,9 +5623,22 @@
         "source_sha256": "fa8efe31073cc3fcfb9bd99cbdd078746c572e813c56ad2de5463f0172f4c80c"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.cli.refusal#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_cli_refusal_fixed_message",
+        "witnesses": []
+      },
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.cli.refusal#2",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_cli_refusal_files_written_false",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "spawn.cli.status-readonly",
@@ -4160,8 +5651,15 @@
         "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-purpose-results.golden",
+        "site": "spawn.cli.status-readonly#1",
+        "vector": "test_guard_spawn_state.Guards.test_spawn_cli_status_readonly",
+        "witnesses": []
+      }
+    ],
+    "reason": "independent mutation killed"
   }
 ]

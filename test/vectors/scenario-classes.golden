@@ -1,0 +1,2076 @@
+[
+ {
+  "id": "test_catalog.CatalogTests.test_argv_executable_exports_symlinks_and_ambiguous_forms",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_bare_environment_paths_and_lists_refused_fresh_and_digest_valid_reuse",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_bare_environment_reuse_checks_recipe_and_unit_at_launcher_cwd",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_build_and_cook_environment_never_copy_operator_environment",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_build_created_symlink_is_refused_before_next_command",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_build_escapes_refused_before_any_execution",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_compile_build_lock_and_revalidate_without_input_archives",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_dependencies_cycles_and_node_major_fail_closed",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_descriptor_changes_require_new_digest",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_digest_mismatch_and_archive_escape_links_duplicates_refused",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_environment_controls_fail_at_install_and_digest_valid_reuse",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_environment_denials_cover_all_descriptor_unit_and_secret_surfaces",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_environment_literals_and_local_data_paths_are_accepted",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_environment_path_escape_and_ambiguity_at_install_and_reuse",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_explicit_state_data_argument_is_lowered_and_verified",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_exported_exec_launcher_and_lock_health_refuse_state_code",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_exported_launch_and_execstartpre_use_actual_cwd",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_hidden_paths_in_settings_args_env_and_generated_launchers",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_input_archives_and_checkout_must_belong_to_agent",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_interpreter_directive_cannot_load_state_or_workspace_code",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_launcher_cd_and_unclassified_shell_forms_fail_closed",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_literal_local_argv_and_unit_cwd_are_accepted",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_placeholder_and_zero_pins_fail_before_io",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_preflight_and_launch_escapes_refused_before_execution_or_unit_render",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_preflight_execution_and_unit_are_selected_only",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_public_catalog_selection_and_placeholder_supply",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_recipe_file_bridge_ignores_catalog_and_matches_base_golden",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_reused_lock_audits_recipe_only_and_unit_environment",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "cook:adapt",
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_spawn_reader_loads_role_fixtures_and_matches_catalog_recipe",
+  "class": "spawn-plan",
+  "entry_points": [
+   "planner:make_plan"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_spawn_reader_matches_role_archive_pin_validation",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_start_wrapper_refuses_post_verify_swap_and_writable_directory",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_state_and_workspace_code_refused_at_plan_install_and_verify",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_unit_bootstrap_execs_preflight_and_launch_with_closed_environment",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_verify_reaudits_digest_valid_build_preflight_and_launch_argv",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_catalog.CatalogTests.test_verify_refuses_writable_directories_files_and_outward_links",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.AdapterTests.test_argv_provenance_fields_rejected_before_any_subprocess",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_disabled_missing_launch_literal_secret_and_unpinned_ref_refused",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.AdapterTests.test_framework_hash_and_commit_verified",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.AdapterTests.test_generic_archive_identity_hash_file_and_githead_rules",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.AdapterTests.test_generic_closed_schema_names_duplicates_and_no_subprocess",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_generic_plan_lock_exact_binding_and_retention",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_invocation_names_only_fresh_dir_and_post_build_validation",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_lock_state_mismatch_has_typed_code",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_no_secret_recipe_omits_cook_only_requirements",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.AdapterTests.test_nonempty_budgets_fail_closed_at_host_schema_boundary",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_operator_recipe_skips_connector_module_and_agent_generation",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_option_like_argv_values_rejected_before_spawn",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_option_like_cook_value_rejected_before_verification",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_real_adapter_cli_failure_is_forwarded_without_paths_or_values",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.AdapterTests.test_registry_claim_requires_origin_and_sha512_without_network",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_registry_mark_never_bypasses_present_githead",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.AdapterTests.test_registry_release_requires_explicit_mark_identity_and_hash",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_repository_allowlist_and_argument_defense",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_retained_framework_provenance_is_bound_to_request",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.AdapterTests.test_source_checkout_git_argv_trusts_exact_resolved_path",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_source_checkout_owned_by_another_uid_is_verified",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.AdapterTests.test_source_checkout_pin_tree_and_cleanliness",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_translate_normalized_spec_and_quote_build_argv",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.AdapterTests.test_unsafe_sources_rejected_before_any_subprocess",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.AdapterTests.test_unsafe_ssh_and_scp_authorities_rejected_before_any_subprocess",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_cook.LockTests.test_all_public_credential_shapes_refused_in_every_string",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.LockTests.test_build_host_and_secret_binding",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.LockTests.test_every_lock_scalar_has_an_exact_type",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.LockTests.test_invalid_json_duplicate_fields_and_nonfinite_numbers_refused",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.LockTests.test_recorded_v1_and_malformed_refused",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.LockTests.test_recorded_v2_accepted_and_mapped",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.LockTests.test_unit_export_and_planned_units_map_with_containment",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.LockTests.test_value_looking_secrets_anywhere_refused_without_echo",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.LockTests.test_versions_missing_fields_and_bad_types_fail_closed",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.RealCookTests.test_real_cook_offline_external_mcp_server",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.RealCookTests.test_real_cook_offline_generic_only_two_dependencies",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.RealCookTests.test_real_cook_offline_install_only_then_start_reuses_release",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.RealCookTests.test_real_cook_offline_local_host_build",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.RealCookTests.test_real_cook_offline_no_secrets_build",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.RealCookTests.test_real_cook_offline_operator_recipe_and_secret_files",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.RealCookTests.test_real_cook_offline_private_home_pass_through_and_host_cwd",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.RealCookTests.test_real_cook_offline_registry_origin_and_integrity",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.RealCookTests.test_real_cook_offline_registry_release_build",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.RealCookTests.test_real_cook_offline_two_dependencies",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_cook.RealCookTests.test_real_cook_refuses_trusted_lifecycle_dependency",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_activation_cause_survives_failed_recovery_without_private_context",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_ambiguous_systemd_paths_fail_before_writes",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_apply_recreates_disabled_unit_links_without_rebuild",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_artifact_escape_refused",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_check_mode_existing_is_unchanged",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_check_mode_has_no_writes_or_provider_calls",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_closed_activation_and_exclusive_schema",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_contained_builds_alias_refused_before_cleanup",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_contained_dropin_directory_alias_over_other_unit_refused",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_directory_helper_sets_exact_modes_under_fully_restrictive_umask",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_directory_modes_ignore_umask_without_repairing_existing_dirs",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_enabled_unpinned_connector_fails_closed",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_environment_file_health_requires_exact_nonoptional_manager_path",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_exclusive_inspection_failure_is_informational_only_when_staging",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_exclusive_refusal_rechecked_before_activation",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_exclusive_units_refuse_start_in_both_scopes",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_exclusive_units_report_only_during_staging",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_explicit_base_contains_root",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_failed_cook_preserves_active_and_retry_is_fresh",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_failed_first_activation_leaves_no_current_or_units",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_first_activation_env_file_rejection_removes_units",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_generic_archive_check_plan_is_complete_and_mutation_free",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_identifier_boundaries_allowed",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_install_only_active_refused_before_any_changes",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_install_only_check_never_queries_or_writes",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_install_only_first_failure_never_starts",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_install_only_refuses_late_activation_before_env_or_pointer_changes",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_install_only_rollback_and_operator_rollback_never_start",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_install_only_runs_static_verify_when_available",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_install_only_static_health_and_status",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_install_only_then_start_reuses_release_and_lock",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_install_only_then_start_without_install_section",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_invalid_names_fail_before_any_filesystem_mutation",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_invalid_parent_files_and_corrupt_manifest_refused_before_mutation",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_invalid_state_paths_and_permissions_fail_without_repair",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_late_state_symlink_and_wrong_lock_state_fail_closed",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_late_symlink_escape_refused_before_prepare",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_managed_retired_unit_is_removed_on_rename",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_manifest_drift_never_repaired_or_disabled_even_in_check_mode",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_manifest_records_exact_installed_paths_and_survives_rollback",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_module_active_guard_precedes_root_and_serialization_lock",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_module_rejects_before_root_mkdir_or_lock",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_no_secret_values_in_spec_or_lock",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_operator_reapply_previous_recorded_request_without_rebuild_or_state_changes",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_optional_health_command_rolls_back",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_owned_builds_alias_refused_before_cleanup",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_planned_install_links_and_unsupported_directives",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_planned_units_digest_and_health_contract",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_preexisting_units_links_dropins_and_enable_links_are_not_adopted",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_prepare_cannot_delete_retained_manifest_owned_unit_files",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_real_shaped_split_layout_lock_accepts_only_exact_external_state",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_rebuild_and_rollback_leave_external_state_untouched",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_registry_archive_plan_and_retained_sidecar",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_rendered_systemd_paths_are_bare_literals",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_required_env_file_manager_rejection_rolls_back",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_retired_link_retargeted_to_never_installed_build_file_refused",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_retired_unmanaged_unit_is_not_disabled_or_deleted_on_rename",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_reused_build_recreates_missing_state_directory_only",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_rollback_across_runtime_pin_change",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_secret_rotation_restarts_without_rebuilding",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_secrets_default_uses_agent_account_home_not_environment",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_secrets_permissions_owner_and_symlinks_fail_closed_before_start",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_secrets_permissions_report_typed_code",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_state_is_created_private_and_not_owned_as_an_artifact",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_switch_rollback_idempotency_and_exact_secrets",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_symlinked_bases_and_derived_escapes_refused",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_symlinked_dropin_escape_refused",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_symlinked_unit_and_enable_directories_refused",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_target_file_lookup_exact_names_and_check_plan",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_unknown_build_directory_is_refused_unchanged",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_unknown_lock_and_secret_value_records_refused",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_unmanaged_unit_is_not_overwritten",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_unowned_alias_and_fixed_temporary_name_are_untouched",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_deploy.DeployTests.test_verifier_failure_reports_step_tool_status_without_output",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_deploy.DeployTests.test_writable_ancestors_are_named_and_never_modified",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalAdapterTests.test_connector_state_naming_external_refused_before_cook",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalAdapterTests.test_generated_recipe_refuses_recorded_external",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalAdapterTests.test_supplied_recipe_binds_recorded_external_servers",
+  "class": "adapter-only",
+  "entry_points": [
+   "cook:adapt"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_ancestor_owner_mode_symlink_and_access_refusals",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_binding_is_raw_argv_exact_server_and_path",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_closed_input_schema",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_declared_data_flag_exact_binding_and_code_flag_deny_set",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_exact_invocation_pin_refuses_any_command_or_args_mismatch",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_file_kind_mode_and_missing_refusals",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_first_script_has_no_execute_bits_for_any_account",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_first_script_must_pass_normal_checks_and_be_regular_file",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_foreign_uid_and_root_owned_fallback",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_no_options_or_option_values_before_script_for_any_data_form",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_node_data_requires_root_owned_first_script",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_outside_home_and_lexical_alias_refusals",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_private_directory_kind_mode_owner_and_symlink_checks",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_python_root_script_state_directory_accepted",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_real_private_file_accepted_without_reading_content",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_external.ExternalDataArgTests.test_resolved_interpreter_basename_is_a_closed_allowlist",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_external.ExternalDataDeploymentTests.test_changed_invocation_refused_before_prepared_marker_or_units",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataDeploymentTests.test_dash_private_script_probe_refused",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataDeploymentTests.test_env_shell_private_script_probe_refused",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataDeploymentTests.test_find_exec_private_python_probe_refused",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataDeploymentTests.test_interpreter_target_is_rechecked_before_activation",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_external.ExternalDataDeploymentTests.test_invalid_input_has_typed_error_before_writes",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataDeploymentTests.test_opt_in_does_not_exempt_command_or_other_args",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataDeploymentTests.test_positive_lock_plan_status_and_recheck",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataDeploymentTests.test_python_option_value_private_script_probe_refused",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataDeploymentTests.test_python_state_directory_flag_prepare_activate_and_recheck",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDataDeploymentTests.test_unknown_nonexternal_and_stale_before_activation",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDeploymentTests.test_root_owned_external_command_activates_and_is_rechecked",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_external.ExternalDeploymentTests.test_unsafe_external_command_refused_before_activation",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalDeploymentTests.test_unsafe_or_relative_path_argument_refused_before_activation",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalLockTests.test_external_list_accepted_and_exposed",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalLockTests.test_lock_connector_state_must_not_name_external",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalLockTests.test_malformed_external_entries_refused",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.ExternalLockTests.test_without_external_key_is_unchanged",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.OwnershipTests.test_fakeroot_owner_mode_ancestor_and_link_refusals",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.OwnershipTests.test_fakeroot_pinned_node_file_and_python_directory",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.OwnershipTests.test_real_refusals_have_typed_public_code_without_path",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_external.OwnershipTests.test_real_root_owned_command_and_symlink_chain_accepted",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_operator_inputs.OperatorTests.test_check_mode_file_secret_has_no_writes_or_provider_calls",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_operator_inputs.OperatorTests.test_file_lock_binds_destination_name_and_source_lookup_is_exact",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_operator_inputs.OperatorTests.test_file_only_canary_rewrite_rotation_removal_and_no_leaks",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_operator_inputs.OperatorTests.test_first_failed_file_activation_removes_created_files",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_operator_inputs.OperatorTests.test_recipe_closed_shape_and_transport_refusals",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_operator_inputs.OperatorTests.test_recipe_file_refusals_before_commands_or_writes",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_operator_inputs.OperatorTests.test_secret_file_health_failure_restores_prior_declarations_and_values",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_operator_inputs.OperatorTests.test_secret_file_symlinks_modes_and_unmanaged_names_refused",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_operator_inputs.OperatorTests.test_secret_files_closed_shapes_names_and_conflicts",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_operator_inputs.OperatorTests.test_verbatim_controller_transport_plan_lock_and_retention",
+  "class": "deployment-entry-point",
+  "entry_points": [
+   "deploy:Deployment.activate",
+   "deploy:Deployment.prepare"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_allowlist_is_exact_and_checks_every_rule_on_each_line",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_public.PublicTests.test_cli_denylist_checks_paths_and_config_context",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_cli_external_policy_and_fail_closed",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_cli_refuses_yaml_and_json_and_redacts_diagnostics",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_commit_range_messages_and_both_identities_scanned",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_config_refuses_nonplain_syntax_even_when_neutral",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_denylist_terms_are_literal_case_insensitive_and_bounded",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_public.PublicTests.test_denylisted_config_values_and_agent_lists_rejected",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_earlier_escaped_key_and_value_probes_are_refused",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_email_allowlist",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_multiline_exception_preserves_each_physical_line_parent",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_public.PublicTests.test_neutral_names_secret_names_and_public_upstreams_allowed",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_plain_config_and_json_safe_values_allowed",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_private_identifiers_addresses_paths_and_values_rejected",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_raw_scan_all_inputs_including_docs_and_comments",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_review_five_multiline_names_and_credentials_refused",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_public.PublicTests.test_single_rule_table_on_plain_config_keys_and_values",
+  "class": "publication-gate",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_archive_connector_symbols_are_explicit_and_refused_as_apply_input",
+  "class": "spawn-plan",
+  "entry_points": [
+   "planner:make_plan"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_archive_symlinks_and_digest_mismatch_refused",
+  "class": "spawn-plan",
+  "entry_points": [
+   "planner:make_plan"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_bare_store_and_refused_nonbare_git_directory",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_catalog_fail_closed_and_template_cannot_supply_executables",
+  "class": "spawn-plan",
+  "entry_points": [
+   "planner:make_plan"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_cli_inline_file_repo_equivalence",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_cli_read_only_independent_of_ansible_and_working_directory",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_git_ignores_ambient_config_and_replace_objects",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_hashes_bind_intent_catalog_target_and_observation",
+  "class": "spawn-plan",
+  "entry_points": [
+   "planner:make_plan"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_identity_and_computed_digests",
+  "class": "spawn-plan",
+  "entry_points": [
+   "planner:make_plan"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_inline_file_repo_have_identical_hashes_and_plans",
+  "class": "spawn-plan",
+  "entry_points": [
+   "planner:make_plan"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_instance_refusals_and_no_identity_fallback",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_missing_partial_clone_objects_never_invoke_remote_helper",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_plan_and_dry_run_show_pinned_name_record",
+  "class": "spawn-plan",
+  "entry_points": [
+   "planner:make_plan"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_preflight_dependency_closure_is_recorded_not_executed",
+  "class": "spawn-plan",
+  "entry_points": [
+   "planner:make_plan"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_role_catalog_single_source_and_future_kind",
+  "class": "spawn-plan",
+  "entry_points": [
+   "planner:make_plan"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_same_package_under_ansible_namespace",
+  "class": "spawn-plan",
+  "entry_points": [
+   "planner:make_plan"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_seed_plans_cli_and_v1_migration",
+  "class": "spawn-plan",
+  "entry_points": [
+   "planner:make_plan"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_strict_decode_refusals",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_temporary_name_template_plans_and_capability_branches",
+  "class": "spawn-plan",
+  "entry_points": [
+   "planner:make_plan"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_unpinned_and_escaping_sources_refused",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn.SpawnTests.test_unsafe_template_refusals",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_all_external_crash_points_refuse_replay",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_all_local_reads_refuse_traversal_symlinks_and_nonregular",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_changed_capability_and_invalid_provider_handles_refused",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_clean_lifecycle_restart_and_idempotence",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_crash_after_marker_and_before_final_state_commit",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_existing_store_is_recovery_not_import",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_hard_linked_name_record_refused_before_named_transition",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_hard_linked_seed_and_lifecycle_refused",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_identity_effect_crashes_report_recovery_without_replay",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_illegal_transition_matrix_and_failure_retirement",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_marker_write_crash_and_missing_adapters",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_missing_provider_and_retire_never_reuses_temporary",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_name_convention_capability_validation_and_no_truncation",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_name_ingress_component_boundary",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_optional_seeded_lifecycle_and_seeded_transition_refusals",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_persistence_crash_before_and_after_replace",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_process_death_releases_lock_but_never_replays_import",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_provider_constraints_refuse_name_before_named_state",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_provider_restart_idempotence_unique_ownership_and_concurrency",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_refuse_placeholders_unsafe_records_and_operation_conflicts",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_rename_preserves_handle_without_retiring_it",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_repo_name_bare_store_and_explicit_git_directory",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_repo_name_full_sha_ref_collisions_refused",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_repo_name_pinned_provenance_and_identical_file_hash",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_repo_name_refusals_leave_lifecycle_unchanged",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_repo_name_requires_real_repository_top",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_repo_name_reuses_strict_record_decoder",
+  "class": "no-entry-point",
+  "entry_points": [],
+  "patches_internals": true
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_repo_name_without_prompt_remains_absent_through_activation",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_required_seed_order_receipt_and_no_reingest",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_seed_ingest_crash_is_not_retried",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_seed_refusals_and_explicit_optional_branches",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_status_cli_read_only_and_missing_state",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status"
+  ],
+  "patches_internals": false
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_store_created_during_build_refuses_ingest_and_bad_receipt",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status",
+   "lifecycle:Lifecycle.transition"
+  ],
+  "patches_internals": true
+ },
+ {
+  "id": "test_spawn_lifecycle.LifecycleTests.test_symlinks_corrupt_state_and_migration_refused",
+  "class": "spawn-lifecycle",
+  "entry_points": [
+   "lifecycle:Lifecycle.create",
+   "lifecycle:Lifecycle.status"
+  ],
+  "patches_internals": false
+ }
+]

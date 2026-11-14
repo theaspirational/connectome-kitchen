@@ -1,0 +1,254 @@
+{
+ "named_sites": {
+  "secrets.reserved.file-env": [
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "record['env'] not in {'DATA_DIR', 'WORKSPACE_DIR', 'PATH', 'HOME', 'LANG', 'LC_ALL', 'TMPDIR'}",
+    "after": "True",
+    "why": "line 97 is shared with inputs.record.secret-files: this removes only the reserved engine-variable set and keeps the duplicate-env half of the condition"
+   }
+  ],
+  "lock.schema.operator-recipe": [
+   {
+    "file": "module_utils/connectome_lock.py",
+    "before": "inputs.read_file(path, config['recipe_file'])",
+    "after": "pass",
+    "why": "line 154 call site: removes the strict read of the installed cook-recipe.json against the operator digest, so the lock is no longer bound to the installed bytes"
+   },
+   {
+    "file": "module_utils/connectome_lock.py",
+    "before": "recipe['sha256'] == config['recipe_file']['sha256']",
+    "after": "True",
+    "why": "line 155, first clause of the provenance condition: removes only the binding of the lock's recipe digest to the operator recipe record"
+   },
+   {
+    "file": "module_utils/connectome_lock.py",
+    "before": "recipe['path'] == str(path)",
+    "after": "True",
+    "why": "second clause of the line 155 condition (continued on line 156): removes only the binding of the lock's recipe path to the installed copy"
+   }
+  ],
+  "inputs.record.secret-files": [
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "isinstance(records, list)",
+    "occurrence": 1,
+    "after": "True",
+    "why": "line 91: removes the list type check of secret_files (same mutation as guard site inputs.L91.8; occurrence 0 is the external_data_args validator)"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "isinstance(record, dict) and set(record) == {'secret', 'env'}",
+    "after": "True",
+    "why": "line 94: removes the closed key set of a secret_files record (same mutation as guard site inputs.L94.12)"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "isinstance(value, str) and re.fullmatch(r'[A-Z_][A-Z0-9_]*', value)",
+    "after": "True",
+    "why": "line 95: removes the literal name grammar of the secret and env fields (the predicate inside all(), so every value passes)"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "record['env'] not in seen",
+    "after": "True",
+    "why": "line 97 is shared with secrets.reserved.file-env: this removes only the duplicate-env check and keeps the reserved-name half of the condition"
+   }
+  ],
+  "inputs.record.data-args": [
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "valid = isinstance(records, list)",
+    "after": "valid = True",
+    "why": "the anchored line 37 (seen = set()) is only a header of the validator; this removes its list type check on line 36"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "{'server', 'command', 'args', 'path', 'kind', 'flag'}",
+    "after": "set(record)",
+    "why": "header anchor, real check on lines 40-41: replaces the upper bound of the key set with the record's own keys, so unknown keys are no longer refused; the rest of the compound condition shared with data-path and data-flag is kept"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "re.fullmatch(r'[A-Za-z0-9_][A-Za-z0-9_.-]*', record['server'])",
+    "after": "True",
+    "why": "header anchor, real check on line 43: removes only the literal server-name grammar from the compound condition"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "isinstance(record['args'], list)",
+    "after": "True",
+    "why": "header anchor, real check on line 45: removes only the list type check of args from the compound condition"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "all(isinstance(arg, str) for arg in record['args'])",
+    "after": "True",
+    "why": "header anchor, real check on line 46: removes only the strings-only check of args from the compound condition"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "isinstance(record['kind'], str) and record['kind'] in ('file', 'dir')",
+    "after": "True",
+    "why": "header anchor, real check on line 48: removes only the closed kind set from the compound condition"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "if key in seen:",
+    "after": "if False:",
+    "why": "the anchored assignment on line 37 feeds this check on line 53: removes the duplicate-server refusal"
+   }
+  ],
+  "inputs.record.data-path": [
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "isinstance(value, str) and value.startswith('/')",
+    "occurrence": 0,
+    "after": "True",
+    "why": "line 21, first clause of the external_data_path return: removes the absolute-string requirement (occurrence 1 is the recipe path check)"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "not value.startswith('//')",
+    "after": "True",
+    "why": "line 21, second clause: removes the refusal of the POSIX double-slash root, which str(Path()) preserves"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "value != '/'",
+    "after": "True",
+    "why": "continuation of the line 21 return: removes only the refusal of the filesystem root"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "value == str(Path(value))",
+    "after": "True",
+    "why": "continuation of the line 21 return: removes only the lexical-normal-form requirement"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "'..' not in Path(value).parts",
+    "after": "True",
+    "why": "continuation of the line 21 return: removes only the parent-traversal refusal"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "not any(ord(c) < 32 or 127 <= ord(c) <= 159 for c in value)",
+    "occurrence": 0,
+    "after": "True",
+    "why": "continuation of the line 21 return: removes only the control-character refusal (occurrence 1 is the recipe path check)"
+   }
+  ],
+  "inputs.record.data-flag": [
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "isinstance(value, str) and re.fullmatch(r'--?[A-Za-z][A-Za-z0-9_-]*', value)",
+    "after": "True",
+    "why": "line 30, first clause of the external_data_flag return: removes the literal option grammar and keeps the code-loading refusals"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "value not in denied",
+    "after": "True",
+    "why": "continuation of the line 30 return: removes only the denied set of code-loading flags"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "not value.startswith(('--require', '--import', '--loader', '--experimental-loader'))",
+    "after": "True",
+    "why": "continuation of the line 30 return: removes only the code-loading prefix families"
+   }
+  ],
+  "inputs.record.transport": [
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "isinstance(supplied, dict) and set(supplied) == expected",
+    "after": "True",
+    "why": "line 144: removes the equality of the transported file set with the expected set (same mutation as guard site inputs.L144.4)"
+   },
+   {
+    "file": "module_utils/connectome_inputs.py",
+    "before": "base64.b64decode(supplied['cook-recipe.json'], validate=True)",
+    "after": "base64.b64decode(supplied['cook-recipe.json'], validate=False)",
+    "why": "line 148: weakens exactly the strict-base64 effect, so non-alphabet characters are silently discarded"
+   }
+  ]
+ },
+ "kills": {
+  "inputs.L63.4": "test_guard_lock_inputs.Guards.test_inputs_L63_4",
+  "inputs.record.activation#1": "test_guard_lock_inputs.Guards.test_inputs_L63_4",
+  "inputs.L67.4": "test_guard_lock_inputs.Guards.test_inputs_L67_4",
+  "inputs.record.exclusive#1": "test_guard_lock_inputs.Guards.test_inputs_L67_4",
+  "inputs.L70.8": "test_guard_lock_inputs.Guards.test_inputs_L70_8",
+  "inputs.record.exclusive#2": "test_guard_lock_inputs.Guards.test_inputs_L70_8",
+  "inputs.L81.8": "test_guard_lock_inputs.Guards.test_inputs_L81_8",
+  "inputs.record.recipe-file#1": "test_guard_lock_inputs.Guards.test_inputs_L81_8",
+  "inputs.L91.8": "test_guard_lock_inputs.Guards.test_inputs_L91_8",
+  "inputs.record.secret-files#1": "test_guard_lock_inputs.Guards.test_inputs_L91_8",
+  "inputs.L94.12": "test_guard_lock_inputs.Guards.test_inputs_L94_12",
+  "inputs.record.secret-files#2": "test_guard_lock_inputs.Guards.test_inputs_L94_12",
+  "inputs.record.secret-files#3": "test_guard_lock_inputs.Guards.test_inputs_secret_file_names",
+  "inputs.record.secret-files#4": "test_guard_lock_inputs.Guards.test_inputs_secret_file_duplicate_env",
+  "secrets.reserved.file-env#1": "test_guard_lock_inputs.Guards.test_inputs_secret_file_reserved_env",
+  "inputs.record.data-args#1": "test_guard_lock_inputs.Guards.test_inputs_data_args_list",
+  "inputs.record.data-args#2": "test_guard_lock_inputs.Guards.test_inputs_data_args_closed_keys",
+  "inputs.record.data-args#3": "test_guard_lock_inputs.Guards.test_inputs_data_args_server",
+  "inputs.record.data-args#4": "test_guard_lock_inputs.Guards.test_inputs_data_args_args_list",
+  "inputs.record.data-args#5": "test_guard_lock_inputs.Guards.test_inputs_data_args_args_strings",
+  "inputs.record.data-args#6": "test_guard_lock_inputs.Guards.test_inputs_data_args_kind",
+  "inputs.record.data-args#7": "test_guard_lock_inputs.Guards.test_inputs_data_args_duplicate_server",
+  "inputs.record.data-path#1": "test_guard_lock_inputs.Guards.test_inputs_data_path_absolute",
+  "inputs.record.data-path#2": "test_guard_lock_inputs.Guards.test_inputs_data_path_double_slash",
+  "inputs.record.data-path#3": "test_guard_lock_inputs.Guards.test_inputs_data_path_root",
+  "inputs.record.data-path#4": "test_guard_lock_inputs.Guards.test_inputs_data_path_normal",
+  "inputs.record.data-path#5": "test_guard_lock_inputs.Guards.test_inputs_data_path_parent",
+  "inputs.record.data-path#6": "test_guard_lock_inputs.Guards.test_inputs_data_path_control",
+  "inputs.record.data-flag#1": "test_guard_lock_inputs.Guards.test_inputs_data_flag_grammar",
+  "inputs.record.data-flag#2": "test_guard_lock_inputs.Guards.test_inputs_data_flag_denied",
+  "inputs.record.data-flag#3": "test_guard_lock_inputs.Guards.test_inputs_data_flag_code_loading_prefix",
+  "inputs.L144.4": "test_guard_lock_inputs.Guards.test_inputs_L144_4",
+  "inputs.record.transport#1": "test_guard_lock_inputs.Guards.test_inputs_L144_4",
+  "inputs.record.transport#2": "test_guard_lock_inputs.Guards.test_inputs_transport_strict_base64",
+  "inputs.L123.8": "test_guard_lock_inputs.Guards.test_inputs_L123_8",
+  "inputs.L127.8": "test_guard_lock_inputs.Guards.test_inputs_L127_8",
+  "inputs.L161.8": "test_guard_lock_inputs.Guards.test_inputs_L161_8",
+  "lock.L129.4": "test_guard_lock_inputs.Guards.test_lock_L129_4",
+  "lock.L132.4": "test_guard_lock_inputs.Guards.test_lock_L132_4",
+  "lock.L319.12": "test_guard_lock_inputs.Guards.test_lock_L319_12",
+  "lock.L324.8": "test_guard_lock_inputs.Guards.test_lock_L324_8",
+  "lock.L246.8": "test_guard_lock_inputs.Guards.test_lock_L246_8",
+  "lock.L259.12": "test_guard_lock_inputs.Guards.test_lock_L259_12",
+  "lock.L266.20": "test_guard_lock_inputs.Guards.test_lock_L266_20",
+  "lock.L269.20": "test_guard_lock_inputs.Guards.test_lock_L269_20",
+  "lock.L271.12": "test_guard_lock_inputs.Guards.test_lock_L271_12",
+  "lock.L299.8": "test_guard_lock_inputs.Guards.test_lock_L299_8",
+  "lock.schema.units-ambiguous#1": "test_guard_lock_inputs.Guards.test_lock_L299_8",
+  "lock.L301.8": "test_guard_lock_inputs.Guards.test_lock_L301_8",
+  "lock.schema.operator-recipe#1": "test_guard_lock_inputs.Guards.test_lock_operator_recipe_installed_bytes",
+  "lock.schema.operator-recipe#2": "test_guard_lock_inputs.Guards.test_lock_operator_recipe_digest",
+  "lock.schema.operator-recipe#3": "test_guard_lock_inputs.Guards.test_lock_operator_recipe_path",
+  "lock.L155.12": "test_guard_lock_inputs.Guards.test_lock_L155_12",
+  "lookup_plugins.connectome_file.L14.16": "test_guard_lock_inputs.Guards.test_lookup_file_L14_16",
+  "lookup_plugins.connectome_file.L17.12": "test_guard_lock_inputs.Guards.test_lookup_file_L17_12",
+  "lookup_plugins.connectome_inputs.L18.12": "test_guard_lock_inputs.Guards.test_lookup_inputs_L18_12",
+  "lookup_plugins.connectome_inputs.L20.12": "test_guard_lock_inputs.Guards.test_lookup_inputs_L20_12"
+ },
+ "waivers": [],
+ "crash_only": [
+  {
+   "id": "inputs.L150.8",
+   "function": "connectome_inputs.payloads",
+   "args": [
+    {
+     "recipe_file": {
+      "path": "/fixture/recipe.json",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+     }
+    },
+    {
+     "cook-recipe.json": "not strict base64!"
+    }
+   ]
+  }
+ ]
+}

@@ -33,10 +33,28 @@ def summarize():
   if evidence[w['id']]:raise ValueError('waiver on a killed mutant: '+w['id'])
   waived[w['id']]=w
  if read('named-site-anchors.golden')!=named_sites.build()[0]:raise ValueError('stale named site mutants')
+ import crash_only
+ # Separate category: a function-level refusal vector whose mutant can only crash.
+ vectors={}
+ for line in (ROOT/'test/vectors/crash-only.golden').read_text().splitlines():
+  row=json.loads(line);vectors[row['id']]=hashlib.sha256(json.dumps(row,sort_keys=True).encode()).hexdigest()
+ crash={}
+ for row in read('crash-only-results.golden'):
+  if row['status']==crash_only.CATEGORY:
+   if vectors.get(row['id'])!=row['vector_sha256']:raise ValueError('crash-only result without its committed vector')
+   crash[row['id']]=row
+ notes=read('unresolved.golden')
+ if notes!=assemble.unresolved():raise ValueError('stale unresolved notes')
+ notes={n['id']:n['analysis'] for n in notes}
  reviews=[]
  for anchor in anchors:
-  ident=anchor['id'];status='killed' if evidence[ident] else 'equivalent' if ident in waived else 'unreviewed'
-  reviews.append({'id':ident,'file':anchor['file'],'line':anchor['line'],'status':status,'last_trial_category':latest.get(ident,'uncovered'),'evidence':evidence[ident]})
+  ident=anchor['id'];status='killed' if evidence[ident] else 'equivalent' if ident in waived else crash_only.CATEGORY if ident in crash else 'unreviewed'
+  if ident in notes and status!='unreviewed':raise ValueError('unresolved note on a resolved mutant: '+ident)
+  if ident in waived and ident in crash:raise ValueError('waiver on a crash-only mutant: '+ident)
+  row={'id':ident,'file':anchor['file'],'line':anchor['line'],'status':status,'last_trial_category':latest.get(ident,'uncovered'),'evidence':evidence[ident]}
+  if status==crash_only.CATEGORY:row['crash_only']={'file':'crash-only-results.golden','vector_sha256':crash[ident]['vector_sha256'],'original':crash[ident]['original'],'mutated':crash[ident]['mutated']}
+  if ident in notes:row['analysis']=notes[ident]
+  reviews.append(row)
  from named_checks import build
  named=read('named-checks.golden')
  if named!=build():raise ValueError('stale named check evidence')
@@ -49,6 +67,7 @@ def summarize():
    if killed:nk.add(row['id'])
  # Site-based evidence is validated inside named_checks.build(): every site killed.
  for row in named:
+  if row['id'] in notes and row['status']=='killed':raise ValueError('unresolved note on a killed name: '+row['id'])
   if row['status']!='pending-semantic-mutant':ng.add(row['id'])
   if row['status']=='killed':nk.add(row['id'])
  B=json.loads((ROOT/'test/vectors/scenario-obligations.golden').read_text());C=json.loads((ROOT/'test/vectors/cli-obligations.golden').read_text())
@@ -58,7 +77,7 @@ def summarize():
   if row['status']=='replayed' and not (proof.get('status')=='replayed' and proof.get('projected_record_sha256')==row['raw_sha256'] and proof.get('adapter_failure') and proof.get('adapter_failure')==proof.get('expected_adapter_failure')):raise ValueError('C entry marked replayed without projection evidence')
  for row in B:
   if row['status']=='replayed':raise ValueError('B entry marked replayed without a replay harness')
- counts={'guard_site_mutants':len(anchors),'combined_killed':sum(r['status']=='killed' for r in reviews),'equivalent':len(waived),'remaining_unreviewed':sum(r['status']=='unreviewed' for r in reviews),'remaining_categories':{},'named_checks':len(named),'named_mutants_implemented':len(ng),'named_killed':len(nk),'named_remaining':len(named_ids-nk),'B_recorded':len(B),'B_independent_replayed':sum(r['status']=='replayed' for r in B),'C_recorded':len(C),'C_shim_replayed':sum(r['status']=='replayed' for r in C),'negative_vectors':len(witnesses),'unavailable_rows':[14,43,44,45,46]}
+ counts={'guard_site_mutants':len(anchors),'combined_killed':sum(r['status']=='killed' for r in reviews),'equivalent':len(waived),'crash_only_kind_A':sum(r['status']==crash_only.CATEGORY for r in reviews),'remaining_unreviewed':sum(r['status']=='unreviewed' for r in reviews),'remaining_categories':{},'named_checks':len(named),'named_mutants_implemented':len(ng),'named_killed':len(nk),'named_crash_only_kind_A':sum(r['status']==crash_only.CATEGORY for r in named),'named_remaining':sum(r['status'] not in ('killed',crash_only.CATEGORY) for r in named),'B_recorded':len(B),'B_independent_replayed':sum(r['status']=='replayed' for r in B),'C_recorded':len(C),'C_shim_replayed':sum(r['status']=='replayed' for r in C),'negative_vectors':len(witnesses),'unavailable_rows':[14,43,44,45,46],'C_unreachable_documented':sum(replay.get(r['id'],{}).get('status')=='unreachable-without-patching' for r in C if r['status']!='replayed'),'unreviewed_with_written_analysis':sum(r['status']=='unreviewed' and 'analysis' in r for r in reviews)}
  for r in reviews:
   if r['status']=='unreviewed':counts['remaining_categories'][r['last_trial_category']]=counts['remaining_categories'].get(r['last_trial_category'],0)+1
  return counts,reviews

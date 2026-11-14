@@ -4,7 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(ROOT/'test/mutants'),str(ROOT/'test/differential')]
-import assemble, named_checks, named_sites, purpose, sweep
+import assemble, crash_only, named_checks, named_sites, purpose, sweep
 spec=importlib.util.spec_from_file_location('replay_c',ROOT/'test/differential/replay_c.py');replay_c=importlib.util.module_from_spec(spec);spec.loader.exec_module(replay_c)
 summary=importlib.machinery.SourceFileLoader('phase1b_summary',str(ROOT/'scripts/summarize-phase1')).load_module()
 
@@ -112,4 +112,64 @@ class ProjectionTests(unittest.TestCase):
   for name in ('cli-obligations.golden','scenario-obligations.golden'):
    with patch.object(Path,'read_text',relabel(name)):
     with self.assertRaisesRegex(ValueError,'marked replayed'):summary.summarize()
+class CrashOnlyTests(unittest.TestCase):
+ VECTOR={'id':'inputs.L150.8','function':'connectome_inputs.payloads','args':[{'recipe_file':{'path':'/fixture/recipe.json','sha256':'a'*64}},{'cook-recipe.json':'not strict base64!'}]}
+ def test_original_refuses_as_declared_and_outcome_names_class_code_message(self):
+  outcome=crash_only.invoke(ROOT/'oracle',self.VECTOR)
+  self.assertEqual(outcome,{'exception':'ValueError','code':None,'message':'invalid recipe transport','declared_refusal':True})
+  accepted=crash_only.invoke(ROOT/'oracle',dict(self.VECTOR,function='connectome_inputs.external_data_path',args=['/fixture/data']))
+  self.assertEqual(accepted,{'returned':'bool'})
+ def test_vector_declarations_are_closed(self):
+  def declared(*rows):
+   with patch.object(crash_only,'fragments',return_value={'fixture':{'crash_only':list(rows)}}):return crash_only.declared()
+  self.assertEqual(declared(self.VECTOR)[0]['area'],'fixture')
+  for bad in (dict(self.VECTOR,function='subprocess.run'),dict(self.VECTOR,test='x'),{k:v for k,v in self.VECTOR.items() if k!='args'}):
+   with self.assertRaises(ValueError):declared(bad)
+  with self.assertRaises(ValueError):declared(self.VECTOR,dict(self.VECTOR))
+ def test_crash_only_is_a_separate_category_never_a_clean_kill(self):
+  counts=json.loads((ROOT/'test/mutants/phase1-summary.golden').read_text());review=json.loads((ROOT/'test/mutants/guard-review.golden').read_text())
+  crash=[r for r in review if r['status']==crash_only.CATEGORY]
+  self.assertEqual(len(crash),counts['crash_only_kind_A'])
+  self.assertEqual(counts['combined_killed'],sum(r['status']=='killed' for r in review))
+  self.assertEqual(counts['combined_killed']+counts['equivalent']+counts['crash_only_kind_A']+counts['remaining_unreviewed'],counts['guard_site_mutants'])
+  results={r['id']:r for r in json.loads((ROOT/'test/mutants/crash-only-results.golden').read_text())}
+  for row in crash:
+   self.assertEqual(row['evidence'],[]);self.assertTrue(results[row['id']]['mutated'].get('exception'))
+  kills=purpose.kills()
+  for vector in crash_only.declared():self.assertNotIn(vector['id'],kills)
+  names=json.loads((ROOT/'test/mutants/named-checks.golden').read_text())
+  self.assertEqual(counts['named_killed']+counts['named_crash_only_kind_A']+counts['named_remaining'],203)
+  self.assertEqual(counts['named_killed'],sum(n['status']=='killed' for n in names))
+ def test_readiness_gate_keeps_a_separate_blocking_line(self):
+  text=(ROOT/'scripts/check-module-ready').read_text()
+  self.assertIn("if counts['crash_only_kind_A']:missing.append(",text);self.assertIn("if counts['named_crash_only_kind_A']:missing.append(",text)
+
+class ScenarioAccountingTests(unittest.TestCase):
+ def test_every_recorded_scenario_is_classified_and_none_is_counted(self):
+  B=json.loads((ROOT/'test/vectors/scenario-obligations.golden').read_text());classes=json.loads((ROOT/'test/vectors/scenario-classes.golden').read_text())
+  self.assertEqual([b['id'] for b in B],[c['id'] for c in classes]);self.assertEqual(len(B),279)
+  self.assertEqual({b['status'] for b in B},{'pending-independent-contract-request'})
+  counts={}
+  for c in classes:counts[c['class']]=counts.get(c['class'],0)+1
+  self.assertEqual(counts,{'no-entry-point':122,'deployment-entry-point':84,'spawn-lifecycle':28,'publication-gate':17,'adapter-only':15,'spawn-plan':13})
+ def test_unreachability_note_is_generated_and_adds_up(self):
+  note=importlib.machinery.SourceFileLoader('unreachable_note',str(ROOT/'scripts/unreachable-note')).load_module()
+  text=(ROOT/'docs/phase1-unreachable.md').read_text();self.assertEqual(text,note.build())
+  for entry in json.loads((ROOT/'test/vectors/scenario-obligations.golden').read_text())+json.loads((ROOT/'test/vectors/cli-obligations.golden').read_text()):
+   self.assertEqual(text.count('- `'+entry['id']+'`'),1,entry['id'])
+  self.assertIn('**B replayed: 0/279.**',text);self.assertIn('| **Total** | **279** |',text);self.assertIn('| **Total** | **60** |',text)
+ def test_unresolved_notes_need_a_real_analysis_and_a_known_id(self):
+  def notes(*rows):
+   with patch.object(assemble,'fragments',return_value={'fixture':{'unresolved':list(rows)}}):return assemble.unresolved()
+  good={'id':'archive.L140.4','analysis':'z'*80}
+  self.assertEqual(notes(good)[0]['kind'],'guard-site');self.assertEqual(notes({'id':'cook.argv.dash','analysis':'z'*80})[0]['kind'],'named-check')
+  for bad in ({'id':'unknown','analysis':'z'*80},{'id':'archive.L140.4','analysis':'short'},{'id':'archive.L140.4'}):
+   with self.assertRaises(ValueError):notes(bad)
+  with self.assertRaises(ValueError):notes(good,dict(good))
+ def test_unresolved_items_stay_unreviewed(self):
+  review={r['id']:r for r in json.loads((ROOT/'test/mutants/guard-review.golden').read_text())}
+  named={r['id']:r for r in json.loads((ROOT/'test/mutants/named-checks.golden').read_text())}
+  for note in json.loads((ROOT/'test/mutants/unresolved.golden').read_text()):
+   if note['kind']=='guard-site':self.assertEqual(review[note['id']]['status'],'unreviewed')
+   else:self.assertNotEqual(named[note['id']]['status'],'killed')
 if __name__=='__main__':unittest.main()

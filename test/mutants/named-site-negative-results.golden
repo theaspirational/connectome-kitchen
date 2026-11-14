@@ -1,6 +1,22 @@
 [
   {
+    "id": "secrets.reserved.file-env#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "secrets.reserved.catalog#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "secrets.reserved.catalog-code-env#1",
     "status": "survived",
     "mismatches": 0,
     "replayed": 37,
@@ -48,6 +64,32 @@
     "witnesses": []
   },
   {
+    "id": "recipe.secret-ref.audit#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "recipe.secret-ref.audit#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "recipe.secret-ref.audit#3",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": [
+      "853352479ea07685a776e79975271bbe560b157fc56ef6de53e270e081ce886a"
+    ]
+  },
+  {
     "id": "recipe.secret-ref.spawn-token#1",
     "status": "no-vectors"
   },
@@ -56,10 +98,74 @@
     "status": "no-vectors"
   },
   {
+    "id": "cook.argv.dash#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.argv.flag-position#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.argv.validate-first#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.private.state-kind#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.private.state-mode#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.private.state-owner#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.private.state-recheck#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "deploy.private.canonical#1",
     "status": "survived",
     "mismatches": 0,
     "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.build.audit#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
     "runtime_errors": 0,
     "witnesses": []
   },
@@ -88,6 +194,14 @@
     "witnesses": []
   },
   {
+    "id": "deploy.adapter-env#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "catalog.stage.inventory#1",
     "status": "survived",
     "mismatches": 0,
@@ -108,6 +222,22 @@
     "status": "survived",
     "mismatches": 0,
     "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.stage.staged-exec#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.stage.staged-exec#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
     "runtime_errors": 0,
     "witnesses": []
   },
@@ -136,12 +266,46 @@
     "witnesses": []
   },
   {
+    "id": "catalog.contained.checkout#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "catalog.preflight.chars#1",
     "status": "survived",
     "mismatches": 0,
     "replayed": 37,
     "runtime_errors": 0,
     "witnesses": []
+  },
+  {
+    "id": "catalog.preflight.audit#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.lifecycle.state-schema#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.lifecycle.state-schema#2",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": [
+      "2ae3bfa29f05afddb0f329f4103d23675b46f3ccab510942e00bdef1c73b990e"
+    ]
   },
   {
     "id": "spawn.lifecycle.store-binding#1",
@@ -176,6 +340,22 @@
     "witnesses": []
   },
   {
+    "id": "spawn.lifecycle.table#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.lifecycle.table#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "spawn.lifecycle.adapter-required#1",
     "status": "survived",
     "mismatches": 0,
@@ -196,6 +376,38 @@
     "status": "survived",
     "mismatches": 0,
     "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.identity.no-reuse#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.identity.no-reuse#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.identity.tombstone#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.identity.tombstone#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
     "runtime_errors": 0,
     "witnesses": []
   },
@@ -244,6 +456,14 @@
     "status": "no-vectors"
   },
   {
+    "id": "spawn.persist.lock-nofollow#1",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.persist.lock-nofollow#2",
+    "status": "no-vectors"
+  },
+  {
     "id": "lock.schema.cook#1",
     "status": "killed",
     "mismatches": 1,
@@ -262,6 +482,30 @@
     "witnesses": [
       "68dc9e50cefe1ab30c41bcce68644d80f237cfd6a558dd45b42141443ff4c121"
     ]
+  },
+  {
+    "id": "lock.schema.operator-recipe#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "lock.schema.operator-recipe#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "lock.schema.operator-recipe#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": []
   },
   {
     "id": "lock.schema.components#1",
@@ -396,6 +640,16 @@
     "witnesses": []
   },
   {
+    "id": "catalog.descriptor.kind#1",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": [
+      "526ecea27acc46676a9895f6f6b4f39c91f8095c730c5cc2991a0038569e2e04"
+    ]
+  },
+  {
     "id": "catalog.descriptor.argv#1",
     "status": "survived",
     "mismatches": 0,
@@ -430,6 +684,24 @@
     "witnesses": []
   },
   {
+    "id": "catalog.data-args.state#1",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": [
+      "c2d83da92c347ac9787821786d835393345d2d11fa1ba4f96060bb3b9eef1679"
+    ]
+  },
+  {
+    "id": "catalog.data-args.state#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "catalog.data-args.conflict#1",
     "status": "survived",
     "mismatches": 0,
@@ -454,10 +726,194 @@
     "status": "no-vectors"
   },
   {
+    "id": "catalog.audit-site.plan#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.plan#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.pre-build#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.pre-build#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.post-build#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.post-build#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "catalog.audit-site.separate#1",
     "status": "survived",
     "mismatches": 0,
     "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.verify-tree#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.verify-tree#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.verify-tree#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.verify-tree#4",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.verify-tree#5",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.verify-lock#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.verify-lock#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.verify-units#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.verify-units#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.verify-units#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.verify-units#4",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.verify-units#5",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.launch-cwd#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.launch-cwd#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.cook-argv#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.cook-argv#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.audit-site.cook-argv#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
     "runtime_errors": 0,
     "witnesses": []
   },
@@ -534,7 +990,191 @@
     "witnesses": []
   },
   {
+    "id": "inputs.record.secret-files#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.secret-files#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.secret-files#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.secret-files#4",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-args#1",
+    "status": "runtime-error",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 1,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-args#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-args#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-args#4",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-args#5",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-args#6",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-args#7",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-path#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-path#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-path#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-path#4",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-path#5",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-path#6",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-flag#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-flag#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.data-flag#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.transport#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.transport#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "name.grammar.unit#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.prepare.marker#1",
     "status": "survived",
     "mismatches": 0,
     "replayed": 5,
@@ -590,6 +1230,22 @@
     "witnesses": []
   },
   {
+    "id": "deploy.units.own-copy#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.units.own-copy#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "deploy.units.empty#1",
     "status": "survived",
     "mismatches": 0,
@@ -606,6 +1262,110 @@
     "witnesses": []
   },
   {
+    "id": "deploy.retained.config#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.retained.pins#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.retained.pins#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.retained.pins#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.retained.recipe#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.retained.previous-first#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.retained.sidecar#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.activate.preflight#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.activate.exclusive-recheck#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.activate.exclusive-recheck#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.activate.reverify#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.activate.marker#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.activate.install-only-health#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "deploy.activate.health-argv#1",
     "status": "survived",
     "mismatches": 0,
@@ -614,10 +1374,42 @@
     "witnesses": []
   },
   {
+    "id": "deploy.activate.health-env#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "config.layers.fold#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "config.layers.prune#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "config.layers.public-connectors#1",
     "status": "survived",
     "mismatches": 0,
     "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.disabled#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
     "runtime_errors": 0,
     "witnesses": []
   },
@@ -639,6 +1431,54 @@
   },
   {
     "id": "cook.input.catalog-connector#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.paths#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.paths#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.paths#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.paths#4",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.paths#5",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.staged-recipe#1",
     "status": "survived",
     "mismatches": 0,
     "replayed": 3,
@@ -670,6 +1510,90 @@
     "witnesses": []
   },
   {
+    "id": "spawn.schema.template#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 26,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.schema.template#2",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 26,
+    "runtime_errors": 0,
+    "witnesses": [
+      "35224be93242b51522fe13f6d5b4f3acfb6bf71174ca9119660ccaeddfd8be21"
+    ]
+  },
+  {
+    "id": "spawn.schema.instance#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 26,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.schema.instance#2",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 26,
+    "runtime_errors": 0,
+    "witnesses": [
+      "6b63456dde0ff2a0507a4bc828f2387e8f47f12a4e6ff29b617df664b7c16b15"
+    ]
+  },
+  {
+    "id": "spawn.schema.name-record#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 26,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.schema.name-record#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 26,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.schema.name-receipt#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 26,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.schema.name-receipt#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 26,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.schema.home#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 26,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.schema.home#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 26,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "spawn.schema.seed#1",
     "status": "killed",
     "mismatches": 1,
@@ -688,7 +1612,87 @@
     "witnesses": []
   },
   {
+    "id": "spawn.catalog.descriptor#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.versions#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.versions#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "spawn.catalog.file-name#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.pin#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.pin#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.pin#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.pin#4",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.pin#5",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.pin#6",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.pin#7",
     "status": "survived",
     "mismatches": 0,
     "replayed": 11,
@@ -710,6 +1714,26 @@
     "replayed": 11,
     "runtime_errors": 0,
     "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.reference#1",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.catalog.reference#2",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.catalog.reference#3",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.catalog.reference#4",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.catalog.reference#5",
+    "status": "no-vectors"
   },
   {
     "id": "spawn.catalog.connector-settings#1",
@@ -740,7 +1764,63 @@
     "witnesses": []
   },
   {
+    "id": "spawn.artifact.payload-path#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.artifact.payload-path#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.artifact.payload-path#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.artifact.payload-path#4",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
     "id": "spawn.artifact.limit#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.artifact.provenance#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.artifact.provenance#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.artifact.provenance#3",
     "status": "survived",
     "mismatches": 0,
     "replayed": 3,
@@ -762,5 +1842,21 @@
   {
     "id": "spawn.cli.combos#3",
     "status": "no-vectors"
+  },
+  {
+    "id": "spawn.cli.refusal#1",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.cli.refusal#2",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.cli.status-readonly#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
   }
 ]

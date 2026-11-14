@@ -1,0 +1,262 @@
+{
+ "named_sites": {
+  "spawn.lifecycle.state-schema": [
+   {
+    "file": "module_utils/connectome_spawn/lifecycle.py",
+    "before": "fields(value, ('schema', 'agent', 'state', 'seed', 'home',",
+    "after": "(lambda *closed_record: None)(value, ('schema', 'agent', 'state', 'seed', 'home',",
+    "why": "Lines 45-46: the closed-record check of the persisted lifecycle state (required and unknown top-level fields) becomes a call that checks nothing; every later value check stays. The anchor is the first line of the two-line call."
+   },
+   {
+    "file": "module_utils/connectome_spawn/lifecycle.py",
+    "before": "need(value['schema'] == 'connectome.spawn-state/v1' and",
+    "after": "need(True or value['schema'] == 'connectome.spawn-state/v1' and",
+    "why": "Lines 47-48: the whole condition (v1 schema, record belongs to the agent being read, one of the six states) is short-circuited to true. The anchor is the first line of the two-line condition."
+   }
+  ],
+  "spawn.lifecycle.table": [
+   {
+    "file": "module_utils/connectome_spawn/lifecycle.py",
+    "before": "branch == 'clean' and (source, target) in",
+    "after": "(source, target) in",
+    "why": "Line 175: the first row of the transition table loses its seed-branch condition, so the clean-only rows (planned to initiation, initiation to named, named to active) become legal for a seeded agent; the other rows and the check on line 180 stay."
+   },
+   {
+    "file": "module_utils/connectome_spawn/lifecycle.py",
+    "before": "need(legal, 'illegal lifecycle transition')",
+    "after": "need(True, 'illegal lifecycle transition')",
+    "why": "Line 180: the table result computed on lines 175-179 is no longer enforced, so any transition between states is accepted."
+   }
+  ],
+  "spawn.identity.no-reuse": [
+   {
+    "file": "module_utils/connectome_spawn/identity.py",
+    "before": "handle = {'id': uuid.uuid4().hex, 'agent': agent}",
+    "after": "handle = {'id': next((key for key, row in value['identities'].items() if row['retired']), uuid.uuid4().hex), 'agent': agent}",
+    "why": "Line 158: a provision takes the handle of a retired identity when one exists instead of always minting a new one (pooled reuse of a tombstone); the live-duplicate refusal above stays."
+   },
+   {
+    "file": "module_utils/connectome_spawn/identity.py",
+    "before": "uuid.uuid4().hex",
+    "after": "uuid.UUID(int=0).hex",
+    "why": "Line 158: the handle is a constant instead of a freshly minted value, so every provision returns the same handle."
+   }
+  ],
+  "spawn.identity.tombstone": [
+   {
+    "file": "module_utils/connectome_spawn/identity.py",
+    "before": "self._row(value, handle)['retired'] = True",
+    "after": "self._row(value, handle)['retired'] = False",
+    "why": "Line 190: retirement validates the handle and records the operation but no longer sets the tombstone flag."
+   },
+   {
+    "file": "module_utils/connectome_spawn/identity.py",
+    "before": "self._row(value, handle)['retired'] = True",
+    "after": "del value['identities'][self._row(value, handle) and handle['id']]",
+    "why": "Line 190: retirement validates the handle and then deletes the identity row instead of marking it retired."
+   }
+  ],
+  "spawn.persist.lock-nofollow": [
+   {
+    "file": "module_utils/connectome_spawn/persistence.py",
+    "before": "os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW",
+    "after": "os.O_CREAT | os.O_RDWR",
+    "why": "Line 68: the lock file is opened without O_NOFOLLOW, so a link at the lock path is followed; the mode stays 0600."
+   },
+   {
+    "file": "module_utils/connectome_spawn/persistence.py",
+    "before": "os.O_NOFOLLOW, 0o600)",
+    "after": "os.O_NOFOLLOW)",
+    "why": "Line 68: the lock file is created without the explicit 0600 mode (default 0777 before umask); O_NOFOLLOW stays."
+   }
+  ],
+  "spawn.schema.template": [
+   {
+    "file": "module_utils/connectome_spawn/schema.py",
+    "before": "fields(value, ('schema', 'runtime', 'agent', 'connectors', 'modules', 'seed'), ('preflights', 'identity'))",
+    "after": "pass",
+    "why": "Line 65: removes the closed top-level field set of the template; the checks of each known field stay."
+   },
+   {
+    "file": "module_utils/connectome_spawn/schema.py",
+    "before": "value['schema'] == 'connectome.spawn-template/v2'",
+    "after": "True",
+    "why": "Line 66: removes the v2 schema identifier check; the v1 migration refusal on line 62 stays."
+   }
+  ],
+  "spawn.schema.instance": [
+   {
+    "file": "module_utils/connectome_spawn/schema.py",
+    "before": "fields(value, ('schema', 'instance', 'unixName', 'agent', 'homeDirectory', 'home', 'rights', 'target'))",
+    "after": "pass",
+    "why": "Line 124: removes the closed top-level field set of the instance; the checks of each known field stay."
+   },
+   {
+    "file": "module_utils/connectome_spawn/schema.py",
+    "before": "value['schema'] == 'connectome.spawn-instance/v1'",
+    "after": "True",
+    "why": "Line 125: removes the v1 instance schema identifier check."
+   }
+  ],
+  "spawn.schema.name-record": [
+   {
+    "file": "module_utils/connectome_spawn/schema.py",
+    "before": "fields(value, ('name', 'displayName', 'summaryParticipant'), ('systemPrompt',))",
+    "after": "pass",
+    "why": "Line 146: removes the closed field set of the name record; the per-field checks stay."
+   },
+   {
+    "file": "module_utils/connectome_spawn/schema.py",
+    "before": "concrete(value[key])",
+    "after": "pass",
+    "why": "Line 151: removes the concrete-value check of each name record field (placeholders, reserved words, surrounding whitespace); the length, character-category and identifier checks on lines 152-157 stay."
+   }
+  ],
+  "spawn.schema.name-receipt": [
+   {
+    "file": "module_utils/connectome_spawn/schema.py",
+    "before": "fields(value, ('recordHash', 'source'))",
+    "after": "pass",
+    "why": "Line 190: removes the closed field set of the persisted name receipt; the hash and source checks stay."
+   },
+   {
+    "file": "module_utils/connectome_spawn/schema.py",
+    "before": "match(value['recordHash'], r'[0-9a-f]{64}')",
+    "after": "True",
+    "why": "Line 191: removes the 64-hex check of the persisted record hash."
+   }
+  ],
+  "spawn.schema.home": [
+   {
+    "file": "module_utils/connectome_spawn/schema.py",
+    "before": "fields(home, ('transport', 'channel'))",
+    "after": "pass",
+    "why": "Line 210: removes the closed field set of the home binding; the concrete-value and pattern checks stay."
+   },
+   {
+    "file": "module_utils/connectome_spawn/schema.py",
+    "before": "need(match(home['transport'], CATALOG_NAME) and",
+    "after": "need(True or match(home['transport'], CATALOG_NAME) and",
+    "why": "Lines 213-215: the whole condition (transport catalog name, channel pattern, channel traversal) is short-circuited to true. The anchor is the first line of the three-line condition; the guard-site mutant spawn.schema.L213.4 removes the same condition."
+   }
+  ],
+  "spawn.cli.refusal": [
+   {
+    "file": "module_utils/connectome_spawn/cli.py",
+    "before": "'error': 'spawn input refused'",
+    "after": "'error': str(exc)",
+    "why": "Line 64: the refusal prints the reason of the exception instead of the one fixed message; exit code and filesWritten stay."
+   },
+   {
+    "file": "module_utils/connectome_spawn/cli.py",
+    "before": ", 'filesWritten': False}",
+    "after": "}",
+    "why": "Line 64: the refusal no longer states filesWritten:false; the fixed message and exit code stay."
+   }
+  ],
+  "spawn.cli.status-readonly": [
+   {
+    "file": "module_utils/connectome_spawn/lifecycle.py",
+    "before": "value = self._read(agent)  # Atomic read; never creates files or lock directories.",
+    "after": "with locked(self._paths(agent)[0]): value = self._read(agent)",
+    "why": "Line 100: status takes the writer lock around its read, which creates the agent directory and its .lock file; the value returned is unchanged."
+   }
+  ]
+ },
+ "kills": {
+  "spawn.cli.L40.16": "test_guard_spawn_state.Guards.test_spawn_cli_L40_16",
+  "spawn.cli.combos#1": "test_guard_spawn_state.Guards.test_spawn_cli_L40_16",
+  "spawn.cli.L44.12": "test_guard_spawn_state.Guards.test_spawn_cli_L44_12",
+  "spawn.cli.combos#2": "test_guard_spawn_state.Guards.test_spawn_cli_L44_12",
+  "spawn.cli.L49.16": "test_guard_spawn_state.Guards.test_spawn_cli_L49_16",
+  "spawn.cli.combos#3": "test_guard_spawn_state.Guards.test_spawn_cli_L49_16",
+  "spawn.cli.L54.16": "test_guard_spawn_state.Guards.test_spawn_cli_L54_16",
+  "spawn.cli.refusal#1": "test_guard_spawn_state.Guards.test_spawn_cli_refusal_fixed_message",
+  "spawn.cli.refusal#2": "test_guard_spawn_state.Guards.test_spawn_cli_refusal_files_written_false",
+  "spawn.cli.status-readonly#1": "test_guard_spawn_state.Guards.test_spawn_cli_status_readonly",
+  "spawn.data.L34.8": "test_guard_spawn_state.Guards.test_spawn_data_L34_8",
+  "spawn.data.L74.8": "test_guard_spawn_state.Guards.test_spawn_data_L74_8",
+  "spawn.data.L76.8": "test_guard_spawn_state.Guards.test_spawn_data_L76_8",
+  "spawn.data.L89.20": "test_guard_spawn_state.Guards.test_spawn_data_L89_20",
+  "spawn.identity.L32.4": "test_guard_spawn_state.Guards.test_spawn_identity_L32_4",
+  "spawn.identity.L107.8": "test_guard_spawn_state.Guards.test_spawn_identity_L107_8",
+  "spawn.identity.L112.12": "test_guard_spawn_state.Guards.test_spawn_identity_L112_12",
+  "spawn.identity.L123.12": "test_guard_spawn_state.Guards.test_spawn_identity_L123_12",
+  "spawn.identity.L134.8": "test_guard_spawn_state.Guards.test_spawn_identity_L134_8",
+  "spawn.identity.L178.12": "test_guard_spawn_state.Guards.test_spawn_identity_L178_12",
+  "spawn.identity.L118.16": "test_guard_spawn_state.Guards.test_spawn_identity_L118_16",
+  "spawn.identity.duplicate-active#1": "test_guard_spawn_state.Guards.test_spawn_identity_L118_16",
+  "spawn.identity.L132.8": "test_guard_spawn_state.Guards.test_spawn_identity_L132_8",
+  "spawn.identity.handle#1": "test_guard_spawn_state.Guards.test_spawn_identity_L132_8",
+  "spawn.identity.no-reuse#1": "test_guard_spawn_state.Guards.test_spawn_identity_no_reuse",
+  "spawn.identity.no-reuse#2": "test_guard_spawn_state.Guards.test_spawn_identity_no_reuse",
+  "spawn.identity.tombstone#1": "test_guard_spawn_state.Guards.test_spawn_identity_tombstone_marks",
+  "spawn.identity.tombstone#2": "test_guard_spawn_state.Guards.test_spawn_identity_tombstone_keeps_row",
+  "spawn.lifecycle.L54.4": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L54_4",
+  "spawn.lifecycle.L131.8": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L131_8",
+  "spawn.lifecycle.L136.16": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L136_16",
+  "spawn.lifecycle.L152.8": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L152_8",
+  "spawn.lifecycle.L186.16": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L186_16",
+  "spawn.lifecycle.L192.16": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L192_16",
+  "spawn.lifecycle.L252.24": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L252_24",
+  "spawn.lifecycle.L96.8": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L96_8",
+  "spawn.lifecycle.store-binding#1": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L96_8",
+  "spawn.lifecycle.L151.8": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L151_8",
+  "spawn.lifecycle.target#1": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L151_8",
+  "spawn.lifecycle.L161.12": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L161_12",
+  "spawn.lifecycle.input-for-target#1": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L161_12",
+  "spawn.lifecycle.L162.12": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L162_12",
+  "spawn.lifecycle.input-for-target#2": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L162_12",
+  "spawn.lifecycle.L190.16": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L190_16",
+  "spawn.lifecycle.adapter-required#1": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L190_16",
+  "spawn.lifecycle.L194.12": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L194_12",
+  "spawn.lifecycle.adapter-required#2": "test_guard_spawn_state.Guards.test_spawn_lifecycle_L194_12",
+  "spawn.lifecycle.state-schema#1": "test_guard_spawn_state.Guards.test_spawn_lifecycle_state_schema_closed_record",
+  "spawn.lifecycle.state-schema#2": "test_guard_spawn_state.Guards.test_spawn_lifecycle_state_schema_values",
+  "spawn.lifecycle.table#1": "test_guard_spawn_state.Guards.test_spawn_lifecycle_table_seeded_rows",
+  "spawn.lifecycle.table#2": "test_guard_spawn_state.Guards.test_spawn_lifecycle_table_enforced",
+  "spawn.persistence.L17.4": "test_guard_spawn_state.Guards.test_spawn_persistence_L17_4",
+  "spawn.persist.traversal#1": "test_guard_spawn_state.Guards.test_spawn_persistence_L17_4",
+  "spawn.persistence.L19.8": "test_guard_spawn_state.Guards.test_spawn_persistence_L19_8",
+  "spawn.persist.symlink#1": "test_guard_spawn_state.Guards.test_spawn_persistence_L19_8",
+  "spawn.persistence.L37.4": "test_guard_spawn_state.Guards.test_spawn_persistence_L37_4",
+  "spawn.persistence.L49.4": "test_guard_spawn_state.Guards.test_spawn_persistence_L49_4",
+  "spawn.persist.bound#1": "test_guard_spawn_state.Guards.test_spawn_persistence_L49_4",
+  "spawn.persist.lock-nofollow#1": "test_guard_spawn_state.Guards.test_spawn_persist_lock_nofollow_symlink",
+  "spawn.persist.lock-nofollow#2": "test_guard_spawn_state.Guards.test_spawn_persist_lock_mode",
+  "spawn.schema.L35.4": "test_guard_spawn_state.Guards.test_spawn_schema_L35_4",
+  "spawn.schema.L39.16": "test_guard_spawn_state.Guards.test_spawn_schema_L39_16",
+  "spawn.schema.L104.8": "test_guard_spawn_state.Guards.test_spawn_schema_L104_8",
+  "spawn.schema.L193.4": "test_guard_spawn_state.Guards.test_spawn_schema_L193_4",
+  "spawn.schema.L196.8": "test_guard_spawn_state.Guards.test_spawn_schema_L196_8",
+  "spawn.schema.L202.8": "test_guard_spawn_state.Guards.test_spawn_schema_L202_8",
+  "spawn.schema.L204.8": "test_guard_spawn_state.Guards.test_spawn_schema_L204_8",
+  "spawn.schema.L191.4": "test_guard_spawn_state.Guards.test_spawn_schema_L191_4",
+  "spawn.schema.name-receipt#2": "test_guard_spawn_state.Guards.test_spawn_schema_L191_4",
+  "spawn.schema.L213.4": "test_guard_spawn_state.Guards.test_spawn_schema_L213_4",
+  "spawn.schema.home#2": "test_guard_spawn_state.Guards.test_spawn_schema_L213_4",
+  "spawn.schema.home#1": "test_guard_spawn_state.Guards.test_spawn_schema_home_closed",
+  "spawn.schema.template#1": "test_guard_spawn_state.Guards.test_spawn_schema_template_closed",
+  "spawn.schema.template#2": "test_guard_spawn_state.Guards.test_spawn_schema_template_version",
+  "spawn.schema.instance#1": "test_guard_spawn_state.Guards.test_spawn_schema_instance_closed",
+  "spawn.schema.instance#2": "test_guard_spawn_state.Guards.test_spawn_schema_instance_version",
+  "spawn.schema.name-record#1": "test_guard_spawn_state.Guards.test_spawn_schema_name_record_closed",
+  "spawn.schema.name-record#2": "test_guard_spawn_state.Guards.test_spawn_schema_name_record_concrete",
+  "spawn.schema.name-receipt#1": "test_guard_spawn_state.Guards.test_spawn_schema_name_receipt_closed",
+  "spawn.seed.L32.4": "test_guard_spawn_state.Guards.test_spawn_seed_L32_4",
+  "spawn.schema.seed#2": "test_guard_spawn_state.Guards.test_spawn_seed_L32_4",
+  "spawn.cli.L15.8": "test_guard_spawn_state.Guards.test_spawn_cli_L15_8",
+  "spawn.cli.parser#1": "test_guard_spawn_state.Guards.test_spawn_cli_L15_8"
+ },
+ "waivers": [],
+ "unresolved": [
+  {
+   "id": "spawn.lifecycle.L198.16",
+   "analysis": "Not killed and not equivalent. With need(self.identity_provider is not None, ...) replaced by need(True, ...), the only input that reaches the difference is a Lifecycle whose identity_provider is exactly None on a transition with identity effects. The very next statement (lifecycle.py:199) passes that None to validate_provider_name, whose first action reads provider.supports_rename (identity.py:38), so the mutated run always raises AttributeError where the oracle raises SpawnError('identity provider required'). Nothing is evaluated between lines 198 and 199 that a fake adapter, importer or persisted state could turn into a declared refusal (the name argument is a plain lookup in already validated records), and nothing is written in either run, so there is no clean kill; the exception class differs, so it is not equivalent. A crash-only vector is not possible either: the guard sits in the method Lifecycle.transition, which needs a constructed Lifecycle instance, and no module-level function of the oracle calls transition (cli.main and the shim only call status). Tried: every target with identity effects (initiation, named, clean active, retired with a live handle); all crash at line 199."
+  },
+  {
+   "id": "spawn.lifecycle.adapter-required",
+   "analysis": "Sites #1 (importer, line 190) and #2 (adapter, line 194) are killed by clean tests. Site #3 (identity provider, line 198) is the same mutation as guard spawn.lifecycle.L198.16 and stays open for the reason written there: with the check removed a None provider crashes with AttributeError on the next statement, before any intent is written, and the guard is only reachable through the method Lifecycle.transition, so neither a clean kill nor a crash-only function vector exists."
+  }
+ ]
+}

@@ -1,0 +1,285 @@
+{
+ "named_sites": {
+  "cook.argv.dash": [
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "not arg.startswith('-')",
+    "after": "True",
+    "why": "Line 37 is one compound condition shared with cook.argv.flag-position. Replacing only the dash sub-expression removes the refusal of option-like values: an argument starting with '-' is accepted at any index, with or without recorded flag positions. text() and credential_shaped() stay in force."
+   }
+  ],
+  "cook.argv.flag-position": [
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "startswith('-') or index in flag_indices",
+    "after": "startswith('-') or arg in [argv[i] for i in flag_indices]",
+    "why": "Same compound condition at line 37; only the sub-expression 'index in flag_indices' changes. The exemption stays, but it is granted by value instead of by recorded index, which removes exactly the positional rule ('a value equal to a flag is not exempt'). A plain True here would be semantically the same mutant as cook.argv.dash (the whole parenthesis becomes True), so the two names could not be told apart; this replacement still refuses option-like values that equal no recorded flag."
+   }
+  ],
+  "cook.argv.validate-first": [
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "validate_arguments(argv, flag_indices)",
+    "after": "pass",
+    "why": "Occurrence 1 is the call at line 317 (occurrence 0 is inside command(), line 43). Removes the validation of the whole assembled cook argv before any subprocess. The same argv is still validated inside command(), but only after verify_cook has already spawned its Git children, so only the validate-before-first-subprocess ordering is removed.",
+    "occurrence": 1
+   }
+  ],
+  "catalog.stage.staged-exec": [
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "entrypoint = str(catalog.stage_checkout(Path(entrypoint).parent.parent, build / 'cook-source') / 'bin/cook')",
+    "after": "catalog.stage_checkout(Path(entrypoint).parent.parent, build / 'cook-source')",
+    "why": "Line 300: the cook checkout is still staged into the build, but the entrypoint is no longer rebound to the staged copy, so the code position keeps naming the input checkout."
+   },
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "host_repo=str(catalog.stage_checkout(",
+    "after": "host_repo=settings['host_repo'], staged=str(catalog.stage_checkout(",
+    "why": "Lines 301-302: the host repository is still staged (the staged path is kept under an unused key), but host_repo, and with it --ch-repo, keeps naming the input checkout instead of the staged copy."
+   }
+  ],
+  "catalog.contained.checkout": [
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "Path(entrypoint).is_relative_to(root) and Path(entrypoint).resolve() == Path(entrypoint)",
+    "after": "True",
+    "why": "Lines 239-240: removes the catalog-mode requirement that the cook checkout entrypoint lies inside the agent tree without a symlink alias; catalog.input_paths on line 238 (the other cook inputs) is untouched."
+   }
+  ],
+  "catalog.audit-site.cook-argv": [
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "catalog.audit_argv(audited, build, root, state, spec['pins']['platform'])",
+    "after": "pass",
+    "why": "Line 327: removes the audit call site for the assembled cook argv (operand grammar and containment in the agent tree); the three code-position audits and the tree audit stay."
+   },
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "catalog.audit_path(value, build, build, state, spec['pins']['platform'])",
+    "after": "pass",
+    "why": "Line 329: removes the audit of the three code positions (runtime, entrypoint, host repository) against the staged build; the argv audit against the wider agent tree stays."
+   },
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "catalog.audit_tree_code(build, state, spec['pins']['platform'])",
+    "after": "pass",
+    "why": "Line 332: removes the pre-execution interpreter-directive audit of the build tree, the first one that sees the staged cook and host checkouts; the post-build catalog.verify still runs, but only after cook has executed."
+   }
+  ],
+  "config.layers.fold": [
+   {
+    "file": "module_utils/connectome_config.py",
+    "before": "result = combine(result, layer, recursive=True)",
+    "after": "result = __import__('functools').reduce(lambda upper, lower: combine(lower, upper, recursive=True), reversed(layers))",
+    "why": "Line 39: replaces the left fold step by a right fold over the same layers with unchanged precedence (upper layers still win), which is what Ansible's multi-argument combine does. Only the associativity is removed: an intermediate null no longer buries the lower layers' keys before a higher mapping is merged. (Ansible is not importable here, so the in-module fallback combine is the one exercised; a multi-argument call of that fallback would itself be a left fold and thus an equivalent mutant, hence the explicit reduce.)"
+   }
+  ],
+  "config.layers.prune": [
+   {
+    "file": "module_utils/connectome_config.py",
+    "before": "if entry.get('enabled', True)}",
+    "after": "if True}",
+    "why": "Line 50 is the assignment header of the comprehension; its filter on line 51 is the real check. Removing the filter keeps disabled entries in connectors/modules/catalog; the boolean-type check on line 48 is untouched."
+   }
+  ],
+  "cook.input.paths": [
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "not any(c in value for c in '?#')",
+    "after": "True",
+    "why": "Line 66 is the def header of absolute_path; this is the path-shape part of its check on line 67: '?' and '#' are no longer refused. text() and credential_shaped() stay."
+   },
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "need(path.is_absolute(), 'absolute adapter path required')",
+    "after": "need(True, 'absolute adapter path required')",
+    "why": "Line 66 is the def header of absolute_path; this is its second check (line 70): a relative adapter path is accepted. Same mutated file as guard cook.L70.4."
+   },
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "all(path.is_absolute() and path.resolve() == path for path in (build, state, spec_path))",
+    "after": "True",
+    "why": "Line 223: build, state and spec paths may be symlink aliases. Same mutated file as guard cook.L223.4."
+   },
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "build.is_dir() and spec_path.name == 'deployment.json'",
+    "after": "True",
+    "why": "Line 225: the spec need not be named deployment.json in an existing build directory. Same mutated file as guard cook.L225.4."
+   },
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "build.parent.name == 'builds'",
+    "after": "True",
+    "why": "Line 226: the output need not be shaped ROOT/builds/REQUEST. Same mutated file as guard cook.L226.4."
+   }
+  ],
+  "cook.input.staged-recipe": [
+   {
+    "file": "module_utils/connectome_cook.py",
+    "before": "content = inputs.read_file(staged, spec['config']['recipe_file'])",
+    "after": "content = staged.read_bytes()",
+    "why": "Line 249: the staged recipe in the build is read without being verified against the recipe_file record (regular file without alias, digest, strict JSON object). read_bytes is the minimal expression that keeps content defined; the except clause and its 'invalid staged recipe' refusal stay."
+   }
+  ]
+ },
+ "kills": {
+  "archive.L74.8": "test_guard_cook.Guards.test_archive_L74_8",
+  "archive.L79.8": "test_guard_cook.Guards.test_archive_L79_8",
+  "archive.L95.8": "test_guard_cook.Guards.test_archive_L95_8",
+  "archive.L99.8": "test_guard_cook.Guards.test_archive_L99_8",
+  "archive.L134.12": "test_guard_cook.Guards.test_archive_L134_12",
+  "archive.L139.8": "test_guard_cook.Guards.test_archive_L139_8",
+  "archive.L140.4": "test_guard_cook.Guards.test_archive_L140_4",
+  "archive.L193.4": "test_guard_cook.Guards.test_archive_L193_4",
+  "config.L60.8": "test_guard_cook.Guards.test_config_L60_8",
+  "config.L46.12": "test_guard_cook.Guards.test_config_L46_12",
+  "cook.L67.4": "test_guard_cook.Guards.test_cook_L67_4",
+  "cook.L70.4": "test_guard_cook.Guards.test_cook_L70_4",
+  "cook.L76.4": "test_guard_cook.Guards.test_cook_L76_4",
+  "cook.L78.4": "test_guard_cook.Guards.test_cook_L78_4",
+  "cook.L117.4": "test_guard_cook.Guards.test_cook_L117_4",
+  "cook.L140.4": "test_guard_cook.Guards.test_cook_L140_4",
+  "cook.L188.4": "test_guard_cook.Guards.test_cook_L188_4",
+  "cook.L208.4": "test_guard_cook.Guards.test_cook_L208_4",
+  "cook.L223.4": "test_guard_cook.Guards.test_cook_L223_4",
+  "cook.L225.4": "test_guard_cook.Guards.test_cook_L225_4",
+  "cook.L226.4": "test_guard_cook.Guards.test_cook_L226_4",
+  "cook.L228.4": "test_guard_cook.Guards.test_cook_L228_4",
+  "cook.L261.4": "test_guard_cook.Guards.test_cook_L261_4",
+  "cook.L264.4": "test_guard_cook.Guards.test_cook_L264_4",
+  "cook.L268.4": "test_guard_cook.Guards.test_cook_L268_4",
+  "cook.L336.4": "test_guard_cook.Guards.test_cook_L336_4",
+  "cook.L355.4": "test_guard_cook.Guards.test_cook_L355_4",
+  "cook.L374.4": "test_guard_cook.Guards.test_cook_L374_4",
+  "cook.L123.8": "test_guard_cook.Guards.test_cook_L123_8",
+  "cook.L136.8": "test_guard_cook.Guards.test_cook_L136_8",
+  "cook.L168.8": "test_guard_cook.Guards.test_cook_L168_8",
+  "cook.L235.8": "test_guard_cook.Guards.test_cook_L235_8",
+  "cook.L349.8": "test_guard_cook.Guards.test_cook_L349_8",
+  "cook.L360.8": "test_guard_cook.Guards.test_cook_L360_8",
+  "cook.L52.12": "test_guard_cook.Guards.test_cook_L52_12",
+  "cook.L134.12": "test_guard_cook.Guards.test_cook_L134_12",
+  "cook.L150.12": "test_guard_cook.Guards.test_cook_L150_12",
+  "cook.L157.16": "test_guard_cook.Guards.test_cook_L157_16",
+  "cook.L172.16": "test_guard_cook.Guards.test_cook_L172_16",
+  "cook.L174.16": "test_guard_cook.Guards.test_cook_L174_16",
+  "cook.L251.16": "test_guard_cook.Guards.test_cook_L251_16",
+  "cook.L257.16": "test_guard_cook.Guards.test_cook_L257_16",
+  "secrets.reserved.adapter#1": "test_guard_cook.Guards.test_cook_L136_8",
+  "secrets.reserved.adapter#2": "test_guard_cook.Guards.test_cook_L188_4",
+  "recipe.secret-ref.token#1": "test_guard_cook.Guards.test_cook_L157_16",
+  "recipe.secret-ref.catalog-token#1": "test_guard_cook.Guards.test_cook_L174_16",
+  "cook.input.spec#1": "test_guard_cook.Guards.test_cook_L117_4",
+  "cook.input.pin-ref#1": "test_guard_cook.Guards.test_cook_L123_8",
+  "cook.input.catalog-connector#1": "test_guard_cook.Guards.test_cook_L172_16",
+  "cook.input.cook-settings#2": "test_guard_cook.Guards.test_cook_L264_4",
+  "cook.input.cook-settings#3": "test_guard_cook.Guards.test_cook_L268_4",
+  "cook.input.paths#2": "test_guard_cook.Guards.test_cook_L70_4",
+  "cook.input.paths#3": "test_guard_cook.Guards.test_cook_L223_4",
+  "cook.input.paths#4": "test_guard_cook.Guards.test_cook_L225_4",
+  "cook.input.paths#5": "test_guard_cook.Guards.test_cook_L226_4",
+  "cook.argv.dash#1": "test_guard_cook.Guards.test_cook_argv_dash_1",
+  "cook.argv.flag-position#1": "test_guard_cook.Guards.test_cook_argv_flag_position_1",
+  "cook.argv.validate-first#1": "test_guard_cook.Guards.test_cook_argv_validate_first_1",
+  "catalog.stage.staged-exec#1": "test_guard_cook.Guards.test_catalog_stage_staged_exec_1",
+  "catalog.stage.staged-exec#2": "test_guard_cook.Guards.test_catalog_stage_staged_exec_2",
+  "catalog.contained.checkout#1": "test_guard_cook.Guards.test_catalog_contained_checkout_1",
+  "catalog.audit-site.cook-argv#1": "test_guard_cook.Guards.test_catalog_audit_site_cook_argv_1",
+  "catalog.audit-site.cook-argv#2": "test_guard_cook.Guards.test_catalog_audit_site_cook_argv_2",
+  "catalog.audit-site.cook-argv#3": "test_guard_cook.Guards.test_catalog_audit_site_cook_argv_3",
+  "config.layers.fold#1": "test_guard_cook.Guards.test_config_layers_fold_1",
+  "config.layers.prune#1": "test_guard_cook.Guards.test_config_layers_prune_1",
+  "config.layers.public-connectors#1": "test_guard_cook.Guards.test_config_layers_public_connectors_1",
+  "cook.input.paths#1": "test_guard_cook.Guards.test_cook_input_paths_1",
+  "cook.input.staged-recipe#1": "test_guard_cook.Guards.test_cook_input_staged_recipe_1"
+ },
+ "waivers": [],
+ "crash_only": [
+  {
+   "id": "cook.L263.4",
+   "function": "connectome_cook.adapt",
+   "args": [
+    "${ROOT}/agent/builds/request/deployment.json",
+    "${ROOT}/agent/builds/request",
+    "${ROOT}/state",
+    "/bin/sh",
+    "/fixture/cook/bin/cook",
+    "/bin/sh",
+    "/bin/sh"
+   ],
+   "tree": {
+    "agent/builds/request/deployment.json": {
+     "json": {
+      "config": {
+       "name": "example",
+       "state_dir": "${ROOT}/state",
+       "agent": {
+        "systemPrompt": "Offline example"
+       },
+       "required_secrets": [],
+       "connectors": {},
+       "modules": {},
+       "cook": [
+        "not",
+        "a",
+        "mapping"
+       ]
+      },
+      "pins": {
+       "runtime": {
+        "cook": "1b874d9dd55b529486b8029dd9814a6c0e2147e0",
+        "connectome-host": "cccccccccccccccccccccccccccccccccccccccc",
+        "agent-framework": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+       },
+       "connectors": {}
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "cook.input.cook-settings#1",
+   "function": "connectome_cook.adapt",
+   "args": [
+    "${ROOT}/agent/builds/request/deployment.json",
+    "${ROOT}/agent/builds/request",
+    "${ROOT}/state",
+    "/bin/sh",
+    "/fixture/cook/bin/cook",
+    "/bin/sh",
+    "/bin/sh"
+   ],
+   "tree": {
+    "agent/builds/request/deployment.json": {
+     "json": {
+      "config": {
+       "name": "example",
+       "state_dir": "${ROOT}/state",
+       "agent": {
+        "systemPrompt": "Offline example"
+       },
+       "required_secrets": [],
+       "connectors": {},
+       "modules": {},
+       "cook": [
+        "not",
+        "a",
+        "mapping"
+       ]
+      },
+      "pins": {
+       "runtime": {
+        "cook": "1b874d9dd55b529486b8029dd9814a6c0e2147e0",
+        "connectome-host": "cccccccccccccccccccccccccccccccccccccccc",
+        "agent-framework": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+       },
+       "connectors": {}
+      }
+     }
+    }
+   }
+  }
+ ]
+}

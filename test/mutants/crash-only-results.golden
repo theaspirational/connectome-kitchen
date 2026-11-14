@@ -1,0 +1,54 @@
+[
+  {
+    "id": "cook.L263.4",
+    "vector_sha256": "dc4d6934bd30421e32358e352d9410e491d99025a711f21da08908b4c03b53cd",
+    "status": "killed-kind-A-crash-only",
+    "original": {
+      "code": "E_ADAPTER_INPUT",
+      "exception": "ArchiveError",
+      "message": "cook settings must be a mapping"
+    },
+    "mutated": {
+      "exception": "AttributeError"
+    }
+  },
+  {
+    "id": "cook.input.cook-settings#1",
+    "vector_sha256": "5091bf62c63e5fdef07eeac6dc732fb7822de88240e75ac043e12d67469a5129",
+    "status": "killed-kind-A-crash-only",
+    "original": {
+      "code": "E_ADAPTER_INPUT",
+      "exception": "ArchiveError",
+      "message": "cook settings must be a mapping"
+    },
+    "mutated": {
+      "exception": "AttributeError"
+    }
+  },
+  {
+    "id": "inputs.L150.8",
+    "vector_sha256": "555c915f295447a83eba6c23a602c0e0ebd582c6da99cfbd7c4b82ecf527a077",
+    "status": "killed-kind-A-crash-only",
+    "original": {
+      "code": null,
+      "exception": "ValueError",
+      "message": "invalid recipe transport"
+    },
+    "mutated": {
+      "exception": "UnboundLocalError"
+    }
+  },
+  {
+    "id": "spawn.sources.L190.8",
+    "vector_sha256": "43f72a9c12f029d160f31747b8d45eb02b717efca623aebd44e5f94e742c27f8",
+    "status": "killed-kind-A-crash-only",
+    "original": {
+      "code": null,
+      "exception": "SpawnError",
+      "message": "expected local repo + path @ full-commit"
+    },
+    "mutated": {
+      "exception": "UnboundLocalError"
+    }
+  }
+]

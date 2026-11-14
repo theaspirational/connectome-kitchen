@@ -1,0 +1,26 @@
+[
+  {
+    "id": "catalog.preflight.chars",
+    "analysis": "Its only site mutant (line 679, the all(...) condition replaced by True) is the same mutation as guard catalog.L679.8 and cannot be observed: audit_argv on line 676 already restricts every preflight word to letters, digits and _ . + @ / = -, so the character check never fails for any list of real strings (see the waiver of catalog.L679.8 for the line-by-line argument and the exhaustive run that found no accepted word with a refused character). It is not crash-only either: with the guard removed nothing raises, the unit text is simply the same. The check only becomes the deciding one when the audit on line 676 is itself removed, which is the separate site mutant catalog.preflight.audit#1 (killed). What was tried: option values, operands after '--', attached short options, trailing line feeds, and executable words; the only input that separates the versions is a str subclass whose __contains__ misreports its contents, which would be a fabricated kill and was not written. A name cannot be waived, so it stays open for a ruling.",
+    "area": "catalog_b",
+    "kind": "named-check"
+  },
+  {
+    "id": "deploy.L1075.12",
+    "analysis": "Guard: Deployment._remove refuses a path that is not in the ownership manifest (connectome_deploy.py:1074-1075). With the raise replaced by pass the next line, self.owned[path] at :1076, always raises KeyError, so the mutant can never accept the input or reach another declared refusal: a direct dep._remove(unowned) call errors (tried; not a kill). It is not equivalent, because that direct call changes the exception class from DeployError to KeyError. It is reachable from the public API only through the rollback in activate() (self._remove(self.current) at :1296 after the release pointer could not be created; tried with a read-only deployment root), and there the blanket handler at :1298-1299 turns both the refusal and the KeyError into the identical ActivationFailed (same step, cause, message, code E_DEPLOY_FAILED, same file state); the other caller, the loop at :1171-1173, only passes owned paths. The Ansible boundary adds nothing, since the refusal already carries the default code. The only remaining difference is the suppressed __context__ of that ActivationFailed (DeployError with the guard's message on the oracle, KeyError on the mutant): test_rollback_refuses_unowned_pointer in test_guard_deploy_b.py asserts it and purpose.py try reports killed with it, but I did not map it because a context hidden by 'raise ... from cause' is not the engine's declared behaviour. A crash_only vector is not possible: the guard sits in a Deployment method and needs loaded instance state, not a plain module-level function.",
+    "area": "deploy_b",
+    "kind": "guard-site"
+  },
+  {
+    "id": "spawn.lifecycle.L198.16",
+    "analysis": "Not killed and not equivalent. With need(self.identity_provider is not None, ...) replaced by need(True, ...), the only input that reaches the difference is a Lifecycle whose identity_provider is exactly None on a transition with identity effects. The very next statement (lifecycle.py:199) passes that None to validate_provider_name, whose first action reads provider.supports_rename (identity.py:38), so the mutated run always raises AttributeError where the oracle raises SpawnError('identity provider required'). Nothing is evaluated between lines 198 and 199 that a fake adapter, importer or persisted state could turn into a declared refusal (the name argument is a plain lookup in already validated records), and nothing is written in either run, so there is no clean kill; the exception class differs, so it is not equivalent. A crash-only vector is not possible either: the guard sits in the method Lifecycle.transition, which needs a constructed Lifecycle instance, and no module-level function of the oracle calls transition (cli.main and the shim only call status). Tried: every target with identity effects (initiation, named, clean active, retired with a live handle); all crash at line 199.",
+    "area": "spawn_state",
+    "kind": "guard-site"
+  },
+  {
+    "id": "spawn.lifecycle.adapter-required",
+    "analysis": "Sites #1 (importer, line 190) and #2 (adapter, line 194) are killed by clean tests. Site #3 (identity provider, line 198) is the same mutation as guard spawn.lifecycle.L198.16 and stays open for the reason written there: with the check removed a None provider crashes with AttributeError on the next statement, before any intent is written, and the guard is only reachable through the method Lifecycle.transition, so neither a clean kill nor a crash-only function vector exists.",
+    "area": "spawn_state",
+    "kind": "named-check"
+  }
+]

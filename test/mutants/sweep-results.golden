@@ -1,1 +1,40 @@
-[]
+[
+  {
+    "id": "archive.L137.8",
+    "status": "killed",
+    "rows": [
+      39
+    ],
+    "trials": [
+      {
+        "test": "test_cook.AdapterTests.test_real_adapter_cli_failure_is_forwarded_without_paths_or_values",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "deploy.L1075.12",
+    "status": "survived",
+    "rows": [
+      30
+    ],
+    "trials": [],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "spawn.lifecycle.L198.16",
+    "status": "survived",
+    "rows": [
+      56
+    ],
+    "trials": [],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  }
+]

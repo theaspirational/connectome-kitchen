@@ -10,14 +10,19 @@ try:
  if reviews!=json.loads((ROOT/'test/mutants/guard-review.golden').read_text()):raise ValueError('stale per-guard review')
  subprocess.run([sys.executable,str(ROOT/'scripts/inventory-sites')],check=True)
  subprocess.run([sys.executable,str(ROOT/'scripts/site-manifest')],check=True)
+ subprocess.run([sys.executable,str(ROOT/'scripts/unreachable-note')],check=True)
  subprocess.run([sys.executable,str(ROOT/'test/differential/guard_vectors.py'),'replay','--vectors',str(ROOT/'test/vectors/guard-negative.golden')],check=True)
 except (ValueError,OSError,KeyError,subprocess.CalledProcessError) as error:
  print('BLOCKED: invalid/stale phase-1 evidence ('+type(error).__name__+')');sys.exit(1)
 missing=[]
 if counts['remaining_unreviewed']:missing.append('unreviewed guard mutants: '+str(counts['remaining_unreviewed']))
+# Separate category, never part of the clean killed totals: blocking until accepted in review.
+if counts['crash_only_kind_A']:missing.append('guard mutants killed only by a crash-only kind-A vector (separate category, not accepted yet): '+str(counts['crash_only_kind_A']))
+if counts['named_crash_only_kind_A']:missing.append('named checks killed only with a crash-only kind-A vector (separate category, not accepted yet): '+str(counts['named_crash_only_kind_A']))
 if counts['named_remaining']:missing.append('named independent checks not killed: '+str(counts['named_remaining']))
-if counts['B_independent_replayed']!=counts['B_recorded']:missing.append('independent B contract replays: '+str(counts['B_independent_replayed'])+'/'+str(counts['B_recorded']))
-if counts['C_shim_replayed']!=counts['C_recorded']:missing.append('C shim projections: '+str(counts['C_shim_replayed'])+'/'+str(counts['C_recorded']))
+# A documented reason is not a pass: both items block until every recorded entry is replayed or the plan owners change the denominator.
+if counts['B_independent_replayed']!=counts['B_recorded']:missing.append('independent B contract replays: '+str(counts['B_independent_replayed'])+'/'+str(counts['B_recorded'])+' (reasons per record: docs/phase1-unreachable.md)')
+if counts['C_shim_replayed']!=counts['C_recorded']:missing.append('C shim projections: '+str(counts['C_shim_replayed'])+'/'+str(counts['C_recorded'])+' (reachable '+str(counts['C_shim_replayed'])+'/'+str(counts['C_recorded']-counts['C_unreachable_documented'])+'; unreachable '+str(counts['C_unreachable_documented'])+', documented in docs/phase1-unreachable.md)')
 for message in missing:print('BLOCKED: '+message)
 if not missing:print('PASS phase-1 evidence; does not qualify a TS engine port or publication')
 sys.exit(int(bool(missing)))

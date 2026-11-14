@@ -1,1 +1,194 @@
-[]
+[
+  {
+    "id": "catalog.contained.inputs#2",
+    "status": "killed",
+    "rows": [],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_input_archives_and_checkout_must_belong_to_agent",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "catalog.preflight.chars#1",
+    "status": "survived",
+    "rows": [],
+    "trials": [],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "spawn.lifecycle.adapter-required#3",
+    "status": "survived",
+    "rows": [],
+    "trials": [],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "spawn.identity.duplicate-active#2",
+    "status": "killed",
+    "rows": [],
+    "trials": [
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_provider_restart_idempotence_unique_ownership_and_concurrency",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "spawn.identity.handle#2",
+    "status": "killed",
+    "rows": [],
+    "trials": [
+      {
+        "test": "test_spawn_lifecycle.LifecycleTests.test_changed_capability_and_invalid_provider_handles_refused",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "lock.schema.outputs#3",
+    "status": "killed",
+    "rows": [],
+    "trials": [
+      {
+        "test": "test_cook.LockTests.test_every_lock_scalar_has_an_exact_type",
+        "tests": 1,
+        "failures": 5,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "catalog.data-args.spawn#1",
+    "status": "killed",
+    "rows": [],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_spawn_reader_loads_role_fixtures_and_matches_catalog_recipe",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "catalog.data-args.spawn#2",
+    "status": "killed",
+    "rows": [],
+    "trials": [
+      {
+        "test": "test_catalog.CatalogTests.test_spawn_reader_loads_role_fixtures_and_matches_catalog_recipe",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "inputs.record.exclusive#3",
+    "status": "killed",
+    "rows": [],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_closed_activation_and_exclusive_schema",
+        "tests": 1,
+        "failures": 4,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "inputs.record.exclusive#4",
+    "status": "killed",
+    "rows": [],
+    "trials": [
+      {
+        "test": "test_deploy.DeployTests.test_closed_activation_and_exclusive_schema",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "inputs.record.recipe-file#2",
+    "status": "killed",
+    "rows": [],
+    "trials": [
+      {
+        "test": "test_operator_inputs.OperatorTests.test_recipe_closed_shape_and_transport_refusals",
+        "tests": 1,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "inputs.record.recipe-path#1",
+    "status": "killed",
+    "rows": [],
+    "trials": [
+      {
+        "test": "test_operator_inputs.OperatorTests.test_recipe_closed_shape_and_transport_refusals",
+        "tests": 1,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  },
+  {
+    "id": "inputs.record.recipe-path#2",
+    "status": "killed",
+    "rows": [],
+    "trials": [
+      {
+        "test": "test_operator_inputs.OperatorTests.test_recipe_closed_shape_and_transport_refusals",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "eligible_tests": 282,
+    "scope": "every eligible frozen test"
+  }
+]

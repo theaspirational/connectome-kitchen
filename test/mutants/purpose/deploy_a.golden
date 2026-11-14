@@ -1,0 +1,119 @@
+{
+ "named_sites": {
+  "deploy.private.state-kind": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "not stat.S_ISDIR(info.st_mode)",
+    "occurrence": 0,
+    "after": "False",
+    "why": "line 541 holds three names in one condition: this replaces only the directory-kind term with False and keeps the mode and owner terms (occurrence 1 is the secret-files directory check at line 947)"
+   }
+  ],
+  "deploy.private.state-mode": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "stat.S_IMODE(info.st_mode) != 0o700",
+    "occurrence": 0,
+    "after": "False",
+    "why": "line 541: replaces only the exact-mode term with False and keeps the kind and owner terms (occurrence 1 is the secret-files directory check at line 947)"
+   }
+  ],
+  "deploy.private.state-owner": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "info.st_uid != os.geteuid()",
+    "occurrence": 0,
+    "after": "False",
+    "why": "line 542: replaces only the owner term with False and keeps the kind and mode terms (occurrences 1 and 2 are the secret-files checks at lines 948 and 954)"
+   }
+  ],
+  "deploy.private.state-recheck": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "self._validate_state()",
+    "occurrence": 3,
+    "after": "pass",
+    "why": "line 548 call site: removes only the second _validate_state() of _ensure_state, the check after make_directory; the check before creation at line 546 stays (occurrences 0-2 are lines 501, 527 and 546)"
+   }
+  ],
+  "catalog.audit-site.plan": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "catalog.audit_descriptors(self.config, self.pins, self.build)",
+    "after": "pass",
+    "why": "line 574 call site: removes the descriptor audit (build argv, exports, preflights, health argv, entry settings) from plan(); the settings audit below stays"
+   },
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "catalog.audit_recipe(surface",
+    "after": "(lambda *args, **options: None)(surface",
+    "why": "line 583 call site: the statement spans three lines, so the callee is replaced by a no-op; the arguments are still evaluated, only the audit of the agent/module/entry settings surface (raw and with compiled data args) is removed from plan(), and the descriptor audit above stays"
+   }
+  ],
+  "deploy.retained.pins": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "pin = (self.pins['runtime']['agent-framework'] if build == self.build else",
+    "after": "pin = (self.pins['runtime']['agent-framework'] if True else",
+    "why": "line 691: the framework pin that validates the sidecar and the lock's host dependencies is always today's request pin, never the one recorded in the retained build's deployment.json"
+   },
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "catalog_pins = (self.pins if build == self.build else",
+    "after": "catalog_pins = (self.pins if True else",
+    "why": "line 707: catalog.verify of a retained build uses today's artifact/platform pins instead of the pins recorded in its deployment.json"
+   },
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "pin = json.loads((build / 'deployment.json').read_text())['pins']['runtime']['agent-framework']",
+    "after": "pin = self.pins['runtime']['agent-framework']",
+    "why": "line 729: the final sidecar-to-lock provenance check uses today's framework pin instead of the build's recorded request pin"
+   }
+  ],
+  "deploy.activate.marker": [
+   {
+    "file": "module_utils/connectome_deploy.py",
+    "before": "not path.is_file() or path.read_text() != 'install_only",
+    "after": "False and path.read_text() != 'install_only",
+    "why": "line 674 is the second line of the condition headed at line 673: the parenthesised term becomes constant False, which removes the closed one-line-file check (regular file with exactly the install_only line) of an existing marker and keeps the symlink term of line 673; it is written as False-and because the anchor must stop before the escape sequence in the source literal"
+   }
+  ]
+ },
+ "kills": {
+  "deploy.L134.12": "test_guard_deploy_a.Guards.test_deploy_L134_12",
+  "deploy.L141.12": "test_guard_deploy_a.Guards.test_deploy_L141_12",
+  "deploy.L143.12": "test_guard_deploy_a.Guards.test_deploy_L143_12",
+  "deploy.L145.12": "test_guard_deploy_a.Guards.test_deploy_L145_12",
+  "deploy.L166.16": "test_guard_deploy_a.Guards.test_deploy_L166_16",
+  "deploy.L172.16": "test_guard_deploy_a.Guards.test_deploy_L172_16",
+  "deploy.L176.8": "test_guard_deploy_a.Guards.test_deploy_L176_8",
+  "deploy.L276.16": "test_guard_deploy_a.Guards.test_deploy_L276_16",
+  "deploy.L303.12": "test_guard_deploy_a.Guards.test_deploy_L303_12",
+  "deploy.L389.16": "test_guard_deploy_a.Guards.test_deploy_L389_16",
+  "deploy.L390.12": "test_guard_deploy_a.Guards.test_deploy_L390_12",
+  "deploy.L411.8": "test_guard_deploy_a.Guards.test_secrets_reserved_direct",
+  "secrets.reserved.direct#1": "test_guard_deploy_a.Guards.test_secrets_reserved_direct",
+  "deploy.L443.12": "test_guard_deploy_a.Guards.test_deploy_L443_12",
+  "deploy.L491.12": "test_guard_deploy_a.Guards.test_deploy_L491_12",
+  "deploy.L498.12": "test_guard_deploy_a.Guards.test_deploy_private_canonical",
+  "deploy.private.canonical#1": "test_guard_deploy_a.Guards.test_deploy_private_canonical",
+  "deploy.L536.12": "test_guard_deploy_a.Guards.test_deploy_L536_12",
+  "deploy.L570.12": "test_guard_deploy_a.Guards.test_deploy_L570_12",
+  "deploy.L635.20": "test_guard_deploy_a.Guards.test_deploy_L635_20",
+  "deploy.L649.16": "test_guard_deploy_a.Guards.test_deploy_L649_16",
+  "deploy.L651.16": "test_guard_deploy_a.Guards.test_deploy_L651_16",
+  "deploy.L675.12": "test_guard_deploy_a.Guards.test_deploy_activate_marker",
+  "deploy.activate.marker#1": "test_guard_deploy_a.Guards.test_deploy_activate_marker",
+  "deploy.L698.16": "test_guard_deploy_a.Guards.test_deploy_L698_16",
+  "deploy.private.state-kind#1": "test_guard_deploy_a.Guards.test_deploy_private_state_kind",
+  "deploy.private.state-mode#1": "test_guard_deploy_a.Guards.test_deploy_private_state_mode",
+  "deploy.private.state-owner#1": "test_guard_deploy_a.Guards.test_deploy_private_state_owner",
+  "deploy.private.state-recheck#1": "test_guard_deploy_a.Guards.test_deploy_private_state_recheck",
+  "catalog.audit-site.plan#1": "test_guard_deploy_a.Guards.test_catalog_audit_site_plan_descriptors",
+  "catalog.audit-site.plan#2": "test_guard_deploy_a.Guards.test_catalog_audit_site_plan_recipe",
+  "deploy.retained.pins#1": "test_guard_deploy_a.Guards.test_deploy_retained_pins_framework",
+  "deploy.retained.pins#2": "test_guard_deploy_a.Guards.test_deploy_retained_pins_catalog",
+  "deploy.retained.pins#3": "test_guard_deploy_a.Guards.test_deploy_retained_pins_framework"
+ },
+ "waivers": []
+}
