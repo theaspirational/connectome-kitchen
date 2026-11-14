@@ -1,0 +1,2232 @@
+[
+ {
+  "id": "inputs.L58.8",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "throw new ExternalDataArgError('invalid external_data_args');",
+  "after": ";",
+  "oracle_line": 58,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L63.4",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isStr(activation)\n    && ACTIVATIONS.has(activation),",
+  "after": "need(true,",
+  "oracle_line": 63,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L67.4",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isList(exclusive),",
+  "after": "need(true,",
+  "oracle_line": 67,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L103.4",
+  "rows": [
+   7,
+   23
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(eq(sha256hex(content), subscript(record, 'sha256')),",
+  "after": "need(true,",
+  "oracle_line": 103,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L111.8",
+  "rows": [
+   7,
+   23
+  ],
+  "file": "src/inputs.ts",
+  "before": "throw new PyValueError('nonfinite recipe JSON number');",
+  "after": "return null;",
+  "oracle_line": 111,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L144.4",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(transport instanceof Map && keysEqual(transport as PyDict, expected),",
+  "after": "need(true,",
+  "oracle_line": 144,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L70.8",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isDict(record) && keysEqual(record, SCOPE_UNIT),",
+  "after": "need(true,",
+  "oracle_line": 70,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L72.8",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isStr(scope) && (scope === 'system' || scope === 'user')\n      && isStr(unit)\n      && UNIT.test(unit)\n      && !(unit.startsWith('.') || unit.startsWith('-')),",
+  "after": "need(true,",
+  "oracle_line": 72,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L77.8",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(!units.has(key),",
+  "after": "need(true,",
+  "oracle_line": 77,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L81.8",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isDict(record) && keysEqual(record, PATH_SHA256),",
+  "after": "need(true,",
+  "oracle_line": 81,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L83.8",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isStr(value) && value.startsWith('/') && !value.includes('{') && !value.includes('}')\n      && !hasControl(value),",
+  "after": "need(true,",
+  "oracle_line": 83,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L86.8",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(value === pathlib.abspath(value as string),",
+  "after": "need(true,",
+  "oracle_line": 86,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L87.8",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isStr(sha256) && SHA256.test(sha256),",
+  "after": "need(true,",
+  "oracle_line": 87,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L91.8",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isList(records),",
+  "after": "need(true,",
+  "oracle_line": 91,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L114.8",
+  "rows": [
+   7,
+   23
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isDict(recipe),",
+  "after": "need(true,",
+  "oracle_line": 114,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L116.8",
+  "rows": [
+   7,
+   23
+  ],
+  "file": "src/inputs.ts",
+  "before": "throw new PyValueError('invalid recipe JSON');",
+  "after": ";",
+  "oracle_line": 116,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L123.8",
+  "rows": [
+   23
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(pathlib.resolve(file) === file && pathlib.lstat(file).isFile(),",
+  "after": "need(true,",
+  "oracle_line": 123,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L127.8",
+  "rows": [
+   23
+  ],
+  "file": "src/inputs.ts",
+  "before": "throw new PyValueError('recipe input unavailable');",
+  "after": "return Buffer.alloc(0);",
+  "oracle_line": 127,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L150.8",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "throw new PyValueError('invalid recipe transport');",
+  "after": "return new Map();",
+  "oracle_line": 150,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L161.8",
+  "rows": [
+   23
+  ],
+  "file": "src/inputs.ts",
+  "before": "need((info.mode & 0o7777) === 0o600 && info.uid === process.geteuid!(),",
+  "after": "need(true,",
+  "oracle_line": 161,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L94.12",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isDict(record) && keysEqual(record, SECRET_ENV),",
+  "after": "need(true,",
+  "oracle_line": 94,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L95.12",
+  "rows": [
+   49,
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need([...entry.values()].every(value => isStr(value) && NAME.test(value)),",
+  "after": "need(true,",
+  "oracle_line": 95,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L97.12",
+  "rows": [
+   49,
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(!seen.has(item(entry, 'env')) && !RESERVED.has(item(entry, 'env') as string),",
+  "after": "need(true,",
+  "oracle_line": 97,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.L107.12",
+  "rows": [
+   7,
+   23
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(!result.has(key),",
+  "after": "need(true,",
+  "oracle_line": 107,
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "lock.L108.4",
+  "rows": [
+   10
+  ],
+  "file": "src/lock.ts",
+  "before": "require(text(value),",
+  "after": "require(true,",
+  "oracle_line": 108,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L110.4",
+  "rows": [
+   10
+  ],
+  "file": "src/lock.ts",
+  "before": "require(pathlib.isRelativeTo(pathlib.resolve(path), pathlib.resolve(build)),",
+  "after": "require(true,",
+  "oracle_line": 110,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L111.4",
+  "rows": [
+   10
+  ],
+  "file": "src/lock.ts",
+  "before": "require(pathlib.isFile(path) && !pathlib.isSymlink(path),",
+  "after": "require(true,",
+  "oracle_line": 111,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L122.4",
+  "rows": [
+   4
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(data) && isInt(get(data, 'version')) && eq(item(data, 'version'), TWO),",
+  "after": "require(true,",
+  "oracle_line": 122,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L124.4",
+  "rows": [
+   4
+  ],
+  "file": "src/lock.ts",
+  "before": "require(eq(get(lock, 'backend'), 'host'),",
+  "after": "require(true,",
+  "oracle_line": 124,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L129.4",
+  "rows": [
+   4
+  ],
+  "file": "src/lock.ts",
+  "before": "require(keysInclude(lock, REQUIRED),",
+  "after": "require(true,",
+  "oracle_line": 129,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L130.4",
+  "rows": [
+   4
+  ],
+  "file": "src/lock.ts",
+  "before": "require(keysWithin(lock, SUPPORTED),",
+  "after": "require(true,",
+  "oracle_line": 130,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L132.4",
+  "rows": [
+   5
+  ],
+  "file": "src/lock.ts",
+  "before": "require(!lock.has('incomplete'),",
+  "after": "require(true,",
+  "oracle_line": 132,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L134.4",
+  "rows": [
+   6
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(identity) && keysEqual(identity, ID_DIR)\n    && digest(item(identity, 'id')) && text(item(identity, 'dir')) && pathlib.isAbsolute(item(identity, 'dir') as string)\n    && pathlib.resolve(item(identity, 'dir') as string) === pathlib.resolve(root),",
+  "after": "require(true,",
+  "oracle_line": 134,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L137.4",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(cook) && keysWithin(cook, COOK_FIELDS)\n    && version(get(cook, 'version')),",
+  "after": "require(true,",
+  "oracle_line": 137,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L142.4",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(recipe) && keysEqual(recipe, PATH_SHA256)\n    && text(item(recipe, 'path')) && digest(item(recipe, 'sha256'))\n    && text(item(lock, 'recipePath')) && eq(item(recipe, 'path'), item(lock, 'recipePath')) && text(item(lock, 'createdAt')),",
+  "after": "require(true,",
+  "oracle_line": 142,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L165.4",
+  "rows": [
+   8
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(host) && keysWithin(host, HOST_FIELDS)\n    && repository(get(host, 'url')) && text(get(host, 'ref')) && digest(get(host, 'commit'), 40)\n    && (!host.has('path') || text(item(host, 'path')))\n    && (host_pin === null || eq(item(host, 'commit'), host_pin)),",
+  "after": "require(true,",
+  "oracle_line": 165,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L170.4",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isList(requirements) && requirements.every(r =>\n    isDict(r) && keysEqual(r, REQUIREMENT_FIELDS)\n    && text(item(r, 'name')) && text(item(r, 'envName')) && ENV_NAME.test(item(r, 'envName') as string)\n    && text(item(r, 'origin'))\n    && ORIGINS.has(item(r, 'origin') as string)),",
+  "after": "require(true,",
+  "oracle_line": 170,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L177.4",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isList(credentials) && credentials.every(n => isStr(n)\n    && CREDENTIAL_NAME.test(n)),",
+  "after": "require(true,",
+  "oracle_line": 177,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L181.4",
+  "rows": [
+   8
+  ],
+  "file": "src/lock.ts",
+  "before": "require(wanted.every(n => declared.has(n)),",
+  "after": "require(true,",
+  "oracle_line": 181,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L182.4",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isList(item(lock, 'components')) && isList(item(lock, 'localExtensions'))\n    && isList(item(lock, 'outputs')),",
+  "after": "require(true,",
+  "oracle_line": 182,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L294.4",
+  "rows": [
+   10,
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(launch) && keysWithin(launch, LAUNCH_FIELDS)\n    && eq(get(launch, 'kind'), 'script'),",
+  "after": "require(true,",
+  "oracle_line": 294,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L324.8",
+  "rows": [
+   7
+  ],
+  "file": "src/lock.ts",
+  "before": "throw new LockError('nonfinite lock number refused');",
+  "after": "return null;",
+  "oracle_line": 324,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L140.8",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(digest(item(cook as PyDict, 'commit'), 40),",
+  "after": "require(true,",
+  "oracle_line": 140,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L160.8",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(TIMESTAMP.test(created)\n      && fromisoformat(created.replaceAll('Z', '+00:00')),",
+  "after": "require(true,",
+  "oracle_line": 160,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L163.8",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "throw new LockError('invalid lock timestamp');",
+  "after": ";",
+  "oracle_line": 163,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L185.8",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(component) && inStrSet(get(component, 'kind'), COMPONENT_KINDS),",
+  "after": "require(true,",
+  "oracle_line": 185,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L199.8",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(inStrSet(get(entry, 'role'), ROLES),",
+  "after": "require(true,",
+  "oracle_line": 199,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L201.8",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(output) && keysWithin(output, OUTPUT_FIELDS)\n      && text(get(output, 'path')) && isInt(get(output, 'mode')) && (item(output, 'mode') as Int).value >= 0n && (item(output, 'mode') as Int).value <= 0o777n,",
+  "after": "require(true,",
+  "oracle_line": 201,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L204.8",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(!record.has('sha256') || digest(item(record, 'sha256')),",
+  "after": "require(true,",
+  "oracle_line": 204,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L205.8",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(!record.has('sha256Omitted') || eq(item(record, 'sha256Omitted'), 'contains-requirement-value'),",
+  "after": "require(true,",
+  "oracle_line": 205,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L208.8",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(extension) && keysEqual(extension, EXTENSION_FIELDS)\n      && [...extension.values()].every(v => text(v)),",
+  "after": "require(true,",
+  "oracle_line": 208,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L211.8",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(state) && keysEqual(state, STATE_FIELDS)\n      && text(item(state, 'path')) && pathlib.isAbsolute(item(state, 'path') as string),",
+  "after": "require(true,",
+  "oracle_line": 211,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L214.8",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(engines) && keysEqual(engines, ENGINE_NAMES),",
+  "after": "require(true,",
+  "oracle_line": 214,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L221.8",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(layout) && keysEqual(layout, LAYOUT_FIELDS)\n      && eq(item(layout, 'schema'), 'connectome.host-layout/v1')\n      && LAYOUT_ROOTS.every(k => text(item(layout, k)) && pathlib.isAbsolute(item(layout, k) as string))\n      && isDict(item(layout, 'connectorState')),",
+  "after": "require(true,",
+  "oracle_line": 221,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L233.8",
+  "rows": [
+   8
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isList(external) && external.length > 0 && external.every(server =>\n      isDict(server) && keysEqual(server, SERVER_FIELDS)\n      && external_name(item(server, 'name')) && external_command(item(server, 'command'))),",
+  "after": "require(true,",
+  "oracle_line": 233,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L238.8",
+  "rows": [
+   8
+  ],
+  "file": "src/lock.ts",
+  "before": "require(new Set(names).size === names.length,",
+  "after": "require(true,",
+  "oracle_line": 238,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L240.8",
+  "rows": [
+   8
+  ],
+  "file": "src/lock.ts",
+  "before": "require(names.every((name, index) => name === sorted[index]),",
+  "after": "require(true,",
+  "oracle_line": 240,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L246.8",
+  "rows": [
+   9
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isList(dependencies),",
+  "after": "require(true,",
+  "oracle_line": 246,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L290.8",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(health) && keysEqual(health, HEALTH_FIELDS)\n      && isList(item(health, 'command')) && (item(health, 'command') as PyValue[]).length > 0\n      && (item(health, 'command') as PyValue[]).every(arg => text(arg)),",
+  "after": "require(true,",
+  "oracle_line": 290,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L299.8",
+  "rows": [
+   10,
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(!lock.has('units'),",
+  "after": "require(true,",
+  "oracle_line": 299,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L301.8",
+  "rows": [
+   10
+  ],
+  "file": "src/lock.ts",
+  "before": "require(UNIT_NAME.test(pathlib.name(path)),",
+  "after": "require(true,",
+  "oracle_line": 301,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L305.8",
+  "rows": [
+   10
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isList(units) && units.length > 0,",
+  "after": "require(true,",
+  "oracle_line": 305,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L331.8",
+  "rows": [
+   7
+  ],
+  "file": "src/lock.ts",
+  "before": "lock.py:330-331\n      throw error;",
+  "after": "lock.py:330-331\n      return new Map();",
+  "oracle_line": 331,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L333.8",
+  "rows": [
+   7
+  ],
+  "file": "src/lock.ts",
+  "before": "throw new LockError('malformed or unreadable cook lock v2');",
+  "after": "return new Map();",
+  "oracle_line": 333,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L85.12",
+  "rows": [
+   2
+  ],
+  "file": "src/lock.ts",
+  "before": "require(!VALUE_FIELDS.has(compact),",
+  "after": "require(true,",
+  "oracle_line": 85,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L155.12",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(eq(item(recipe as PyDict, 'sha256'), subscript(item(config as PyDict, 'recipe_file'), 'sha256'))\n        && eq(item(recipe as PyDict, 'path'), path),",
+  "after": "require(true,",
+  "oracle_line": 155,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L158.12",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "throw new LockError('invalid operator recipe provenance');",
+  "after": ";",
+  "oracle_line": 158,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L188.12",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(keysWithin(entry, GIT_FIELDS)\n        && ['key', 'ref', 'path'].every(k => text(get(entry, k)))\n        && repository(get(entry, 'url')) && isStr(get(entry, 'install'))\n        && digest(get(entry, 'commit'), 40),",
+  "after": "require(true,",
+  "oracle_line": 188,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L193.12",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(keysWithin(entry, NPM_FIELDS)\n        && ['key', 'name', 'spec'].every(k => text(get(entry, k)))\n        && (!entry.has('version') || version(item(entry, 'version')))\n        && (!entry.has('integrity') || (text(item(entry, 'integrity')) && INTEGRITY.test(item(entry, 'integrity') as string))),",
+  "after": "require(true,",
+  "oracle_line": 193,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L216.12",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(engine) && keysEqual(engine, ENGINE_FIELDS)\n        && text(item(engine, 'path')) && text(item(engine, 'realPath')) && version(item(engine, 'version')),",
+  "after": "require(true,",
+  "oracle_line": 216,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L226.12",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(bindings) && [...bindings].every(([k, v]) =>\n        ENV_NAME.test(k) && text(v)),",
+  "after": "require(true,",
+  "oracle_line": 226,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L243.12",
+  "rows": [
+   8
+  ],
+  "file": "src/lock.ts",
+  "before": "require(!names.some(name => bound.has(name)),",
+  "after": "require(true,",
+  "oracle_line": 243,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L249.12",
+  "rows": [
+   9
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(dependency) && keysEqualExcept(dependency, DEPENDENCY_FIELDS, 'provenance')\n        && ['name', 'originalRange', 'snapshot'].every(k => text(item(dependency, k)))\n        && version(item(dependency, 'version'))\n        && digest(item(dependency, 'sha256')) && isInt(item(dependency, 'size')) && (item(dependency, 'size') as Int).value > 0n,",
+  "after": "require(true,",
+  "oracle_line": 249,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L259.12",
+  "rows": [
+   9
+  ],
+  "file": "src/lock.ts",
+  "before": "require(archive.npm_name(item(record, 'name')) && !seen.has(item(record, 'name')),",
+  "after": "require(true,",
+  "oracle_line": 259,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L271.12",
+  "rows": [
+   9
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(delta) && keysEqual(delta, DELTA_FIELDS),",
+  "after": "require(true,",
+  "oracle_line": 271,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L287.12",
+  "rows": [
+   9
+  ],
+  "file": "src/lock.ts",
+  "before": "throw new LockError('host dependencies differ from config');",
+  "after": ";",
+  "oracle_line": 287,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L307.12",
+  "rows": [
+   10
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(unit) && keysEqual(unit, PATH_SHA256)\n        && digest(item(unit, 'sha256')),",
+  "after": "require(true,",
+  "oracle_line": 307,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L310.12",
+  "rows": [
+   10
+  ],
+  "file": "src/lock.ts",
+  "before": "require(pathlib.suffix(path) === '.service' && eq(sha256(pathlib.readBytes(path)), item(unit as PyDict, 'sha256')),",
+  "after": "require(true,",
+  "oracle_line": 310,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L319.12",
+  "rows": [
+   7
+  ],
+  "file": "src/lock.ts",
+  "before": "require(!result.has(key),",
+  "after": "require(true,",
+  "oracle_line": 319,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L93.8",
+  "rows": [
+   2
+  ],
+  "file": "src/lock.ts",
+  "before": "require(!hasControl(value),",
+  "after": "require(true,",
+  "oracle_line": 93,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L94.8",
+  "rows": [
+   2
+  ],
+  "file": "src/lock.ts",
+  "before": "require(!credentialShaped(value, frame + 1),",
+  "after": "require(true,",
+  "oracle_line": 94,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L275.16",
+  "rows": [
+   9
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(edit) && keysEqual(edit, EDIT_FIELDS)\n          && inStrSet(item(edit, 'section'), sections) && eq(item(edit, 'name'), item(record, 'name')) && text(item(edit, 'after'))\n          && (kind === 'direct' ? text(item(edit, 'before')) : item(edit, 'before') === null),",
+  "after": "require(true,",
+  "oracle_line": 275,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L266.20",
+  "rows": [
+   9
+  ],
+  "file": "src/lock.ts",
+  "before": "require(['name', 'sha256', 'version'].every(k => eq(subscript(provenance, k), item(record, k))),",
+  "after": "require(true,",
+  "oracle_line": 266,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.L269.20",
+  "rows": [
+   9
+  ],
+  "file": "src/lock.ts",
+  "before": "throw new LockError('invalid host dependency provenance');",
+  "after": ";",
+  "oracle_line": 269,
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.recipe",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(recipe) && keysEqual(recipe, PATH_SHA256)\n    && text(item(recipe, 'path')) && digest(item(recipe, 'sha256'))\n    && text(item(lock, 'recipePath')) && eq(item(recipe, 'path'), item(lock, 'recipePath')) && text(item(lock, 'createdAt')),",
+  "after": "require(true,",
+  "oracle_line": 142,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.timestamp",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(TIMESTAMP.test(created)\n      && fromisoformat(created.replaceAll('Z', '+00:00')),",
+  "after": "require(true,",
+  "oracle_line": 160,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.requirements",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isList(requirements) && requirements.every(r =>\n    isDict(r) && keysEqual(r, REQUIREMENT_FIELDS)\n    && text(item(r, 'name')) && text(item(r, 'envName')) && ENV_NAME.test(item(r, 'envName') as string)\n    && text(item(r, 'origin'))\n    && ORIGINS.has(item(r, 'origin') as string)),",
+  "after": "require(true,",
+  "oracle_line": 170,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.credentials",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isList(credentials) && credentials.every(n => isStr(n)\n    && CREDENTIAL_NAME.test(n)),",
+  "after": "require(true,",
+  "oracle_line": 177,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.extensions",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(extension) && keysEqual(extension, EXTENSION_FIELDS)\n      && [...extension.values()].every(v => text(v)),",
+  "after": "require(true,",
+  "oracle_line": 208,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.state",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(state) && keysEqual(state, STATE_FIELDS)\n      && text(item(state, 'path')) && pathlib.isAbsolute(item(state, 'path') as string),",
+  "after": "require(true,",
+  "oracle_line": 211,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.health",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(health) && keysEqual(health, HEALTH_FIELDS)\n      && isList(item(health, 'command')) && (item(health, 'command') as PyValue[]).length > 0\n      && (item(health, 'command') as PyValue[]).every(arg => text(arg)),",
+  "after": "require(true,",
+  "oracle_line": 290,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.launch",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(launch) && keysWithin(launch, LAUNCH_FIELDS)\n    && eq(get(launch, 'kind'), 'script'),",
+  "after": "require(true,",
+  "oracle_line": 294,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.units-ambiguous",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(!lock.has('units'),",
+  "after": "require(true,",
+  "oracle_line": 299,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "inputs.record.activation",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isStr(activation)\n    && ACTIVATIONS.has(activation),",
+  "after": "need(true,",
+  "oracle_line": 63,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "lock.schema.cook#1",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(cook) && keysWithin(cook, COOK_FIELDS)\n    && version(get(cook, 'version')),",
+  "after": "require(true,",
+  "oracle_line": 137,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.cook#2",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(digest(item(cook as PyDict, 'commit'), 40),",
+  "after": "require(true,",
+  "oracle_line": 140,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.components#1",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(component) && inStrSet(get(component, 'kind'), COMPONENT_KINDS),",
+  "after": "require(true,",
+  "oracle_line": 185,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.components#2",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(keysWithin(entry, GIT_FIELDS)\n        && ['key', 'ref', 'path'].every(k => text(get(entry, k)))\n        && repository(get(entry, 'url')) && isStr(get(entry, 'install'))\n        && digest(get(entry, 'commit'), 40),",
+  "after": "require(true,",
+  "oracle_line": 188,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.components#3",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(keysWithin(entry, NPM_FIELDS)\n        && ['key', 'name', 'spec'].every(k => text(get(entry, k)))\n        && (!entry.has('version') || version(item(entry, 'version')))\n        && (!entry.has('integrity') || (text(item(entry, 'integrity')) && INTEGRITY.test(item(entry, 'integrity') as string))),",
+  "after": "require(true,",
+  "oracle_line": 193,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.components#4",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(inStrSet(get(entry, 'role'), ROLES),",
+  "after": "require(true,",
+  "oracle_line": 199,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.outputs#1",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(output) && keysWithin(output, OUTPUT_FIELDS)\n      && text(get(output, 'path')) && isInt(get(output, 'mode')) && (item(output, 'mode') as Int).value >= 0n && (item(output, 'mode') as Int).value <= 0o777n,",
+  "after": "require(true,",
+  "oracle_line": 201,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.outputs#2",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(!record.has('sha256') || digest(item(record, 'sha256')),",
+  "after": "require(true,",
+  "oracle_line": 204,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.outputs#3",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(!record.has('sha256Omitted') || eq(item(record, 'sha256Omitted'), 'contains-requirement-value'),",
+  "after": "require(true,",
+  "oracle_line": 205,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.engines#1",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(engines) && keysEqual(engines, ENGINE_NAMES),",
+  "after": "require(true,",
+  "oracle_line": 214,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.engines#2",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(engine) && keysEqual(engine, ENGINE_FIELDS)\n        && text(item(engine, 'path')) && text(item(engine, 'realPath')) && version(item(engine, 'version')),",
+  "after": "require(true,",
+  "oracle_line": 216,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.layout#1",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(layout) && keysEqual(layout, LAYOUT_FIELDS)\n      && eq(item(layout, 'schema'), 'connectome.host-layout/v1')\n      && LAYOUT_ROOTS.every(k => text(item(layout, k)) && pathlib.isAbsolute(item(layout, k) as string))\n      && isDict(item(layout, 'connectorState')),",
+  "after": "require(true,",
+  "oracle_line": 221,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.layout#2",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(isDict(bindings) && [...bindings].every(([k, v]) =>\n        ENV_NAME.test(k) && text(v)),",
+  "after": "require(true,",
+  "oracle_line": 226,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.units-ambiguous#1",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "require(!lock.has('units'),",
+  "after": "require(true,",
+  "oracle_line": 299,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "inputs.record.activation#1",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isStr(activation)\n    && ACTIVATIONS.has(activation),",
+  "after": "need(true,",
+  "oracle_line": 63,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.exclusive#1",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isList(exclusive),",
+  "after": "need(true,",
+  "oracle_line": 67,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.exclusive#2",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isDict(record) && keysEqual(record, SCOPE_UNIT),",
+  "after": "need(true,",
+  "oracle_line": 70,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.exclusive#3",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isStr(scope) && (scope === 'system' || scope === 'user')\n      && isStr(unit)\n      && UNIT.test(unit)\n      && !(unit.startsWith('.') || unit.startsWith('-')),",
+  "after": "need(true,",
+  "oracle_line": 72,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.exclusive#4",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(!units.has(key),",
+  "after": "need(true,",
+  "oracle_line": 77,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.recipe-file#1",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isDict(record) && keysEqual(record, PATH_SHA256),",
+  "after": "need(true,",
+  "oracle_line": 81,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.recipe-file#2",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isStr(sha256) && SHA256.test(sha256),",
+  "after": "need(true,",
+  "oracle_line": 87,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.recipe-path#1",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isStr(value) && value.startsWith('/') && !value.includes('{') && !value.includes('}')\n      && !hasControl(value),",
+  "after": "need(true,",
+  "oracle_line": 83,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.recipe-path#2",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(value === pathlib.abspath(value as string),",
+  "after": "need(true,",
+  "oracle_line": 86,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.secret-files#1",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isList(records),",
+  "after": "need(true,",
+  "oracle_line": 91,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.secret-files#2",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(isDict(record) && keysEqual(record, SECRET_ENV),",
+  "after": "need(true,",
+  "oracle_line": 94,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.transport#1",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "need(transport instanceof Map && keysEqual(transport as PyDict, expected),",
+  "after": "need(true,",
+  "oracle_line": 144,
+  "note": "named check; whole guard, as in the oracle",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "secrets.reserved.file-env#1",
+  "rows": [
+   49
+  ],
+  "file": "src/inputs.ts",
+  "before": "!RESERVED.has(item(entry, 'env') as string)",
+  "after": "true",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.secret-files#3",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "isStr(value) && NAME.test(value)",
+  "after": "true",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.secret-files#4",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "!seen.has(item(entry, 'env'))",
+  "after": "true",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "lock.schema.operator-recipe#1",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "inputs.read_file(path, item(config as PyDict, 'recipe_file'));",
+  "after": ";",
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.operator-recipe#2",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "eq(item(recipe as PyDict, 'sha256'), subscript(item(config as PyDict, 'recipe_file'), 'sha256'))",
+  "after": "true",
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.schema.operator-recipe#3",
+  "rows": [
+   59
+  ],
+  "file": "src/lock.ts",
+  "before": "eq(item(recipe as PyDict, 'path'), path)",
+  "after": "true",
+  "note": "",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "inputs.record.data-args#1",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "let valid = isList(records);",
+  "after": "let valid = true;",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-args#2",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "keysWithin(record, DATA_ALLOWED)",
+  "after": "true",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-args#3",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "SERVER.test(item(record, 'server') as string)",
+  "after": "true",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-args#4",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "isList(item(record, 'args'))",
+  "after": "true",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-args#5",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "Array.from(item(record, 'args') as Iterable<PyValue>).every(arg => isStr(arg))",
+  "after": "true",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-args#6",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "isStr(item(record, 'kind')) && (item(record, 'kind') === 'file' || item(record, 'kind') === 'dir')",
+  "after": "true",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-args#7",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "if (seen.has(key)) {",
+  "after": "if (false) {",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-path#1",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "isStr(value) && value.startsWith('/') && !value.startsWith('//')",
+  "after": "isStr(value) && !value.startsWith('//')",
+  "note": "the type test stays: without it the mutant does not compile",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-path#2",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "&& !value.startsWith('//')",
+  "after": "",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-path#3",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "&& value !== '/' && value === pathlib.pathStr(value)",
+  "after": "&& value === pathlib.pathStr(value)",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-path#4",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "&& value !== '/' && value === pathlib.pathStr(value)",
+  "after": "&& value !== '/'",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-path#5",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "&& !pathlib.pathParts(value).includes('..')\n    && !hasControl(value);",
+  "after": "&& !hasControl(value);",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-path#6",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "&& !pathlib.pathParts(value).includes('..')\n    && !hasControl(value);",
+  "after": "&& !pathlib.pathParts(value).includes('..');",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-flag#1",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "if (!FLAG.test(value)) return null;",
+  "after": "",
+  "note": "the type test stays: without it the mutant does not compile",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-flag#2",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "if (DENIED_FLAGS.has(value)) return false;",
+  "after": "",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.data-flag#3",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "return !DENIED_PREFIXES.some(prefix => value.startsWith(prefix));",
+  "after": "return true;",
+  "note": "",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "inputs.record.transport#2",
+  "rows": [
+   63
+  ],
+  "file": "src/inputs.ts",
+  "before": "b64decodeStrict((transport as ReadonlyMap<string, unknown>).get('cook-recipe.json'))",
+  "after": "Buffer.from(String((transport as ReadonlyMap<string, unknown>).get('cook-recipe.json')), 'base64')",
+  "note": "strict decoding replaced by a lenient one, as validate=False in the oracle mutant",
+  "source_sha256": "aa67dbfdd885796473f124e0f48186f7af7270fc6382c83676ed10d02954f6e4"
+ },
+ {
+  "id": "lock.names-only.call",
+  "rows": [
+   2
+  ],
+  "file": "src/lock.ts",
+  "before": "namesOnly(lock, frame + 1);",
+  "after": ";",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.provider-token",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "'(?:gh[oprsu]_|github_pat_|glpat[-_]|xox[baprs]-|sk-)[A-Za-z0-9_-]{12,}',",
+  "after": "'(?!)',",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.vault-token",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "BOUNDARY + 'hvs\\\\.[A-Za-z0-9_-]+',",
+  "after": "'(?!)',",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.bot-token",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "BOUNDARY + '[0-9]{8,10}:[A-Za-z0-9_-]{30,}',",
+  "after": "'(?!)',",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.private-key",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "'-----' + 'BEGIN [^\\\\n]*PRIVATE KEY-----',",
+  "after": "'(?!)',",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.jwt",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "BOUNDARY + 'eyJ[' + W + '-]+\\\\.[' + W + '-]+\\\\.[' + W + '-]+',",
+  "after": "'(?!)',",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.assignment",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "[TOKEN_SHAPES.join('|'), ASSIGNMENT, URL_SHAPES.join('|'), STORE_PATH]",
+  "after": "[TOKEN_SHAPES.join('|'), '(?!)', URL_SHAPES.join('|'), STORE_PATH]",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.url-userinfo",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "'://[^/' + S + ']*:[^/' + S + ']*@',",
+  "after": "'(?!)',",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.query",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "'[?&](?:' + ['token', 'password', 'secret', 'api_key'].map(insensitive).join('|') + ')=',",
+  "after": "'(?!)',",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.store-path",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "[TOKEN_SHAPES.join('|'), ASSIGNMENT, URL_SHAPES.join('|'), STORE_PATH]",
+  "after": "[TOKEN_SHAPES.join('|'), ASSIGNMENT, URL_SHAPES.join('|'), '(?!)']",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.word-boundary",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "const BOUNDARY = '(?<![' + W + '])';",
+  "after": "const BOUNDARY = '';",
+  "note": "TS only; \\b",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.unicode-boundary",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "const BOUNDARY = '(?<![' + W + '])';",
+  "after": "const BOUNDARY = '(?<![A-Za-z0-9_])';",
+  "note": "TS only; \\b is Unicode-aware",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.unicode-word",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "BOUNDARY + 'eyJ[' + W + '-]+\\\\.[' + W + '-]+\\\\.[' + W + '-]+',",
+  "after": "BOUNDARY + 'eyJ[A-Za-z0-9_-]+\\\\.[A-Za-z0-9_-]+\\\\.[A-Za-z0-9_-]+',",
+  "note": "TS only; \\w is Unicode-aware",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.unicode-space",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "[' + S + ']*[:=][' + S + ']*[^' + S + ']+';",
+  "after": "\\\\s*[:=]\\\\s*\\\\S+';",
+  "note": "TS only; \\s differs between the two engines",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.ignore-case",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "const lower = letter.toLowerCase(), upper = letter.toUpperCase();",
+  "after": "const lower = letter, upper = letter;",
+  "note": "TS only; re.I",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.case-equivalents",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "(lower === 'i' ? '\\\\u0130\\\\u0131' : lower === 's' ? '\\\\u017f' : lower === 'k' ? '\\\\u212a' : '')",
+  "after": "''",
+  "note": "TS only; CPython case equivalences under re.I",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.class-equivalents",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "const LETTER = 'A-Za-z\\\\u0130\\\\u0131\\\\u017f\\\\u212a';",
+  "after": "const LETTER = 'A-Za-z';",
+  "note": "TS only; the same equivalences inside a class",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.credential.dot",
+  "rows": [
+   1
+  ],
+  "file": "src/lock.ts",
+  "before": "'-----' + 'BEGIN [^\\\\n]*PRIVATE KEY-----',",
+  "after": "'-----' + 'BEGIN .*PRIVATE KEY-----',",
+  "note": "TS only; \".\" excludes only a newline in Python",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.text",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "  if (!text(value)) return false;\n  if (credential_shaped(value)) return false;",
+  "after": "  if (!isStr(value)) return false;\n  if (credential_shaped(value)) return false;",
+  "note": "TS only; the type test stays",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.credential",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "  if (credential_shaped(value)) return false;\n",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.decoded-text",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "  if (!text(decoded)) return false;\n",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.decoded-credential",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "  if (credential_shaped(decoded)) return false;\n",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.delimiters",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "  if (/[?#\\\\]/u.test(decoded)) return false;\n",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.whitespace",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "  if (SPACE.test(decoded)) return false;\n",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.scheme",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "if (parts.scheme === 'https' || parts.scheme === 'ssh') {",
+  "after": "if (parts.scheme) {",
+  "note": "TS only; any scheme accepted as a URL",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.host",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "const host = url.hostname(parts.netloc), user",
+  "after": "const host = url.hostname(parts.netloc) ?? 'host', user",
+  "note": "TS only; an absent host passes",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.path",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "return Boolean(host\n        && parts.path",
+  "after": "return Boolean(host",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.password",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "        && url.password(parts.netloc) === null\n",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.ssh-option-host",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "        && (parts.scheme !== 'ssh' || !url.unquote(host).startsWith('-'))\n",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.port-range",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "        && (port === null || (0 < port && port <= 65535))\n",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.port-syntax",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "const port = url.port(parts.netloc);",
+  "after": "const port = null as number | null;",
+  "note": "TS only; the port is no longer read, so a malformed one no longer refuses",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.user",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "        && (user === null || (parts.scheme === 'ssh' && USER.test(url.unquote(user)))));",
+  "after": ");",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.user-grammar",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "(parts.scheme === 'ssh' && USER.test(url.unquote(user)))",
+  "after": "parts.scheme === 'ssh'",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.malformed-url",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "    if (error instanceof PyValueError) return false;\n    throw error;\n  }\n  // scp syntax",
+  "after": "    if (error instanceof PyValueError) return true;\n    throw error;\n  }\n  // scp syntax",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.transport-prefix",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "  if (TRANSPORT_PREFIX.test(decoded)) return false;\n",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.scp-shape",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "return SCP.test(decoded) && !decoded.includes('://');",
+  "after": "return !decoded.includes('://');",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "lock.repository.scp-not-uri",
+  "rows": [
+   3
+  ],
+  "file": "src/lock.ts",
+  "before": "return SCP.test(decoded) && !decoded.includes('://');",
+  "after": "return SCP.test(decoded);",
+  "note": "TS only",
+  "source_sha256": "06782509108f5ba1f78012d99008e2048f74b445d5febc9976a259946eb47ec8"
+ },
+ {
+  "id": "errors.closed.cook-table",
+  "rows": [
+   28
+  ],
+  "file": "src/errors.ts",
+  "before": "if (COOK_CODES.has(code)) return code;",
+  "after": "return code;",
+  "note": "TS only",
+  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+ },
+ {
+  "id": "errors.closed.left-boundary",
+  "rows": [
+   28
+  ],
+  "file": "src/errors.ts",
+  "before": "/(?<![A-Za-z0-9_])(E_[A-Z_]+)(?![A-Za-z0-9_])/g",
+  "after": "/(E_[A-Z_]+)(?![A-Za-z0-9_])/g",
+  "note": "TS only",
+  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+ },
+ {
+  "id": "errors.closed.right-boundary",
+  "rows": [
+   28
+  ],
+  "file": "src/errors.ts",
+  "before": "/(?<![A-Za-z0-9_])(E_[A-Z_]+)(?![A-Za-z0-9_])/g",
+  "after": "/(?<![A-Za-z0-9_])(E_[A-Z_]+)/g",
+  "note": "TS only",
+  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+ },
+ {
+  "id": "errors.closed.stream-window",
+  "rows": [
+   28
+  ],
+  "file": "src/errors.ts",
+  "before": "tail = chunk.slice(Math.max(0, chunk.length - 128));",
+  "after": "tail = new Uint8Array(0);",
+  "note": "TS only",
+  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+ },
+ {
+  "id": "errors.closed.stream-rewind",
+  "rows": [
+   28
+  ],
+  "file": "src/errors.ts",
+  "before": "  stream.seek(0);\n",
+  "after": "",
+  "note": "TS only",
+  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+ },
+ {
+  "id": "errors.closed.unknown-code",
+  "rows": [
+   28
+  ],
+  "file": "src/errors.ts",
+  "before": "typeof code === 'string' && Object.hasOwn(MESSAGES, code) ? code : 'E_DEPLOY_FAILED'",
+  "after": "typeof code === 'string' ? code : 'E_DEPLOY_FAILED'",
+  "note": "TS only",
+  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+ },
+ {
+  "id": "errors.closed.upstream-only-cook",
+  "rows": [
+   28
+  ],
+  "file": "src/errors.ts",
+  "before": "if (known === 'E_COOK_FAILED' && typeof upstream === 'string' && COOK_CODES.has(upstream)) {",
+  "after": "if (typeof upstream === 'string' && COOK_CODES.has(upstream)) {",
+  "note": "TS only",
+  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+ },
+ {
+  "id": "errors.closed.upstream-table",
+  "rows": [
+   28
+  ],
+  "file": "src/errors.ts",
+  "before": "if (known === 'E_COOK_FAILED' && typeof upstream === 'string' && COOK_CODES.has(upstream)) {",
+  "after": "if (known === 'E_COOK_FAILED' && typeof upstream === 'string') {",
+  "note": "TS only",
+  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+ },
+ {
+  "id": "errors.closed.envelope-exact",
+  "rows": [
+   28
+  ],
+  "file": "src/errors.ts",
+  "before": "return eq(data, new Map(Object.entries(safe))) ? safe : fallback;",
+  "after": "return safe;",
+  "note": "TS only",
+  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+ },
+ {
+  "id": "errors.closed.envelope-mapping",
+  "rows": [
+   28
+  ],
+  "file": "src/errors.ts",
+  "before": "  if (!isDict(data)) return fallback;\n",
+  "after": "",
+  "note": "TS only; expected not to compile: the decoder is typed",
+  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+ },
+ {
+  "id": "errors.closed.envelope-type",
+  "rows": [
+   28
+  ],
+  "file": "src/errors.ts",
+  "before": "  if (typeof output !== 'string' && !(output instanceof Uint8Array)) return fallback;\n",
+  "after": "",
+  "note": "TS only; expected not to compile: the decoder is typed",
+  "source_sha256": "675dd12e0b4f1eeed7ae530d077a6ae00850a2b40e281c6039798d14d7e00197"
+ }
+]

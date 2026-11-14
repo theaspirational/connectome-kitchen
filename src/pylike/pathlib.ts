@@ -12,7 +12,7 @@
  */
 import fs from 'node:fs';
 import { decodeUtf8, fsdecode, fsencode } from './codec.js';
-import { PyOSError, PyRuntimeError, PyValueError } from './py.js';
+import { PyOSError, PyRuntimeError, PyValueError, isprintable } from './py.js';
 
 const ERRNO: Record<string, [number, string]> = {
   EPERM: [1, 'Operation not permitted'], ENOENT: [2, 'No such file or directory'], EIO: [5, 'Input/output error'],
@@ -21,9 +21,7 @@ const ERRNO: Record<string, [number, string]> = {
   ENAMETOOLONG: [36, 'File name too long'], ELOOP: [40, 'Too many levels of symbolic links'],
 };
 
-// `str.isprintable()` is False for these categories (and True for the ASCII space).
-const UNPRINTABLE = /[\p{Cc}\p{Cf}\p{Cs}\p{Co}\p{Cn}\p{Zl}\p{Zp}\p{Zs}]/u;
-/** `repr()` of a str. Unassigned code points follow the runtime's Unicode version, not CPython's. */
+/** `repr()` of a str, as CPython's `unicode_repr` writes it. */
 export function repr(value: string): string {
   const quote = value.includes("'") && !value.includes('"') ? '"' : "'";
   let out = quote;
@@ -31,8 +29,8 @@ export function repr(value: string): string {
     const code = char.codePointAt(0)!;
     if (char === quote || char === '\\') out += '\\' + char;
     else if (char === '\n') out += '\\n'; else if (char === '\r') out += '\\r'; else if (char === '\t') out += '\\t';
-    else if (char !== ' ' && UNPRINTABLE.test(char)) out += code < 0x100 ? '\\x' + code.toString(16).padStart(2, '0') : code < 0x10000 ? '\\u' + code.toString(16).padStart(4, '0') : '\\U' + code.toString(16).padStart(8, '0');
-    else out += char;
+    else if (isprintable(char)) out += char;
+    else out += code < 0x100 ? '\\x' + code.toString(16).padStart(2, '0') : code < 0x10000 ? '\\u' + code.toString(16).padStart(4, '0') : '\\U' + code.toString(16).padStart(8, '0');
   }
   return out + quote;
 }
@@ -90,10 +88,11 @@ export function parent(value: string): string {
   const head = parts.slice(0, -1);
   return rooted ? head[0]! + head.slice(1).join('/') : head.join('/');
 }
-/** `Path(value).is_relative_to(other)`: component-wise, never a string prefix. */
+/** `Path(value).is_relative_to(other)`: component-wise, never a string prefix; an absolute path is never relative to a relative one. */
 export function isRelativeTo(value: string, other: string): boolean {
   const mine = pathParts(value), theirs = pathParts(other);
-  return theirs.length <= mine.length && theirs.every((part, index) => mine[index] === part);
+  const root = (parts: string[]): string => (parts[0] !== undefined && isAbsolute(parts[0]) ? parts[0] : '');
+  return root(mine) === root(theirs) && theirs.length <= mine.length && theirs.every((part, index) => mine[index] === part);
 }
 /** `str(Path(value).relative_to(other))`; `ValueError` when `other` is not a lexical ancestor. */
 export function relativeTo(value: string, other: string): string {

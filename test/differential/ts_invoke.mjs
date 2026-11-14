@@ -90,6 +90,7 @@ function lockOptions(kwargs) {
     if (key === 'required_names') {
       if (typeof value === 'string') options[key] = Array.from(value);
       else if (Array.isArray(value)) options[key] = value.map(deep);
+      else if (value instanceof Map) options[key] = [...value.keys()]; // iterating a dict yields its keys
       else throw new Unsupported('required_names');
     } else options[key] = deep(value);
   }
@@ -183,14 +184,15 @@ function plain(value) {
 export function run(job) {
   const name = job.get('function');
   let outcome;
-  const replay = job.has('seam') ? replaySeam(job.get('seam')) : null;
-  archive.bind_seam(replay ? replay.seam : null);
+  // No log means the oracle asked the archive module nothing; then neither may the port.
+  const replay = replaySeam(job.has('seam') ? job.get('seam') : []);
+  archive.bind_seam(replay.seam);
   try {
     const call = CALLS[name];
     if (!call) throw new Unsupported('function');
     const args = decode(job.get('args')), kwargs = decode(job.get('kwargs'));
     const result = call(args, kwargs);
-    if (replay) replay.done();
+    replay.done();
     outcome = { result: encode(result) };
   } catch (error) {
     if (error instanceof Unsupported) outcome = { unsupported: error.message };
@@ -209,7 +211,7 @@ export const parse = line => loads(line);
 
 /**
  * Creates a fixture tree: `{relative path: {dir: mode} | {file: base64, mode} | {text: str, mode} | {link: target}}`.
- * Parents are created 0755. `${ROOT}` inside a link target is the tree root.
+ * Parents are created 0755. `${ROOT}` inside a link target or a text is the tree root.
  */
 export function materialize(root, tree) {
   fs.rmSync(root, { recursive: true, force: true });
@@ -220,7 +222,7 @@ export function materialize(root, tree) {
     fs.mkdirSync(path.dirname(target), { recursive: true, mode: 0o755 });
     if ('link' in spec) fs.symlinkSync(spec.link.replaceAll('${ROOT}', root), target);
     else if ('dir' in spec) { fs.mkdirSync(target, { recursive: true }); later.push([target, spec.dir]); }
-    else { fs.writeFileSync(target, 'file' in spec ? Buffer.from(spec.file, 'base64') : spec.text); later.push([target, spec.mode ?? 0o644]); }
+    else { fs.writeFileSync(target, 'file' in spec ? Buffer.from(spec.file, 'base64') : spec.text.replaceAll('${ROOT}', root)); later.push([target, spec.mode ?? 0o644]); }
   }
   // Modes last and deepest first, so that an unreadable directory can still be filled.
   for (const [target, mode] of later.sort((a, b) => b[0].length - a[0].length)) fs.chmodSync(target, mode);

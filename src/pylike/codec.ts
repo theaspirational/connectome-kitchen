@@ -98,20 +98,35 @@ export function decodeJsonBytes(bytes: Uint8Array): string {
 /**
  * `os.fsencode` followed by the embedded-null check every `os` call makes: UTF-8
  * with `surrogateescape`. A lone surrogate outside U+DC80..U+DCFF cannot be
- * encoded (`UnicodeEncodeError`, a `ValueError`); a NUL is `ValueError`.
+ * encoded (`UnicodeEncodeError`, a `ValueError`); a NUL is `ValueError`. Both
+ * messages are CPython's, since a `ValueError` message can reach a caller.
+ * Positions count code points. A high surrogate directly followed by a low one
+ * is one character here; a Python str can hold the two apart, a JavaScript
+ * string cannot.
  */
 export function fsencode(path: string): Buffer {
   const bytes: number[] = [];
-  for (let index = 0; index < path.length; index++) {
+  const lone = (index: number): boolean => {
+    const unit = path.charCodeAt(index);
+    if (unit >= 0xd800 && unit <= 0xdbff) return !(index + 1 < path.length && path.charCodeAt(index + 1) >= 0xdc00 && path.charCodeAt(index + 1) <= 0xdfff);
+    return unit >= 0xdc00 && unit <= 0xdfff && !(index > 0 && path.charCodeAt(index - 1) >= 0xd800 && path.charCodeAt(index - 1) <= 0xdbff);
+  };
+  for (let index = 0, position = 0; index < path.length; index++, position++) {
     const unit = path.charCodeAt(index);
     if (unit < 0x80) bytes.push(unit);
     else if (unit < 0x800) bytes.push(0xc0 | (unit >> 6), 0x80 | (unit & 0x3f));
-    else if (unit >= 0xd800 && unit <= 0xdbff && index + 1 < path.length && path.charCodeAt(index + 1) >= 0xdc00 && path.charCodeAt(index + 1) <= 0xdfff) {
+    else if (unit >= 0xd800 && unit <= 0xdfff && !lone(index)) {
       const codePoint = 0x10000 + ((unit - 0xd800) << 10) + (path.charCodeAt(++index) - 0xdc00);
       bytes.push(0xf0 | (codePoint >> 18), 0x80 | ((codePoint >> 12) & 0x3f), 0x80 | ((codePoint >> 6) & 0x3f), 0x80 | (codePoint & 0x3f));
     } else if (unit >= 0xd800 && unit <= 0xdfff) {
-      if (unit < 0xdc80 || unit > 0xdcff) throw new UnicodeEncodeError("'utf-8' codec can't encode character: surrogates not allowed");
-      bytes.push(unit - 0xdc00);
+      if (unit >= 0xdc80 && unit <= 0xdcff) { bytes.push(unit - 0xdc00); continue; }
+      // CPython reports from the first surrogate it cannot escape to the end of the run of surrogates.
+      let end = index + 1;
+      while (end < path.length && lone(end)) end++;
+      const last = position + (end - index) - 1;
+      throw new UnicodeEncodeError(end === index + 1
+        ? "'utf-8' codec can't encode character '\\u" + unit.toString(16) + "' in position " + position + ': surrogates not allowed'
+        : "'utf-8' codec can't encode characters in position " + position + '-' + last + ': surrogates not allowed');
     } else bytes.push(0xe0 | (unit >> 12), 0x80 | ((unit >> 6) & 0x3f), 0x80 | (unit & 0x3f));
   }
   if (bytes.includes(0)) throw new PyValueError('embedded null byte');

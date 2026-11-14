@@ -79,28 +79,34 @@ const insensitive = (word: string): string => Array.from(word, letter => {
 }).join('');
 const LETTER = 'A-Za-z\\u0130\\u0131\\u017f\\u212a';
 const BOUNDARY = '(?<![' + W + '])';
-// row 1 lock.credential: the four credential shapes. lock.py:40-46
-const CREDENTIAL_SHAPES: readonly RegExp[] = [
-  new RegExp('(?:gh[oprsu]_|github_pat_|glpat[-_]|xox[baprs]-|sk-)[A-Za-z0-9_-]{12,}'
-    + '|' + BOUNDARY + 'hvs\\.[A-Za-z0-9_-]+|' + BOUNDARY + '[0-9]{8,10}:[A-Za-z0-9_-]{30,}'
-    + '|-----' + 'BEGIN [^\\n]*PRIVATE KEY-----|' + BOUNDARY + 'eyJ[' + W + '-]+\\.[' + W + '-]+\\.[' + W + '-]+', 'u'),
-  new RegExp(BOUNDARY + '[' + LETTER + '_]*(?:' + ['TOKEN', 'PASSWORD', 'API_KEY', 'SECRET'].map(insensitive).join('|') + ')[' + S + ']*[:=][' + S + ']*[^' + S + ']+', 'u'),
-  new RegExp('://[^/' + S + ']*:[^/' + S + ']*@|[?&](?:' + ['token', 'password', 'secret', 'api_key'].map(insensitive).join('|') + ')=', 'u'),
-  new RegExp('(?:' + insensitive('vault') + '|' + insensitive('secret') + ')/[' + LETTER + '][' + W + '-]+/[' + W + '/-]+', 'u'),
+// row 1 lock.credential: the credential shapes, one alternative per line. lock.py:40-46
+const TOKEN_SHAPES = [
+  '(?:gh[oprsu]_|github_pat_|glpat[-_]|xox[baprs]-|sk-)[A-Za-z0-9_-]{12,}',
+  BOUNDARY + 'hvs\\.[A-Za-z0-9_-]+',
+  BOUNDARY + '[0-9]{8,10}:[A-Za-z0-9_-]{30,}',
+  '-----' + 'BEGIN [^\\n]*PRIVATE KEY-----',
+  BOUNDARY + 'eyJ[' + W + '-]+\\.[' + W + '-]+\\.[' + W + '-]+',
 ];
+const ASSIGNMENT = BOUNDARY + '[' + LETTER + '_]*(?:' + ['TOKEN', 'PASSWORD', 'API_KEY', 'SECRET'].map(insensitive).join('|') + ')[' + S + ']*[:=][' + S + ']*[^' + S + ']+';
+const URL_SHAPES = [
+  '://[^/' + S + ']*:[^/' + S + ']*@',
+  '[?&](?:' + ['token', 'password', 'secret', 'api_key'].map(insensitive).join('|') + ')=',
+];
+const STORE_PATH = '(?:' + insensitive('vault') + '|' + insensitive('secret') + ')/[' + LETTER + '][' + W + '-]+/[' + W + '/-]+';
+const CREDENTIAL_SHAPES: readonly RegExp[] = [TOKEN_SHAPES.join('|'), ASSIGNMENT, URL_SHAPES.join('|'), STORE_PATH].map(source => new RegExp(source, 'u'));
 
 /*
  * CPython refuses deep recursion with RecursionError, which `read_lock` turns
  * into a refusal (lock.py:332). `names_only` is the only recursive function
  * here. Its bound is modelled, not left to the JavaScript stack: the default
- * limit is 1000 frames, and on the oracle interpreter a frame may sit at depth
- * 999 when the caller is a script's top level (measured). A string costs up to
+ * limit is 1000 frames, the script's own top level being the first (measured
+ * on the oracle interpreter: a frame may sit at depth 1000). A string costs up to
  * five more frames (the generator expression, then `credential_shaped`,
  * `re.search`, `re._compile` and, for the three patterns compiled with a flag,
  * the flag's `value` property). The caller's own depth shifts the bound in the
  * oracle too; the constants below are the script-level case.
  */
-const PY_FRAME_LIMIT = 999;
+const PY_FRAME_LIMIT = 1000;
 const SCRIPT_CALL_FRAME = 2; // the frame of a function a script calls directly
 const READ_LOCK_FRAME = 3;   // map_lock when read_lock called it
 function frameCheck(frame: number): void {
@@ -135,9 +141,12 @@ const SPACE = new RegExp('[' + S + ']', 'u');
 /** Allow only credential-free HTTPS, SSH/scp, or absolute local sources. lock.py:49-76 */
 export function repository(value: PyValue): boolean {
   // row 3 lock.repository: text, and no credential shape, before and after unquoting. lock.py:51-55
-  if (!text(value) || credential_shaped(value)) return false;
+  if (!text(value)) return false;
+  if (credential_shaped(value)) return false;
   const decoded = url.unquote(value);
-  if (!text(decoded) || credential_shaped(decoded) || /[?#\\]/u.test(decoded)) return false;
+  if (!text(decoded)) return false;
+  if (credential_shaped(decoded)) return false;
+  if (/[?#\\]/u.test(decoded)) return false;
   if (value.startsWith('/')) return true;
   if (SPACE.test(decoded)) return false;
   try {
@@ -147,7 +156,9 @@ export function repository(value: PyValue): boolean {
       const port = url.port(parts.netloc);
       const host = url.hostname(parts.netloc), user = url.username(parts.netloc);
       // row 3 lock.repository: host and path, no password, no option-like ssh host, a real port, a user only for ssh. lock.py:65-69
-      return Boolean(host && parts.path && url.password(parts.netloc) === null
+      return Boolean(host
+        && parts.path
+        && url.password(parts.netloc) === null
         && (parts.scheme !== 'ssh' || !url.unquote(host).startsWith('-'))
         && (port === null || (0 < port && port <= 65535))
         && (user === null || (parts.scheme === 'ssh' && USER.test(url.unquote(user)))));
@@ -324,9 +335,9 @@ function mapLock(data: PyValue, build: string, options: LockOptions, frame: numb
       require(eq(item(recipe as PyDict, 'sha256'), subscript(item(config as PyDict, 'recipe_file'), 'sha256'))
         && eq(item(recipe as PyDict, 'path'), path), 'operator recipe provenance mismatch');
     } catch (error) {
+      if (!(error instanceof PyValueError)) throw error;
       // row 59 lock.schema.operator-recipe: every input refusal is a lock refusal. lock.py:157-158
-      if (error instanceof PyValueError) throw new LockError('invalid operator recipe provenance');
-      throw error;
+      throw new LockError('invalid operator recipe provenance');
     }
   }
   const created = item(lock, 'createdAt') as string;
@@ -335,9 +346,9 @@ function mapLock(data: PyValue, build: string, options: LockOptions, frame: numb
     require(TIMESTAMP.test(created)
       && fromisoformat(created.replaceAll('Z', '+00:00')), 'invalid lock timestamp');
   } catch (error) {
+    if (!(error instanceof PyValueError)) throw error;
     // row 59 lock.schema.timestamp: an impossible date is a lock refusal. lock.py:162-163
-    if (error instanceof PyValueError) throw new LockError('invalid lock timestamp');
-    throw error;
+    throw new LockError('invalid lock timestamp');
   }
   const host = item(lock, 'connectomeHost');
   // row 8 lock.pin-names-external: closed host record whose commit is the requested pin. lock.py:165-168
@@ -481,9 +492,9 @@ function mapLock(data: PyValue, build: string, options: LockOptions, frame: numb
           require(['name', 'sha256', 'version'].every(k => eq(subscript(provenance, k), item(record, k))),
             'dependency provenance identity mismatch');
         } catch (error) {
+          if (!(error instanceof PyValueError)) throw error;
           // row 9 lock.host-deps: every provenance refusal is a lock refusal. lock.py:268-269
-          if (error instanceof PyValueError) throw new LockError('invalid host dependency provenance');
-          throw error;
+          throw new LockError('invalid host dependency provenance');
         }
       }
       const delta = item(record, 'packageJsonDelta');
@@ -505,9 +516,9 @@ function mapLock(data: PyValue, build: string, options: LockOptions, frame: numb
       // row 9 lock.host-deps: the inventory is bound to config. lock.py:285
       archive.check_dependencies(lock, config, framework_pin, framework_record);
     } catch (error) {
+      if (!(error instanceof PyValueError)) throw error;
       // row 9 lock.host-deps: every mismatch is a lock refusal. lock.py:286-287
-      if (error instanceof PyValueError) throw new LockError('host dependencies differ from config');
-      throw error;
+      throw new LockError('host dependencies differ from config');
     }
   }
   if (lock.has('health')) {
@@ -575,7 +586,7 @@ export function read_lock(path: string, options: LockOptions = {}): PyDict {
     }
     return result;
   };
-  const invalid_number = (): never => {
+  const invalid_number = (_name: string): PyValue => {
     // row 7 json.strict: NaN and the infinities are refused. lock.py:324
     throw new LockError('nonfinite lock number refused');
   };
@@ -584,11 +595,13 @@ export function read_lock(path: string, options: LockOptions = {}): PyDict {
     const data = loads(pathlib.readText(file), { object_pairs_hook: unique_fields, parse_constant: invalid_number });
     return mapLock(data, pathlib.parent(file), options, READ_LOCK_FRAME);
   } catch (error) {
-    // row 7 json.strict: a declared refusal keeps its own message. lock.py:330-331
-    if (error instanceof LockError) throw error;
+    if (error instanceof LockError) {
+      // row 7 json.strict: a declared refusal keeps its own message. lock.py:330-331
+      throw error;
+    }
+    if (!(error instanceof PyOSError || error instanceof PyValueError || error instanceof PyTypeError || error instanceof PyKeyError
+      || error instanceof PyAttributeError || error instanceof PyRecursionError)) throw error;
     // row 7 json.strict: every other failure the oracle names is one refusal. lock.py:332-333
-    if (error instanceof PyOSError || error instanceof PyValueError || error instanceof PyTypeError || error instanceof PyKeyError
-      || error instanceof PyAttributeError || error instanceof PyRecursionError) throw new LockError('malformed or unreadable cook lock v2');
-    throw error;
+    throw new LockError('malformed or unreadable cook lock v2');
   }
 }

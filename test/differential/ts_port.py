@@ -33,6 +33,7 @@ FIXTURE = SCRATCH / 'lock-files-v1'
 TREES = SCRATCH / 'trees'
 MODULES = ('connectome_errors', 'connectome_lock', 'connectome_inputs')
 PORT = ROOT / 'test/vectors/port-m1-3.golden'
+PORT_TREES = ROOT / 'test/vectors/port-m1-3.trees.golden'
 SEAM = ('npm_name', 'validate_dependency_record', 'check_dependencies')
 
 
@@ -56,7 +57,7 @@ def materialize(root, tree):
             target.mkdir(parents=True, exist_ok=True)
             later.append((target, spec['dir']))
         else:
-            target.write_bytes(base64.b64decode(spec['file']) if 'file' in spec else spec['text'].encode())
+            target.write_bytes(base64.b64decode(spec['file']) if 'file' in spec else spec['text'].replace('${ROOT}', str(root)).encode())
             later.append((target, spec.get('mode', 0o644)))
     for target, mode in sorted(later, key=lambda item: -len(str(item[0]))):
         os.chmod(target, mode)
@@ -67,11 +68,12 @@ def remove(root):
         root.unlink()
         return
     if root.is_dir():
-        for directory, _names, _files in os.walk(root):
-            try:
-                os.chmod(directory, 0o700)
-            except OSError:
-                pass
+        os.chmod(root, 0o700)
+        for directory, names, _files in os.walk(root):
+            for name in names:  # before the walk descends: a 0000 directory cannot be listed
+                child = os.path.join(directory, name)
+                if not os.path.islink(child):
+                    os.chmod(child, 0o700)
         shutil.rmtree(root)
 
 
@@ -191,11 +193,14 @@ def generated(spec, root):
 
 
 def expand(value, root):
+    """`$generate` and `$join` (a string written in pieces so that no committed file holds it whole)."""
     if isinstance(value, list):
         return [expand(item, root) for item in value]
     if isinstance(value, dict):
         if '$generate' in value:
             return generated(value, root)
+        if '$join' in value:
+            return ''.join(value['$join'])
         return {key: expand(item, root) for key, item in value.items()}
     return value
 
@@ -212,6 +217,8 @@ def sha256_arg(value):
 
 
 class Vector:
+    made = set()
+
     def __init__(self, source, ident, row):
         self.source, self.id, self.row = source, ident, row
         self.function = row['function']
@@ -225,9 +232,12 @@ class Vector:
             self.root = FIXTURE
             return bind(args, '@BUILD@', str(FIXTURE)), bind(kwargs, '@BUILD@', str(FIXTURE))
         if 'tree' in self.row:
-            self.root = TREES / hashlib.sha256(self.id.encode()).hexdigest()[:16]
-            tree = {key: expand(spec, self.root) if '$generate' in spec else spec for key, spec in self.row['tree'].items()}
-            materialize(self.root, tree)
+            # Nothing under test writes, so vectors with the same tree share one directory.
+            self.root = TREES / hashlib.sha256(canonical(self.row['tree']).encode()).hexdigest()[:16]
+            if self.root not in Vector.made:
+                tree = {key: expand(spec, self.root) if '$generate' in spec else spec for key, spec in self.row['tree'].items()}
+                materialize(self.root, tree)
+                Vector.made.add(self.root)
         root = str(self.root) if self.root else str(TREES / 'none')
         return bind(sha256_arg(expand(args, self.root)), '${ROOT}', root), bind(sha256_arg(expand(kwargs, self.root)), '${ROOT}', root)
 
@@ -239,6 +249,7 @@ class Vector:
     def cleanup(self):
         if self.root is not None and self.root != FIXTURE:
             remove(self.root)
+            Vector.made.discard(self.root)
 
 
 def committed():
@@ -252,11 +263,28 @@ def committed():
         if row['function'].split('.')[0] in MODULES:
             outcome = {'exception': row['outcome']['exception'], 'message': row['outcome']['message']}
             vectors.append(Vector('crash-only', row['id'], dict(row, outcome=outcome)))
-    if PORT.exists():
-        for line in PORT.read_text().splitlines():
-            row = json.loads(line)
-            vectors.append(Vector('port', row['id'], row))
+    for row in port_rows():
+        vectors.append(Vector('port', row['id'], row))
     return vectors
+
+
+def port_rows():
+    """The committed corpus. A row names its file tree by digest; the trees are stored once."""
+    if not PORT.exists():
+        return []
+    trees = json.loads(PORT_TREES.read_text())
+    rows = []
+    for line in PORT.read_text().splitlines():
+        row = json.loads(line)
+        if 'tree' in row:
+            row['tree'] = trees[row['tree']]
+        rows.append(row)
+    return rows
+
+
+def generated_vectors():
+    import port_seeds
+    return [Vector('generated', row['id'], row) for row in port_seeds.generated()]
 
 
 def recording(path):
@@ -313,7 +341,7 @@ def evaluate(vectors, node='node'):
                 record['skipped'] = 'undecodable arguments (opaque object or fake)'
                 records.append(record)
                 continue
-            outcome, log = (invoke_bare if vector.row.get('bare') else invoke)(vector.function, call_args, call_kwargs)
+            outcome, log = invoke_bare(vector.function, args, kwargs) if vector.row.get('bare') else invoke(vector.function, call_args, call_kwargs)
             record['oracle'] = vector.unbind(canonical(outcome))
             record['seam'] = log
             records.append(record)
@@ -373,34 +401,33 @@ def failed(report):
                entry['recorded-outcome-differs-from-live-oracle'] for entry in report.values())
 
 
-def build_port(seeds, node):
-    """Write the committed corpus: each seed row gets the oracle's outcome and seam log. TS is not consulted."""
+def build_port():
+    """Write the committed corpus: each hand-written input gets the oracle's outcome and seam log. TS is not consulted."""
+    import port_seeds
     initialize()
-    lock = importlib.import_module('connectome_lock')
     fixture()
-    rows = []
-    seen = set()
-    for line in seeds.read_text().splitlines():
-        if not line.strip() or line.startswith('#'):
-            continue
-        row = json.loads(line)
-        if row['id'] in seen:
-            raise ValueError('duplicate vector id ' + row['id'])
-        seen.add(row['id'])
+    rows, trees = [], {}
+    remove(TREES)
+    for row in port_seeds.hand():
         vector = Vector('port', row['id'], row)
-        try:
-            args, kwargs = vector.prepare()
-            outcome, log = (invoke_bare if row.get('bare') else invoke)(row['function'], decode(args), decode(kwargs))
-            row = dict(row, outcome=json.loads(vector.unbind(canonical(outcome))))
-            if log:
-                row['seam'] = json.loads(vector.unbind(canonical(log)))
-            else:
-                row.pop('seam', None)
-        finally:
-            vector.cleanup()
-        rows.append(canonical(row))
+        args, kwargs = vector.prepare()
+        outcome, log = invoke_bare(row['function'], args, kwargs) if row.get('bare') else invoke(row['function'], decode(args), decode(kwargs))
+        row = dict(row, outcome=json.loads(vector.unbind(canonical(outcome))))
+        if log:
+            row['seam'] = json.loads(vector.unbind(canonical(log)))
+        if 'tree' in row:
+            digest = hashlib.sha256(canonical(row['tree']).encode()).hexdigest()[:16]
+            trees[digest] = row['tree']
+            row['tree'] = digest
+        # Not `canonical`: the key order of an input document is part of the input.
+        rows.append(json.dumps(row, separators=(',', ':')))
+    for root in list(Vector.made):
+        remove(root)
+    Vector.made.clear()
+    remove(TREES)
     PORT.write_text('\n'.join(rows) + '\n')
-    print(canonical({'port_vectors': len(rows)}))
+    PORT_TREES.write_text(json.dumps(trees, indent=1, sort_keys=True) + '\n')
+    print(canonical({'port_vectors': len(rows), 'trees': len(trees)}))
 
 
 def main():
@@ -411,14 +438,15 @@ def main():
     run.add_argument('--exploratory', type=Path)
     run.add_argument('--node', default='node')
     run.add_argument('--report', type=Path)
-    build = sub.add_parser('build')
-    build.add_argument('--seeds', type=Path, default=ROOT / 'test/vectors/port-m1-3.seeds')
-    build.add_argument('--node', default='node')
+    run.add_argument('--no-generated', action='store_true')
+    sub.add_parser('build')
     args = parser.parse_args()
     if args.command == 'build':
-        build_port(args.seeds, args.node)
+        build_port()
         return 0
     vectors = committed()
+    if not args.no_generated:
+        vectors += generated_vectors()
     if args.recording:
         vectors += recording(args.recording)
     if args.exploratory:

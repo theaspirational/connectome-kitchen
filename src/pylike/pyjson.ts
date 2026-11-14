@@ -15,7 +15,7 @@
  *     `RecursionError`, see MAX_DEPTH below.
  * Objects are `Map`s, so key order is the document's.
  */
-import { Float, Int, NonFinite, PyRecursionError, PyValueError } from './py.js';
+import { Float, Int, NonFinite, PyError, PyRecursionError, PyValueError } from './py.js';
 import type { PyDict, PyValue } from './py.js';
 import { decodeJsonBytes } from './codec.js';
 
@@ -31,15 +31,35 @@ export interface LoadOptions {
 
 /**
  * CPython 3.12.3 guards the scanner's recursion with its C recursion counter
- * (`Py_C_RECURSION_LIMIT`, 10000). Measured on the oracle interpreter, called
- * from module level: a container may be opened at nesting depth 9997, and a
- * Python-level hook can still be called from depth 9995. One level deeper is
- * `RecursionError` in both cases. The counter is per C call chain, so a caller
- * that itself sits inside C frames lowers both numbers by a few levels; that
- * band is oracle-dependent and is reported, not papered over.
+ * (`Py_C_RECURSION_LIMIT`, 10000). Everything the scanner does at depth costs
+ * some of that budget, so each of the following has its own bound. "Depth" is
+ * the number of containers open at that point (an object counts while its
+ * pairs hook runs). All numbers were measured on the oracle interpreter with
+ * `json.loads` called from a script's top level:
+ *
+ *   9997  a container may be opened (`[`, `{`)
+ *   9996  a C-level failure that needs no Python frame still gets its own
+ *         class: "Expecting value", the integer digit limit; and the default
+ *         handling of `NaN`/`Infinity` (a builtin call) still succeeds
+ *   9995  a Python-level hook can be called and can return
+ *   9994  a Python-level hook can raise a new exception instance, as both
+ *         engine hooks do (`raise LockError(...)`, `need(...)`)
+ *   9993  the scanner can raise `JSONDecodeError` (a Python class with its own
+ *         `__init__`) for a malformed string, delimiter or key
+ *
+ * Beyond its bound each of them is `RecursionError` instead. The counter is
+ * per C call chain, so a caller that itself sits inside C frames (for example
+ * under `exec`) lowers all five numbers by the same few levels; that band is
+ * oracle-dependent and is reported, not papered over. Only the hook bounds are
+ * visible through the engine: `read_lock` keeps a hook's own message but turns
+ * `RecursionError` into its generic refusal. Every consumer treats
+ * `JSONDecodeError` and `RecursionError` alike.
  */
 export const MAX_DEPTH = 9997;
+export const MAX_C_ERROR_DEPTH = 9996;
 export const MAX_HOOK_DEPTH = 9995;
+export const MAX_HOOK_RAISE_DEPTH = 9994;
+export const MAX_DECODE_ERROR_DEPTH = 9993;
 /** `sys.int_info.default_max_str_digits`. */
 export const MAX_INT_DIGITS = 4300;
 
@@ -51,14 +71,20 @@ type Frame = { array: PyValue[] } | { pairs: Pair[]; key: string };
 export function loads(input: string | Uint8Array, options: LoadOptions = {}): PyValue {
   let source: string;
   if (typeof input === 'string') {
-    if (input.startsWith('﻿')) throw new JSONDecodeError('Unexpected UTF-8 BOM (decode using utf-8-sig)');
+    if (input.startsWith('\ufeff')) throw new JSONDecodeError('Unexpected UTF-8 BOM (decode using utf-8-sig)');
     source = input;
   } else source = decodeJsonBytes(input);
   const { object_pairs_hook: pairsHook, parse_constant: constantHook } = options;
   let at = 0;
-  const bad = (message: string): never => { throw new JSONDecodeError(message); };
+  const stack: Frame[] = [];
+  const deep = (): never => { throw new PyRecursionError('maximum recursion depth exceeded'); };
+  const bad = (message: string, limit = MAX_DECODE_ERROR_DEPTH): never => { if (stack.length > limit) deep(); throw new JSONDecodeError(message); };
   const space = (): void => { for (;;) { const c = source.charCodeAt(at); if (c === 0x20 || c === 0x09 || c === 0x0a || c === 0x0d) at++; else return; } };
-  const hook = (depth: number): void => { if (depth > MAX_HOOK_DEPTH) throw new PyRecursionError('maximum recursion depth exceeded'); };
+  /** Calls a hook at `depth`; a Python exception it raises needs one more level than the call itself. */
+  function hooked<Result>(depth: number, call: () => Result): Result {
+    if (depth > MAX_HOOK_DEPTH) deep();
+    try { return call(); } catch (error) { if (depth > MAX_HOOK_RAISE_DEPTH && error instanceof PyError) deep(); throw error; }
+  }
 
   function string(): string {
     const start = at++;
@@ -78,34 +104,38 @@ export function loads(input: string | Uint8Array, options: LoadOptions = {}): Py
     }
   }
   function close(pairs: Pair[], depth: number): PyValue {
-    if (pairsHook) { hook(depth); return pairsHook(pairs); }
+    if (pairsHook) return hooked(depth, () => pairsHook(pairs));
     const result: PyDict = new Map();
     for (const [key, value] of pairs) result.set(key, value);
     return result;
   }
-  function constant(name: string, value: number, depth: number): PyValue {
+  function constant(name: string, value: number): PyValue {
     at += name.length;
-    if (constantHook) { hook(depth); return constantHook(name); }
+    if (constantHook) return hooked(stack.length, () => constantHook(name));
+    if (stack.length > MAX_C_ERROR_DEPTH) deep();
     return new NonFinite(value);
   }
-  function scalar(depth: number): PyValue {
+  function scalar(): PyValue {
     const head = source[at];
     if (head === '"') return string();
     if (head === 'n' && source.startsWith('null', at)) { at += 4; return null; }
     if (head === 't' && source.startsWith('true', at)) { at += 4; return true; }
     if (head === 'f' && source.startsWith('false', at)) { at += 5; return false; }
-    if (head === 'N' && source.startsWith('NaN', at)) return constant('NaN', NaN, depth);
-    if (head === 'I' && source.startsWith('Infinity', at)) return constant('Infinity', Infinity, depth);
-    if (head === '-' && source.startsWith('-Infinity', at)) return constant('-Infinity', -Infinity, depth);
+    if (head === 'N' && source.startsWith('NaN', at)) return constant('NaN', NaN);
+    if (head === 'I' && source.startsWith('Infinity', at)) return constant('Infinity', Infinity);
+    if (head === '-' && source.startsWith('-Infinity', at)) return constant('-Infinity', -Infinity);
     NUMBER.lastIndex = at;
     const match = NUMBER.exec(source);
-    if (!match) return bad('Expecting value');
+    if (!match) return bad('Expecting value', MAX_C_ERROR_DEPTH);
     at += match[0].length;
     if (match[1] !== undefined || match[2] !== undefined) {
       const value = Number(match[0]);
       return Number.isFinite(value) ? new Float(value) : new NonFinite(value);
     }
-    if (match[0].length - (match[0].startsWith('-') ? 1 : 0) > MAX_INT_DIGITS) throw new PyValueError('Exceeds the limit (4300 digits) for integer string conversion');
+    if (match[0].length - (match[0].startsWith('-') ? 1 : 0) > MAX_INT_DIGITS) {
+      if (stack.length > MAX_C_ERROR_DEPTH) deep();
+      throw new PyValueError('Exceeds the limit (4300 digits) for integer string conversion');
+    }
     return new Int(match[0]);
   }
   /** Reads `"key" :` and leaves `at` on the value. */
@@ -116,7 +146,6 @@ export function loads(input: string | Uint8Array, options: LoadOptions = {}): Py
     at++; space(); return name;
   }
 
-  const stack: Frame[] = [];
   let value: PyValue;
   space();
   for (;;) {
@@ -128,10 +157,11 @@ export function loads(input: string | Uint8Array, options: LoadOptions = {}): Py
         if (source[at] !== ']') { stack.push({ array: [] }); continue; }
         at++; value = [];
       } else {
-        if (source[at] !== '}') { stack.push({ pairs: [], key: key() }); continue; }
+        // The frame goes on the stack before its first key is read: a bad key is an error inside the object.
+        if (source[at] !== '}') { const frame: Frame = { pairs: [], key: '' }; stack.push(frame); frame.key = key(); continue; }
         at++; value = close([], stack.length + 1);
       }
-    } else value = scalar(stack.length);
+    } else value = scalar();
     // A value is complete: hand it to the enclosing container, closing as many as end here.
     for (;;) {
       const top = stack.at(-1);

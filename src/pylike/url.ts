@@ -54,12 +54,30 @@ function ipv6(text: string): boolean {
   for (let index = parts.length - low; index < parts.length; index++) if (!hextet(parts[index]!)) return false;
   return true;
 }
-/** `urllib.parse._check_bracketed_host`. */
+/** `urllib.parse._check_bracketed_host`. An IPv4 address is refused as well, so only IPv6 and IPvFuture pass. */
 function checkBracketedHost(host: string): void {
   if (host.startsWith('v')) {
     if (!/^v[a-fA-F0-9]+\.[^\n]+$/u.test(host)) throw new PyValueError('IPvFuture address is invalid');
   } else if (ipv4(host)) throw new PyValueError('An IPv4 address cannot be in brackets');
   else if (!ipv6(host)) throw new PyValueError(host + ' does not appear to be an IPv4 or IPv6 address');
+}
+/**
+ * `urllib.parse._check_bracketed_netloc`, called when the netloc holds both a
+ * `[` and a `]`. The oracle interpreter (3.12.3 as the distribution ships it)
+ * mirrors `_hostinfo` here: nothing may stand before the bracket or between
+ * the bracket and the port, and when the brackets are all in the userinfo the
+ * plain host is checked as if it had been bracketed. Upstream 3.12.3 only
+ * looked at the text between the first `[` and the first `]`.
+ */
+function checkBracketedNetloc(netloc: string): void {
+  const info = netloc.slice(netloc.lastIndexOf('@') + 1);
+  const open = info.indexOf('[');
+  if (open < 0) { const colon = info.indexOf(':'); checkBracketedHost(colon < 0 ? info : info.slice(0, colon)); return; }
+  if (open > 0) throw new PyValueError('Invalid IPv6 URL');
+  const bracketed = info.slice(1), shut = bracketed.indexOf(']');
+  const tail = shut < 0 ? '' : bracketed.slice(shut + 1);
+  if (tail && !tail.startsWith(':')) throw new PyValueError('Invalid IPv6 URL');
+  checkBracketedHost(shut < 0 ? bracketed : bracketed.slice(0, shut));
 }
 
 /** `urllib.parse.urlsplit(value)` without the lazy properties. `ValueError` exactly where CPython raises it. */
@@ -74,11 +92,7 @@ export function split(value: string): SplitParts {
     netloc = url.slice(2, cut); url = url.slice(cut);
     const open = netloc.includes('['), shut = netloc.includes(']');
     if (open !== shut) throw new PyValueError('Invalid IPv6 URL');
-    if (open) {
-      // The text between the first `[` and the first `]` after it, wherever they stand.
-      const after = netloc.slice(netloc.indexOf('[') + 1), stop = after.indexOf(']');
-      checkBracketedHost(stop < 0 ? after : after.slice(0, stop));
-    }
+    if (open) checkBracketedNetloc(netloc);
   }
   const hash = url.indexOf('#');
   if (hash >= 0) { fragment = url.slice(hash + 1); url = url.slice(0, hash); }

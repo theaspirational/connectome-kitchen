@@ -1,0 +1,3350 @@
+{
+ "mutants": 191,
+ "counts": {
+  "compiler": 2,
+  "killed": 187,
+  "survived": 2
+ },
+ "unit_suite_disagrees": [],
+ "results": [
+  {
+   "id": "inputs.L58.8",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 41,
+   "declared": 40,
+   "seam": 1,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.30a22bc2b01ab5d4",
+    "inputs.data-args.empty-mapping",
+    "inputs.data-args.empty-string"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L63.4",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 9,
+   "declared": 8,
+   "seam": 1,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.activation.other",
+    "inputs.validate.activation.number",
+    "inputs.validate.activation.null"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L67.4",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 2,
+   "seam": 0,
+   "crash": 1,
+   "witnesses": [
+    "inputs.validate.exclusive.not-list",
+    "inputs.validate.exclusive.string"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L103.4",
+   "rows": [
+    7,
+    23
+   ],
+   "status": "killed",
+   "differing_vectors": 14,
+   "declared": 13,
+   "seam": 1,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.7238cd708abe84c0",
+    "lock.map.operator.installed-differs.then-timestamp",
+    "inputs.verify.digest-differs"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L111.8",
+   "rows": [
+    7,
+    23
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.verify.nan",
+    "inputs.verify.infinity",
+    "inputs.verify.negative-infinity"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L144.4",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 8,
+   "declared": 4,
+   "seam": 0,
+   "crash": 4,
+   "witnesses": [
+    "inputs.payloads.unexpected",
+    "inputs.payloads.missing",
+    "inputs.payloads.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L70.8",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 1,
+   "seam": 0,
+   "crash": 2,
+   "witnesses": [
+    "inputs.validate.exclusive.item.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L72.8",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 10,
+   "declared": 10,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.exclusive.scope.other",
+    "inputs.validate.exclusive.scope.number",
+    "inputs.validate.exclusive.unit.number"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L77.8",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.exclusive.duplicate"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L81.8",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 1,
+   "seam": 0,
+   "crash": 3,
+   "witnesses": [
+    "inputs.validate.recipe-file.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L83.8",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 9,
+   "declared": 8,
+   "seam": 0,
+   "crash": 1,
+   "witnesses": [
+    "inputs.validate.recipe-file.path.relative",
+    "inputs.validate.recipe-file.path.brace-open",
+    "inputs.validate.recipe-file.path.brace-close"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L86.8",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.recipe-file.path.double-slash",
+    "inputs.validate.recipe-file.path.dot",
+    "inputs.validate.recipe-file.path.dotdot"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L87.8",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.recipe-file.sha.short",
+    "inputs.validate.recipe-file.sha.upper",
+    "inputs.validate.recipe-file.sha.number"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L91.8",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 1,
+   "seam": 0,
+   "crash": 1,
+   "witnesses": [
+    "inputs.validate.secret-files.not-list"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L114.8",
+   "rows": [
+    7,
+    23
+   ],
+   "status": "killed",
+   "differing_vectors": 7,
+   "declared": 7,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.verify.array",
+    "inputs.verify.string",
+    "inputs.verify.number"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L116.8",
+   "rows": [
+    7,
+    23
+   ],
+   "status": "killed",
+   "differing_vectors": 36,
+   "declared": 36,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.verify.array",
+    "inputs.verify.string",
+    "inputs.verify.number"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L123.8",
+   "rows": [
+    23
+   ],
+   "status": "killed",
+   "differing_vectors": 13,
+   "declared": 12,
+   "seam": 1,
+   "crash": 0,
+   "witnesses": [
+    "inputs.read.dotdot",
+    "inputs.read.link",
+    "inputs.read.via-dir-link"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L127.8",
+   "rows": [
+    23
+   ],
+   "status": "killed",
+   "differing_vectors": 8,
+   "declared": 7,
+   "seam": 0,
+   "crash": 1,
+   "witnesses": [
+    "inputs.read.missing",
+    "inputs.read.missing-parent",
+    "inputs.read.through-file"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L150.8",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 15,
+   "declared": 15,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "crash-only.inputs.L150.8",
+    "inputs.payloads.base64.space",
+    "inputs.payloads.base64.newline"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L161.8",
+   "rows": [
+    23
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.installed.mode.0644",
+    "inputs.installed.mode.0400",
+    "inputs.installed.mode.setuid"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L94.12",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 1,
+   "seam": 0,
+   "crash": 2,
+   "witnesses": [
+    "inputs.validate.secret-files.item.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L95.12",
+   "rows": [
+    49,
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 6,
+   "declared": 6,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.secret-files.secret.lower",
+    "inputs.validate.secret-files.secret.number",
+    "inputs.validate.secret-files.env.lower"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L97.12",
+   "rows": [
+    49,
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 8,
+   "declared": 8,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.secret-files.duplicate-env",
+    "inputs.validate.secret-files.reserved.DATA_DIR",
+    "inputs.validate.secret-files.reserved.WORKSPACE_DIR"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.L107.12",
+   "rows": [
+    7,
+    23
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.verify.duplicate",
+    "inputs.verify.duplicate.nested",
+    "inputs.verify.same-key-escaped"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L108.4",
+   "rows": [
+    10
+   ],
+   "status": "killed",
+   "differing_vectors": 10,
+   "declared": 3,
+   "seam": 0,
+   "crash": 7,
+   "witnesses": [
+    "guard-negative.20518c15902a80cb",
+    "lock.map.launch.script.empty",
+    "lock.contained.12ae32cb"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L110.4",
+   "rows": [
+    10
+   ],
+   "status": "killed",
+   "differing_vectors": 10,
+   "declared": 10,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.6f5025431b0c8bbc",
+    "lock.map.launch.script.1d84ce88",
+    "lock.map.launch.script.ca0a181d"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L111.4",
+   "rows": [
+    10
+   ],
+   "status": "killed",
+   "differing_vectors": 19,
+   "declared": 17,
+   "seam": 0,
+   "crash": 2,
+   "witnesses": [
+    "guard-negative.d7bf5b7bc2d70a93",
+    "lock.map.identity.dir.missing",
+    "lock.map.identity.dir.closed"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L122.4",
+   "rows": [
+    4
+   ],
+   "status": "killed",
+   "differing_vectors": 12,
+   "declared": 7,
+   "seam": 0,
+   "crash": 5,
+   "witnesses": [
+    "guard-negative.f05be763086c3a7f",
+    "lock.map.top.version.3",
+    "lock.map.top.version.float"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L124.4",
+   "rows": [
+    4
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.dbbcb2062659efd4",
+    "lock.map.top.backend.other",
+    "lock.map.top.backend.missing"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L129.4",
+   "rows": [
+    4
+   ],
+   "status": "killed",
+   "differing_vectors": 13,
+   "declared": 1,
+   "seam": 0,
+   "crash": 12,
+   "witnesses": [
+    "lock.map.top.missing-and-incomplete"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L130.4",
+   "rows": [
+    4
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.802a3a81413feac9",
+    "lock.map.top.unsupported",
+    "lock.map.top.unsupported-and-incomplete"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L132.4",
+   "rows": [
+    5
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.incomplete.true",
+    "lock.map.incomplete.null"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L134.4",
+   "rows": [
+    6
+   ],
+   "status": "killed",
+   "differing_vectors": 10,
+   "declared": 10,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.5ca67d9c7e17c54c",
+    "lock.map.identity.not-mapping",
+    "lock.map.identity.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L137.4",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 9,
+   "declared": 7,
+   "seam": 0,
+   "crash": 2,
+   "witnesses": [
+    "lock.map.cook.extra",
+    "lock.map.cook.version.missing",
+    "lock.map.cook.version.bad.d0ff5974"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L142.4",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 10,
+   "declared": 10,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.11be0c117046ba98",
+    "lock.map.recipe.not-mapping",
+    "lock.map.recipe.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L165.4",
+   "rows": [
+    8
+   ],
+   "status": "killed",
+   "differing_vectors": 11,
+   "declared": 11,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.18853c801b26d0c7",
+    "lock.map.host.not-mapping",
+    "lock.map.host.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L170.4",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 9,
+   "declared": 6,
+   "seam": 0,
+   "crash": 3,
+   "witnesses": [
+    "lock.map.requirements.item.extra",
+    "lock.map.requirements.name.empty",
+    "lock.map.requirements.env.lower"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L177.4",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.7eac9255c340e6a6",
+    "lock.map.credentials.not-list",
+    "lock.map.credentials.number"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L181.4",
+   "rows": [
+    8
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.names.required.missing",
+    "lock.map.names.required.number"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L182.4",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.ffd825d93f414e49",
+    "lock.map.inventory.components",
+    "lock.map.inventory.localExtensions"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L294.4",
+   "rows": [
+    10,
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 4,
+   "seam": 0,
+   "crash": 1,
+   "witnesses": [
+    "guard-negative.32fb2763e0fed809",
+    "lock.map.launch.extra",
+    "lock.map.launch.kind.other"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L324.8",
+   "rows": [
+    7
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.read.nonfinite.nan",
+    "lock.read.nonfinite.infinity",
+    "lock.read.nonfinite.negative"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L140.8",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.68dc9e50cefe1ab3",
+    "lock.map.cook.commit.short",
+    "lock.map.cook.commit.sha256"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L160.8",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 19,
+   "declared": 18,
+   "seam": 1,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.c3c8a966010cd049",
+    "lock.map.timestamp.670a0397",
+    "lock.map.timestamp.65df41e2"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L163.8",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 19,
+   "declared": 18,
+   "seam": 1,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.c3c8a966010cd049",
+    "lock.map.timestamp.670a0397",
+    "lock.map.timestamp.65df41e2"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L185.8",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 11,
+   "declared": 4,
+   "seam": 0,
+   "crash": 7,
+   "witnesses": [
+    "guard-negative.a9073d74c777b745",
+    "lock.map.component.kind.other",
+    "lock.map.component.kind.unhashable"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L199.8",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.0f0319197a0a788d",
+    "lock.map.component.role.other",
+    "lock.map.component.role.missing"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L201.8",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 14,
+   "declared": 12,
+   "seam": 0,
+   "crash": 2,
+   "witnesses": [
+    "lock.map.output.extra",
+    "lock.map.output.path.missing",
+    "lock.map.output.mode.-1"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L204.8",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.a7900d5aabb62635",
+    "lock.map.output.sha.bad"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L205.8",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.output.omitted.other",
+    "lock.map.output.omitted.true"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L208.8",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 6,
+   "declared": 6,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.3a5156ba5d07e464",
+    "lock.map.extension.not-mapping",
+    "lock.map.extension.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L211.8",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 6,
+   "declared": 6,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.2bac9237c789d417",
+    "lock.map.state.not-mapping",
+    "lock.map.state.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L214.8",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.a4d86209901d309c",
+    "lock.map.engines.not-mapping",
+    "lock.map.engines.missing"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L221.8",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 12,
+   "declared": 10,
+   "seam": 0,
+   "crash": 2,
+   "witnesses": [
+    "guard-negative.16112729e7113af2",
+    "lock.map.layout.extra",
+    "lock.map.layout.missing"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L233.8",
+   "rows": [
+    8
+   ],
+   "status": "killed",
+   "differing_vectors": 11,
+   "declared": 10,
+   "seam": 0,
+   "crash": 1,
+   "witnesses": [
+    "lock.map.external.empty",
+    "lock.map.external.extra",
+    "lock.map.external.name.bad"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L238.8",
+   "rows": [
+    8
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.external.duplicate"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L240.8",
+   "rows": [
+    8
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.external.unsorted"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L246.8",
+   "rows": [
+    9
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.deps.not-list"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L290.8",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 7,
+   "declared": 7,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.6a51affed139ee62",
+    "lock.map.health.not-mapping",
+    "lock.map.health.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L299.8",
+   "rows": [
+    10,
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.units.ambiguous"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L301.8",
+   "rows": [
+    10
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.user-unit.a8404455",
+    "lock.map.user-unit.a434241b",
+    "lock.map.user-unit.bad-name"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L305.8",
+   "rows": [
+    10
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.e6fda6a8c1a5aef3",
+    "lock.map.units.not-list",
+    "lock.map.units.empty"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L331.8",
+   "rows": [
+    7
+   ],
+   "status": "killed",
+   "differing_vectors": 26,
+   "declared": 26,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.read.host-pin-differs",
+    "lock.read.duplicate.top",
+    "lock.read.duplicate.nested"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L333.8",
+   "rows": [
+    7
+   ],
+   "status": "killed",
+   "differing_vectors": 37,
+   "declared": 37,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.read.syntax.before-duplicate",
+    "lock.read.integer.4301",
+    "lock.read.integer.negative-4301"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L85.12",
+   "rows": [
+    2
+   ],
+   "status": "killed",
+   "differing_vectors": 24,
+   "declared": 24,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.names.field.value",
+    "lock.map.names.field.Values",
+    "lock.map.names.field.SECRET"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L155.12",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 2,
+   "seam": 2,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.operator.digest-differs.then-timestamp",
+    "lock.map.operator.path-differs.then-timestamp"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L158.12",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 13,
+   "declared": 5,
+   "seam": 8,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.operator.digest-differs.then-timestamp",
+    "lock.map.operator.path-differs.then-timestamp",
+    "lock.map.operator.installed-missing.then-timestamp"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L188.12",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 12,
+   "declared": 12,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.5fa3bd226d6d4b10",
+    "lock.map.component.git.extra",
+    "lock.map.component.git.key.missing"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L193.12",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 9,
+   "declared": 9,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.dfa46beb85c98d34",
+    "lock.map.component.npm.extra",
+    "lock.map.component.npm.key.missing"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L216.12",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 6,
+   "declared": 6,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.55580c6b46b06307",
+    "lock.map.engine.not-mapping",
+    "lock.map.engine.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L226.12",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.667f8cfa2962475c",
+    "lock.map.layout.bindings.list",
+    "lock.map.layout.bindings.name"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L243.12",
+   "rows": [
+    8
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.external.connector-state"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L249.12",
+   "rows": [
+    9
+   ],
+   "status": "killed",
+   "differing_vectors": 19,
+   "declared": 0,
+   "seam": 17,
+   "crash": 2,
+   "witnesses": [
+    "lock.map.deps.item.extra",
+    "lock.map.deps.item.missing.originalRange",
+    "lock.map.deps.item.missing.version"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "fails"
+  },
+  {
+   "id": "lock.L259.12",
+   "rows": [
+    9
+   ],
+   "status": "killed",
+   "differing_vectors": 35,
+   "declared": 1,
+   "seam": 34,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.deps.name.not-npm"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "fails"
+  },
+  {
+   "id": "lock.L271.12",
+   "rows": [
+    9
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 1,
+   "seam": 0,
+   "crash": 2,
+   "witnesses": [
+    "lock.map.deps.delta.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L287.12",
+   "rows": [
+    9
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.deps.absent.config-declares",
+    "lock.map.deps.config.differs",
+    "lock.map.deps.config.missing"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L307.12",
+   "rows": [
+    10
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 3,
+   "seam": 0,
+   "crash": 1,
+   "witnesses": [
+    "guard-negative.7e1cc2885a49e6bb",
+    "lock.map.units.item.extra",
+    "lock.map.units.item.sha.bad"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L310.12",
+   "rows": [
+    10
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.69c9ebf6293c4afc",
+    "lock.map.units.item.sha.differs",
+    "lock.map.units.item.suffix"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L319.12",
+   "rows": [
+    7
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.read.duplicate.top",
+    "lock.read.duplicate.nested",
+    "lock.read.duplicate.same-value"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L93.8",
+   "rows": [
+    2
+   ],
+   "status": "killed",
+   "differing_vectors": 16,
+   "declared": 16,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.f3db0b5941c50069",
+    "lock.map.names.control.value",
+    "lock.map.names.control.key"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L94.8",
+   "rows": [
+    2
+   ],
+   "status": "killed",
+   "differing_vectors": 7,
+   "declared": 7,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.names.credential.value",
+    "lock.map.names.credential.key",
+    "lock.map.names.order.insertion-reverse"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L275.16",
+   "rows": [
+    9
+   ],
+   "status": "killed",
+   "differing_vectors": 16,
+   "declared": 16,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.deps.edit.direct.not-mapping",
+    "lock.map.deps.edit.direct.extra",
+    "lock.map.deps.edit.direct.section"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.L266.20",
+   "rows": [
+    9
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.deps.provenance.identity.name",
+    "lock.map.deps.provenance.identity.sha256",
+    "lock.map.deps.provenance.identity.version"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "fails"
+  },
+  {
+   "id": "lock.L269.20",
+   "rows": [
+    9
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.deps.provenance.invalid",
+    "lock.map.deps.provenance.not-mapping",
+    "lock.map.deps.provenance.identity.name"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "fails"
+  },
+  {
+   "id": "lock.schema.recipe",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 10,
+   "declared": 10,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.11be0c117046ba98",
+    "lock.map.recipe.not-mapping",
+    "lock.map.recipe.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.timestamp",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 19,
+   "declared": 18,
+   "seam": 1,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.c3c8a966010cd049",
+    "lock.map.timestamp.670a0397",
+    "lock.map.timestamp.65df41e2"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.requirements",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 9,
+   "declared": 6,
+   "seam": 0,
+   "crash": 3,
+   "witnesses": [
+    "lock.map.requirements.item.extra",
+    "lock.map.requirements.name.empty",
+    "lock.map.requirements.env.lower"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.credentials",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.7eac9255c340e6a6",
+    "lock.map.credentials.not-list",
+    "lock.map.credentials.number"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.extensions",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 6,
+   "declared": 6,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.3a5156ba5d07e464",
+    "lock.map.extension.not-mapping",
+    "lock.map.extension.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.state",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 6,
+   "declared": 6,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.2bac9237c789d417",
+    "lock.map.state.not-mapping",
+    "lock.map.state.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.health",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 7,
+   "declared": 7,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.6a51affed139ee62",
+    "lock.map.health.not-mapping",
+    "lock.map.health.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.launch",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 4,
+   "seam": 0,
+   "crash": 1,
+   "witnesses": [
+    "guard-negative.32fb2763e0fed809",
+    "lock.map.launch.extra",
+    "lock.map.launch.kind.other"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.units-ambiguous",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.units.ambiguous"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.activation",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 9,
+   "declared": 8,
+   "seam": 1,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.activation.other",
+    "inputs.validate.activation.number",
+    "inputs.validate.activation.null"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.cook#1",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 9,
+   "declared": 7,
+   "seam": 0,
+   "crash": 2,
+   "witnesses": [
+    "lock.map.cook.extra",
+    "lock.map.cook.version.missing",
+    "lock.map.cook.version.bad.d0ff5974"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.cook#2",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.68dc9e50cefe1ab3",
+    "lock.map.cook.commit.short",
+    "lock.map.cook.commit.sha256"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.components#1",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 11,
+   "declared": 4,
+   "seam": 0,
+   "crash": 7,
+   "witnesses": [
+    "guard-negative.a9073d74c777b745",
+    "lock.map.component.kind.other",
+    "lock.map.component.kind.unhashable"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.components#2",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 12,
+   "declared": 12,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.5fa3bd226d6d4b10",
+    "lock.map.component.git.extra",
+    "lock.map.component.git.key.missing"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.components#3",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 9,
+   "declared": 9,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.dfa46beb85c98d34",
+    "lock.map.component.npm.extra",
+    "lock.map.component.npm.key.missing"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.components#4",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.0f0319197a0a788d",
+    "lock.map.component.role.other",
+    "lock.map.component.role.missing"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.outputs#1",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 14,
+   "declared": 12,
+   "seam": 0,
+   "crash": 2,
+   "witnesses": [
+    "lock.map.output.extra",
+    "lock.map.output.path.missing",
+    "lock.map.output.mode.-1"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.outputs#2",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.a7900d5aabb62635",
+    "lock.map.output.sha.bad"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.outputs#3",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.output.omitted.other",
+    "lock.map.output.omitted.true"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.engines#1",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.a4d86209901d309c",
+    "lock.map.engines.not-mapping",
+    "lock.map.engines.missing"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.engines#2",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 6,
+   "declared": 6,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.55580c6b46b06307",
+    "lock.map.engine.not-mapping",
+    "lock.map.engine.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.layout#1",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 12,
+   "declared": 10,
+   "seam": 0,
+   "crash": 2,
+   "witnesses": [
+    "guard-negative.16112729e7113af2",
+    "lock.map.layout.extra",
+    "lock.map.layout.missing"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.layout#2",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.667f8cfa2962475c",
+    "lock.map.layout.bindings.list",
+    "lock.map.layout.bindings.name"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.units-ambiguous#1",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.units.ambiguous"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.activation#1",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 9,
+   "declared": 8,
+   "seam": 1,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.activation.other",
+    "inputs.validate.activation.number",
+    "inputs.validate.activation.null"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.exclusive#1",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 2,
+   "seam": 0,
+   "crash": 1,
+   "witnesses": [
+    "inputs.validate.exclusive.not-list",
+    "inputs.validate.exclusive.string"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.exclusive#2",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 1,
+   "seam": 0,
+   "crash": 2,
+   "witnesses": [
+    "inputs.validate.exclusive.item.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.exclusive#3",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 10,
+   "declared": 10,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.exclusive.scope.other",
+    "inputs.validate.exclusive.scope.number",
+    "inputs.validate.exclusive.unit.number"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.exclusive#4",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.exclusive.duplicate"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.recipe-file#1",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 1,
+   "seam": 0,
+   "crash": 3,
+   "witnesses": [
+    "inputs.validate.recipe-file.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.recipe-file#2",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.recipe-file.sha.short",
+    "inputs.validate.recipe-file.sha.upper",
+    "inputs.validate.recipe-file.sha.number"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.recipe-path#1",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 9,
+   "declared": 8,
+   "seam": 0,
+   "crash": 1,
+   "witnesses": [
+    "inputs.validate.recipe-file.path.relative",
+    "inputs.validate.recipe-file.path.brace-open",
+    "inputs.validate.recipe-file.path.brace-close"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.recipe-path#2",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.recipe-file.path.double-slash",
+    "inputs.validate.recipe-file.path.dot",
+    "inputs.validate.recipe-file.path.dotdot"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.secret-files#1",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 1,
+   "seam": 0,
+   "crash": 1,
+   "witnesses": [
+    "inputs.validate.secret-files.not-list"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.secret-files#2",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 1,
+   "seam": 0,
+   "crash": 2,
+   "witnesses": [
+    "inputs.validate.secret-files.item.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.transport#1",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 8,
+   "declared": 4,
+   "seam": 0,
+   "crash": 4,
+   "witnesses": [
+    "inputs.payloads.unexpected",
+    "inputs.payloads.missing",
+    "inputs.payloads.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "secrets.reserved.file-env#1",
+   "rows": [
+    49
+   ],
+   "status": "killed",
+   "differing_vectors": 7,
+   "declared": 7,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.secret-files.reserved.DATA_DIR",
+    "inputs.validate.secret-files.reserved.WORKSPACE_DIR",
+    "inputs.validate.secret-files.reserved.PATH"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.secret-files#3",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 6,
+   "declared": 6,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.secret-files.secret.lower",
+    "inputs.validate.secret-files.secret.number",
+    "inputs.validate.secret-files.env.lower"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.secret-files#4",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.validate.secret-files.duplicate-env"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.operator-recipe#1",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 2,
+   "seam": 3,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.operator.installed-missing.then-timestamp",
+    "lock.map.operator.installed-differs.then-timestamp"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.operator-recipe#2",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 1,
+   "seam": 1,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.operator.digest-differs.then-timestamp"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.schema.operator-recipe#3",
+   "rows": [
+    59
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 1,
+   "seam": 1,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.operator.path-differs.then-timestamp"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-args#1",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 2,
+   "seam": 0,
+   "crash": 3,
+   "witnesses": [
+    "inputs.data-args.empty-mapping",
+    "inputs.data-args.empty-string"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-args#2",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-args.item.extra"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-args#3",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-args.server.dash",
+    "inputs.data-args.server.newline",
+    "inputs.data-args.server.empty"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-args#4",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-args.args.string"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-args#5",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-args.args.number-item"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-args#6",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-args.kind.other",
+    "inputs.data-args.kind.number",
+    "inputs.data-args.kind.list"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-args#7",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-args.duplicate",
+    "inputs.data-args.duplicate.second-kind"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-path#1",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-path.08",
+    "inputs.data-args.command.relative",
+    "inputs.data-args.path.relative"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-path#2",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-path.02",
+    "inputs.data-args.path.double"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-path#3",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-path.01",
+    "inputs.data-args.command.root"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-path#4",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-path.04",
+    "inputs.data-path.05",
+    "inputs.data-path.07"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-path#5",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-path.06",
+    "inputs.data-path.16",
+    "inputs.data-args.command.dotdot"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-path#6",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-path.10",
+    "inputs.data-path.11",
+    "inputs.data-path.12"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-flag#1",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 12,
+   "declared": 12,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-flag.05",
+    "inputs.data-flag.06",
+    "inputs.data-flag.07"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-flag#2",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 8,
+   "declared": 8,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-flag.16",
+    "inputs.data-flag.17",
+    "inputs.data-flag.18"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.data-flag#3",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "inputs.data-flag.28",
+    "inputs.data-flag.29",
+    "inputs.data-flag.30"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "inputs.record.transport#2",
+   "rows": [
+    63
+   ],
+   "status": "killed",
+   "differing_vectors": 15,
+   "declared": 15,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "crash-only.inputs.L150.8",
+    "inputs.payloads.base64.space",
+    "inputs.payloads.base64.newline"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.names-only.call",
+   "rows": [
+    2
+   ],
+   "status": "killed",
+   "differing_vectors": 34,
+   "declared": 34,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "guard-negative.f3db0b5941c50069",
+    "lock.map.names.field.value",
+    "lock.map.names.field.Values"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.provider-token",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 21,
+   "declared": 21,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.names.credential.value",
+    "lock.map.names.credential.key",
+    "lock.map.names.order.insertion-reverse"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.vault-token",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.vt",
+    "lock.credential.vt.punct-before"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.bot-token",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.bot.8",
+    "lock.credential.bot.10"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.private-key",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.key",
+    "lock.credential.key.rsa",
+    "lock.credential.key.cr"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.jwt",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.jwt",
+    "lock.credential.jwt.unicode",
+    "lock.credential.jwt.dash"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.assignment",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 16,
+   "declared": 16,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.assign.token",
+    "lock.credential.assign.lower",
+    "lock.credential.assign.prefixed"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.url-userinfo",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.url.userinfo",
+    "lock.credential.url.empty-userinfo"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.query",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.query.token",
+    "lock.credential.query.secret",
+    "lock.credential.query.api-key"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.store-path",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 6,
+   "declared": 6,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.store.vault",
+    "lock.credential.store.secret",
+    "lock.credential.store.upper"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.word-boundary",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 8,
+   "declared": 8,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.vt.word-before",
+    "lock.credential.vt.unicode-before",
+    "lock.credential.vt.digit-before"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.unicode-boundary",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.vt.unicode-before",
+    "lock.credential.vt.digit-before",
+    "lock.credential.assign.other-letter"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.unicode-word",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.jwt.unicode"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.unicode-space",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.assign.fs",
+    "lock.credential.assign.bom",
+    "lock.credential.assign.value-nel"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.ignore-case",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 10,
+   "declared": 10,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.assign.lower",
+    "lock.credential.assign.password",
+    "lock.credential.assign.long-s"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.case-equivalents",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 6,
+   "declared": 6,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.assign.long-s",
+    "lock.credential.assign.kelvin",
+    "lock.credential.assign.dotted-i"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.class-equivalents",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.assign.class-kelvin",
+    "lock.credential.store.dotless-first"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.credential.dot",
+   "rows": [
+    1
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.credential.key.cr",
+    "lock.credential.key.ls"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.text",
+   "rows": [
+    3
+   ],
+   "status": "survived",
+   "differing_vectors": 0,
+   "declared": 0,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [],
+   "unit_suite": "passes",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.credential",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.path.credential-raw-only"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.decoded-text",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.path.encoded-control",
+    "lock.repository.path.encoded-nul"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.decoded-credential",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.path.encoded-credential"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.delimiters",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 8,
+   "declared": 8,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.path.query",
+    "lock.repository.path.fragment",
+    "lock.repository.path.backslash"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.whitespace",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 6,
+   "declared": 6,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.https.space",
+    "lock.repository.https.encoded-space",
+    "lock.repository.https.nbsp"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.scheme",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 10,
+   "declared": 10,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.map.host.url.http",
+    "lock.map.component.git.url.bad",
+    "lock.repository.scp.no-user"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.host",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.https.no-host",
+    "lock.repository.https.no-slashes",
+    "lock.repository.https.single-slash"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.path",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.https.no-path"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.password",
+   "rows": [
+    3
+   ],
+   "status": "survived",
+   "differing_vectors": 0,
+   "declared": 0,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [],
+   "unit_suite": "passes",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.ssh-option-host",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 2,
+   "declared": 2,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.ssh.host.dash",
+    "lock.repository.ssh.host.encoded-dash"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.port-range",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.https.port.zero"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.port-syntax",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 8,
+   "declared": 8,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.https.port.zero",
+    "lock.repository.https.port.over",
+    "lock.repository.https.port.text"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.user",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 7,
+   "declared": 7,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.https.user",
+    "lock.repository.https.empty-user",
+    "lock.repository.ssh.user.dash"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.user-grammar",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.ssh.user.dash",
+    "lock.repository.ssh.user.encoded-dash",
+    "lock.repository.ssh.user.empty"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.malformed-url",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 14,
+   "declared": 14,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.https.port.over",
+    "lock.repository.https.port.text",
+    "lock.repository.https.port.fullwidth"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.transport-prefix",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.prefix.ext-plain",
+    "lock.repository.prefix.upper",
+    "lock.repository.prefix.encoded"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.scp-shape",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 8,
+   "declared": 8,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.scp.user.dash",
+    "lock.repository.scp.host.dash",
+    "lock.repository.scp.host.underscore"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "lock.repository.scp-not-uri",
+   "rows": [
+    3
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "lock.repository.scp.uri-inside",
+    "lock.repository.scp.encoded-uri",
+    "lock.repository.prefix.other-uri"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "errors.closed.cook-table",
+   "rows": [
+    28
+   ],
+   "status": "killed",
+   "differing_vectors": 10,
+   "declared": 10,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "errors.cook-code.unknown",
+    "errors.cook-code.engine",
+    "errors.cook-code.first-known"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "errors.closed.left-boundary",
+   "rows": [
+    28
+   ],
+   "status": "killed",
+   "differing_vectors": 14,
+   "declared": 14,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "errors.cook-code.prefix-letter",
+    "errors.cook-code.prefix-digit",
+    "errors.cook-code.prefix-underscore"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "errors.closed.right-boundary",
+   "rows": [
+    28
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "errors.cook-code.suffix-letter",
+    "errors.cook-code.suffix-digit",
+    "errors.cook-code.suffix-lower"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "errors.closed.stream-window",
+   "rows": [
+    28
+   ],
+   "status": "killed",
+   "differing_vectors": 6,
+   "declared": 6,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "errors.stream.glued.000",
+    "errors.stream.boundary.001",
+    "errors.stream.second.001"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "errors.closed.stream-rewind",
+   "rows": [
+    28
+   ],
+   "status": "killed",
+   "differing_vectors": 1,
+   "declared": 1,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "errors.stream.position"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "errors.closed.unknown-code",
+   "rows": [
+    28
+   ],
+   "status": "killed",
+   "differing_vectors": 5,
+   "declared": 5,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "errors.diagnostic.unknown",
+    "errors.diagnostic.proto",
+    "errors.diagnostic.constructor"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "errors.closed.upstream-only-cook",
+   "rows": [
+    28
+   ],
+   "status": "killed",
+   "differing_vectors": 3,
+   "declared": 3,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "errors.diagnostic.upstream.other-code",
+    "errors.diagnostic.upstream.deploy",
+    "errors.safe-error.upstream-ignored"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "errors.closed.upstream-table",
+   "rows": [
+    28
+   ],
+   "status": "killed",
+   "differing_vectors": 4,
+   "declared": 4,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "errors.diagnostic.upstream.unknown",
+    "errors.diagnostic.upstream.engine-code",
+    "errors.diagnostic.upstream.newline"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "errors.closed.envelope-exact",
+   "rows": [
+    28
+   ],
+   "status": "killed",
+   "differing_vectors": 11,
+   "declared": 11,
+   "seam": 0,
+   "crash": 0,
+   "witnesses": [
+    "errors.adapter.extra-key",
+    "errors.adapter.wrong-msg",
+    "errors.adapter.missing-msg"
+   ],
+   "unit_suite": "fails",
+   "named_fake_test": "passes"
+  },
+  {
+   "id": "errors.closed.envelope-mapping",
+   "rows": [
+    28
+   ],
+   "status": "compiler",
+   "compiler": [
+    "TS2345: Argument of type 'PyValue' is not assignable to parameter of type 'PyDict'.",
+    "  Type 'null' is not assignable to type 'Map<string, PyValue>'."
+   ]
+  },
+  {
+   "id": "errors.closed.envelope-type",
+   "rows": [
+    28
+   ],
+   "status": "compiler",
+   "compiler": [
+    "TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike>'."
+   ]
+  }
+ ]
+}

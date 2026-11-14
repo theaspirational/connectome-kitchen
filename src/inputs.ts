@@ -70,7 +70,7 @@ export function validate_external_data_args(records: PyValue): void {
       && SERVER.test(item(record, 'server') as string)
       && external_data_path(item(record, 'command'))
       && isList(item(record, 'args'))
-      && (item(record, 'args') as PyValue[]).every(arg => isStr(arg))
+      && Array.from(item(record, 'args') as Iterable<PyValue>).every(arg => isStr(arg))
       && external_data_path(item(record, 'path'))
       && isStr(item(record, 'kind')) && (item(record, 'kind') === 'file' || item(record, 'kind') === 'dir')
       && (!record.has('flag') || external_data_flag(item(record, 'flag')) === true))) {
@@ -187,7 +187,7 @@ export function verify_bytes<Bytes extends Uint8Array>(content: Bytes, record: P
     }
     return result;
   };
-  const invalid = (): never => {
+  const invalid = (_name: string): PyValue => {
     // row 7 json.strict: NaN and the infinities are refused. inputs.py:111
     throw new PyValueError('nonfinite recipe JSON number');
   };
@@ -196,9 +196,9 @@ export function verify_bytes<Bytes extends Uint8Array>(content: Bytes, record: P
     // row 23 inputs.recipe: the recipe is a JSON object. inputs.py:114
     need(isDict(recipe), 'recipe must be a JSON object');
   } catch (error) {
+    if (!(error instanceof PyValueError || error instanceof PyRecursionError)) throw error;
     // row 23 inputs.recipe: every decoding failure is one refusal. inputs.py:115-116
-    if (error instanceof PyValueError || error instanceof PyRecursionError) throw new PyValueError('invalid recipe JSON');
-    throw error;
+    throw new PyValueError('invalid recipe JSON');
   }
   return content;
 }
@@ -212,9 +212,9 @@ export function read_file(path: string, record: PyValue): Buffer {
       'recipe must be a regular file without symlink aliases');
     return verify_bytes(pathlib.readBytes(file), record);
   } catch (error) {
+    if (!(error instanceof PyOSError)) throw error;
     // row 23 inputs.recipe: an unreadable input is one refusal. inputs.py:126-127
-    if (error instanceof PyOSError) throw new PyValueError('recipe input unavailable');
-    throw error;
+    throw new PyValueError('recipe input unavailable');
   }
 }
 
@@ -242,9 +242,9 @@ export function payloads(config: PyValue, supplied: PyValue | ReadonlyMap<string
     // row 63 inputs.record.transport: strict base64. inputs.py:148
     content = b64decodeStrict((transport as ReadonlyMap<string, unknown>).get('cook-recipe.json'));
   } catch (error) {
+    if (!(error instanceof PyValueError || error instanceof PyTypeError)) throw error;
     // row 63 inputs.record.transport: a bad transport is one refusal. inputs.py:149-150
-    if (error instanceof PyValueError || error instanceof PyTypeError) throw new PyValueError('invalid recipe transport');
-    throw error;
+    throw new PyValueError('invalid recipe transport');
   }
   return new Map([['cook-recipe.json', verify_bytes(content, item(settings, 'recipe_file'))]]);
 }
