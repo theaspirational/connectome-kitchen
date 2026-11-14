@@ -72,10 +72,19 @@ function streamBytes(job) {
 
 const TAR_READ_LIMIT = 16n * 1024n * 1024n;
 const SUPPORTED_TYPES = new Set([0x30, 0x00, 0x31, 0x32, 0x35, 0x36, 0x37, 0x33, 0x34, 0x4c, 0x4b, 0x53]);
+/**
+ * No answer may depend on how many compressed bytes the reader hands to zlib at once: every container is read at the
+ * engine's step and at two others, one of them a single byte for a small container, and the answers must be the same text.
+ */
+function stepwise(data, run) {
+  const sizes = data.length <= 1024 ? [undefined, 1, 61] : [undefined, 61, 1021];
+  const answers = sizes.map(inputStep => JSON.stringify(run(inputStep === undefined ? {} : { inputStep })));
+  return answers.every(answer => answer === answers[0]) ? JSON.parse(answers[0]) : { 'STEP-DEPENDENT': answers };
+}
 /** As `tar_listing` in port_primitives.py. */
-function tarListing(data) {
+function tarListing(data, options) {
   let members;
-  try { members = tarfile.gzipMembers(data); } catch (error) { return failure(error); }
+  try { members = tarfile.gzipMembers(data, options); } catch (error) { return failure(error); }
   return { members: members.map(member => {
     const entry = [member.name, member.isfile, member.size.toString(), member.type];
     if ((member.isfile || !SUPPORTED_TYPES.has(member.type)) && member.size <= TAR_READ_LIMIT) {
@@ -86,9 +95,9 @@ function tarListing(data) {
 }
 const MANIFEST_NAME = /^[^/]+\/package[^\n]json$/u;
 /** As `manifest_flow` in port_primitives.py: archive.py:131-139. */
-function manifestFlow(data) {
+function manifestFlow(data, options) {
   try {
-    const manifests = tarfile.gzipMembers(data).filter(member => MANIFEST_NAME.test(member.name) && member.isfile);
+    const manifests = tarfile.gzipMembers(data, options).filter(member => MANIFEST_NAME.test(member.name) && member.isfile);
     if (!(manifests.length === 1 && manifests[0].size <= 1024n * 1024n)) return ['refused', 'archive manifest required'];
     const manifest = pyjson.loads(manifests[0].read());
     return ['accepted', createHash('sha256').update(sortedJson(manifest)).digest('hex')];
@@ -107,13 +116,15 @@ function sortedJson(value) {
 }
 
 const KINDS = {
-  tar: job => tarListing(bytes(job)),
-  tardepth: job => { try { return 'members:' + tarfile.gzipMembers(bytes(job)).length; } catch (error) { return failure(error).error; } },
+  tar: job => { const data = bytes(job); return stepwise(data, options => tarListing(data, options)); },
+  tardepth: job => { const data = bytes(job); return stepwise(data, options => { try { return 'members:' + tarfile.gzipMembers(data, options).length; } catch (error) { return failure(error).error; } }); },
   targz: job => {
     const data = bytes(job);
-    let container = 'valid';
-    try { tarfile.gunzip(data); } catch (error) { container = failure(error).error; }
-    return { container, flow: manifestFlow(data) };
+    return stepwise(data, options => {
+      let container = 'valid';
+      try { tarfile.gunzip(data, options.inputStep); } catch (error) { container = failure(error).error; }
+      return { container, flow: manifestFlow(data, options) };
+    });
   },
   pyint: job => { const value = 's' in job ? tarfile.pyIntStr(job.s) : tarfile.pyIntBytes(bytes(job)); return value === null ? 'ValueError' : value.toString(); },
   unquote: job => url.unquote(job.s),

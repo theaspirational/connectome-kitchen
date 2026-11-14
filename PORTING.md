@@ -77,7 +77,7 @@ oracle-only.
 | oracle-only | `connectome_catalog.isolated_unit` | `oracle/module_utils/connectome_catalog.py:814` | | |
 | ported | `connectome_config.merge_layers` | `oracle/module_utils/connectome_config.py:31` | `src/config.ts:51` | 69 |
 | ported | `connectome_config.public_catalog` | `oracle/module_utils/connectome_config.py:57` | `src/config.ts:85` | 69 |
-| ported | `connectome_config.required_names` | `oracle/module_utils/connectome_config.py:68` | `src/config.ts:122` |  |
+| ported | `connectome_config.required_names` | `oracle/module_utils/connectome_config.py:68` | `src/config.ts:131` |  |
 | oracle-only | `connectome_cook.need` | `oracle/module_utils/connectome_cook.py:29` | | |
 | oracle-only | `connectome_cook.validate_arguments` | `oracle/module_utils/connectome_cook.py:34` | | |
 | oracle-only | `connectome_cook.command` | `oracle/module_utils/connectome_cook.py:42` | | |

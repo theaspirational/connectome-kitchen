@@ -1,42 +1,113 @@
 #!/usr/bin/env python3
 """Fail closed on what the TS port of the engine modules ported so far still owes.
 
-This reads committed evidence only; `ts_mutants.py run --check` and
-`ts_port.py run` reproduce it. A mutant that is not killed stays blocking until
-its id is in test/mutants/ts-reviewed.golden, which only a review may extend:
-the implementer's written analysis (ts-unkilled.golden) is not an acceptance.
+This reads committed evidence only; `ts_mutants.py run --check`, `ts_port.py
+run`, `port_divergences.py --check`, `port_large.py --check` and
+`r6_combine.py --check` reproduce it.
+
+Nothing here is accepted by the implementer. A mutant that is not killed, and
+an input on which the port deliberately differs from the oracle, block until a
+ruling names them, and rulings are recorded in test/port-rulings.golden as
+they were received. A ruled mutant is reported under its classification and is
+never counted as killed. The whole check stays red while the delta review of
+the last fix round is pending, whatever else is settled.
 """
 import json, subprocess, sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
-missing = []
+STATUS_OF = {'redundant survivor': 'survived', 'compiler': 'compiler', 'crash-only': 'crash-only'}
+missing, ruled = [], []
 try:
     results = json.loads((ROOT / 'test/mutants/ts-results.golden').read_text())['results']
-    unkilled = {entry['id'] for entry in json.loads((ROOT / 'test/mutants/ts-unkilled.golden').read_text())}
-    reviewed = set(json.loads((ROOT / 'test/mutants/ts-reviewed.golden').read_text()))
-    if not reviewed <= unkilled:
-        raise ValueError('reviewed id without an analysis')
+    unkilled = {entry['id']: entry for entry in json.loads((ROOT / 'test/mutants/ts-unkilled.golden').read_text())}
+    reviewed = {entry['id']: entry for entry in json.loads((ROOT / 'test/mutants/ts-reviewed.golden').read_text())}
+    record = json.loads((ROOT / 'test/port-rulings.golden').read_text())
+    rulings = {entry['id']: entry for entry in record['rulings']}
+    divergences = json.loads((ROOT / 'test/vectors/port-divergences.golden').read_text())
+    r6 = json.loads((ROOT / 'test/vectors/r6-combine.golden').read_text())
+    large = json.loads((ROOT / 'test/vectors/port-large.golden').read_text())
+    status = {result['id']: result['status'] for result in results}
+    for ident, entry in reviewed.items():
+        ruling = rulings[entry['ruling']]
+        # A ruled mutant is one the analysis lists, with the status its classification stands for, named by the ruling itself.
+        if ident not in unkilled or status[ident] != STATUS_OF[entry['classification']] or unkilled[ident]['classification'] != entry['classification']:
+            raise ValueError('ruled mutant without a matching analysis or result')
+        if ident not in ruling['classification'][entry['classification']]:
+            raise ValueError('mutant is not named by the ruling it cites')
+        if status[ident] == 'killed':
+            raise ValueError('a killed mutant needs no ruling')
     subprocess.run([sys.executable, str(ROOT / 'scripts/porting-map.py'), '--check'], check=True)
-except (ValueError, OSError, KeyError, subprocess.CalledProcessError) as error:
+except (ValueError, OSError, KeyError, TypeError, subprocess.CalledProcessError) as error:
     print('BLOCKED: invalid/stale port evidence (' + type(error).__name__ + ')')
     sys.exit(1)
+
+# Mutants: killed, ruled under a classification, or blocking.
 by_status = {}
 for result in results:
     by_status.setdefault(result['status'], []).append(result['id'])
-for status in sorted(by_status):
-    if status == 'killed':
+killed = len(by_status.get('killed', []))
+for name in sorted(by_status):
+    if name == 'killed':
         continue
-    open_ids = [ident for ident in by_status[status] if ident not in reviewed]
-    if status not in ('survived', 'compiler', 'crash-only'):
-        missing.append('TS mutants with status ' + status + ': ' + ', '.join(by_status[status]))
+    open_ids = [ident for ident in by_status[name] if ident not in reviewed]
+    if name not in ('survived', 'compiler', 'crash-only'):
+        missing.append('TS mutants with status ' + name + ': ' + ', '.join(by_status[name]))
     elif open_ids:
-        missing.append('TS mutants not killed and not reviewed (' + status + '): ' + ', '.join(open_ids) + ' (analysis: test/mutants/ts-unkilled.golden)')
-divergences = json.loads((ROOT / 'test/vectors/port-divergences.golden').read_text())
-open_divergences = [entry['id'] for entry in divergences if not entry.get('reviewed')]
+        missing.append('TS mutants not killed and not ruled (' + name + '): ' + ', '.join(open_ids) + ' (analysis: test/mutants/ts-unkilled.golden)')
+classes = {}
+for entry in reviewed.values():
+    classes[entry['classification']] = classes.get(entry['classification'], 0) + 1
+if reviewed:
+    ruled.append('%d TS mutants are not kills and are accepted as such by ruling %s: %s' % (
+        len(reviewed), ', '.join(sorted({entry['ruling'] for entry in reviewed.values()})),
+        ', '.join('%d %s' % (classes[name], name + ('s' if name == 'redundant survivor' and classes[name] != 1 else '')) for name in STATUS_OF if name in classes)))
+
+# Divergences: every entry belongs to a divergence a ruling accepted.
+open_divergences = [entry['id'] for entry in divergences if entry.get('ruling') not in rulings or rulings[entry['ruling']]['subject'] != 'divergence' or entry['ruling'] != entry.get('divergence')]
 if open_divergences:
-    missing.append('deliberate divergences from the oracle not reviewed: ' + ', '.join(open_divergences) + ' (test/vectors/port-divergences.golden)')
+    missing.append('deliberate divergences from the oracle without a ruling: ' + ', '.join(open_divergences) + ' (test/vectors/port-divergences.golden)')
+for name in sorted({entry['divergence'] for entry in divergences if entry['id'] not in open_divergences}):
+    ruled.append('divergence %s is accepted by ruling, %d named inputs' % (name, sum(entry['divergence'] == name for entry in divergences)))
+
+# D1 must not cover a container that is merely large.
+wanted = {'large.valid': ('valid', 'equal'), 'large.crc-trailer': ('BadGzipFile', 'D1')}
+seen = {case['id']: (case['full_gzip_read'], case['classification']) for case in large['cases']}
+if seen != wanted or not large['at_least_4_gib']:
+    missing.append('the 4 GiB archive vectors do not show a valid archive read as the oracle reads it (test/vectors/port-large.golden)')
+
+# R6: closed for merge_layers only; the helper's known mismatches are the recorded ones.
+helper = sorted(entry['id'] for entry in r6['known_mismatches_of_the_combine_helper'])
+elsewhere = [function for function, counts in r6['vectors'].items() if function != 'connectome_config.combine' and (counts.get('mismatch') or counts.get('crash-mismatch'))]
+fuzz = r6['merge_layers_fuzz']['outcomes']
+if 'R6' not in rulings:
+    missing.append('plan risk R6 has no ruling')
+elif elsewhere or fuzz.get('VALUE-DIFFERENCE') or fuzz.get('ACCEPT-REFUSE-DIFFERENCE'):
+    missing.append('merge_layers differs from Ansible\'s combine (test/vectors/r6-combine.golden)')
+elif helper != sorted(rulings['R6']['known_mismatches_of_the_combine_helper']):
+    missing.append('the combine helper differs from Ansible on other vectors than the ruling records: ' + ', '.join(helper))
+else:
+    ruled.append('R6 is closed for merge_layers only (ansible-core %s); the combine helper has %d known mismatches; key order differs in %d of %d fuzzed merges' % (
+        r6['ansible_core'], len(helper), fuzz.get('accepted-key-order-differs', 0), r6['merge_layers_fuzz']['cases']))
+
+# Obligations a ruling moved to a later module come due when that module exists.
+for entry in record['obligations']:
+    present = [name for name in entry['due_when_any_exists'] if (ROOT / name).exists()]
+    if entry['status'] != 'discharged' and present:
+        missing.append('obligation ' + entry['id'] + ' is due (' + ', '.join(present) + ' exists): ' + entry['owed'])
+    elif entry['status'] != 'discharged':
+        ruled.append('obligation ' + entry['id'] + ' is open and comes due with ' + ' or '.join(entry['due_when_any_exists']))
+
+for entry in record['open_findings']:
+    if entry['status'] != 'ruled':
+        missing.append('open finding ' + entry['id'] + ' has no ruling (test/port-rulings.golden)')
+if record['delta_review']['status'] != 'passed':
+    missing.append('the delta review is ' + record['delta_review']['status'] + ': ' + record['delta_review']['of'])
+
+print('%d of %d TS mutants killed' % (killed, len(results)))
+for message in ruled:
+    print('RULED: ' + message)
 for message in missing:
     print('BLOCKED: ' + message)
 if not missing:
-    print('PASS port evidence; ' + str(len(by_status.get('killed', []))) + ' of ' + str(len(results)) + ' TS mutants killed')
+    print('PASS port evidence')
 sys.exit(int(bool(missing)))

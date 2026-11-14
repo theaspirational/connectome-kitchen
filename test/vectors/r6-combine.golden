@@ -1,0 +1,339 @@
+{
+ "ansible_core": "2.21.6",
+ "combine": "ansible.plugins.filter.core.combine",
+ "vectors": {
+  "connectome_config.combine": {
+   "equal": 5,
+   "mismatch": 4
+  },
+  "connectome_config.merge_layers": {
+   "crash-equal": 11,
+   "equal": 791
+  },
+  "connectome_config.public_catalog": {
+   "crash-equal": 112,
+   "equal": 152
+  },
+  "connectome_config.required_names": {
+   "crash-equal": 244,
+   "equal": 160,
+   "named-divergence": 4
+  }
+ },
+ "known_mismatches_of_the_combine_helper": [
+  {
+   "id": "config.combine.three",
+   "function": "connectome_config.combine",
+   "args": [
+    {
+     "a": {
+      "b": {
+       "c": 1
+      }
+     }
+    },
+    {
+     "a": {
+      "b": null
+     }
+    },
+    {
+     "a": {
+      "b": {
+       "d": 2
+      }
+     }
+    }
+   ],
+   "kwargs": {
+    "recursive": true
+   },
+   "ansible": {
+    "result": {
+     "$mapping": [
+      [
+       "a",
+       {
+        "$mapping": [
+         [
+          "b",
+          {
+           "$mapping": [
+            [
+             "c",
+             1
+            ],
+            [
+             "d",
+             2
+            ]
+           ]
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "a",
+       {
+        "$mapping": [
+         [
+          "b",
+          {
+           "$mapping": [
+            [
+             "d",
+             2
+            ]
+           ]
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "id": "config.combine.list-layer",
+   "function": "connectome_config.combine",
+   "args": [
+    {},
+    []
+   ],
+   "kwargs": {
+    "recursive": true
+   },
+   "ansible": {
+    "result": {
+     "$mapping": []
+    }
+   },
+   "port": {
+    "crash": "AttributeError"
+   }
+  },
+  {
+   "id": "config.combine.null-layer",
+   "function": "connectome_config.combine",
+   "args": [
+    null
+   ],
+   "kwargs": {},
+   "ansible": {
+    "result": {
+     "$mapping": []
+    }
+   },
+   "port": {
+    "crash": "AttributeError"
+   }
+  },
+  {
+   "id": "config.combine.string-layer",
+   "function": "connectome_config.combine",
+   "args": [
+    "ab"
+   ],
+   "kwargs": {},
+   "ansible": {
+    "result": "ab"
+   },
+   "port": {
+    "crash": "AttributeError"
+   }
+  }
+ ],
+ "merge_layers_fuzz": {
+  "seed": 1,
+  "cases": 4000,
+  "outcomes": {
+   "accepted-equal": 2959,
+   "accepted-key-order-differs": 643,
+   "refused-equal": 398
+  },
+  "key_order_example": {
+   "layers": [
+    {
+     "connectors": {
+      "p": {
+       "opt": {},
+       "required_secrets": [
+        []
+       ],
+       "kind": {
+        "enabled": {},
+        "modules": {}
+       }
+      },
+      "q": {}
+     }
+    },
+    {
+     "connectors": {
+      "q": {},
+      "p": {
+       "required_secrets": [
+        []
+       ],
+       "kind": {
+        "enabled": {},
+        "modules": {}
+       },
+       "opt": {}
+      }
+     }
+    },
+    {
+     "connectors": {
+      "p": {
+       "kind": {
+        "modules": {},
+        "enabled": {}
+       },
+       "required_secrets": [
+        []
+       ],
+       "opt": {}
+      },
+      "q": {}
+     }
+    },
+    {}
+   ],
+   "ansible": {
+    "result": {
+     "$mapping": [
+      [
+       "connectors",
+       {
+        "$mapping": [
+         [
+          "p",
+          {
+           "$mapping": [
+            [
+             "kind",
+             {
+              "$mapping": [
+               [
+                "modules",
+                {
+                 "$mapping": []
+                }
+               ],
+               [
+                "enabled",
+                {
+                 "$mapping": []
+                }
+               ]
+              ]
+             }
+            ],
+            [
+             "required_secrets",
+             [
+              []
+             ]
+            ],
+            [
+             "opt",
+             {
+              "$mapping": []
+             }
+            ]
+           ]
+          }
+         ],
+         [
+          "q",
+          {
+           "$mapping": []
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       "modules",
+       {
+        "$mapping": []
+       }
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "connectors",
+       {
+        "$mapping": [
+         [
+          "p",
+          {
+           "$mapping": [
+            [
+             "opt",
+             {
+              "$mapping": []
+             }
+            ],
+            [
+             "required_secrets",
+             [
+              []
+             ]
+            ],
+            [
+             "kind",
+             {
+              "$mapping": [
+               [
+                "enabled",
+                {
+                 "$mapping": []
+                }
+               ],
+               [
+                "modules",
+                {
+                 "$mapping": []
+                }
+               ]
+              ]
+             }
+            ]
+           ]
+          }
+         ],
+         [
+          "q",
+          {
+           "$mapping": []
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       "modules",
+       {
+        "$mapping": []
+       }
+      ]
+     ]
+    }
+   }
+  }
+ }
+}

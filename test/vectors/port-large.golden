@@ -1,0 +1,74 @@
+{
+ "decompressed_bytes": 4404021760,
+ "at_least_4_gib": true,
+ "cases": [
+  {
+   "id": "large.valid",
+   "full_gzip_read": "valid",
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "large.crc-trailer",
+   "full_gzip_read": "BadGzipFile",
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
+     "$mapping": [
+      [
+       "error_code",
+       "E_ADAPTER_INPUT"
+      ],
+      [
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
+      ]
+     ]
+    }
+   },
+   "classification": "D1"
+  }
+ ]
+}

@@ -371,7 +371,7 @@
   "after": ";",
   "oracle_line": 33,
   "note": "",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "config.L60.8",
@@ -383,7 +383,7 @@
   "after": ";",
   "oracle_line": 60,
   "note": "",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "config.L46.12",
@@ -395,7 +395,7 @@
   "after": ";",
   "oracle_line": 46,
   "note": "",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "config.L49.16",
@@ -407,7 +407,7 @@
   "after": ";",
   "oracle_line": 49,
   "note": "",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "inputs.L58.8",
@@ -2120,7 +2120,7 @@
   "before": "len(layers) !== 4 || iterate(layers).some(layer => !isDict(layer))",
   "after": "false",
   "note": "",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "config.layers.enabled-type",
@@ -2131,7 +2131,7 @@
   "before": "!isDict(entry) || typeof dictGet(entry, 'enabled', true) !== 'boolean'",
   "after": "false",
   "note": "",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "config.layers.public-connectors",
@@ -2142,7 +2142,7 @@
   "before": "if (strIn('connectors', result)) {",
   "after": "if (false) {",
   "note": "",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "config.layers.public-connectors#1",
@@ -2153,7 +2153,7 @@
   "before": "if (strIn('connectors', result)) {",
   "after": "if (false) {",
   "note": "same mutation as the name without a site number, as in the oracle lists",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "config.layers.fold#1",
@@ -2164,7 +2164,7 @@
   "before": "for (const layer of layers as PyDict[]) merged = combine([merged, layer], true);",
   "after": "merged = (layers as PyDict[]).reduceRight((upper, lower) => combine([lower, upper], true));",
   "note": "the reversed fold of Ansible's multi-argument combine, as in the oracle mutant",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "config.layers.prune#1",
@@ -2175,7 +2175,7 @@
   "before": "filter(([, entry]) => dictGet(entry, 'enabled', true) === true)",
   "after": "filter(() => true)",
   "note": "",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "config.layers.tombstones",
@@ -2186,7 +2186,7 @@
   "before": "const result = prune(merged) as PyDict;",
   "after": "const result = merged;",
   "note": "TS only; nulls survive the merge",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "config.layers.tombstones-last",
@@ -2197,7 +2197,7 @@
   "before": "if (recursive && isDict(value) && isDict(present)) result.set(key, combine([present, value], true));\n      else result.set(key, deepcopy(value));",
   "after": "if (recursive && isDict(value) && isDict(present)) result.set(key, combine([present, value], true));\n      else if (value === null) result.delete(key);\n      else result.set(key, deepcopy(value));",
   "note": "TS only; a null applied while merging instead of after it lets a lower layer come back",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "config.layers.recursive",
@@ -2208,7 +2208,7 @@
   "before": "result.set(key, combine([present, value], true));",
   "after": "result.set(key, deepcopy(value));",
   "note": "TS only; an upper mapping replaces a lower one instead of merging into it",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "config.layers.empty-catalog",
@@ -2219,7 +2219,7 @@
   "before": "if (!truthy(dictGet(result, 'catalog', null))) result.delete('catalog');",
   "after": ";",
   "note": "TS only",
-  "source_sha256": "648f2f8e4eb45069805a688493c5190f2ddbff9fdd6689789dde07779e2fb425"
+  "source_sha256": "061723a9dd2b1a0c52eb59c68a0ffdac83b21f01b8f9002795f2ba479511258c"
  },
  {
   "id": "cook.provenance.npm-name-length",

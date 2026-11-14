@@ -14,16 +14,26 @@
  * Two deliberate differences from the oracle, both stated here and measured in
  * test/differential/port_primitives.py:
  *
- *   1. The gzip container is checked in full before the tar stream is read.
- *      CPython decompresses lazily, only as far as the listing and one member
- *      need, so damage behind the last byte it reads goes unseen, and a
- *      truncated stream surfaces as `EOFError` or `zlib.error`, which
- *      `archive.py` does not catch. Here any container damage is an `OSError`
- *      (`BadGzipFile` where gzip.py says so). A container CPython reads to its
- *      end without error is read identically.
+ *   1. The gzip container is checked in full before the tar stream is read
+ *      (divergence D1). CPython decompresses lazily, only as far as the listing
+ *      and one member need, so damage behind the last byte it reads goes
+ *      unseen, and a truncated stream surfaces as `EOFError` or `zlib.error`,
+ *      which `archive.py` does not catch. Here any container damage is an
+ *      `OSError` (`BadGzipFile` where gzip.py says so). D1 is about damage
+ *      only: a container CPython's gzip module reads to its end without error
+ *      is read identically, whatever its size (test/differential/port_large.py
+ *      holds that at 4 GiB and above).
  *   2. Exceptions that depend on the machine are modelled with constants:
  *      `MemoryError` for a read above MEMORY_LIMIT, `RecursionError` at
  *      Python's default frame limit for a caller at CALLER_FRAME.
+ *
+ * Memory. The decompressed stream is never held as a whole. The container is
+ * inflated in steps of INPUT_STEP compressed bytes, once to check it and again
+ * for the listing and for each backward seek, as CPython's `GzipFile` rewinds.
+ * What is held is the compressed file (the oracle holds it too, archive.py:125),
+ * one step of output, and whatever a single `read` returns: a header block, a
+ * long-name or pax block, the member that is read. The oracle holds the same
+ * `read` results.
  *
  * `tarfile.ENCODING` is taken to be UTF-8 (a UTF-8 locale, or the C locale
  * under PEP 538/540), with the `surrogateescape` handler `tarfile` uses.
@@ -84,6 +94,8 @@ export interface OpenOptions {
    * top level being 1. The default is a function a script calls directly.
    */
   callerFrame?: number;
+  /** Compressed bytes per inflate step, INPUT_STEP by default. It changes no result. */
+  inputStep?: number;
 }
 
 /** Python's default recursion limit, as lock.ts states it: a frame may sit at depth 1000. */
@@ -109,17 +121,121 @@ function enter(frame: number): void {
 
 const FHCRC = 2, FEXTRA = 4, FNAME = 8, FCOMMENT = 16;
 const TRUNCATED = 'Compressed file ended before the end-of-stream marker was reached';
+/**
+ * Compressed bytes handed to zlib in one step. Deflate expands at most 1032
+ * times, so a step yields a little over 4 MiB at most, however the archive
+ * was built. No result depends on this number; the helper differential runs
+ * every container at several values of it.
+ */
+export const INPUT_STEP = 4 * 1024;
+
+/** What `zlib.inflateRawSync` itself drives (Node lib/zlib.js, `zlibBufferSync`), as far as it is used here. */
+interface SyncEngine {
+  _handle: { close: () => void } | null;
+  _processChunk(chunk: Buffer, flush: number): Buffer;
+  bytesWritten: number;
+  removeAllListeners(event: string): unknown;
+}
+const held = (): void => { /* the engine stays open between steps */ };
 
 /**
- * What `gzip.GzipFile(...).read()` returns when it reads the whole file:
- * every member's header as `_read_gzip_header` accepts it, a complete deflate
+ * One raw deflate stream, inflated forward in steps of bounded size.
+ *
+ * Node documents no synchronous inflate that can be resumed: `inflateRawSync`
+ * returns the whole output at once, which for an archive is the whole
+ * decompressed stream in memory. This class makes the call `inflateRawSync`
+ * makes (`_processChunk` without a callback), on one slice of the input at a
+ * time. The call was written for one-shot use, and three things follow:
+ *
+ *   - it closes the engine when it returns. The handle's `close` is held back
+ *     for the duration of the call and the handle is put back afterwards;
+ *   - it adds an `error` listener each time. After a call that succeeded the
+ *     listeners are removed; after one that failed they stay, because the
+ *     engine reports that error once more on the next tick;
+ *   - the Buffer it returns can be the engine's own output buffer, which the
+ *     next call overwrites. `step` therefore lends its result until the next
+ *     `step`, and every caller copies what it keeps.
+ *
+ * npm's gzip layer (minizlib, shipped inside the Node 22 and 24 distributions)
+ * drives Node's zlib the same way. A Node whose engine has another shape ends
+ * here with a plain `Error`, which no handler of the engine catches. A piece
+ * of output that is lost or repeated cannot pass `scan`, which checks every
+ * member's CRC-32 and length through this class.
+ */
+class Inflater {
+  private engine: SyncEngine | null;
+  private ended = false;
+  /** Offset in the file of the next compressed byte; once the stream has ended, of the first byte behind it. */
+  at: number;
+  constructor(private readonly input: Buffer, start: number, private readonly inputStep: number) {
+    if (!Number.isInteger(inputStep) || inputStep < 1) throw new Error('inflate step must be a positive integer');
+    this.at = start;
+    this.engine = zlib.createInflateRaw({ chunkSize: 64 * 1024 }) as unknown as SyncEngine;
+  }
+  /** The next piece of output, valid until the next call; `null` when the deflate stream has ended. */
+  step(): Buffer | null {
+    while (!this.ended) {
+      if (this.at >= this.input.length) throw new GzipDamage(TRUNCATED);
+      const slice = this.input.subarray(this.at, Math.min(this.at + this.inputStep, this.input.length));
+      const piece = this.feed(slice);
+      const taken = this.engine!.bytesWritten;
+      if (!Number.isInteger(taken) || taken < 0 || taken > slice.length) throw new Error('unsupported zlib engine: input accounting');
+      this.at += taken;
+      // zlib takes all the input it is given unless the stream ends inside it.
+      if (taken < slice.length) { this.ended = true; this.close(); }
+      if (piece.length > 0) return piece;
+    }
+    return null;
+  }
+  private feed(slice: Buffer): Buffer {
+    const engine = this.engine;
+    const handle = engine === null ? null : engine._handle;
+    if (engine === null || typeof engine._processChunk !== 'function' || handle === null || typeof handle !== 'object' || typeof handle.close !== 'function') {
+      throw new Error('unsupported zlib engine: no synchronous step');
+    }
+    const close = handle.close;
+    handle.close = held;
+    let piece: Buffer;
+    try {
+      piece = engine._processChunk(slice, zlib.constants.Z_NO_FLUSH);
+    } catch (error) {
+      handle.close = close;
+      handle.close();
+      this.engine = null;
+      const code = (error as NodeJS.ErrnoException | null)?.code;
+      if (typeof code === 'string' && code.startsWith('Z_')) throw new GzipDamage('Error while decompressing data');
+      throw error;
+    }
+    handle.close = close;
+    engine._handle = handle;
+    engine.removeAllListeners('error');
+    if (!Buffer.isBuffer(piece)) throw new Error('unsupported zlib engine: output');
+    return piece;
+  }
+  /** Frees the engine; a stream left unfinished must not wait for the collector. */
+  close(): void {
+    const engine = this.engine;
+    this.engine = null;
+    if (engine !== null && engine._handle !== null) { engine._handle.close(); engine._handle = null; }
+  }
+}
+
+/** One gzip member: where its deflate data starts in the file, and which decompressed bytes it holds. */
+interface GzipMember { readonly deflate: number; readonly start: number; readonly end: number; }
+
+/**
+ * What `gzip.GzipFile(...).read()` checks when it reads the whole file: every
+ * member's header as `_read_gzip_header` accepts it, a complete deflate
  * stream, the CRC-32 and the length modulo 2**32, zero padding after a member,
  * then the next member or the end. An empty file is an empty stream.
+ *
+ * The CRC is accumulated over the pieces. `zlib.crc32` of Node 22.23.3 and of
+ * 24.14.0 takes the length of its argument modulo 2**32, so on a buffer of
+ * 4 GiB or more it answers for a prefix; no piece here comes near that size.
  */
-export function gunzip(data: Uint8Array): Buffer {
-  const input = Buffer.from(data.buffer, data.byteOffset, data.byteLength);
-  const parts: Buffer[] = [];
-  let at = 0;
+function scan(input: Buffer, inputStep: number, sink?: (piece: Buffer) => void): GzipMember[] {
+  const members: GzipMember[] = [];
+  let at = 0, total = 0;
   const exact = (count: number): number => {
     if (input.length - at < count) throw new GzipDamage(TRUNCATED);
     const start = at; at += count; return start;
@@ -135,25 +251,109 @@ export function gunzip(data: Uint8Array): Buffer {
     if (flag & FNAME) text();
     if (flag & FCOMMENT) text();
     if (flag & FHCRC) exact(2);
-    let body: Buffer, consumed: number;
+    const deflate = at, start = total;
+    const inflater = new Inflater(input, deflate, inputStep);
+    let crc = 0, length = 0;
     try {
-      const result = zlib.inflateRawSync(input.subarray(at), { info: true }) as unknown as { buffer: Buffer; engine: { bytesWritten: number } };
-      body = result.buffer; consumed = result.engine.bytesWritten;
-    } catch (error) {
-      const code = (error as NodeJS.ErrnoException | null)?.code;
-      if (code === 'Z_BUF_ERROR') throw new GzipDamage(TRUNCATED);
-      if (code === 'ERR_BUFFER_TOO_LARGE' || error instanceof RangeError) throw new PyMemoryError('decompressed archive too large');
-      if (typeof code === 'string' && code.startsWith('Z_')) throw new GzipDamage('Error while decompressing data');
-      throw error;
-    }
-    at += consumed;
+      for (let piece = inflater.step(); piece !== null; piece = inflater.step()) {
+        crc = zlib.crc32(piece, crc);
+        length += piece.length;
+        sink?.(piece);
+      }
+    } finally { inflater.close(); }
+    at = inflater.at;
+    total += length;
     const trailer = exact(8);
-    if (input.readUInt32LE(trailer) !== zlib.crc32(body)) throw new BadGzipFile('CRC check failed');
-    if (input.readUInt32LE(trailer + 4) !== body.length % 4294967296) throw new BadGzipFile('Incorrect length of data produced');
-    parts.push(body);
+    if (input.readUInt32LE(trailer) !== crc) throw new BadGzipFile('CRC check failed');
+    if (input.readUInt32LE(trailer + 4) !== length % 4294967296) throw new BadGzipFile('Incorrect length of data produced');
+    members.push({ deflate, start, end: total });
     while (at < input.length && input[at] === 0) at++;
   }
-  return parts.length === 1 ? parts[0]! : Buffer.concat(parts);
+  return members;
+}
+
+/** `gzip.GzipFile(...).read()` of the whole file, in memory. The archive reader does not use it; the helper differential does. */
+export function gunzip(data: Uint8Array, inputStep: number = INPUT_STEP): Buffer {
+  const parts: Buffer[] = [];
+  scan(Buffer.from(data.buffer, data.byteOffset, data.byteLength), inputStep, piece => { parts.push(Buffer.from(piece)); });
+  return Buffer.concat(parts);
+}
+
+/** The bytes a tar reader works on: a length, and a copy of any range. */
+interface Source {
+  readonly length: number;
+  /** The bytes `[position, position + count)`, which lie inside the stream. */
+  read(position: number, count: number): Buffer;
+  close(): void;
+}
+
+class MemorySource implements Source {
+  readonly length: number;
+  constructor(private readonly data: Buffer) { this.length = data.length; }
+  read(position: number, count: number): Buffer { return this.data.subarray(position, position + count); }
+  close(): void { /* nothing is held open */ }
+}
+
+/**
+ * A checked gzip container as the stream of its decompressed bytes, without
+ * holding them. Reading forward inflates forward and drops what was passed;
+ * reading behind the piece at hand starts again at the member that holds the
+ * position, as `GzipFile.seek` rewinds.
+ */
+class GzipSource implements Source {
+  readonly length: number;
+  private readonly members: GzipMember[];
+  private inflater: Inflater | null = null;
+  private member = 0;
+  private piece: Buffer = Buffer.alloc(0);
+  /** Decompressed offset of `piece[0]`. */
+  private pieceStart = 0;
+  constructor(private readonly input: Buffer, private readonly inputStep: number) {
+    this.members = scan(input, inputStep);
+    this.length = this.members.length === 0 ? 0 : this.members[this.members.length - 1]!.end;
+  }
+  read(position: number, count: number): Buffer {
+    if (!Number.isInteger(position) || !Number.isInteger(count) || position < 0 || count < 0 || position + count > this.length) throw new Error('read outside the stream');
+    const out = Buffer.allocUnsafe(count);
+    let filled = 0;
+    while (filled < count) {
+      const wanted = position + filled;
+      if (wanted < this.pieceStart || wanted >= this.pieceStart + this.piece.length) this.reach(wanted);
+      const from = wanted - this.pieceStart;
+      filled += this.piece.copy(out, filled, from, Math.min(this.piece.length, from + count - filled));
+    }
+    return out;
+  }
+  /** Makes `piece` the piece that holds `position`. */
+  private reach(position: number): void {
+    if (this.inflater === null || position < this.pieceStart) {
+      this.close();
+      this.member = this.members.findIndex(member => position < member.end);
+      this.open();
+    }
+    while (position >= this.pieceStart + this.piece.length) {
+      const next = this.inflater!.step();
+      this.pieceStart += this.piece.length;
+      if (next !== null) { this.piece = next; continue; }
+      // The member ends where `scan` saw it end; the next one continues the stream.
+      this.inflater!.close();
+      this.member++;
+      this.open();
+    }
+  }
+  private open(): void {
+    const member = this.members[this.member];
+    if (member === undefined) throw new Error('read outside the stream');
+    this.inflater = new Inflater(this.input, member.deflate, this.inputStep);
+    this.piece = Buffer.alloc(0);
+    this.pieceStart = member.start;
+  }
+  close(): void {
+    this.inflater?.close();
+    this.inflater = null;
+    this.piece = Buffer.alloc(0);
+    this.pieceStart = 0;
+  }
 }
 
 /* ---- Python number parsing ------------------------------------------------ */
@@ -204,27 +404,27 @@ type Sparse = [offset: bigint, size: bigint][];
 /** The `GzipFile` the tar reader sees: the decompressed bytes with a position. */
 class Stream {
   position = 0;
-  constructor(readonly data: Buffer) {}
+  constructor(readonly source: Source) {}
   /** `fileobj.read(count)`; `frame` is the caller's. */
   read(count: bigint | number, frame: number): Buffer {
     enter(frame + 2); // GzipFile.read, _check_not_closed
     const wanted = BigInt(count);
-    const left = this.data.length - this.position;
+    const left = this.source.length - this.position;
     if (wanted > BigInt(left)) {
       if (wanted > SSIZE_MAX) throw new PyOverflowError("cannot fit 'int' into an index-sized integer");
       if (wanted > SSIZE_MAX - BYTES_OBJECT_OVERHEAD) throw new PyOverflowError('byte string is too large');
       if (wanted > MEMORY_LIMIT) throw new PyMemoryError();
     }
-    const end = wanted > BigInt(left) ? this.data.length : this.position + Number(wanted);
-    const chunk = this.data.subarray(this.position, end);
-    this.position = end;
+    const length = wanted > BigInt(left) ? left : Number(wanted);
+    const chunk = this.source.read(this.position, length);
+    this.position += length;
     return chunk;
   }
   /** `fileobj.seek(target)`: past the end stops at the end, before the start at the start. */
   seek(target: bigint, frame: number): void {
     enter(frame + 2); // GzipFile.seek, _check_not_closed
     if (target > SSIZE_MAX || target < -SSIZE_MAX - 1n) throw new PyValueError("cannot fit 'int' into an offset-sized integer");
-    this.position = target < 0n ? 0 : target > BigInt(this.data.length) ? this.data.length : Number(target);
+    this.position = target < 0n ? 0 : target > BigInt(this.source.length) ? this.source.length : Number(target);
   }
   /** `fileobj.tell()`. */
   tell(frame: number): bigint {
@@ -607,28 +807,40 @@ function readMember(info: TarInfo, file: Stream): Uint8Array {
   return Buffer.concat(chunks);
 }
 
-/** `tarfile.open(path, 'r:gz')` on these bytes followed by `getmembers()`. */
+/**
+ * `tarfile.open(path, 'r:gz')` on these bytes followed by `getmembers()`. The
+ * container is checked first; nothing stays open between the listing and a
+ * member's `read`, which starts at the front of the container again.
+ */
 export function gzipMembers(data: Uint8Array, options: OpenOptions = {}): TarMember[] {
-  return tarMembers(gunzip(data), options);
+  return listing(new GzipSource(Buffer.from(data.buffer, data.byteOffset, data.byteLength), options.inputStep ?? INPUT_STEP), options);
 }
 
 /** The same on an already decompressed tar stream. */
 export function tarMembers(stream: Uint8Array, options: OpenOptions = {}): TarMember[] {
+  return listing(new MemorySource(Buffer.from(stream.buffer, stream.byteOffset, stream.byteLength)), options);
+}
+
+function listing(source: Source, options: OpenOptions): TarMember[] {
   const caller = options.callerFrame ?? CALLER_FRAME;
-  const file = new Stream(Buffer.from(stream.buffer, stream.byteOffset, stream.byteLength));
+  const file = new Stream(source);
   const tar: TarFile = { file, offset: 0n, pax_headers: new Map(), members: [] };
-  // open, gzopen, taropen, TarFile.__init__, then the first next().
-  enter(caller + 4);
-  let member = next(tar, caller + 5);
-  // getmembers, _load, then next() until it returns None.
-  while (member !== null) member = next(tar, caller + 3);
+  try {
+    // open, gzopen, taropen, TarFile.__init__, then the first next().
+    enter(caller + 4);
+    let member = next(tar, caller + 5);
+    // getmembers, _load, then next() until it returns None.
+    while (member !== null) member = next(tar, caller + 3);
+  } finally { source.close(); }
   return tar.members.map(info => ({
     name: info.name,
     isfile: REGULAR_TYPES.has(info.type),
     size: info.size,
     type: info.type,
     read(): Uint8Array {
-      if (REGULAR_TYPES.has(info.type) || !SUPPORTED_TYPES.has(info.type)) return readMember(info, file);
+      if (REGULAR_TYPES.has(info.type) || !SUPPORTED_TYPES.has(info.type)) {
+        try { return readMember(info, file); } finally { source.close(); }
+      }
       if (info.type === LNKTYPE || info.type === SYMTYPE) throw new Error('link members are not read by the engine');
       throw new PyAttributeError("'NoneType' object has no attribute 'read'");
     },

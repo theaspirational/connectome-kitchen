@@ -278,8 +278,8 @@ compared.
 Plan section 3.1, modules 1–5, ported from the oracle at `a49b5dc`.
 `docs/port-notes.md` has the details: how each Python/JavaScript divergence of
 plan section 3.2 is handled, what the oracle does that the plan did not list,
-the lazy imports, where the port deliberately differs from the oracle, and the
-open points for review.
+the lazy imports, where the port deliberately differs from the oracle (D1,
+D2), the rulings on those points, the backlog and what is still open.
 
 - **Differential.** `test/differential/ts_port.py run` calls the oracle live on
   every vector and the TS port on the same input at the same paths, and compares
@@ -301,18 +301,31 @@ open points for review.
   replays the committed vectors; `ts-results.golden` records the outcome per
   mutant and `ts-unkilled.golden` the written analysis of each one that is not
   killed. Guard-site and named-check ids are those of the oracle mutants.
+- **Large archives.** `test/differential/port_large.py --check` builds an
+  archive of 4.1 GiB, asks both engines, and bounds the port's peak memory;
+  `test/unit/port-large.test.js` runs it (about half a minute).
+- **Rulings.** `test/port-rulings.golden` quotes the rulings received on the
+  divergences, on the mutants that are not killed, on the reproduced oracle
+  behaviours and on plan risk R6, with the obligations and the backlog that
+  follow from them. `test/differential/r6_combine.py --ansible <lib> --check`
+  reproduces the R6 comparison against an ansible-core source tree.
 
 ```
 python3 test/differential/ts_port.py run
 python3 test/differential/ts_port.py run --no-generated --recording /path/to/recording/functions.jsonl --exploratory .cache/exploratory.golden
 python3 test/differential/port_primitives.py run
+python3 test/differential/port_large.py --check
+python3 test/differential/port_divergences.py --check
+python3 test/differential/r6_combine.py --ansible /path/to/ansible-core/lib --check
 python3 test/mutants/ts_mutants.py run --check
 python3 test/mutants/shadowed_repository.py
 python3 scripts/porting-map.py --check
 python3 scripts/check-port-ready
 ```
 
-The last command fails on purpose until a review has ruled on the mutants that
-are not killed (their ids then go into `test/mutants/ts-reviewed.golden`, which
-is empty) and on the deliberate divergences from the oracle
-(`test/vectors/port-divergences.golden`).
+The last command prints what was ruled and fails on what is still owed. A
+mutant that is not killed and an input on which the port differs from the
+oracle block until a ruling names them; a ruled mutant is listed under its
+classification (`test/mutants/ts-reviewed.golden`) and is never counted as
+killed. The command stays red while the delta review of the last fix round is
+pending and while a finding has no ruling.

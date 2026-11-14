@@ -1,1 +1,42 @@
-[]
+[
+ {
+  "id": "lock.repository.text",
+  "classification": "redundant survivor",
+  "ruling": "M1"
+ },
+ {
+  "id": "lock.repository.password",
+  "classification": "redundant survivor",
+  "ruling": "M1"
+ },
+ {
+  "id": "cook.provenance.origin-password",
+  "classification": "redundant survivor",
+  "ruling": "M1"
+ },
+ {
+  "id": "cook.provenance.origin-query",
+  "classification": "redundant survivor",
+  "ruling": "M1"
+ },
+ {
+  "id": "cook.provenance.origin-fragment",
+  "classification": "redundant survivor",
+  "ruling": "M1"
+ },
+ {
+  "id": "errors.closed.envelope-mapping",
+  "classification": "compiler",
+  "ruling": "M1"
+ },
+ {
+  "id": "errors.closed.envelope-type",
+  "classification": "compiler",
+  "ruling": "M1"
+ },
+ {
+  "id": "archive.L140.4",
+  "classification": "crash-only",
+  "ruling": "M1"
+ }
+]

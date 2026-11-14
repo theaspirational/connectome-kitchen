@@ -364,12 +364,21 @@ def evaluate(vectors, node='node'):
     return records
 
 
+def unordered(outcome):
+    """An outcome whose result is a list, with the list in a fixed order: for an oracle answer whose order is not a property of the input."""
+    if isinstance(outcome.get('result'), list):
+        return dict(outcome, result=sorted(outcome['result'], key=canonical))
+    return outcome
+
+
 def classify(record):
     if 'skipped' in record:
         return 'skipped'
     oracle, ts = json.loads(record['oracle']), json.loads(record['ts'])
     if record['vector'].source == 'divergence':
         row = record['vector'].row
+        if row.get('unordered'):
+            oracle = unordered(oracle)
         return 'named-divergence' if oracle == row['oracle'] and ts == row['port'] else 'mismatch'
     if 'unsupported' in ts:
         return 'outside-signature-oracle-crash' if 'crash' in oracle else 'outside-signature-oracle-declared'

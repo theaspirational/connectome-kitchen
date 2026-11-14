@@ -1,0 +1,200 @@
+{
+ "about": "Rulings on the TS port of errors, lock, inputs, archive and config (plan phase 3). This file records decisions that were made by a review or by the technical owner; the implementer writes them down and does not make them. scripts/check-port-ready reads it. A ruling is quoted as it was received.",
+ "received": {
+  "date": "2026-11-14",
+  "from": "the technical owner, relayed in the dispatch brief of the fix round of TASK-XQ63S",
+  "after": "the second review of commit ac5e89c, verdict APPROVE with three LOW findings",
+  "review_report_sha256": "f24d0c67c7802072d069df3270bee47537d431171edb2304368cd572f75e241c",
+  "earlier_review_report_sha256": "ed31c7212ec3b8a4d9c22d19fdf72564cc5e2721894c54e1514006eab4813cd6"
+ },
+ "delta_review": {
+  "status": "pending",
+  "of": "the fix round after ac5e89c: the stepwise gzip reader, the vectors at 4 GiB, D2, and this record",
+  "rule": "Only a reviewer sets this to \"passed\", with the commit reviewed and the sha256 of the review report. Until then scripts/check-port-ready is red and the port is neither port-ready nor shippable."
+ },
+ "rulings": [
+  {
+   "id": "D1",
+   "subject": "divergence",
+   "as_received": "D1 is accepted as an explicit, stricter full-gzip-read refusal. Document that on D1 inputs the public code changes from E_ARCHIVE_IDENTITY to E_ADAPTER_INPUT. The >=4 GiB CRC bug must not hide under D1.",
+   "bounds": [
+    "D1 covers a container on which a full read by CPython's gzip module fails, and nothing else. On such an input the port answers \"unreadable archive or manifest\", code E_ADAPTER_INPUT.",
+    "The public code can change: where the oracle refuses the content with E_ARCHIVE_IDENTITY, the port refuses the container with E_ADAPTER_INPUT (entry gzip.crc-trailer.identity-mismatch). Where the oracle refuses with E_ADAPTER_INPUT for the content, the message changes and the code does not (entries gzip.crc-trailer.no-manifest, .manifest-not-mapping).",
+    "A container CPython's gzip module reads to its end is not a D1 input at any size. test/differential/port_large.py holds that at 4.1 GiB of decompressed data; before the fix round such an archive was refused because of a length truncation in the runtime's crc32."
+   ],
+   "evidence": [
+    "test/vectors/port-divergences.golden (entries gzip.*)",
+    "test/vectors/port-large.golden",
+    "test/differential/port_primitives.py (kind targz)"
+   ]
+  },
+  {
+   "id": "D2",
+   "subject": "divergence",
+   "as_received": "NaN in `required_names`: name it D2 and fix the comment at config.ts:111-118.",
+   "bounds": [
+    "D2 covers `required_names` on a set of two or more members that are all numbers and include a NaN. The oracle returns a list whose order follows the address of the NaN object; the port raises TypeError.",
+    "No engine module calls `required_names` at the a49b5dc freeze. Were its result handed to `read_lock`, the oracle refuses there, since a NaN is never among the declared names."
+   ],
+   "evidence": [
+    "test/vectors/port-divergences.golden (entries required-names.*)",
+    "src/config.ts (comment on `sorted`)"
+   ]
+  },
+  {
+   "id": "M1",
+   "subject": "mutants",
+   "as_received": "The 8 non-kills are accepted only under a separate classification: 5 redundant survivors, 2 compiler, 1 crash-only. Do not count them as kills (262 stays 262). The e2e witness for archive.L140.4 moves to cook/deploy.",
+   "classification": {
+    "redundant survivor": [
+     "lock.repository.text",
+     "lock.repository.password",
+     "cook.provenance.origin-password",
+     "cook.provenance.origin-query",
+     "cook.provenance.origin-fragment"
+    ],
+    "compiler": [
+     "errors.closed.envelope-mapping",
+     "errors.closed.envelope-type"
+    ],
+    "crash-only": [
+     "archive.L140.4"
+    ]
+   },
+   "bounds": [
+    "The count of killed TS mutants is 262 of 270. None of the eight is a kill, in any summary.",
+    "archive.L140.4 keeps an open obligation: an end-to-end vector through cook.main or the deployment boundary, where the missing check changes the public code."
+   ],
+   "evidence": [
+    "test/mutants/ts-results.golden",
+    "test/mutants/ts-unkilled.golden",
+    "test/mutants/ts-reviewed.golden",
+    "test/mutants/shadowed_repository.py"
+   ]
+  },
+  {
+   "id": "O1",
+   "subject": "oracle behaviour reproduced by the port",
+   "as_received": "The reproduced oracle oddities are accepted with explicit bounds and backlog entries.",
+   "items": [
+    {
+     "id": "O1.encodings",
+     "behaviour": "`verify_bytes` accepts a recipe in UTF-16 or UTF-32, because `json.loads` guesses the encoding of bytes.",
+     "bound": "The recipe is pinned by sha256, so the bytes are the operator's. Both engines accept the same recipes; the port adds none.",
+     "backlog": "B1"
+    },
+    {
+     "id": "O1.recursion",
+     "behaviour": "Nesting bounds (`RecursionError`) move with the caller's depth in the oracle.",
+     "bound": "The port is exact for a function a script calls directly. In the oracle the JSON bounds drop by exactly three levels under `exec` or `python -m`, and the frame bound of `names_only` by the caller's own frame count. Only a document nested within that band of a bound (about 10,000 levels for JSON, 1,000 for `names_only`) can differ. Every such lock is refused by both engines, with one of two messages; only a recipe nested about ten thousand levels deep could be accepted by one engine and refused by the other.",
+     "backlog": "B2"
+    },
+    {
+     "id": "O1.interpreter",
+     "behaviour": "The oracle interpreter's `urlsplit` and `tarfile` are distribution-patched CPython 3.12.3.",
+     "bound": "The port follows the installed files of the oracle host, not upstream 3.12.3. Their sha256 on that host are in docs/port-notes.md.",
+     "backlog": "B3"
+    },
+    {
+     "id": "O1.tar-listing",
+     "behaviour": "A bad tar header after the first member ends the listing silently, so a manifest is accepted from an archive whose tail is not a tar stream.",
+     "bound": "Tar level only and deterministic; reproduced for parity. Extraction does not use this reader but the strict src/pylike/tar.ts.",
+     "backlog": "B4"
+    }
+   ]
+  },
+  {
+   "id": "R6",
+   "subject": "plan risk R6",
+   "as_received": "R6 is closed for the real merge_layers shape only, not for generic combine. The direct helper has 4 known mismatches; record that.",
+   "bounds": [
+    "Closed: `merge_layers`, the one production merge site, which calls `combine` on two mappings with recursive=True. Against ansible-core 2.21.6 every vector of `merge_layers` agrees, and a seeded fuzz of 4,000 four-layer merges has no difference in value and none in acceptance.",
+    "Inside that closure one difference remains and is recorded, not removed: in 643 of the 4,000 fuzzed merges the mapping key order differs. Ansible's `merge_hash` returns the upper mapping when the two are equal, the stand-in keeps the lower one's order.",
+    "Not closed: `combine` called on its own. Four vectors differ (three layers folded in the reverse order; a list, a null and a string as a layer, which Ansible accepts or flattens and the stand-in rejects)."
+   ],
+   "known_mismatches_of_the_combine_helper": [
+    "config.combine.three",
+    "config.combine.list-layer",
+    "config.combine.null-layer",
+    "config.combine.string-layer"
+   ],
+   "evidence": [
+    "test/vectors/r6-combine.golden",
+    "test/differential/r6_combine.py"
+   ],
+   "backlog": [
+    "B5",
+    "B6"
+   ]
+  }
+ ],
+ "obligations": [
+  {
+   "id": "archive.L140.4",
+   "ruling": "M1",
+   "status": "open",
+   "owed": "An end-to-end vector, through cook.main or the deployment boundary, on which the mutant gives another public code than the original.",
+   "due_when_any_exists": [
+    "src/cook.ts",
+    "src/deploy.ts"
+   ]
+  }
+ ],
+ "open_findings": [
+  {
+   "id": "F1",
+   "found": "by the implementer in the fix round, while measuring what the archive reader still holds in memory",
+   "status": "not ruled",
+   "finding": "A tar name or a pax value longer than 536,870,888 UTF-16 units (the longest string of the JavaScript runtime) ends the port in a RangeError of the runtime, where the oracle accepts the archive. Measured with a pax value and a GNU long name of 600 MiB: the oracle accepts at 2.4 GiB and 1.8 GiB peak, the port fails closed at 1.2 GiB. At 300 MiB both accept. Present at ac5e89c as well; the fix round did not change it.",
+   "asks": "Rule whether this stays a limit of the value model, or becomes a declared refusal with its own divergence entry.",
+   "backlog": "B8"
+  }
+ ],
+ "backlog": [
+  {
+   "id": "B1",
+   "for": "oracle",
+   "entry": "Refuse a recipe that is not UTF-8 in `verify_bytes`, in both engines, by a reviewed waiver."
+  },
+  {
+   "id": "B2",
+   "for": "oracle and plan",
+   "entry": "Bound document depth explicitly, well below the interpreter limits, so that no refusal depends on the caller's depth."
+  },
+  {
+   "id": "B3",
+   "for": "plan",
+   "entry": "Pin the oracle interpreter by the sha256 of its files (urllib/parse.py, tarfile.py, gzip.py, json/decoder.py), not by the name \"CPython 3.12.3\"."
+  },
+  {
+   "id": "B4",
+   "for": "oracle",
+   "entry": "Refuse an archive whose tar listing ends on an invalid header instead of an end marker."
+  },
+  {
+   "id": "B5",
+   "for": "port, when cook and catalog are ported",
+   "entry": "Decide whether the key order of the merged configuration is observable downstream. If it is, port the order rule of `merge_hash` (an equal upper mapping replaces the lower one)."
+  },
+  {
+   "id": "B6",
+   "for": "port",
+   "entry": "`combine` in src/config.ts is the stand-in and matches Ansible only in the `merge_layers` shape. A second caller needs Ansible's semantics for three or more layers and for layers that are not mappings."
+  },
+  {
+   "id": "B7",
+   "for": "port, with cook or deploy",
+   "entry": "The end-to-end witness for archive.L140.4 (obligation above)."
+  },
+  {
+   "id": "B8",
+   "for": "ruling",
+   "entry": "Open finding F1: strings beyond the runtime's limit in a tar name or pax value."
+  },
+  {
+   "id": "B9",
+   "for": "port",
+   "entry": "The stepwise gzip reader drives Node's zlib engine through the call `inflateRawSync` uses internally. Replace it when Node documents a synchronous inflate that can be resumed."
+  }
+ ]
+}

@@ -108,7 +108,16 @@ function add(unique: PyValue[], value: PyValue): void {
   if (isList(value) || isDict(value)) throw new PyTypeError("unhashable type: '" + typeName(value) + "'");
   if (!unique.some(seen => eq(seen, value))) unique.push(value);
 }
-/** `sorted(a_set)`: ascending; `TypeError` where Python cannot order the members. */
+/**
+ * `sorted(a_set)`: ascending; `TypeError` where Python refuses to compare two members (a string with a number).
+ *
+ * Divergence D2: a NaN among two or more numbers. Python does not refuse it. Every comparison with NaN is false, so
+ * `sorted` returns the members in an order that follows the set's iteration order, which for a NaN follows the address
+ * of the float object: `[1.5, nan]` in one call, `[nan, 1, 2]` in another. The port does not model an order that is
+ * not one and raises `TypeError`. Nothing is opened by that: no engine module calls `required_names` at this freeze
+ * (the oracle's tests do), and were its result handed to `read_lock`, a NaN is never equal to a declared name, so the
+ * oracle refuses there (`lock omits a declared required secret`). test/vectors/port-divergences.golden, `required-names.*`.
+ */
 function sorted(unique: PyValue[]): PyValue[] {
   if (unique.length < 2) return unique;
   if (unique.every(value => typeof value === 'string')) return (unique as string[]).sort(compare);

@@ -62,6 +62,7 @@ class Port(unittest.TestCase):
                 # Not waived here: listed with a written analysis for the reviewer.
                 self.assertIn(result['status'], ('survived', 'compiler', 'crash-only'), result['id'])
                 self.assertEqual(unkilled[result['id']]['status'], result['status'], result['id'])
+                self.assertEqual({'survived': 'redundant survivor', 'compiler': 'compiler', 'crash-only': 'crash-only'}[result['status']], unkilled[result['id']]['classification'], result['id'])
                 self.assertGreater(len(unkilled[result['id']]['analysis']), 200)
         self.assertEqual(set(unkilled), {r['id'] for r in results['results'] if r['status'] != 'killed'})
         self.assertEqual(len({entry['analysis'] for entry in unkilled.values()}), len(unkilled))
@@ -96,17 +97,78 @@ class Port(unittest.TestCase):
     def test_deliberate_divergences_are_named_and_still_hold_on_the_oracle(self):
         entries = json.loads((ROOT / 'test/vectors/port-divergences.golden').read_text())
         self.assertEqual(len({entry['id'] for entry in entries}), len(entries))
+        self.assertEqual({entry['divergence'] for entry in entries}, {'D1', 'D2'})
         ts_port.initialize()
         for entry in entries:
             self.assertGreater(len(entry['reason']), 100, entry['id'])
+            self.assertTrue(entry['reason'].startswith(entry['divergence'] + ': '), entry['id'])
             self.assertNotEqual(entry['oracle'], entry['port'], entry['id'])
             vector = ts_port.Vector('divergence', entry['id'], entry)
             try:
                 args, kwargs = vector.prepare()
-                outcome = ts_port.invoke(entry['function'], ts_port.decode(args), ts_port.decode(kwargs))
-                self.assertEqual(json.loads(vector.unbind(ts_port.canonical(outcome))), entry['oracle'], entry['id'])
+                outcome = json.loads(vector.unbind(ts_port.canonical(ts_port.invoke(entry['function'], ts_port.decode(args), ts_port.decode(kwargs)))))
+                self.assertEqual(ts_port.unordered(outcome) if entry.get('unordered') else outcome, entry['oracle'], entry['id'])
             finally:
                 vector.cleanup()
+        # D1 changes the public code where the oracle would have refused the content: that is recorded, not implied.
+        by_id = {entry['id']: entry for entry in entries}
+        changed = by_id['gzip.crc-trailer.identity-mismatch']
+        self.assertEqual(dict(changed['oracle']['public']['$mapping'])['error_code'], 'E_ARCHIVE_IDENTITY')
+        self.assertEqual(dict(changed['port']['public']['$mapping'])['error_code'], 'E_ADAPTER_INPUT')
+        for entry in entries:
+            if entry['divergence'] == 'D1':
+                self.assertEqual((entry['port']['message'], dict(entry['port']['public']['$mapping'])['error_code']), ('unreadable archive or manifest', 'E_ADAPTER_INPUT'), entry['id'])
+            else:
+                self.assertEqual(entry['port'], {'crash': 'TypeError'}, entry['id'])
+                self.assertIn({'$float': 'nan'}, entry['oracle']['result'], entry['id'])
+
+    def test_rulings_are_recorded_as_received_and_nothing_unkilled_counts_as_killed(self):
+        record = json.loads((ROOT / 'test/port-rulings.golden').read_text())
+        rulings = {entry['id']: entry for entry in record['rulings']}
+        self.assertEqual(sorted(rulings), ['D1', 'D2', 'M1', 'O1', 'R6'])
+        for entry in rulings.values():
+            self.assertGreater(len(entry['as_received']), 40, entry['id'])
+        results = {r['id']: r['status'] for r in json.loads(ts_mutants.RESULTS.read_text())['results']}
+        reviewed = json.loads((ROOT / 'test/mutants/ts-reviewed.golden').read_text())
+        classes = rulings['M1']['classification']
+        self.assertEqual({name: len(ids) for name, ids in classes.items()}, {'redundant survivor': 5, 'compiler': 2, 'crash-only': 1})
+        self.assertEqual(sorted(entry['id'] for entry in reviewed), sorted(ident for ids in classes.values() for ident in ids))
+        for entry in reviewed:
+            self.assertNotEqual(results[entry['id']], 'killed', entry['id'])
+            self.assertIn(entry['id'], classes[entry['classification']])
+        self.assertEqual(sum(status == 'killed' for status in results.values()), 262)
+        self.assertEqual(len(results), 270)
+        # The witness a ruling moved to a later module is an open obligation with a trigger, not a note.
+        owed = {entry['id']: entry for entry in record['obligations']}
+        self.assertEqual(owed['archive.L140.4']['due_when_any_exists'], ['src/cook.ts', 'src/deploy.ts'])
+        backlog = {entry['id'] for entry in record['backlog']}
+        for item in rulings['O1']['items']:
+            self.assertGreater(len(item['bound']), 60, item['id'])
+            self.assertIn(item['backlog'], backlog, item['id'])
+        r6 = json.loads((ROOT / 'test/vectors/r6-combine.golden').read_text())
+        self.assertEqual(sorted(entry['id'] for entry in r6['known_mismatches_of_the_combine_helper']), sorted(rulings['R6']['known_mismatches_of_the_combine_helper']))
+        self.assertEqual(r6['vectors']['connectome_config.merge_layers'].get('mismatch', 0), 0)
+
+    def test_the_readiness_check_is_red_while_a_review_or_a_ruling_is_owed(self):
+        record = json.loads((ROOT / 'test/port-rulings.golden').read_text())
+        done = subprocess.run([sys.executable, str(ROOT / 'scripts/check-port-ready')], capture_output=True, text=True)
+        lines = done.stdout.splitlines()
+        self.assertEqual(lines[0], '262 of 270 TS mutants killed')
+        self.assertIn('RULED: 8 TS mutants are not kills and are accepted as such by ruling M1: 5 redundant survivors, 2 compiler, 1 crash-only', lines)
+        owed = record['delta_review']['status'] != 'passed' or any(entry['status'] != 'ruled' for entry in record['open_findings'])
+        self.assertEqual(done.returncode, int(owed), done.stdout)
+        if record['delta_review']['status'] != 'passed':
+            self.assertTrue(any(line.startswith('BLOCKED: the delta review is ') for line in lines), done.stdout)
+        self.assertEqual('PASS port evidence' in lines, not owed)
+
+    def test_archives_of_4_gib_are_recorded_as_read_not_as_divergent(self):
+        large = json.loads((ROOT / 'test/vectors/port-large.golden').read_text())
+        self.assertGreaterEqual(large['decompressed_bytes'], 1 << 32)
+        cases = {case['id']: case for case in large['cases']}
+        self.assertEqual(cases['large.valid']['classification'], 'equal')
+        self.assertEqual(cases['large.valid']['oracle'], cases['large.valid']['port'])
+        self.assertIn('result', cases['large.valid']['port'])
+        self.assertEqual((cases['large.crc-trailer']['full_gzip_read'], cases['large.crc-trailer']['classification']), ('BadGzipFile', 'D1'))
 
 
 if __name__ == '__main__':
