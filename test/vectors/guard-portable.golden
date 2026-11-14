@@ -1,0 +1,1 @@
+{"args":[{"$mapping":[[1,"value"]]}],"function":"connectome_spawn.data.json_data","kwargs":{"$mapping":[]},"outcome":{"exception":"SpawnError","message":"string keys required"}}

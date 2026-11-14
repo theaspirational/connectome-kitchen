@@ -11,7 +11,7 @@ try:
  subprocess.run([sys.executable,str(ROOT/'scripts/inventory-sites')],check=True)
  subprocess.run([sys.executable,str(ROOT/'scripts/site-manifest')],check=True)
  subprocess.run([sys.executable,str(ROOT/'scripts/unreachable-note')],check=True)
- subprocess.run([sys.executable,str(ROOT/'test/differential/guard_vectors.py'),'replay','--vectors',str(ROOT/'test/vectors/guard-negative.golden')],check=True)
+ for name in ('guard-negative.golden','guard-portable.golden'):subprocess.run([sys.executable,str(ROOT/'test/differential/guard_vectors.py'),'replay','--vectors',str(ROOT/'test/vectors'/name)],check=True)
 except (ValueError,OSError,KeyError,subprocess.CalledProcessError) as error:
  print('BLOCKED: invalid/stale phase-1 evidence ('+type(error).__name__+')');sys.exit(1)
 missing=[]
@@ -24,5 +24,7 @@ if counts['named_remaining']:missing.append('named independent checks not killed
 if counts['B_independent_replayed']!=counts['B_recorded']:missing.append('independent B contract replays: '+str(counts['B_independent_replayed'])+'/'+str(counts['B_recorded'])+' (reasons per record: docs/phase1-unreachable.md)')
 if counts['C_shim_replayed']!=counts['C_recorded']:missing.append('C shim projections: '+str(counts['C_shim_replayed'])+'/'+str(counts['C_recorded'])+' (reachable '+str(counts['C_shim_replayed'])+'/'+str(counts['C_recorded']-counts['C_unreachable_documented'])+'; unreachable '+str(counts['C_unreachable_documented'])+', documented in docs/phase1-unreachable.md)')
 for message in missing:print('BLOCKED: '+message)
+# Not a verdict: kills by a Python-only witness are shown apart from ordinary clean kills. Whether they suffice is for review to decide.
+if counts['killed_python_only_witness'] or counts['named_killed_python_only_witness']:print('NOTE: killed only by a Python-only witness (input no JSON document decodes to; counted in the killed totals, listed in guard-review.golden): guard mutants '+str(counts['killed_python_only_witness'])+', named checks '+str(counts['named_killed_python_only_witness']))
 if not missing:print('PASS phase-1 evidence; does not qualify a TS engine port or publication')
 sys.exit(int(bool(missing)))

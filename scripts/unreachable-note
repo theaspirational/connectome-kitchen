@@ -1,52 +1,102 @@
 #!/usr/bin/env python3
 """Write docs/phase1-unreachable.md: every recorded B and C entry, grouped by why it is or is not replayable.
 
-Generated from `test/vectors/scenario-classes.golden`, `scenario-obligations.golden`,
-`cli-obligations.golden` and `cli-replay.golden`. Nothing here changes a status.
+Generated from `test/vectors/scenario-classes.golden`, `scenario-calls.golden`,
+`scenario-obligations.golden`, `cli-obligations.golden` and `cli-replay.golden`.
+Nothing here changes a status.
 """
 import argparse, json, sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 V=ROOT/'test/vectors'
+FAKE_ADAPTER='tests/fixtures/cook.py';FAKE_VERIFIER='tests/fixtures/analyze.py';REAL_ADAPTER='scripts/cook-adapter.py'
+COMMANDS={FAKE_ADAPTER:'the fake adapter `'+FAKE_ADAPTER+'`',REAL_ADAPTER:'the real adapter `'+REAL_ADAPTER+'`',FAKE_VERIFIER:'the fake verifier `'+FAKE_VERIFIER+'`','unset':'left unset','empty':'an empty argv','inline':'an inline interpreter script'}
+def uses(counts):
+ for label in counts:
+  if label not in COMMANDS:raise ValueError('command label without a description: '+label)
+ return ', '.join(COMMANDS[label]+(' ('+str(n)+' of '+str(sum(counts.values()))+' constructions)' if len(counts)>1 else '') for label,n in counts.items())
+def total(fact):return sum(fact['calls'].values())
+def some(rows,test):return sum(1 for c,f in rows if f['observed'] and test(f))
+
+# One function per group: (group reason, {record id: its own reason}). The group
+# reason states only what holds for every record without an own reason, and
+# every count in it is taken from the facts.
+def deployment(rows):
+ own={}
+ for c,f in rows:
+  if not f['observed']:raise ValueError('deployment record not observed: '+c['id'])
+  notes=[]
+  if list(f['cook_command'])!=[FAKE_ADAPTER]:notes.append('`cook_command` is '+uses(f['cook_command'])+(', which `engines.cook` can name' if list(f['cook_command'])==[REAL_ADAPTER] else ''))
+  if list(f['analyze_command'])!=[FAKE_VERIFIER]:notes.append('`analyze_command` is '+uses(f['analyze_command']))
+  if not notes:continue
+  pending=[]
+  if FAKE_ADAPTER in f['cook_command']:pending.append('its `cook_command` is still the fake adapter')
+  if FAKE_VERIFIER in f['analyze_command'] or 'inline' in f['analyze_command']:pending.append('contract v1 has no key for the verifier it injects')
+  if c['patches_internals']:pending.append('it patches internals')
+  if total(f)>1:pending.append('it makes '+str(total(f))+' entry-point calls after one snapshot')
+  own[c['id']]='; '.join(notes)+'. Pending '+('because '+'; '.join(pending) if pending else 'for the two general reasons above')+'.'
+ plain=len(rows)-len(own)
+ text=('The method reaches `Deployment.prepare` and/or `activate` on a `Deployment` it builds with a free-form `cook_command` and `analyze_command`. '
+  +str(plain)+' of the '+str(len(rows))+' records give every construction the fake adapter `'+FAKE_ADAPTER+'` and the fake verifier `'+FAKE_VERIFIER+'`. Contract v1 has a closed `engines.cook` record and no verifier key, so no request can name either fake. A fake-injection key was ruled out for v1 when this note was written. '
+  +'The other '+str(len(own))+' use something else for one of the two and carry their own reason below. Where `analyze_command` is left unset the engine discovers the host verifier, which is also what a contract request gets. '
+  +str(some(rows,lambda f:total(f)==1))+' of the '+str(len(rows))+' methods make a single entry-point call; the rest make '+span(rows,lambda f:total(f)>1)+' after one snapshot.')
+ return text,own
+def span(rows,test):
+ values=sorted(total(f) for c,f in rows if f['observed'] and test(f))
+ return str(values[0])+' to '+str(values[-1]) if values else 'none'
+def adapter(rows):
+ return ('The method calls `connectome_cook.adapt` without a deployment ('+span(rows,lambda f:True)+' calls per method). The adapter is an internal stage, not a contract command. '
+  +str(sum(c['patches_internals'] for c,f in rows))+' of the '+str(len(rows))+' methods use `patch` or `Mock`.'),{}
+def lifecycle(rows):
+ if some(rows,lambda f:f['calls'].get('lifecycle:Lifecycle.create',0)>0)!=len(rows):raise ValueError('a lifecycle record without create')
+ return ('Every one of these methods calls `Lifecycle.create`, and '+str(some(rows,lambda f:'lifecycle:Lifecycle.transition' in f['calls']))+' of the '+str(len(rows))+' also call `transition`. Neither has a contract command at `a49b5dc`; only `status` does, and no method consists of status calls alone.'),{}
+def planning(rows):
+ own={c['id']:'One `make_plan` call, so the several-calls reason does not apply. Pending because the recording holds unittest attributes at a random scratch root, not a `spawn` request, and no per-request vector was written for it.'
+  for c,f in rows if f['observed'] and total(f)==1}
+ if len(own)!=some(rows,lambda f:True) and some(rows,lambda f:total(f)<1):raise ValueError('a planning record without a plan call')
+ return ('The method calls `make_plan`, which the `spawn` command stands for. '+str(len(rows)-len(own))+' of the '+str(len(rows))+' methods make '+span(rows,lambda f:total(f)>1)
+  +' different plan calls after the one recorded snapshot, at a random scratch root, so the record is not one request. Converting them means writing new per-request vectors, which this round did not do. The other '+str(len(own))+' make a single call and carry their own reason below.'),own
+def publication(rows):
+ return 'The method belongs to `test_public`, the publication-content checks. That is not engine behaviour and has no contract command.',{}
+def none(rows):
+ own={c['id']:'Skipped when the calls were observed (integration prerequisites absent), so nothing is claimed about what it calls. It has no recorded entry point and stays pending.' for c,f in rows if not f['observed']}
+ return ('No call of `Deployment.prepare`/`activate`, `adapt`, `make_plan` or a lifecycle method was observed in process. '+str(len(rows)-len(own))+' of the '+str(len(rows))
+  +' methods ran to the end that way; '+str(some(rows,lambda f:f['deployments']>0))+' of them build a `Deployment` without preparing or activating it. Whatever such a method tests (single functions, a constructor refusal, a subprocess) is not a contract scenario as recorded. The other '+str(len(own))+' did not run and carry their own reason below.'),own
 B_GROUPS=[
- ('deployment-entry-point','Deployment with the fake adapter and fake verifier',
-  'The method reaches `Deployment.prepare` and/or `activate`, always constructed with the fake adapter `tests/fixtures/cook.py` as `cook_command` and a fake `analyze_command`. Contract v1 has a closed `engines.cook` record and no verifier key, so no request can name either fake. A fake-injection key was ruled out for v1 when this note was written.'),
- ('adapter-only','Adapter called directly',
-  'The method calls `connectome_cook.adapt` without a deployment. The adapter is an internal stage, not a contract command, and most of these methods patch `verify_cook` or `command`.'),
- ('spawn-lifecycle','Spawn lifecycle without a command',
-  'The method drives `Lifecycle.create` and, for most, `transition`. Neither has a contract command at `a49b5dc`; only `status` does, and no method consists of a status call alone.'),
- ('spawn-plan','Spawn planning, several requests per method',
-  'The method calls `make_plan`, which the `spawn` command stands for. It is not replayable as recorded: one snapshot precedes several different plan calls, and the recorded root is a random scratch path. Converting these means writing new per-request vectors, which this round did not do.'),
- ('publication-gate','Publication gate tests',
-  'The method tests `scripts/check_public.py`. That is not engine behaviour and has no contract command.'),
- ('no-entry-point','No contract entry point',
-  'The method calls individual engine functions or a subprocess and never reaches `Deployment.prepare`/`activate`, `adapt`, `make_plan` or a lifecycle method in process. It is kind-A material, not a scenario.'),
+ ('deployment-entry-point','Deployment with a free-form adapter and verifier command',deployment),
+ ('adapter-only','Adapter called directly',adapter),
+ ('spawn-lifecycle','Spawn lifecycle without a command',lifecycle),
+ ('spawn-plan','Spawn planning',planning),
+ ('publication-gate','Publication gate tests',publication),
+ ('no-entry-point','No contract entry point',none),
 ]
 def build():
- classes=json.loads((V/'scenario-classes.golden').read_text());B=json.loads((V/'scenario-obligations.golden').read_text())
+ classes=json.loads((V/'scenario-classes.golden').read_text());B=json.loads((V/'scenario-obligations.golden').read_text());facts=json.loads((V/'scenario-calls.golden').read_text())
  C=json.loads((V/'cli-obligations.golden').read_text());replay={r['id']:r for r in json.loads((V/'cli-replay.golden').read_text())}
  if [b['id'] for b in B]!=[c['id'] for c in classes] or any(b['status']=='replayed' for b in B):raise ValueError('B accounting out of step')
+ if [f['id'] for f in facts]!=[c['id'] for c in classes] or any(f['observed'] and sorted(f['calls'])!=c['entry_points'] for c,f in zip(classes,facts)):raise ValueError('observed calls out of step with the classes')
+ paired=list(zip(classes,facts))
  out=['# Phase-1 replay accounting: every recorded B and C entry','',
   'Generated by `scripts/unreachable-note`; do not edit by hand. It lists each recorded entry once, under the reason it can or cannot be replayed through the contract shim. It records no approval and changes no status: `scripts/check-module-ready` still reports both items as blocking.','',
   '## B: recorded scenarios','',
   '**B replayed: 0/'+str(len(B))+'.** Every record is still `pending-independent-contract-request`.','',
-  'A record is one unittest method that owned a scratch directory. The class is derived from the entry points the method executed in process (recorder line coverage) and is committed in `test/vectors/scenario-classes.golden`. "Patches internals" means the method uses `patch` or `Mock`.','',
-  '| Group | Records | Patching internals |','| --- | ---: | ---: |']
- total=0
- for key,title,_ in B_GROUPS:
-  rows=[c for c in classes if c['class']==key];total+=len(rows)
-  out.append('| '+title+' | '+str(len(rows))+' | '+str(sum(c['patches_internals'] for c in rows))+' |')
- out+=['| **Total** | **'+str(total)+'** | **'+str(sum(c['patches_internals'] for c in classes))+'** |','']
- if total!=len(B):raise ValueError('B groups do not add up')
- out+=['Besides the per-group reason, two facts hold for every group that reaches an entry point:','',
-  '- The recordings were taken at random scratch roots, and those roots enter request ids, build directory names and document hashes. A replay at a fixed root cannot be compared with the recorded final tree.',
-  '- The engine refuses a root with a group- or other-writable ancestor. Every directory of this checkout is group-writable; the frozen suite passes through its in-process `safe_ancestors` seam, which a second engine in another process cannot use.','']
+  'A record is one unittest method that owned a scratch directory. The class is derived from the entry points the method executed in process (recorder line coverage) and is committed in `test/vectors/scenario-classes.golden`. "Patches internals" means the method uses `patch` or `Mock`. The call counts (`×n`) and the commands each `Deployment` was built with were observed by `test/differential/scenario_calls.py` and are committed in `test/vectors/scenario-calls.golden`. A group reason states what holds for the records of the group that have no reason of their own; a record that differs carries its own.','',
+  '| Group | Records | Patching internals | With an own reason |','| --- | ---: | ---: | ---: |']
+ total_rows=0;texts={}
  for key,title,reason in B_GROUPS:
-  rows=[c for c in classes if c['class']==key]
-  out+=['### '+title+' ('+str(len(rows))+')','',reason,'']
-  for c in rows:
-   detail=', '.join('`'+e.split(':',1)[1]+'`' for e in c['entry_points'])
-   out.append('- `'+c['id']+'`'+(' — reaches '+detail if detail else '')+(' — patches internals' if c['patches_internals'] else ''))
+  rows=[(c,f) for c,f in paired if c['class']==key];total_rows+=len(rows);texts[key]=reason(rows)
+  out.append('| '+title+' | '+str(len(rows))+' | '+str(sum(c['patches_internals'] for c,f in rows))+' | '+str(len(texts[key][1]))+' |')
+ out+=['| **Total** | **'+str(total_rows)+'** | **'+str(sum(c['patches_internals'] for c in classes))+'** | **'+str(sum(len(own) for text,own in texts.values()))+'** |','']
+ if total_rows!=len(B):raise ValueError('B groups do not add up')
+ out+=['Besides the group reason, two facts hold for every record that reaches an entry point:','',
+  '- The recordings were taken at random scratch roots, and those roots enter request ids, build directory names and document hashes. A replay at a fixed root cannot be compared with the recorded final tree.',
+  '- The engine refuses a root with a group- or other-writable ancestor. The frozen suite models the directories above its scratch root as safe through its in-process `safe_ancestors` seam, which a second engine in another process cannot use; a checkout with a group-writable ancestor therefore cannot hold a scenario root without an agreed seam.','']
+ for key,title,_ in B_GROUPS:
+  rows=[(c,f) for c,f in paired if c['class']==key];text,own=texts[key]
+  out+=['### '+title+' ('+str(len(rows))+')','',text,'']
+  for c,f in rows:
+   detail=', '.join('`'+e.split(':',1)[1]+'`'+(' ×'+str(f['calls'][e]) if f['observed'] else '') for e in c['entry_points'])
+   out.append('- `'+c['id']+'`'+(' — reaches '+detail if detail else '')+(' — patches internals' if c['patches_internals'] else '')+(' — '+own[c['id']] if c['id'] in own else ''))
   out.append('')
  done=[c for c in C if c['status']=='replayed'];left=[c for c in C if c['status']!='replayed']
  for c in left:

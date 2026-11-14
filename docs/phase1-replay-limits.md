@@ -103,22 +103,33 @@ for every record; none is silently counted as an independent replay.
 
 `test/vectors/scenario-classes.golden` classifies all 279 records by the entry
 points their test method executed in process (from the recorder's line
-coverage) and by whether the method patches engine internals. The status of
+coverage) and by whether the method patches engine internals.
+`test/vectors/scenario-calls.golden` adds how often each entry point was
+called and which commands every `Deployment` was built with; it is observed by
+`test/differential/scenario_calls.py`, which patches nothing. The status of
 every record is unchanged: pending.
+
+The table gives the reason that holds for most of a class. It does not hold
+for every record: 19 records differ, and the generated
+`docs/phase1-unreachable.md` gives each of those its own reason.
 
 | Class | Records | Of these, patching internals | What stands between it and a contract request |
 | --- | ---: | ---: | --- |
-| `deployment-entry-point` (`Deployment.prepare` and/or `activate`) | 84 | 12 | Every one constructs `Deployment` with the fake adapter `tests/fixtures/cook.py` as `cook_command` and a fake `analyze_command`. Contract v1 has a closed `engines.cook` record and no key for either |
-| `adapter-only` (`connectome_cook.adapt` without a deployment) | 15 | 12 | The adapter is an internal stage, not a contract command; 12 patch `verify_cook` or `command` |
-| `spawn-lifecycle` (`Lifecycle.create`, `transition`, `status`) | 28 | 5 | `create` and `transition` have no command at this freeze; only `status` does |
-| `spawn-plan` (`make_plan`) | 13 | 1 | Expressible as `spawn` `plan`/`dry-run` requests, but each method issues several requests against one snapshot |
+| `deployment-entry-point` (`Deployment.prepare` and/or `activate`) | 84 | 12 | 78 build every `Deployment` with the fake adapter `tests/fixtures/cook.py` as `cook_command` and the fake verifier `tests/fixtures/analyze.py` as `analyze_command`. Contract v1 has a closed `engines.cook` record and no key for either. Of the other 6, one uses the real adapter (with `run` patched) and five keep the fake adapter but leave the verifier unset in some construction or use an inline one |
+| `adapter-only` (`connectome_cook.adapt` without a deployment) | 15 | 12 | The adapter is an internal stage, not a contract command; 12 use `patch` or `Mock` |
+| `spawn-lifecycle` (`Lifecycle.create`, `transition`, `status`) | 28 | 5 | All 28 call `create` and 25 call `transition`, which have no command at this freeze; only `status` does |
+| `spawn-plan` (`make_plan`) | 13 | 1 | Expressible as `spawn` `plan`/`dry-run` requests. 11 methods issue 2 to 13 plan calls against one snapshot; 2 issue one |
 | `publication-gate` (`test_public`) | 17 | 3 | Not engine behaviour; no contract command |
-| `no-entry-point` | 122 | 26 | The method calls individual functions (kind-A material) or a subprocess; it never reaches a contract entry point in process |
+| `no-entry-point` | 122 | 26 | No contract entry point was observed in process. 111 ran that way (16 of them build a `Deployment` without using it); 11 real-cook integration tests skip without their prerequisites and were not observed |
 
 So at most 125 of the 279 records (84 + 28 + 13) touch something a contract
-command stands for, and none of those is a single request. The 279 denominator
-counts unittest methods that own a scratch directory; it is not a count of
-kind-B scenarios in the plan's sense.
+command stands for. Ten of those make a single entry-point call: eight
+deployment methods, all with the fake adapter, and two planning methods. Those
+two are one request each in principle; they are pending because the recording
+holds unittest attributes at a random scratch root, not a `spawn` request, and
+no per-request vector was written for them. The other 115 make several calls
+after one snapshot. The 279 denominator counts unittest methods that own a
+scratch directory; it is not a count of kind-B scenarios in the plan's sense.
 
 Two further facts block a same-root replay on this checkout:
 
@@ -130,9 +141,10 @@ Two further facts block a same-root replay on this checkout:
   needs no contract change: the real adapter with a fake *runtime*. Scenarios
   built that way are new vectors, not replays of these recordings.
 - **Ancestors.** The engine refuses a root with a group- or other-writable
-  ancestor. Every directory of this checkout is group-writable, and the frozen
-  suite passes only because it models the directories above its scratch root
-  as root-owned 0755 in process (`tests/deploy_fixtures.py`, `safe_ancestors`).
+  ancestor. The checkout this was written in has group-writable directories
+  all the way up, and the frozen suite passes there only because it models the
+  directories above its scratch root as root-owned 0755 in process
+  (`tests/deploy_fixtures.py`, `safe_ancestors`).
   A second engine in another process cannot use that seam. A fixed scenario
   root therefore needs a location with safe ancestry outside the checkout, or
   an agreed harness seam.

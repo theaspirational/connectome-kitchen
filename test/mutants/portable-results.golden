@@ -1,0 +1,13 @@
+[
+  {
+    "id": "spawn.data.L34.8",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 1,
+    "runtime_errors": 0,
+    "witnesses": [
+      "b7b8bb6a911910f9b7c4b5d6447cfa518f81af7809663621f40e83b5afdf1087"
+    ],
+    "vector_sha256": "b7b8bb6a911910f9b7c4b5d6447cfa518f81af7809663621f40e83b5afdf1087"
+  }
+]

@@ -258,5 +258,27 @@
    "id": "spawn.lifecycle.adapter-required",
    "analysis": "Sites #1 (importer, line 190) and #2 (adapter, line 194) are killed by clean tests. Site #3 (identity provider, line 198) is the same mutation as guard spawn.lifecycle.L198.16 and stays open for the reason written there: with the check removed a None provider crashes with AttributeError on the next statement, before any intent is written, and the guard is only reachable through the method Lifecycle.transition, so neither a clean kill nor a crash-only function vector exists."
   }
+ ],
+ "python_only": {
+  "test_guard_spawn_state.Guards.test_spawn_data_L34_8": "The mapping has an integer key. A JSON object has string keys only; the tagged `$mapping` encoding can carry the key, and the portable vector for this mutant does.",
+  "test_guard_spawn_state.Guards.test_spawn_data_L74_8": "The document is an instance of a `str` subclass. A request carries plain strings only.",
+  "test_guard_spawn_state.Guards.test_spawn_identity_L107_8": "The reader is replaced so that it returns `collections.UserDict` tables. The persisted JSON state decodes to `dict` only."
+ },
+ "portable_vectors": [
+  {
+   "id": "spawn.data.L34.8",
+   "function": "connectome_spawn.data.json_data",
+   "args": [
+    {
+     "$mapping": [
+      [
+       1,
+       "value"
+      ]
+     ]
+    }
+   ],
+   "kwargs": {}
+  }
  ]
 }

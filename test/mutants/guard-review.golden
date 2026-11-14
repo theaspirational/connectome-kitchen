@@ -1993,7 +1993,8 @@
       {
         "file": "purpose-results.golden",
         "kind": "unit",
-        "witness": null
+        "witness": null,
+        "python_only": "test_guard_cook.Guards.test_config_L46_12"
       }
     ]
   },
@@ -2256,7 +2257,8 @@
       {
         "file": "purpose-results.golden",
         "kind": "unit",
-        "witness": null
+        "witness": null,
+        "python_only": "test_guard_cook.Guards.test_cook_L208_4"
       }
     ]
   },
@@ -5654,7 +5656,8 @@
       {
         "file": "purpose-results.golden",
         "kind": "unit",
-        "witness": null
+        "witness": null,
+        "python_only": "test_guard_spawn_sources.Guards.test_catalog_L81_4"
       }
     ]
   },
@@ -5668,7 +5671,8 @@
       {
         "file": "purpose-results.golden",
         "kind": "unit",
-        "witness": null
+        "witness": null,
+        "python_only": "test_guard_spawn_sources.Guards.test_catalog_L85_4"
       }
     ]
   },
@@ -5920,7 +5924,8 @@
       {
         "file": "purpose-results.golden",
         "kind": "unit",
-        "witness": null
+        "witness": null,
+        "python_only": "test_guard_spawn_sources.Guards.test_catalog_L137_8"
       }
     ]
   },
@@ -6130,7 +6135,13 @@
       {
         "file": "purpose-results.golden",
         "kind": "unit",
-        "witness": null
+        "witness": null,
+        "python_only": "test_guard_spawn_state.Guards.test_spawn_data_L34_8"
+      },
+      {
+        "file": "portable-results.golden",
+        "kind": "portable-vector",
+        "witness": "b7b8bb6a911910f9b7c4b5d6447cfa518f81af7809663621f40e83b5afdf1087"
       }
     ]
   },
@@ -6163,7 +6174,8 @@
       {
         "file": "purpose-results.golden",
         "kind": "unit",
-        "witness": null
+        "witness": null,
+        "python_only": "test_guard_spawn_state.Guards.test_spawn_data_L74_8"
       }
     ]
   },
@@ -6375,7 +6387,8 @@
       {
         "file": "purpose-results.golden",
         "kind": "unit",
-        "witness": null
+        "witness": null,
+        "python_only": "test_guard_spawn_state.Guards.test_spawn_identity_L107_8"
       }
     ]
   },

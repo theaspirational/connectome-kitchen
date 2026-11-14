@@ -13,6 +13,11 @@ def summarize():
  for a in anchors:
   if hashlib.sha256((ROOT/'oracle'/a['file']).read_bytes()).hexdigest()!=a['source_sha256']:raise ValueError('stale oracle anchor')
  witnesses={hashlib.sha256(line.encode()).hexdigest() for line in (ROOT/'test/vectors/guard-negative.golden').read_text().splitlines()}
+ import sys
+ sys.path.insert(0,str(ROOT/'test/mutants'))
+ import portable
+ # Declared witnesses whose input no JSON document decodes to. Their kills are real; they are counted apart.
+ python_only=portable.python_only()
  evidence={k:[] for k in expected};latest={}
  for file,kind in [('oracle-results.golden','unit'),('a-results.golden','prior-A'),('extended-results.golden','unit'),('negative-results.golden','negative'),('sweep-results.golden','unit'),('purpose-results.golden','unit')]:
   for row in read(file):
@@ -21,9 +26,17 @@ def summarize():
    latest[ident]=row['status']
    killed=unit_kill(row) if kind=='unit' else row.get('status')=='killed' and bool(row.get('witnesses'))
    if kind=='negative' and killed and not set(row['witnesses'])<=witnesses:raise ValueError('missing committed killing witness')
-   if killed:evidence[ident].append({'file':file,'kind':kind,'witness':row.get('witnesses',[None])[0]})
- import sys
- sys.path.insert(0,str(ROOT/'test/mutants'))
+   if killed:
+    entry={'file':file,'kind':kind,'witness':row.get('witnesses',[None])[0]}
+    if file=='purpose-results.golden' and row['test'] in python_only:entry['python_only']=row['test']
+    evidence[ident].append(entry)
+ # Portable replacements of Python-only witnesses: same kill rule as the negative vectors, their own vector file.
+ replacements={hashlib.sha256(line.encode()).hexdigest() for line in (ROOT/'test/vectors/guard-portable.golden').read_text().splitlines()}
+ if (ROOT/'test/vectors/guard-portable.golden').read_text()!=''.join(line+'\n' for line in portable.build().values()):raise ValueError('stale portable vectors')
+ for row in read('portable-results.golden'):
+  if row['id'] not in expected:raise ValueError('unknown mutant')
+  if row['status']!='killed' or row['vector_sha256'] not in replacements or row['vector_sha256'] not in row['witnesses']:raise ValueError('portable vector without its kill: '+row['id'])
+  evidence[row['id']].append({'file':'portable-results.golden','kind':'portable-vector','witness':row['vector_sha256']})
  import assemble, named_sites
  waivers=read('equivalence-waivers.golden');waived={}
  if waivers!=assemble.build():raise ValueError('stale equivalence waivers')
@@ -70,6 +83,15 @@ def summarize():
   if row['id'] in notes and row['status']=='killed':raise ValueError('unresolved note on a killed name: '+row['id'])
   if row['status']!='pending-semantic-mutant':ng.add(row['id'])
   if row['status']=='killed':nk.add(row['id'])
+ # A name leans on a Python-only witness when one of its site mutants has no other kill and the name has no site-independent proof.
+ def leans(row):
+  sites={}
+  for entry in row.get('evidence',[]):
+   if 'site' not in entry:return False
+   sites.setdefault(entry['site'],[]).append(entry.get('vector') in python_only)
+  return any(all(flags) for flags in sites.values())
+ named_python_only=sorted(row['id'] for row in named if row['status']=='killed' and leans(row))
+ guard_python_only=[r['id'] for r in reviews if r['status']=='killed' and all('python_only' in e for e in r['evidence'])]
  B=json.loads((ROOT/'test/vectors/scenario-obligations.golden').read_text());C=json.loads((ROOT/'test/vectors/cli-obligations.golden').read_text())
  replay={r['id']:r for r in json.loads((ROOT/'test/vectors/cli-replay.golden').read_text())}
  for row in C:
@@ -77,7 +99,7 @@ def summarize():
   if row['status']=='replayed' and not (proof.get('status')=='replayed' and proof.get('projected_record_sha256')==row['raw_sha256'] and proof.get('build_identity_sha256') and proof.get('adapter_failure') and proof.get('adapter_failure')==proof.get('expected_adapter_failure')):raise ValueError('C entry marked replayed without projection evidence')
  for row in B:
   if row['status']=='replayed':raise ValueError('B entry marked replayed without a replay harness')
- counts={'guard_site_mutants':len(anchors),'combined_killed':sum(r['status']=='killed' for r in reviews),'equivalent':len(waived),'crash_only_kind_A':sum(r['status']==crash_only.CATEGORY for r in reviews),'remaining_unreviewed':sum(r['status']=='unreviewed' for r in reviews),'remaining_categories':{},'named_checks':len(named),'named_mutants_implemented':len(ng),'named_killed':len(nk),'named_crash_only_kind_A':sum(r['status']==crash_only.CATEGORY for r in named),'named_remaining':sum(r['status'] not in ('killed',crash_only.CATEGORY) for r in named),'B_recorded':len(B),'B_independent_replayed':sum(r['status']=='replayed' for r in B),'C_recorded':len(C),'C_shim_replayed':sum(r['status']=='replayed' for r in C),'negative_vectors':len(witnesses),'unavailable_rows':[14,43,44,45,46],'C_unreachable_documented':sum(replay.get(r['id'],{}).get('status')=='unreachable-without-patching' for r in C if r['status']!='replayed'),'unreviewed_with_written_analysis':sum(r['status']=='unreviewed' and 'analysis' in r for r in reviews)}
+ counts={'guard_site_mutants':len(anchors),'combined_killed':sum(r['status']=='killed' for r in reviews),'killed_ordinary':sum(r['status']=='killed' for r in reviews)-len(guard_python_only),'killed_python_only_witness':len(guard_python_only),'python_only_witnesses':len(python_only),'portable_replacement_vectors':len(replacements),'equivalent':len(waived),'crash_only_kind_A':sum(r['status']==crash_only.CATEGORY for r in reviews),'remaining_unreviewed':sum(r['status']=='unreviewed' for r in reviews),'remaining_categories':{},'named_checks':len(named),'named_mutants_implemented':len(ng),'named_killed':len(nk),'named_killed_ordinary':len(nk)-len(named_python_only),'named_killed_python_only_witness':len(named_python_only),'named_crash_only_kind_A':sum(r['status']==crash_only.CATEGORY for r in named),'named_remaining':sum(r['status'] not in ('killed',crash_only.CATEGORY) for r in named),'B_recorded':len(B),'B_independent_replayed':sum(r['status']=='replayed' for r in B),'C_recorded':len(C),'C_shim_replayed':sum(r['status']=='replayed' for r in C),'negative_vectors':len(witnesses),'unavailable_rows':[14,43,44,45,46],'C_unreachable_documented':sum(replay.get(r['id'],{}).get('status')=='unreachable-without-patching' for r in C if r['status']!='replayed'),'unreviewed_with_written_analysis':sum(r['status']=='unreviewed' and 'analysis' in r for r in reviews)}
  for r in reviews:
   if r['status']=='unreviewed':counts['remaining_categories'][r['last_trial_category']]=counts['remaining_categories'].get(r['last_trial_category'],0)+1
  return counts,reviews

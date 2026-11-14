@@ -243,5 +243,10 @@
    ],
    "kwargs": {}
   }
- ]
+ ],
+ "python_only": {
+  "test_guard_spawn_sources.Guards.test_catalog_L81_4": "The catalog is a `types.SimpleNamespace` with the right attributes instead of a `RoleCatalog`. The check is on the Python class of an in-process object, which no request carries.",
+  "test_guard_spawn_sources.Guards.test_catalog_L85_4": "`descriptors` is a `collections.OrderedDict`: a `dict` subclass. A JSON document decodes objects to plain `dict` only.",
+  "test_guard_spawn_sources.Guards.test_catalog_L137_8": "`requires` is a one-shot iterator, so that the dependency walk ends under the mutant. A JSON list can be walked again and would make the mutant recurse without end."
+ }
 }

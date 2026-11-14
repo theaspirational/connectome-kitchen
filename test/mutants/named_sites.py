@@ -28,7 +28,7 @@ def fragments(only=None):
  for path in sorted((M/'purpose').glob('*.golden')):
   if only and path.stem!=only:continue
   data=json.loads(path.read_text())
-  if set(data)-{'named_sites','kills','waivers','unresolved','crash_only'}:raise ValueError('unknown fragment key: '+path.name)
+  if set(data)-{'named_sites','kills','waivers','unresolved','crash_only','python_only','portable_vectors'}:raise ValueError('unknown fragment key: '+path.name)
   result[path.stem]=data
  return result
 

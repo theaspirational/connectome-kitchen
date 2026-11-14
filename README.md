@@ -174,10 +174,13 @@ has the current counts:
 | --- | ---: |
 | Guard-site mutants | 573 |
 | Killed (clean evidence) | 564 |
+| ... of these with ordinary evidence | 557 |
+| ... of these only by a Python-only witness (shown apart) | 7 |
 | Waived as equivalent or unreachable, each with a written justification | 4 |
 | Killed only by a crash-only kind-A vector (separate category) | 3 |
 | Unreviewed, each with a written analysis | 2 |
 | Named checks killed | 200 of 203 |
+| ... of these leaning on a Python-only witness | 1 |
 | Named checks killed only with a crash-only vector (separate category) | 1 |
 | Named checks open | 2 |
 | C entries replayed through the unpatched adapter | 49 of 60 (11 unreachable) |
@@ -210,6 +213,22 @@ What this slice added:
   what is neither killed, waived nor crash-only. These stay blocking.
 - **C replay** (`test/differential/replay_c.py`) and the per-entry B/C
   accounting in `docs/phase1-unreachable.md`.
+- **Observed calls per B record** (`test/differential/scenario_calls.py`,
+  `test/vectors/scenario-calls.golden`): how often each recorded test method
+  called an entry point and which commands it built a `Deployment` with. The
+  accounting words its reasons from these facts, and a record that differs
+  from its group gets its own reason. Nothing is patched; no status changes.
+- **Python-only witnesses, shown apart** (`test/mutants/portable.py`). Eight
+  purpose-built tests give their function an input that no JSON document
+  decodes to (a `UserDict`, an `OrderedDict`, a look-alike object, a `str`
+  subclass, a one-shot iterator, an integer key, a patched reader). They are
+  clean unit-test kills of the Python oracle, declared under `python_only` in
+  `test/mutants/purpose/*.golden`. The summary counts the mutants and names
+  that have no other evidence separately, and the readiness gate prints them
+  in a `NOTE` line; whether they suffice is a review decision. One of the
+  eight inputs, the integer key, is expressible in the tagged `$mapping`
+  encoding: `test/vectors/guard-portable.golden` holds that vector and its
+  mutant counts as ordinary evidence.
 
 ```
 python3 test/mutants/named_sites.py
@@ -217,12 +236,15 @@ python3 test/mutants/guard_vectors.py --anchors test/mutants/named-site-anchors.
 python3 test/mutants/purpose.py run --check
 python3 test/mutants/crash_only.py build --check
 python3 test/mutants/crash_only.py run --check
+python3 test/mutants/portable.py build --check
+python3 test/mutants/portable.py run --check
 python3 test/mutants/sweep.py verify --anchors test/mutants/guard-anchors.golden --results test/mutants/sweep-results.golden --out .cache/sweep-verify
 python3 test/mutants/sweep.py verify --anchors test/mutants/named-site-anchors.golden --results test/mutants/named-site-sweep-results.golden --out .cache/named-sweep-verify
 python3 test/mutants/assemble.py
 python3 test/differential/replay_c.py run --cook-source /path/to/local/cook/clone
 python3 test/differential/replay_c.py relocated --cook-source /path/to/local/cook/clone
 python3 test/differential/replay_c.py shim-mutants --cook-source /path/to/local/cook/clone
+python3 test/differential/scenario_calls.py
 python3 scripts/unreachable-note
 ```
 
@@ -233,4 +255,6 @@ holds the reviewed cook commit; without it the command exits 3 and counts
 nothing. Its golden does not depend on the checkout root or the interpreter
 path: `relocated` reruns the gate from a second root to show that, and
 `docs/phase1-replay-limits.md` lists the four host values it names instead of
-hashing.
+hashing. `scenario_calls.py` re-observes all 279 recorded test methods and
+takes about two minutes; methods that skip on the host are reported as not
+compared.

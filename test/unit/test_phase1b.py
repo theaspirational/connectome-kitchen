@@ -1,10 +1,10 @@
 """Evidence rules of the phase-1 deficit tooling: sites, waivers, purpose kills, C projection."""
-import hashlib, importlib.machinery, importlib.util, json, sys, tempfile, unittest
+import hashlib, importlib.machinery, importlib.util, json, re, sys, tempfile, unittest
 from pathlib import Path
 from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(ROOT/'test/mutants'),str(ROOT/'test/differential')]
-import assemble, crash_only, named_checks, named_sites, purpose, sweep
+import assemble, crash_only, named_checks, named_sites, portable, purpose, sweep
 spec=importlib.util.spec_from_file_location('replay_c',ROOT/'test/differential/replay_c.py');replay_c=importlib.util.module_from_spec(spec);spec.loader.exec_module(replay_c)
 summary=importlib.machinery.SourceFileLoader('phase1b_summary',str(ROOT/'scripts/summarize-phase1')).load_module()
 
@@ -242,4 +242,102 @@ class ScenarioAccountingTests(unittest.TestCase):
   for note in json.loads((ROOT/'test/mutants/unresolved.golden').read_text()):
    if note['kind']=='guard-site':self.assertEqual(review[note['id']]['status'],'unreviewed')
    else:self.assertNotEqual(named[note['id']]['status'],'killed')
+ def grouped(self):
+  note=importlib.machinery.SourceFileLoader('unreachable_note',str(ROOT/'scripts/unreachable-note')).load_module()
+  classes=json.loads((ROOT/'test/vectors/scenario-classes.golden').read_text());facts=json.loads((ROOT/'test/vectors/scenario-calls.golden').read_text())
+  return note,classes,facts,lambda key:[(c,f) for c,f in zip(classes,facts) if c['class']==key]
+ def test_observed_calls_agree_with_the_classes(self):
+  note,classes,facts,rows=self.grouped()
+  self.assertEqual([f['id'] for f in facts],[c['id'] for c in classes])
+  for c,f in zip(classes,facts):
+   if f['observed']:
+    self.assertEqual(sorted(f['calls']),c['entry_points'],c['id'])
+    self.assertEqual((sum(f['cook_command'].values()),sum(f['analyze_command'].values())),(f['deployments'],f['deployments']),c['id'])
+   else:self.assertEqual((set(f),c['entry_points']),({'id','observed'},[]),c['id'])
+  self.assertEqual(sum(not f['observed'] for f in facts),11)
+ def test_group_reasons_claim_nothing_a_record_contradicts(self):
+  note,classes,facts,rows=self.grouped();doc=(ROOT/'docs/phase1-unreachable.md').read_text();total=lambda f:sum(f['calls'].values())
+  text,own=note.deployment(rows('deployment-entry-point'))
+  for c,f in rows('deployment-entry-point'):
+   self.assertEqual(c['id'] not in own,list(f['cook_command'])==[note.FAKE_ADAPTER] and list(f['analyze_command'])==[note.FAKE_VERIFIER],c['id'])
+  real=own['test_catalog.CatalogTests.test_role_prepare_adapter_build_lock_reuse_and_preflight_dropin']
+  self.assertIn('the real adapter `scripts/cook-adapter.py`',real);self.assertNotIn('fake adapter',real);self.assertIn('78 of the 84',text);owned=dict(own)
+  text,own=note.planning(rows('spawn-plan'));self.assertEqual(set(own),{c['id'] for c,f in rows('spawn-plan') if total(f)==1})
+  self.assertIn('test_spawn.SpawnTests.test_identity_and_computed_digests',own);self.assertIn('11 of the 13 methods make 2 to 13',text);owned.update(own)
+  text,own=note.none(rows('no-entry-point'));self.assertEqual(set(own),{c['id'] for c,f in rows('no-entry-point') if not f['observed']});owned.update(own)
+  self.assertEqual(len(owned),19)
+  for ident,reason in owned.items():self.assertEqual(sum(line.startswith('- `'+ident+'`') and line.endswith(reason) for line in doc.splitlines()),1,ident)
+  for old in ('always constructed with the fake adapter','one snapshot precedes several different plan calls','most of these methods patch `verify_cook`'):self.assertNotIn(old,doc)
+ def test_generator_refuses_facts_its_wording_does_not_cover(self):
+  note,classes,facts,rows=self.grouped();edit=lambda group,change:[(c,dict(f,**change)) for c,f in group[:1]]+group[1:]
+  with self.assertRaisesRegex(ValueError,'without create'):note.lifecycle(edit(rows('spawn-lifecycle'),{'calls':{'lifecycle:Lifecycle.status':1}}))
+  with self.assertRaisesRegex(ValueError,'without a description'):note.deployment(edit(rows('deployment-entry-point'),{'cook_command':{'other':1}}))
+  with self.assertRaisesRegex(ValueError,'not observed'):note.deployment(edit(rows('deployment-entry-point'),{'observed':False}))
+ def test_hand_written_limits_cite_the_observed_numbers(self):
+  note,classes,facts,rows=self.grouped();text=' '.join((ROOT/'docs/phase1-replay-limits.md').read_text().split());total=lambda f:sum(f['calls'].values())
+  dep=rows('deployment-entry-point');plan=rows('spawn-plan');none=rows('no-entry-point');life=rows('spawn-lifecycle')
+  plain=sum(list(f['cook_command'])==[note.FAKE_ADAPTER] and list(f['analyze_command'])==[note.FAKE_VERIFIER] for c,f in dep)
+  single=[sum(total(f)==1 for c,f in group) for group in (dep,plan,life)];ran=[f for c,f in none if f['observed']]
+  self.assertEqual((plain,single,len(ran),sum(f['deployments']>0 for f in ran)),(78,[8,2,0],111,16))
+  self.assertTrue(all(list(f['cook_command'])==[note.FAKE_ADAPTER] for c,f in dep if total(f)==1))
+  self.assertEqual(sum('lifecycle:Lifecycle.transition' in f['calls'] for c,f in life),25)
+  for claim in ('78 build every `Deployment` with the fake adapter','Of the other 6, one uses the real adapter','All 28 call `create` and 25 call `transition`','11 methods issue 2 to 13 plan calls against one snapshot; 2 issue one',
+   '111 ran that way (16 of them build a `Deployment` without using it); 11 real-cook integration tests skip','Ten of those make a single entry-point call: eight deployment methods, all with the fake adapter, and two planning methods','The other 115 make several calls','19 records differ'):
+   self.assertIn(claim,text)
+
+class PythonOnlyTests(unittest.TestCase):
+ """Kills by an input no JSON document decodes to are real, declared, and counted apart."""
+ def test_declared_witnesses_are_exactly_the_marked_tests(self):
+  marked=set()
+  for path in sorted((ROOT/'test/unit').glob('test_guard_*.py')):
+   lines=path.read_text().splitlines()
+   for index,line in enumerate(lines):
+    found=re.match(r'\s*def (test_\w+)\(self\):(.*)',line)
+    if found and '# non-JSON input' in found.group(2)+lines[index+1]:marked.add(path.stem+'.Guards.'+found.group(1))
+  self.assertEqual(set(portable.python_only()),marked);self.assertEqual(len(marked),8)
+ def test_python_only_kills_are_counted_apart(self):
+  counts=json.loads((ROOT/'test/mutants/phase1-summary.golden').read_text());review=json.loads((ROOT/'test/mutants/guard-review.golden').read_text());declared=portable.python_only();kills=purpose.kills()
+  only=[r for r in review if r['status']=='killed' and all('python_only' in e for e in r['evidence'])]
+  self.assertEqual((counts['killed_ordinary'],counts['killed_python_only_witness'],counts['python_only_witnesses'],counts['portable_replacement_vectors']),(557,len(only),8,1))
+  self.assertEqual(counts['killed_ordinary']+counts['killed_python_only_witness'],counts['combined_killed']);self.assertEqual(len(only),7)
+  for row in only:self.assertIn(kills[row['id']],declared)
+  self.assertEqual({r['id'] for r in review if any('python_only' in e for e in r['evidence'])},{ident for ident,test in kills.items() if test in declared and '#' not in ident})
+  # The integer-key mutant also has a portable vector, so it is ordinary evidence.
+  key=next(r for r in review if r['id']=='spawn.data.L34.8');self.assertEqual([e['kind'] for e in key['evidence']],['unit','portable-vector']);self.assertNotIn(key,only)
+  names={n['id']:n for n in json.loads((ROOT/'test/mutants/named-checks.golden').read_text())}
+  self.assertEqual((counts['named_killed_ordinary'],counts['named_killed_python_only_witness']),(199,1))
+  self.assertEqual([e['vector'] for e in names['spawn.catalog.cycle']['evidence']],['test_guard_spawn_sources.Guards.test_catalog_L137_8'])
+ def test_portable_vector_is_the_oracles_own_refusal_and_kills_cleanly(self):
+  lines=portable.build();self.assertEqual((ROOT/'test/vectors/guard-portable.golden').read_text(),''.join(line+'\n' for line in lines.values()))
+  row=json.loads(lines['spawn.data.L34.8'])
+  self.assertEqual((row['function'],row['args'],row['outcome']),('connectome_spawn.data.json_data',[{'$mapping':[[1,'value']]}],{'exception':'SpawnError','message':'string keys required'}))
+  results=json.loads((ROOT/'test/mutants/portable-results.golden').read_text());self.assertEqual([r['id'] for r in results],list(lines))
+  for result in results:
+   self.assertEqual((result['status'],result['runtime_errors'],result['vector_sha256']),('killed',0,hashlib.sha256(lines[result['id']].encode()).hexdigest()));self.assertIn(result['vector_sha256'],result['witnesses'])
+ def test_declarations_are_closed(self):
+  def using(data,call):
+   with patch.object(portable,'fragments',return_value={'fixture':data}):return call()
+  kills={'example.L1.4':'test_guard_fixture.Guards.test_one'};reason='A mapping that is not a dict.'
+  self.assertEqual(using({'kills':kills,'python_only':{'test_guard_fixture.Guards.test_one':reason}},portable.python_only),{'test_guard_fixture.Guards.test_one':reason})
+  for bad in ({'test_guard_fixture.Guards.test_other':reason},{'test_guard_fixture.Guards.test_one':'short'},{'test_guard_fixture.Guards.test_one':None}):
+   with self.assertRaises(ValueError):using({'kills':kills,'python_only':bad},portable.python_only)
+  good={'id':'spawn.data.L34.8','function':'connectome_spawn.data.json_data','args':[{'$mapping':[[1,'value']]}]}
+  self.assertEqual(using({'portable_vectors':[good]},portable.declared),[good])
+  for bad in (dict(good,id='not.a.mutant'),dict(good,id='spawn.catalog.cycle#1'),dict(good,outcome={}),{k:v for k,v in good.items() if k!='args'}):
+   with self.assertRaises(ValueError):using({'portable_vectors':[bad]},portable.declared)
+  with self.assertRaises(ValueError):using({'portable_vectors':[good,dict(good)]},portable.declared)
+  # An input the oracle accepts, a crash, or an unaudited function is not a portable refusal vector.
+  for bad in (dict(good,args=[{'$mapping':[['1','value']]}]),dict(good,args=[]),dict(good,function='connectome_spawn.data.canonical'),dict(good,function='connectome_lock.map_lock')):
+   with self.assertRaises(ValueError):using({'portable_vectors':[bad]},portable.build)
+ def test_summary_refuses_a_portable_vector_without_its_kill(self):
+  real=Path.read_text
+  def read_text(path,*a,**kw):
+   text=real(path,*a,**kw)
+   if path.name!='portable-results.golden':return text
+   rows=json.loads(text);rows[0]['status']='survived';return json.dumps(rows)
+  with patch.object(Path,'read_text',read_text):
+   with self.assertRaisesRegex(ValueError,'portable vector without its kill'):summary.summarize()
+ def test_readiness_gate_shows_them_in_a_note_not_a_blocking_line(self):
+  text=(ROOT/'scripts/check-module-ready').read_text()
+  self.assertIn("print('NOTE: killed only by a Python-only witness",text);self.assertNotIn("missing.append('python",text.lower().replace('python-only witness',''))
 if __name__=='__main__':unittest.main()

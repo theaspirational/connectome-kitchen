@@ -281,5 +281,9 @@
     }
    }
   }
- ]
+ ],
+ "python_only": {
+  "test_guard_cook.Guards.test_config_L46_12": "The `connectors` layer is a `collections.UserDict`: a mapping that is not a `dict`. A JSON document decodes objects to `dict` only.",
+  "test_guard_cook.Guards.test_cook_L208_4": "`mcpServers` is a `collections.UserDict`: a mapping that is not a `dict`. A JSON document decodes objects to `dict` only."
+ }
 }
