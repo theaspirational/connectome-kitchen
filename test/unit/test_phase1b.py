@@ -1,5 +1,5 @@
 """Evidence rules of the phase-1 deficit tooling: sites, waivers, purpose kills, C projection."""
-import hashlib, importlib.machinery, importlib.util, json, sys, unittest
+import hashlib, importlib.machinery, importlib.util, json, sys, tempfile, unittest
 from pathlib import Path
 from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2]
@@ -99,6 +99,7 @@ class ProjectionTests(unittest.TestCase):
    row=replay[entry['id']]
    if entry['status']=='replayed':
     self.assertEqual(row['projected_record_sha256'],entry['raw_sha256']);self.assertEqual(row['adapter_failure'],row['expected_adapter_failure'])
+    self.assertRegex(row['build_identity_sha256'],'^[0-9a-f]{64}$');self.assertRegex(row['fake_tool_log_sha256'],'^[0-9a-f]{64}$')
    else:
     self.assertEqual(row['status'],'unreachable-without-patching');self.assertIn(row['reason'].split(':')[0],replay_c.DEPLOY_ONLY+replay_c.SAME_VALIDATION)
  def test_summary_refuses_a_relabelled_replay(self):
@@ -112,6 +113,75 @@ class ProjectionTests(unittest.TestCase):
   for name in ('cli-obligations.golden','scenario-obligations.golden'):
    with patch.object(Path,'read_text',relabel(name)):
     with self.assertRaisesRegex(ValueError,'marked replayed'):summary.summarize()
+
+class HostNamingTests(unittest.TestCase):
+ """The C golden names four host values. Naming them must not hide any other difference."""
+ PYTHON='/usr/bin/python3'
+ def call(self,root,build,archive='6'*64,out=None,extra=()):
+  base=root+'/.cache/scenario-root'
+  argv=[base+'/cook/bin/cook','install',base+'/agent/builds/'+build+'/cook-recipe.json','--out',out or base+'/agent/builds/'+build,'--strict','--host-dependency','@example/package='+base+'/inputs/framework.tgz#sha256='+archive,*extra]
+  return json.dumps({'tool':'runtime','argv':argv,'stdin_tty':False})+'\n'
+ def names(self,root,build=None):return [(self.PYTHON,'${PYTHON}',True),(root+'/','${REPO}/',False)]+([(build,'${BUILD_ID}',False)] if build else [])
+ def test_same_calls_from_two_roots_have_one_digest(self):
+  one=replay_c.tool_log(self.call('/fixture/one','a'*64),self.names('/fixture/one','a'*64))
+  for root,build in (('/tmp/deeper/second','b'*64),('/e','c'*64),('/fixture/d\u00e9p\u00f4t "quoted"','d'*64)):
+   self.assertEqual(replay_c.tool_log(self.call(root,build),self.names(root,build)),one,root)
+  self.assertEqual(one[0],1);self.assertEqual(replay_c.tool_log('',self.names('/fixture/one')),(0,hashlib.sha256(b'').hexdigest()))
+ def test_every_other_difference_changes_the_digest(self):
+  root,build='/fixture/one','a'*64;names=self.names(root,build);base=replay_c.tool_log(self.call(root,build),names)
+  different={
+   'archive digest':self.call(root,build,archive='7'*64),
+   'another build directory':self.call(root,build,out=root+'/.cache/scenario-root/agent/builds/'+'f'*64),
+   'output outside the checkout':self.call(root,build,out='/fixture/elsewhere/'+build),
+   'extra argument':self.call(root,build,extra=('--force',)),
+   'second call':self.call(root,build)*2,
+   'path of another checkout':self.call('/fixture/other',build),
+  }
+  for label,text in different.items():self.assertNotEqual(replay_c.tool_log(text,names),base,label)
+  # A build id that was not verified gets no name, so it stays in the digest.
+  self.assertNotEqual(replay_c.tool_log(self.call(root,build),self.names(root)),base)
+  self.assertNotEqual(replay_c.tool_log(self.call(root,build),self.names(root)),replay_c.tool_log(self.call(root,'b'*64),self.names(root)))
+ def test_names_are_exact(self):
+  names=self.names('/e')
+  self.assertEqual(replay_c.named([self.PYTHON,self.PYTHON+'.12','run '+self.PYTHON,'https://example.invalid/extra.git','/e/x','/e',{'/e/key':7,'n':None}],names),
+   ['${PYTHON}',self.PYTHON+'.12','run '+self.PYTHON,'https://example.invalid/extra.git','${REPO}/x','/e',{'${REPO}/key':7,'n':None}])
+  # An interpreter inside the checkout is still the interpreter.
+  self.assertEqual(replay_c.named(['/e/venv/bin/python','/e/venv/bin/python/x'],[('/e/venv/bin/python','${PYTHON}',True),('/e/','${REPO}/',False)]),['${PYTHON}','${REPO}/venv/bin/python/x'])
+ def test_request_digest_names_interpreter_checkout_and_platform_digest(self):
+  data=replay_c.request({'path':str(replay_c.SCENARIO/'inputs/framework.tgz'),'sha256':'0'*64},'catalog-checkout-outside-agent','e'*40)
+  shell=hashlib.sha256(Path('/bin/sh').read_bytes()).hexdigest();text=replay_c.canonical(replay_c.named(data,replay_c.host_names(data)))
+  for host in (str(ROOT),shell,json.dumps(sys.executable)):self.assertNotIn(host,text)
+  self.assertEqual((text.count('"${PYTHON}"'),text.count('${PLATFORM_DIGEST}')),(1,1));self.assertIn('"root":"${REPO}/.cache/scenario-root/agent"',text)
+  self.assertEqual(replay_c.request_digest(data),hashlib.sha256(text.encode()).hexdigest())
+  changed=json.loads(json.dumps(data));changed['request']['config']['name']='other';self.assertNotEqual(replay_c.request_digest(changed),replay_c.request_digest(data))
+ def test_build_identity_is_the_preimage_of_the_directory_name(self):
+  cook={'entrypoint':'/fixture/cook/bin/cook','runtime':'/fixture/bin/runtime','bun':'/fixture/bin/bun','node':'/fixture/bin/node'}
+  data={'request':{'engines':{'cook':cook}}};spec={'config':{'name':'example'},'pins':{'runtime':{'cook':'e'*40}}}
+  with tempfile.TemporaryDirectory() as scratch:
+   oracle=Path(scratch)/'oracle'
+   # Written out here on purpose: the engine's request id over the shim's literal adapter command line.
+   argv=[sys.executable,str(oracle/'scripts/cook-adapter.py'),'--spec','{recipe}','--out','{build_dir}','--state','{state_dir}','--runtime','/fixture/bin/runtime','--entrypoint','/fixture/cook/bin/cook','--bun-path','/fixture/bin/bun','--node-path','/fixture/bin/node']
+   name=hashlib.sha256(json.dumps({'spec':spec,'cook':argv},sort_keys=True,separators=(',',':')).encode()).hexdigest()
+   build=Path(scratch)/'builds'/name;build.mkdir(parents=True);(build/'deployment.json').write_text(json.dumps(spec,sort_keys=True,separators=(',',':')))
+   self.assertEqual(replay_c.build_identity(oracle,data,build),{'spec':spec,'cook':argv})
+   for other in (dict(cook,bun=cook['node']),dict(cook,entrypoint='/fixture/other/bin/cook')):
+    with self.assertRaisesRegex(ValueError,'not the hash'):replay_c.build_identity(oracle,{'request':{'engines':{'cook':other}}},build)
+   with self.assertRaisesRegex(ValueError,'not the hash'):replay_c.build_identity(Path(scratch)/'moved-oracle',data,build)
+   (build/'deployment.json').write_text(json.dumps(dict(spec,config={'name':'other'})))
+   with self.assertRaisesRegex(ValueError,'not the hash'):replay_c.build_identity(oracle,data,build)
+   (build/'deployment.json').write_text('not json')
+   with self.assertRaises(ValueError):replay_c.build_identity(oracle,data,build)
+ def test_a_replay_counts_only_with_a_bound_build(self):
+  entries,errors=replay_c.expected_records();entry=next(e for e in entries if e['id']=='C.0')
+  row={'projected':{'stdout':'','stderr':json.dumps(entry['expected'])+'\n','status':1},'adapter_failure':'LockError','expected_adapter_failure':'LockError'}
+  unbound=replay_c.evaluate({'fallback:LockError':dict(row,build_identity_error='fixture reason')},[entry],errors)[0]
+  self.assertEqual((unbound['status'],unbound['reason']),('not-reproduced','tool log is not bound to one build: fixture reason'))
+  self.assertEqual(replay_c.evaluate({'fallback:LockError':dict(row,build_identity_sha256='a'*64)},[entry],errors)[0]['status'],'replayed')
+ def test_golden_holds_no_host_value(self):
+  text=(ROOT/'test/vectors/cli-replay.golden').read_text()
+  for host in (str(ROOT),sys.executable,'host','build_id'):self.assertNotIn(json.dumps(host),text)
+  for row in json.loads(text):self.assertLessEqual(set(row),{'id','test','raw_sha256','scenario','request_sha256','fake_runtime_mode','fake_runtime_calls','fake_tool_log_sha256','build_identity_sha256','adapter_failure','expected_adapter_failure','projected_record_sha256','status','reason'})
+
 class CrashOnlyTests(unittest.TestCase):
  VECTOR={'id':'inputs.L150.8','function':'connectome_inputs.payloads','args':[{'recipe_file':{'path':'/fixture/recipe.json','sha256':'a'*64}},{'cook-recipe.json':'not strict base64!'}]}
  def test_original_refuses_as_declared_and_outcome_names_class_code_message(self):

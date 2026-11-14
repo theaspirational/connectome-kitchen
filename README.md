@@ -221,6 +221,7 @@ python3 test/mutants/sweep.py verify --anchors test/mutants/guard-anchors.golden
 python3 test/mutants/sweep.py verify --anchors test/mutants/named-site-anchors.golden --results test/mutants/named-site-sweep-results.golden --out .cache/named-sweep-verify
 python3 test/mutants/assemble.py
 python3 test/differential/replay_c.py run --cook-source /path/to/local/cook/clone
+python3 test/differential/replay_c.py relocated --cook-source /path/to/local/cook/clone
 python3 test/differential/replay_c.py shim-mutants --cook-source /path/to/local/cook/clone
 python3 scripts/unreachable-note
 ```
@@ -229,4 +230,7 @@ python3 scripts/unreachable-note
 writing anything. `sweep.py search` runs every frozen test against a mutant and
 confirms each failing test on its own. The C replay needs a local clone that
 holds the reviewed cook commit; without it the command exits 3 and counts
-nothing.
+nothing. Its golden does not depend on the checkout root or the interpreter
+path: `relocated` reruns the gate from a second root to show that, and
+`docs/phase1-replay-limits.md` lists the four host values it names instead of
+hashing.

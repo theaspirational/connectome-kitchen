@@ -21,12 +21,24 @@ Entries whose injected failure the unpatched adapter can never produce are
 listed as unreachable; they are not replayed and not relabelled.
 
 Prerequisite outside this repository: a local clone that holds the reviewed
-cook commit (`--cook-source`). Nothing is fetched. The scenario root is the
-fixed `.cache/scenario-root`; the directories above it are modelled as
-root-owned 0755 through the frozen suite's own `safe_ancestors` seam, because
-every directory of this checkout is group-writable and the engine refuses that.
+cook commit (`--cook-source`). Nothing is fetched. The scenario root is
+`.cache/scenario-root` of whatever checkout this file is in; the directories
+above it are modelled as root-owned 0755 through the frozen suite's own
+`safe_ancestors` seam, because a checkout may have group-writable ancestors
+and the engine refuses those.
+
+The committed golden must not depend on where the checkout is or which path
+the interpreter has. Three host values are therefore named instead of hashed:
+`${PYTHON}`, `${REPO}` and `${PLATFORM_DIGEST}` (see `host_names`). A fourth
+value is derived from them: the build directory is named after the engine's
+request id, a hash over absolute paths. It is named `${BUILD_ID}` in the tool
+log only after `build_identity` has recomputed it from what it hashes, and
+that preimage, host values named, is pinned as `build_identity_sha256`.
+Nothing else in a tool-log argv is replaced, so any other difference changes
+the golden. The literal ids of one run go to the ignored
+`.cache/replay-c-host.json`; `relocated` runs the gate from a second root.
 """
-import argparse, gzip, hashlib, importlib.util, io, json, os, shutil, subprocess, sys, tarfile
+import argparse, gzip, hashlib, importlib.util, io, json, os, shutil, subprocess, sys, tarfile, tempfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 SCENARIO=ROOT/'.cache/scenario-root'
@@ -58,12 +70,48 @@ sys.exit(0)
 
 def canonical(value):return json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=True)
 
-def request_digest(data):
- # Host-specific values (checkout location, the platform shell's digest) are named, not hashed.
- text=canonical(data).replace(str(ROOT),'${REPO}')
+def digest(value):return hashlib.sha256(canonical(value).encode()).hexdigest()
+
+def named(value,names):
+ """Name host values inside a JSON value. `names` is ordered (literal, name, whole) triples.
+
+ A `whole` literal replaces only a string equal to it; the others replace each
+ occurrence inside a string or key. A string no triple covers stays as it is.
+ """
+ if isinstance(value,str):
+  for literal,name,whole in names:
+   if not whole:value=value.replace(literal,name)
+   elif value==literal:return name
+  return value
+ if isinstance(value,list):return [named(item,names) for item in value]
+ if isinstance(value,dict):return {named(key,names):named(item,names) for key,item in value.items()}
+ return value
+
+def host_names(data):
+ """What a request holds because of the host, not the scenario: interpreter, checkout, the platform shell's digest."""
  platform=data['request']['versions'].get('platform',{})
- for value in platform.values():text=text.replace(value,'${PLATFORM_DIGEST}')
- return hashlib.sha256(text.encode()).hexdigest()
+ return [(sys.executable,'${PYTHON}',True),(str(ROOT)+'/','${REPO}/',False)]+[(value,'${PLATFORM_DIGEST}',False) for value in platform.values()]
+
+def request_digest(data):return digest(named(data,host_names(data)))
+
+def build_identity(oracle,data,build):
+ """The preimage of the build directory's name, refused unless it hashes to that name.
+
+ The engine names the directory after its request id: the hash of the spec it
+ writes to `deployment.json` and the adapter command line the shim builds from
+ `engines.cook` (`connectome_deploy.py`, `request_id`; `shim/kitchen_v1.py`,
+ `argv`). Both hold absolute paths, so the id differs per checkout.
+ """
+ cook=data['request']['engines']['cook']
+ argv=[sys.executable,str(oracle/'scripts/cook-adapter.py'),'--spec','{recipe}','--out','{build_dir}','--state','{state_dir}','--runtime',cook['runtime'],'--entrypoint',cook['entrypoint'],'--bun-path',cook['bun'],'--node-path',cook['node']]
+ preimage={'spec':json.loads((build/'deployment.json').read_text()),'cook':argv}
+ if digest(preimage)!=build.name:raise ValueError('build directory name is not the hash of its spec and adapter command')
+ return preimage
+
+def tool_log(text,names):
+ """Recorded fake-tool calls with host values named: (number of calls, digest)."""
+ calls=[named(json.loads(line),names) for line in text.splitlines()]
+ return len(calls),hashlib.sha256(''.join(canonical(call)+'\n' for call in calls).encode()).hexdigest()
 
 def scenarios(cook_codes):
  """name -> (fake runtime mode, config edit, archive edit, expected adapter failure)."""
@@ -174,16 +222,23 @@ def child(args):
  prepare_inputs(args.cook_source,commit)
  with safe_ancestors(SCENARIO):
   for name,(mode,config_edit,archive_edit,expected) in scenarios(connectome_errors.COOK_CODES).items():
-   artifact=reset(mode,archive_edit);data=request(artifact,config_edit,commit)
+   artifact=reset(mode,archive_edit);data=request(artifact,config_edit,commit);names=host_names(data)
    receipt,status=shim.dispatch(json.loads(json.dumps(data)))
-   log=SCENARIO/'fake-tools.jsonl';calls=log.read_text().replace(str(ROOT),'${REPO}') if log.exists() else ''
-   row={'scenario':name,'request_sha256':request_digest(data),'fake_runtime_mode':mode,'fake_runtime_calls':len(calls.splitlines()),'fake_tool_log_sha256':hashlib.sha256(calls.encode()).hexdigest(),'status':status,'expected_adapter_failure':expected}
+   log=SCENARIO/'fake-tools.jsonl';raw=log.read_text() if log.exists() else ''
+   builds=sorted((SCENARIO/'agent/builds').iterdir()) if (SCENARIO/'agent/builds').is_dir() else []
+   build=builds[0] if len(builds)==1 and (builds[0]/'deployment.json').is_file() else None
+   row={'scenario':name,'request_sha256':request_digest(data),'fake_runtime_mode':mode,'status':status,'expected_adapter_failure':expected,
+    'host':{'build_id':build and build.name,'tool_log_sha256':hashlib.sha256(raw.encode()).hexdigest()}}
+   if build:
+    # Only an id that matches its preimage gets a name; an unbound one stays literal and fails the golden.
+    try:row['build_identity_sha256']=digest(named(build_identity(oracle,data,build),names));names=names+[(build.name,'${BUILD_ID}',False)]
+    except ValueError as error:row['build_identity_error']=str(error)
+   row['fake_runtime_calls'],row['fake_tool_log_sha256']=tool_log(raw,names)
    try:row['projected']=project(receipt,status)
    except ValueError as error:row['projection_error']=str(error);print(json.dumps(row),flush=True);continue
-   builds=sorted((SCENARIO/'agent/builds').iterdir()) if (SCENARIO/'agent/builds').is_dir() else []
-   if len(builds)==1 and (builds[0]/'deployment.json').is_file():
+   if build:
     runtime=str(SCENARIO/'bin/runtime')
-    row['adapter_failure']=classify(oracle,{'spec':str(builds[0]/'deployment.json'),'build':str(builds[0]),'state':str(SCENARIO/'runtime-state'),'runtime':runtime,'entrypoint':str(SCENARIO/'cook/bin/cook')})
+    row['adapter_failure']=classify(oracle,{'spec':str(build/'deployment.json'),'build':str(build),'state':str(SCENARIO/'runtime-state'),'runtime':runtime,'entrypoint':str(SCENARIO/'cook/bin/cook')})
    else:row['adapter_failure']='adapter-not-reached'
    print(json.dumps(row),flush=True)
  return 0
@@ -202,7 +257,7 @@ def wanted(entry,errors):
 def run_child(oracle,cook_source):
  done=subprocess.run([sys.executable,'-B',str(Path(__file__).resolve()),'child','--oracle',str(oracle),'--cook-source',str(cook_source)],capture_output=True,timeout=900)
  rows=[json.loads(line) for line in done.stdout.decode().splitlines() if line.startswith('{')]
- if done.returncode==3:raise SystemExit('PREREQUISITE MISSING: '+rows[0]['prerequisite'])
+ if done.returncode==3:print('PREREQUISITE MISSING: '+rows[0]['prerequisite'],file=sys.stderr);raise SystemExit(3)
  if done.returncode:raise ValueError('scenario runner failed: '+done.stderr.decode()[-2000:])
  return {row['scenario']:row for row in rows}
 
@@ -230,14 +285,43 @@ def evaluate(rows,entries,errors):
   if scenario is None:out.update(status='unreachable-without-patching',reason=blocked);result.append(out);continue
   row=rows.get(scenario,{});projected=row.get('projected')
   record=projected and {'argv':ARGV,'function':entry['function'],'kind':'C','status':projected['status'],'stderr':projected['stderr'],'stdin':None,'stdout':projected['stdout'],'test':entry['test']}
-  out.update(request_sha256=row.get('request_sha256'),fake_runtime_mode=row.get('fake_runtime_mode'),fake_runtime_calls=row.get('fake_runtime_calls'),fake_tool_log_sha256=row.get('fake_tool_log_sha256'),adapter_failure=row.get('adapter_failure'),expected_adapter_failure=row.get('expected_adapter_failure'),
+  out.update(request_sha256=row.get('request_sha256'),fake_runtime_mode=row.get('fake_runtime_mode'),fake_runtime_calls=row.get('fake_runtime_calls'),fake_tool_log_sha256=row.get('fake_tool_log_sha256'),build_identity_sha256=row.get('build_identity_sha256'),adapter_failure=row.get('adapter_failure'),expected_adapter_failure=row.get('expected_adapter_failure'),
    projected_record_sha256=hashlib.sha256(canonical(record).encode()).hexdigest() if record else None)
-  same_bytes=out['projected_record_sha256']==entry['raw_sha256'];same_branch=row.get('adapter_failure')==row.get('expected_adapter_failure')
-  out['status']='replayed' if same_bytes and same_branch else 'not-reproduced'
+  same_bytes=out['projected_record_sha256']==entry['raw_sha256'];same_branch=row.get('adapter_failure')==row.get('expected_adapter_failure');bound=bool(row.get('build_identity_sha256'))
+  out['status']='replayed' if same_bytes and same_branch and bound else 'not-reproduced'
   if not same_bytes:out['reason']='projected bytes differ from the recording: '+str(row.get('projection_error') or (projected or {}).get('stderr'))
   elif not same_branch:out['reason']='adapter failed differently from the injected failure'
+  elif not bound:out['reason']='tool log is not bound to one build: '+str(row.get('build_identity_error') or 'no single build directory')
   result.append(out)
  return result
+
+HOST_EVIDENCE='.cache/replay-c-host.json'
+def host_evidence(rows):
+ """What this run saw that the golden names instead of hashing. Ignored scratch, never compared."""
+ return {'root':str(ROOT),'python':sys.executable,'scenarios':{name:row.get('host') for name,row in rows.items()}}
+
+def relocated(cook_source,parent):
+ """Run the committed gate from a copy at a second root, through a second interpreter path.
+
+ Passes only if the copy accepts the committed goldens unchanged while the
+ interpreter path and every build id it saw differ from the ones seen here.
+ """
+ here=host_evidence(run_child(ROOT/'oracle',cook_source));parent.mkdir(parents=True,exist_ok=True);other=Path(tempfile.mkdtemp(prefix='replay-c-root-',dir=parent))
+ shutil.copytree(ROOT/'oracle',other/'oracle',ignore=shutil.ignore_patterns('__pycache__','.cache'))
+ for name in ('test/differential/replay_c.py','test/vectors/cli-obligations.golden','test/vectors/cli-replay.golden'):
+  (other/name).parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/name,other/name)
+ python=other/'bin/python3';python.parent.mkdir();python.symlink_to(sys.executable)
+ done=subprocess.run([str(python),'-B',str(other/'test/differential/replay_c.py'),'run','--cook-source',str(cook_source)],capture_output=True,timeout=900)
+ report={'second_root_gate':'current' if done.returncode==0 else 'failed: '+(done.stdout+done.stderr).decode()[-400:].strip()}
+ if done.returncode==0:
+  there=json.loads((other/HOST_EVIDENCE).read_text());pairs=[(here['scenarios'][name]['build_id'],there['scenarios'][name]['build_id']) for name in here['scenarios']]
+  report.update(scenarios=len(pairs),builds_compared=sum(a is not None for a,b in pairs),build_ids_differing=sum(a is not None and b is not None and a!=b for a,b in pairs),
+   raw_tool_logs_differing=sum(here['scenarios'][name]['tool_log_sha256']!=there['scenarios'][name]['tool_log_sha256'] for name in here['scenarios']),
+   root_differs=there['root']!=here['root'],interpreter_differs=there['python']!=here['python'])
+ good=done.returncode==0 and set(there['scenarios'])==set(here['scenarios']) and report['builds_compared']>0 and report['build_ids_differing']==report['builds_compared'] and report['root_differs'] and report['interpreter_differs']
+ if good:shutil.rmtree(other)
+ else:report['kept']=str(other)
+ print(json.dumps(report,sort_keys=True));return int(not good)
 
 SHIM_MUTANTS=[
  ('shim.core.message',"except SafeError as error:core=error.public()","except SafeError as error:core=dict(error.public(),msg='edited')"),
@@ -249,15 +333,18 @@ SHIM_MUTANTS=[
 
 def main():
  p=argparse.ArgumentParser();sub=p.add_subparsers(dest='command',required=True)
- for name in ('run','shim-mutants','child'):
+ for name in ('run','relocated','shim-mutants','child'):
   s=sub.add_parser(name);s.add_argument('--cook-source',type=Path,required=True)
   if name=='child':s.add_argument('--oracle',type=Path,required=True)
   if name=='run':s.add_argument('--write',action='store_true')
+  if name=='relocated':s.add_argument('--parent',type=Path,default=ROOT/'.cache',help='existing or new directory to create the second root in')
  a=p.parse_args()
  if a.command=='child':return child(a)
+ if a.command=='relocated':return relocated(a.cook_source,a.parent.resolve())
  entries,errors=expected_records()
  if a.command=='run':
-  result=evaluate(run_child(ROOT/'oracle',a.cook_source),entries,errors);target=ROOT/'test/vectors/cli-replay.golden';data=json.dumps(result,indent=2)+'\n'
+  rows=run_child(ROOT/'oracle',a.cook_source);(ROOT/HOST_EVIDENCE).write_text(json.dumps(host_evidence(rows),indent=1)+'\n')
+  result=evaluate(rows,entries,errors);target=ROOT/'test/vectors/cli-replay.golden';data=json.dumps(result,indent=2)+'\n'
   listed=[]
   for entry,row in zip(obligations(),result):
    entry=dict(entry,status='replayed' if row['status']=='replayed' else 'pending-shim-projection')

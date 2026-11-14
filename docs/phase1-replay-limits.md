@@ -197,6 +197,45 @@ leave the C denominator, or become a unit vector of `main`, is a plan decision.
 between the engine call and the envelope in five ways (message, code, cook
 code, phase, an extra key) and each edit breaks the replay.
 
+### What the C golden hashes, and what it names
+
+`cli-replay.golden` is compared byte for byte, so it must come out the same
+from any checkout root and any interpreter path. Section "Exact residual
+nondeterminism" above says why replacing a visible path is not enough: the
+engine's request id hashes absolute paths, and the build directory is named
+after it. The replay therefore treats four values as host values. Each is
+replaced by a name before hashing, in every string of the request and of the
+fake-tool log, and nothing else is replaced:
+
+| Name | Value | Where it occurs |
+| --- | --- | --- |
+| `${PYTHON}` | the interpreter path, only as a whole string | `systemctl` argv of the request; the adapter command line |
+| `${REPO}/` | the checkout root with its trailing slash | scenario paths, the fixture `systemctl.py`, `cook-adapter.py` |
+| `${PLATFORM_DIGEST}` | SHA-256 of the host's `/bin/sh` | catalog scenario pins |
+| `${BUILD_ID}` | the name of the one build directory the request created | tool-log argv only |
+
+`${BUILD_ID}` is derived, so it is named only after a check. The harness
+rebuilds the id's preimage, `{spec, cook}`, from the `deployment.json` the
+engine wrote and the adapter command line the shim passes for the request's
+`engines.cook`, and requires its SHA-256 to equal the directory name. If it
+does not, or there is not exactly one build directory, the id keeps its literal
+value, the entry is `not-reproduced`, and the golden goes stale. The preimage,
+with the other three names applied, is committed as `build_identity_sha256`.
+So the golden still pins what the id is a hash of (config, resolved pins and
+the full adapter command line), and `fake_tool_log_sha256` still pins every
+argv element of every fake-tool call: an archive digest, a second build
+directory, a path outside the checkout or an extra argument all change it.
+
+The literal build ids and the digest of the unnamed tool log are evidence about
+one host, not something another checkout can reproduce. Each `run` writes them
+to the ignored `.cache/replay-c-host.json` and never compares them.
+
+`replay_c.py relocated` is the standing check for this property. It copies the
+oracle, the harness and the two committed goldens to a new root, runs `run`
+there through a symlinked interpreter, and passes only if that copy accepts the
+goldens unchanged while the root, the interpreter path and every build id
+differ from this checkout's.
+
 Limits of this replay:
 
 - It needs a local clone holding the reviewed cook commit (`--cook-source`).
