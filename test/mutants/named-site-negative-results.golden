@@ -1,0 +1,766 @@
+[
+  {
+    "id": "secrets.reserved.catalog#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "secrets.reserved.direct#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "secrets.reserved.adapter#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "secrets.reserved.adapter#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "recipe.secret-ref.token#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "recipe.secret-ref.catalog-token#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "recipe.secret-ref.spawn-token#1",
+    "status": "no-vectors"
+  },
+  {
+    "id": "recipe.secret-ref.spawn-env#1",
+    "status": "no-vectors"
+  },
+  {
+    "id": "deploy.private.canonical#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.build.executable#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.build.status#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.build.export#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.stage.inventory#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.stage.inventory#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.stage.inventory#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.contained.archive#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.contained.inputs#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.contained.inputs#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.preflight.chars#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.lifecycle.store-binding#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.lifecycle.target#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.lifecycle.input-for-target#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.lifecycle.input-for-target#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.lifecycle.adapter-required#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.lifecycle.adapter-required#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.lifecycle.adapter-required#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.identity.duplicate-active#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.identity.duplicate-active#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.identity.handle#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.identity.handle#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 9,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.persist.traversal#1",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.persist.symlink#1",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.persist.bound#1",
+    "status": "no-vectors"
+  },
+  {
+    "id": "lock.schema.cook#1",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "adadf4c0dbd46ec5519fcbb3ade49b246a47ada234b340aad93eafd835187c11"
+    ]
+  },
+  {
+    "id": "lock.schema.cook#2",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "68dc9e50cefe1ab30c41bcce68644d80f237cfd6a558dd45b42141443ff4c121"
+    ]
+  },
+  {
+    "id": "lock.schema.components#1",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "a9073d74c777b74570915666bec984487be976356de7dde45ff2d2e84d47f1d4"
+    ]
+  },
+  {
+    "id": "lock.schema.components#2",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "5fa3bd226d6d4b104ad3a8270bac764a1d4a815bc29c052b1dd1336356265724"
+    ]
+  },
+  {
+    "id": "lock.schema.components#3",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "dfa46beb85c98d346f568244e8f4236c041ce7d1067655dfa41f43c918a57cfc"
+    ]
+  },
+  {
+    "id": "lock.schema.components#4",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "0f0319197a0a788d5116dabc99ea4e8511372d56d750c75f45fcffa005bb5327"
+    ]
+  },
+  {
+    "id": "lock.schema.outputs#1",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "e7a2724ef3743e10ea80055ddbd418ead32698a0c3e66812236d7921a71668b8"
+    ]
+  },
+  {
+    "id": "lock.schema.outputs#2",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "a7900d5aabb6263519ce3e2a89a3e7e082953ff7803130ab2313993f6d9d702d"
+    ]
+  },
+  {
+    "id": "lock.schema.outputs#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "lock.schema.engines#1",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "a4d86209901d309c5a04693aa14b698796c1ba733f119a27a2a8c1f4fbd5c5c8"
+    ]
+  },
+  {
+    "id": "lock.schema.engines#2",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "55580c6b46b06307870bf03044036723b7a3ccefd8f053d9e508e77c0a7b08ec"
+    ]
+  },
+  {
+    "id": "lock.schema.layout#1",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "16112729e7113af2b478116be500fa4557bc33b3d6392d97b9310b5ce9698d4b"
+    ]
+  },
+  {
+    "id": "lock.schema.layout#2",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": [
+      "667f8cfa2962475c9fda5b85ea7591e6dab8bffdec63d9d7b7fbfde9d1c4c92c"
+    ]
+  },
+  {
+    "id": "lock.schema.units-ambiguous#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 33,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.descriptor.duplicate#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.descriptor.name#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.descriptor.argv#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.descriptor.argv#2",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": [
+      "8684612bfad19a458b943176b2e56df2ff17f0247212b500959864b075eeaf7a"
+    ]
+  },
+  {
+    "id": "catalog.descriptor.cycle#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.descriptor.runtimes#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.data-args.conflict#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.data-args.binding#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "catalog.data-args.spawn#1",
+    "status": "no-vectors"
+  },
+  {
+    "id": "catalog.data-args.spawn#2",
+    "status": "no-vectors"
+  },
+  {
+    "id": "catalog.audit-site.separate#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 37,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.activation#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.exclusive#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.exclusive#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.exclusive#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.exclusive#4",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.recipe-file#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.recipe-file#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.recipe-path#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "inputs.record.recipe-path#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "name.grammar.unit#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.prepare.no-adapter#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.prepare.active#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.units.launcher#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.units.launcher#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.units.name#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.units.digest#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.units.empty#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.units.conflict#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "deploy.activate.health-argv#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 5,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "config.layers.public-connectors#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 2,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.spec#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.pin-ref#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.catalog-connector#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.cook-settings#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.cook-settings#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "cook.input.cook-settings#3",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.schema.seed#1",
+    "status": "killed",
+    "mismatches": 1,
+    "replayed": 1,
+    "runtime_errors": 0,
+    "witnesses": [
+      "1af8a3cbf4871819b644c94721034ce4832085de3fb3b972f9e0a7c51732cb05"
+    ]
+  },
+  {
+    "id": "spawn.schema.seed#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 1,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.file-name#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.select#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.cycle#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.catalog.connector-settings#1",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.catalog.connector-settings#2",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.catalog.home-transport#1",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.artifact.store#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.artifact.store#2",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 11,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.artifact.limit#1",
+    "status": "survived",
+    "mismatches": 0,
+    "replayed": 3,
+    "runtime_errors": 0,
+    "witnesses": []
+  },
+  {
+    "id": "spawn.cli.parser#1",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.cli.combos#1",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.cli.combos#2",
+    "status": "no-vectors"
+  },
+  {
+    "id": "spawn.cli.combos#3",
+    "status": "no-vectors"
+  }
+]

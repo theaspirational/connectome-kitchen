@@ -51,6 +51,29 @@ def parse(token):
   refs.append((file,int(line)))
  return refs
 
+def unit_kill(row):
+ return row.get('status')=='killed' and any(t.get('tests')==1 and t.get('failures',0)>0 and t.get('errors')==0 and not t.get('timeout') and not t.get('driver_error') for t in row.get('trials',[]))
+
+def site_proof():
+ """Names whose every site mutant (named-site-anchors.golden) has its own kill."""
+ M=ROOT/'test/mutants';path=M/'named-site-anchors.golden'
+ if not path.exists():return {},set()
+ names={}
+ for site in json.loads(path.read_text()):names.setdefault(site['name'],[]).append(site['id'])
+ ids={i for group in names.values() for i in group}
+ witnesses={hashlib.sha256(line.encode()).hexdigest() for line in (ROOT/'test/vectors/guard-negative.golden').read_text().splitlines()}
+ evidence={}
+ for file,kind in (('named-site-negative-results.golden','negative'),('named-site-sweep-results.golden','unit'),('named-purpose-results.golden','unit')):
+  if not (M/file).exists():continue
+  for row in json.loads((M/file).read_text()):
+   if row['id'] not in ids:raise ValueError('result for unknown named site: '+row['id'])
+   if kind=='unit':
+    if unit_kill(row):evidence.setdefault(row['id'],[]).append({'file':file,'site':row['id'],'vector':row['trials'][-1]['test'],'witnesses':[]})
+   elif row.get('status')=='killed' and row.get('witnesses'):
+    if not set(row['witnesses'])<=witnesses:raise ValueError('missing committed killing witness')
+    evidence.setdefault(row['id'],[]).append({'file':file,'site':row['id'],'vector':None,'witnesses':row['witnesses']})
+ return {name:[evidence[i][0] for i in group] for name,group in names.items() if all(i in evidence for i in group)},set(names)
+
 def build():
  files=inv.files(ROOT/'oracle');result=[];proof={};implemented=set()
  for file in ('named-guard-anchors.golden','named-effect-anchors.golden'):
@@ -63,6 +86,9 @@ def build():
    valid=r['status']=='killed'
    if file=='named-legacy-results.golden':valid=valid and any(t.get('tests')==1 and t.get('failures',0)>0 and t.get('errors')==0 and not t.get('timeout') and not t.get('driver_error') for t in r.get('trials',[]))
    if valid:proof.setdefault(r['id'],[]).append({'file':file,'vector':r.get('vector'),'witnesses':r.get('witnesses',[])})
+ sites,site_names=site_proof()
+ implemented|=site_names
+ for name,evidence in sites.items():proof.setdefault(name,[]).extend(evidence)
  for row in inv.inventory(ROOT/'docs/approved-plan.md')[47:]:
   anchors=ANCHORS[row['row']].split()
   if len(row['ids'])!=len(anchors):raise ValueError('name/anchor count mismatch')

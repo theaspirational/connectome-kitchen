@@ -336,7 +336,7 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -897,7 +897,7 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -954,7 +954,7 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -1094,7 +1094,7 @@
         "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -1142,7 +1142,7 @@
         "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -1193,7 +1193,7 @@
         "source_sha256": "358e5b67ace6a7988fc4ab6c2da08666d389dc83c6acb50c607b44505412c37e"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -1256,7 +1256,7 @@
         "source_sha256": "e64a9241f3b3ed6600839c7808cc376ac455e15b035aa57cafef0e0005346b97"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -1449,9 +1449,26 @@
         "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "lock.schema.cook#1",
+        "vector": null,
+        "witnesses": [
+          "adadf4c0dbd46ec5519fcbb3ade49b246a47ada234b340aad93eafd835187c11"
+        ]
+      },
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "lock.schema.cook#2",
+        "vector": null,
+        "witnesses": [
+          "68dc9e50cefe1ab30c41bcce68644d80f237cfd6a558dd45b42141443ff4c121"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "lock.schema.recipe",
@@ -1605,9 +1622,42 @@
         "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "lock.schema.components#1",
+        "vector": null,
+        "witnesses": [
+          "a9073d74c777b74570915666bec984487be976356de7dde45ff2d2e84d47f1d4"
+        ]
+      },
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "lock.schema.components#2",
+        "vector": null,
+        "witnesses": [
+          "5fa3bd226d6d4b104ad3a8270bac764a1d4a815bc29c052b1dd1336356265724"
+        ]
+      },
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "lock.schema.components#3",
+        "vector": null,
+        "witnesses": [
+          "dfa46beb85c98d346f568244e8f4236c041ce7d1067655dfa41f43c918a57cfc"
+        ]
+      },
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "lock.schema.components#4",
+        "vector": null,
+        "witnesses": [
+          "0f0319197a0a788d5116dabc99ea4e8511372d56d750c75f45fcffa005bb5327"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "lock.schema.outputs",
@@ -1632,7 +1682,7 @@
         "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -1704,9 +1754,26 @@
         "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "lock.schema.engines#1",
+        "vector": null,
+        "witnesses": [
+          "a4d86209901d309c5a04693aa14b698796c1ba733f119a27a2a8c1f4fbd5c5c8"
+        ]
+      },
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "lock.schema.engines#2",
+        "vector": null,
+        "witnesses": [
+          "55580c6b46b06307870bf03044036723b7a3ccefd8f053d9e508e77c0a7b08ec"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "lock.schema.layout",
@@ -1725,9 +1792,26 @@
         "source_sha256": "cd3c6e4cced69f495a2009034574eb0c9e9ef047ac6cf5ec107481ed8b88f3b9"
       }
     ],
-    "status": "pending-semantic-mutant",
-    "evidence": [],
-    "reason": "source anchored; independent killing vector still required"
+    "status": "killed",
+    "evidence": [
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "lock.schema.layout#1",
+        "vector": null,
+        "witnesses": [
+          "16112729e7113af2b478116be500fa4557bc33b3d6392d97b9310b5ce9698d4b"
+        ]
+      },
+      {
+        "file": "named-site-negative-results.golden",
+        "site": "lock.schema.layout#2",
+        "vector": null,
+        "witnesses": [
+          "667f8cfa2962475c9fda5b85ea7591e6dab8bffdec63d9d7b7fbfde9d1c4c92c"
+        ]
+      }
+    ],
+    "reason": "independent mutation killed"
   },
   {
     "id": "lock.schema.health",
@@ -1926,7 +2010,7 @@
         "source_sha256": "396855b1ecbb8265699867ae4eca205387b9803c7181174f7449ede511a4dcbd"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -2148,7 +2232,7 @@
         "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -2421,7 +2505,7 @@
         "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -2442,7 +2526,7 @@
         "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -2463,7 +2547,7 @@
         "source_sha256": "1e8b16e7d8c130e7f36fb755930a90fbb9aaf8f08c59171732525121ac21f216"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -2780,7 +2864,7 @@
         "source_sha256": "f9fa9ebebf41b58a4d10c9376f0e02f7e4e9f1c76aec57fc79e557464abc7c6d"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -3421,7 +3505,7 @@
         "source_sha256": "9fe0b847b07e46d7ea8e1591d50a54e845f9574e5bb2aa37e392c9f1e4c8c2c3"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -3589,7 +3673,7 @@
         "source_sha256": "b96f61dd54a447f116baf285c1ce353e600deb7f9af717027c6badc9c0e477cf"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -3809,7 +3893,7 @@
         "source_sha256": "5c8a26859ea763f34b15a9c3a129dd6aba85f44c1aecd19e46c92944f6be8867"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -3887,7 +3971,7 @@
         "source_sha256": "4669e474bfcd971f3be9a31d02e12f7b6425484cd98e220be0db8de556890aa3"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },
@@ -4046,7 +4130,7 @@
         "source_sha256": "fa8efe31073cc3fcfb9bd99cbdd078746c572e813c56ad2de5463f0172f4c80c"
       }
     ],
-    "status": "pending-semantic-mutant",
+    "status": "not-killed",
     "evidence": [],
     "reason": "source anchored; independent killing vector still required"
   },

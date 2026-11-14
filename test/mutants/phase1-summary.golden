@@ -10,13 +10,13 @@
     "runtime-error": 1
   },
   "named_checks": 203,
-  "named_mutants_implemented": 113,
-  "named_killed": 69,
-  "named_remaining": 134,
+  "named_mutants_implemented": 136,
+  "named_killed": 73,
+  "named_remaining": 130,
   "B_recorded": 279,
   "B_independent_replayed": 0,
   "C_recorded": 60,
-  "C_shim_replayed": 0,
+  "C_shim_replayed": 49,
   "negative_vectors": 154,
   "unavailable_rows": [
     14,

@@ -14,7 +14,7 @@ def summarize():
   if hashlib.sha256((ROOT/'oracle'/a['file']).read_bytes()).hexdigest()!=a['source_sha256']:raise ValueError('stale oracle anchor')
  witnesses={hashlib.sha256(line.encode()).hexdigest() for line in (ROOT/'test/vectors/guard-negative.golden').read_text().splitlines()}
  evidence={k:[] for k in expected};latest={}
- for file,kind in [('oracle-results.golden','unit'),('a-results.golden','prior-A'),('extended-results.golden','unit'),('negative-results.golden','negative')]:
+ for file,kind in [('oracle-results.golden','unit'),('a-results.golden','prior-A'),('extended-results.golden','unit'),('negative-results.golden','negative'),('sweep-results.golden','unit'),('purpose-results.golden','unit')]:
   for row in read(file):
    ident=row['id']
    if ident not in expected:raise ValueError('unknown mutant')
@@ -22,17 +22,21 @@ def summarize():
    killed=unit_kill(row) if kind=='unit' else row.get('status')=='killed' and bool(row.get('witnesses'))
    if kind=='negative' and killed and not set(row['witnesses'])<=witnesses:raise ValueError('missing committed killing witness')
    if killed:evidence[ident].append({'file':file,'kind':kind,'witness':row.get('witnesses',[None])[0]})
+ import sys
+ sys.path.insert(0,str(ROOT/'test/mutants'))
+ import assemble, named_sites
  waivers=read('equivalence-waivers.golden');waived={}
+ if waivers!=assemble.build():raise ValueError('stale equivalence waivers')
  for w in waivers:
   if w['id'] not in expected or not w.get('justification') or not w.get('no_observable_difference') or not w.get('anchor'):raise ValueError('invalid equivalence waiver')
   if w['id'] in waived:raise ValueError('duplicate equivalence waiver')
+  if evidence[w['id']]:raise ValueError('waiver on a killed mutant: '+w['id'])
   waived[w['id']]=w
+ if read('named-site-anchors.golden')!=named_sites.build()[0]:raise ValueError('stale named site mutants')
  reviews=[]
  for anchor in anchors:
   ident=anchor['id'];status='killed' if evidence[ident] else 'equivalent' if ident in waived else 'unreviewed'
   reviews.append({'id':ident,'file':anchor['file'],'line':anchor['line'],'status':status,'last_trial_category':latest.get(ident,'uncovered'),'evidence':evidence[ident]})
- import sys
- sys.path.insert(0,str(ROOT/'test/mutants'))
  from named_checks import build
  named=read('named-checks.golden')
  if named!=build():raise ValueError('stale named check evidence')
@@ -43,7 +47,17 @@ def summarize():
    ng.add(row['id'])
    killed=unit_kill(row) if kind=='unit' else row.get('status')=='killed'
    if killed:nk.add(row['id'])
+ # Site-based evidence is validated inside named_checks.build(): every site killed.
+ for row in named:
+  if row['status']!='pending-semantic-mutant':ng.add(row['id'])
+  if row['status']=='killed':nk.add(row['id'])
  B=json.loads((ROOT/'test/vectors/scenario-obligations.golden').read_text());C=json.loads((ROOT/'test/vectors/cli-obligations.golden').read_text())
+ replay={r['id']:r for r in json.loads((ROOT/'test/vectors/cli-replay.golden').read_text())}
+ for row in C:
+  proof=replay.get(row['id'],{})
+  if row['status']=='replayed' and not (proof.get('status')=='replayed' and proof.get('projected_record_sha256')==row['raw_sha256'] and proof.get('adapter_failure') and proof.get('adapter_failure')==proof.get('expected_adapter_failure')):raise ValueError('C entry marked replayed without projection evidence')
+ for row in B:
+  if row['status']=='replayed':raise ValueError('B entry marked replayed without a replay harness')
  counts={'guard_site_mutants':len(anchors),'combined_killed':sum(r['status']=='killed' for r in reviews),'equivalent':len(waived),'remaining_unreviewed':sum(r['status']=='unreviewed' for r in reviews),'remaining_categories':{},'named_checks':len(named),'named_mutants_implemented':len(ng),'named_killed':len(nk),'named_remaining':len(named_ids-nk),'B_recorded':len(B),'B_independent_replayed':sum(r['status']=='replayed' for r in B),'C_recorded':len(C),'C_shim_replayed':sum(r['status']=='replayed' for r in C),'negative_vectors':len(witnesses),'unavailable_rows':[14,43,44,45,46]}
  for r in reviews:
   if r['status']=='unreviewed':counts['remaining_categories'][r['last_trial_category']]=counts['remaining_categories'].get(r['last_trial_category'],0)+1

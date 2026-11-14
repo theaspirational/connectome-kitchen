@@ -4,16 +4,16 @@
     "test": "test_errors.ErrorTests.test_cli_lock_and_unexpected_exception_fallbacks",
     "function": "connectome_cook.main",
     "raw_sha256": "fa55477df57dbd1c8fe9cbd9d4f8e5e8755af24d6015b2dcdbd25d1a3193c61e",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.1",
     "test": "test_errors.ErrorTests.test_cli_lock_and_unexpected_exception_fallbacks",
     "function": "connectome_cook.main",
     "raw_sha256": "a38814fa4c291192b5d70cc40f513067028adbafa14c8a9bb65423bb3239752d",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.2",
@@ -21,15 +21,15 @@
     "function": "connectome_cook.main",
     "raw_sha256": "793fa9991f68500f4ec01f7c92e169a8324c64a62d397335a084e564dc08e81a",
     "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "issue": "E_UNIT_VERIFY: raised only by deployment-engine code that the adapter never calls"
   },
   {
     "id": "C.3",
     "test": "test_errors.ErrorTests.test_each_closed_code_survives_cli_and_deployment_command",
     "function": "connectome_cook.main",
     "raw_sha256": "432bb36e6c6d7849514f44336b0e3c29796e1c39cd3e965e9ffdd4f90bd3ab8a",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.4",
@@ -37,7 +37,7 @@
     "function": "connectome_cook.main",
     "raw_sha256": "ba4a41ccd7e51f49e27dd9385e0fa8dc7809d9ce8e1483bda3ef61f176e7148a",
     "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "issue": "E_UNIT_ACTIVE: raised only by deployment-engine code that the adapter never calls"
   },
   {
     "id": "C.5",
@@ -45,7 +45,7 @@
     "function": "connectome_cook.main",
     "raw_sha256": "e00189f9f907c23b6e139e568d96b635d7204ba33bd6efd8cde55a6876113396",
     "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "issue": "E_UNIT_EXCLUSIVE: raised only by deployment-engine code that the adapter never calls"
   },
   {
     "id": "C.6",
@@ -53,7 +53,7 @@
     "function": "connectome_cook.main",
     "raw_sha256": "8d2b92080ac294db2c692a329c4c37a6db01a378d3d801d98613b2c752920f44",
     "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "issue": "E_ANCESTOR_WRITABLE: raised only by deployment-engine code that the adapter never calls"
   },
   {
     "id": "C.7",
@@ -61,7 +61,7 @@
     "function": "connectome_cook.main",
     "raw_sha256": "ff8175395beefb26c9fc122ef639e0187d38ad017a68a7fdbb7dfca312ebb643",
     "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "issue": "E_EXTERNAL_COMMAND: raised only by deployment-engine code that the adapter never calls"
   },
   {
     "id": "C.8",
@@ -69,7 +69,7 @@
     "function": "connectome_cook.main",
     "raw_sha256": "5ada0e77d3394d2b54cf6f7598749a6d4deda246023542e6ec3240df0ec110e0",
     "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "issue": "E_EXTERNAL_ACCESS: raised only by deployment-engine code that the adapter never calls"
   },
   {
     "id": "C.9",
@@ -77,7 +77,7 @@
     "function": "connectome_cook.main",
     "raw_sha256": "112ed1f2b7f4399ae05a6fddc9be0b8d891cd7a83d235b066f16369f41cac4f6",
     "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "issue": "E_EXTERNAL_DATA_ARG: the adapter raises it only from validation the engine has already applied to the same request, so no contract request reaches it at the adapter stage"
   },
   {
     "id": "C.10",
@@ -85,7 +85,7 @@
     "function": "connectome_cook.main",
     "raw_sha256": "13a61e7142ed89e356605002ccab56fd1180f05c0c5c9c38f5421db5331ed240",
     "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "issue": "E_SYSTEMD_PATH: raised only by deployment-engine code that the adapter never calls"
   },
   {
     "id": "C.11",
@@ -93,55 +93,55 @@
     "function": "connectome_cook.main",
     "raw_sha256": "44b3ac478c13f9c3e0bce522c5c29f68f8c81d494f9b9ac906f05d302b9c1ef9",
     "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "issue": "E_ENVIRONMENT_FILE: raised only by deployment-engine code that the adapter never calls"
   },
   {
     "id": "C.12",
     "test": "test_errors.ErrorTests.test_each_closed_code_survives_cli_and_deployment_command",
     "function": "connectome_cook.main",
     "raw_sha256": "51d4c242001ebd65f847dc17a951eafdf1f6edb6ab9b5d309088ee4fd1611098",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.13",
     "test": "test_errors.ErrorTests.test_each_closed_code_survives_cli_and_deployment_command",
     "function": "connectome_cook.main",
     "raw_sha256": "10e035e5647fe32069ddea33d5b78332ba1ee7dc30c303e4d91a8b3454cdb33a",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.14",
     "test": "test_errors.ErrorTests.test_each_closed_code_survives_cli_and_deployment_command",
     "function": "connectome_cook.main",
     "raw_sha256": "807376f0419d46ae1721f49dccb646c7563e5060ca36c1d487adc3cb7a6d491e",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.15",
     "test": "test_errors.ErrorTests.test_each_closed_code_survives_cli_and_deployment_command",
     "function": "connectome_cook.main",
     "raw_sha256": "65522724d949255c8c0e0b001424313daa9cf418f5e75cf93153200b77591d49",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.16",
     "test": "test_errors.ErrorTests.test_each_closed_code_survives_cli_and_deployment_command",
     "function": "connectome_cook.main",
     "raw_sha256": "0a3e75a76dce25033c292c595c74612e2b82da7de8b110fea18c133b0246d1bc",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.17",
     "test": "test_errors.ErrorTests.test_each_closed_code_survives_cli_and_deployment_command",
     "function": "connectome_cook.main",
     "raw_sha256": "954bbe45288230475bed5912b1b47fef081d622c0ebcf3a9464dad38ef3a5470",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.18",
@@ -149,23 +149,23 @@
     "function": "connectome_cook.main",
     "raw_sha256": "9b73fb005d27250f7e93a22ea012127e1ecc3711b48f21d4c3f4cadee21506f2",
     "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "issue": "E_SECRETS_MODE: raised only by deployment-engine code that the adapter never calls"
   },
   {
     "id": "C.19",
     "test": "test_errors.ErrorTests.test_each_closed_code_survives_cli_and_deployment_command",
     "function": "connectome_cook.main",
     "raw_sha256": "3462860050036249ecb6f2daa24ccd7518241e8341b1c063a38424653d534245",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.20",
     "test": "test_errors.ErrorTests.test_each_closed_code_survives_cli_and_deployment_command",
     "function": "connectome_cook.main",
     "raw_sha256": "6e7ddd5adda3603a7fb66eb7918cc3d09cb7a65d616b549a62d562247c77b8ff",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.21",
@@ -173,310 +173,310 @@
     "function": "connectome_cook.main",
     "raw_sha256": "986d6532cd26e56fa8b982c540f81d8a86064db8c75c371f74eab6a6747c8989",
     "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "issue": "E_DEPLOY_FAILED: the adapter raises it only from validation the engine has already applied to the same request, so no contract request reaches it at the adapter stage"
   },
   {
     "id": "C.22",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "188674db556aab0ac01ab4eca1321561cd99ca3cd9a74d671ff544bf1c3f66de",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.23",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "9e297a203bcf8ca974cbff24af50f445f8e0e4b467dd4e2c67f442b2a84e2953",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.24",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "4d4a3025a420433a6b1516ed9b274dace28460ad4372c3c672a324020f01dc21",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.25",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "c58369920757ec9da7057294eabbae80ae8ee28bd25a9f2d7816ebddb0002072",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.26",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "6e8d2aeac9c7ca53b9b2d72b906116366375756b03f8271af6105b493d99d818",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.27",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "322c288466618da2d758f41441ce46332020b688a68d565791dd16f987bbf820",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.28",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "3f180dd88036fa8164c583f5e1d42e11df3f7d5cfd546562ff976b46b53635cf",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.29",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "cd4d5d869d915186bbcafb79541d8ad24e900410f89b63eba8fa4e56f8c56652",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.30",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "01e3078eeb62c2bfc7458853855c416fe403ea142a1520f1a64ab0c819df9adc",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.31",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "cba62817dca91d42253e850e53cdeef71d8d0fb65a60b407c273b8be1c5fb229",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.32",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "5540a8fd2a1391ab9633362ea5386a206911be6097cd439b6e4a62bf142ea1b5",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.33",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "b636ad49908301442debaa9a71254d0e58988e1d55a2b5506f1b0c2b643407f5",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.34",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "ce74679e174b1045682a49cacbe044ea248798f2f7cf031925077e1a5f668550",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.35",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "7da08561a1a4812dd0d1fe74f0d845dc9b3c9d29754153d2af61e34f62013403",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.36",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "61476a2bc2f79c21841c9ddc8706437c417d4f9fc7ddcbf101d76ef8309a17cc",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.37",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "3a5f1905409d092ec3f4f4c404b96c0fc4551bae90259b0df00cdcfece6b752a",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.38",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "e26c93cb9f4179389d58f7bc4e5ed251df4f7904ab67875e4fdd99b497fa2b00",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.39",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "39c647772a2694cd6044f59c296207d1bf76c22fbb4e0c05c80a2a264b49fafd",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.40",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "6190d82448d1a103dc5d1edd87ea18df236ca0d0a3a02b72026533f7abdd9ef4",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.41",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "c98076200902afe5c22873c80187987155a345fbfc15f38a08d485656bab3ea5",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.42",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "3edb3d36d667257e11cb7dddd1ea7c590e320a6b12e7ec224fb0503ec506326a",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.43",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "8f91288de30abd3b6b3db8b8eaf532a19a57f2e63e06c171b529f92e8cb68d8b",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.44",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "8adffa362af16789031b046ad471621b7c8070df2cc2052aa641e88193ba716b",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.45",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "7095751464ed8b6c7beb9e43f12c08a963cd5ad12be4c67873eb571fe8751fd8",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.46",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "ddede56785edc053b73a0651dfaefd6b9ee7e46d644dd3de808ad89ab96455e0",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.47",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "7308eb127fb21f8c4a070033797a05fe20040c45a1ff39760b10274c55a77457",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.48",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "d9106264a40f07f7d69d94d89c21b571071b8f48b82722e4f57cbf14fab6537a",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.49",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "19f0ed357d615db1472518ce7bfc7ca70005940a5570d841d46ea6e1e8068f8b",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.50",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "a9ec2f683d45ebf0099eedd15d60e3243d062fdfc6c747b90f85e8b8e053e464",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.51",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "49f743cd4e8fe82151d43bb0f813d4175d76282fda34d905a5fcdd2e0e6c3151",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.52",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "d05224d936a1e0c106a81c2a55ea35cf939457791ff477de4c4238c09f1bef04",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.53",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "ba2c1dd6e2de258cce22a678ba5c98d8b1d0cd446303e425e64c5185f0ad8a4e",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.54",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "4c08c278d1163663b7f30b201e91857416e33a0d5c74cb29d2f0c6a6ba69f9ab",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.55",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "06be5f185793aa32ec76340a50bbdd02020d0edc29e91b4b7a668e16a9970d26",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.56",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "4136bda692cc5022cc040299467ca33c3dbedc22008643f6841b05627a981b7d",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.57",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "8c561db823121c1a23e4964721b783dfc923ff98f942e44b02b04c4a1645c92a",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.58",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "fe7c4b5f5eb0c6a7bb2221d795119a26e6c40a1074e4d4da52ea141629df8512",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   },
   {
     "id": "C.59",
     "test": "test_errors.ErrorTests.test_every_reviewed_cook_code_is_preserved_without_raw_output",
     "function": "connectome_cook.main",
     "raw_sha256": "bc3dc62178882a6bc2a4519cd0be8e1fdb2696e79469b1ae00d4a7a495ec1d67",
-    "status": "pending-shim-projection",
-    "issue": "cook.main called under a patched adapt; required named fake is not yet independently reconstructed"
+    "status": "replayed",
+    "issue": "projected from a shim receipt and bound to the unpatched adapter failure; see cli-replay.golden"
   }
 ]
