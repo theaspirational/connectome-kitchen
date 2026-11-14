@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import {atomicWrite,readFile,manifest} from '../../src/io/fs-safe.js';
-import {run} from '../../src/io/proc.js';
-import {withFlock} from '../../src/io/flock.js';
+import {atomicWrite,readFile,manifest} from '../../dist/io/fs-safe.js';
+import {run} from '../../dist/io/proc.js';
+import {withFlock} from '../../dist/io/flock.js';
 const base=path.resolve('.cache/io');
 fs.mkdirSync(base,{recursive:true,mode:0o700});
 test('private atomic write, syscall ordering and no-follow reads',()=>{

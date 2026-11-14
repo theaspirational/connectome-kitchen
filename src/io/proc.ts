@@ -1,6 +1,8 @@
 import { spawnSync } from 'node:child_process';
+export interface ChildEvent { op: 'child'; stdin: 'null'; stdout: 'discard'; stderr: 'discard'; envNames: string[]; status: number | null; }
+export interface RunOptions { env?: Record<string, string>; cwd?: string; timeout?: number; maxBuffer?: number; log?: (event: ChildEvent) => void; }
 /** Child output is never forwarded, nor included in failures. */
-export function run(argv,{env={},cwd,timeout=30000,maxBuffer=1024*1024,log=()=>{}}={}) {
+export function run(argv: readonly string[],{env={},cwd,timeout=30000,maxBuffer=1024*1024,log=()=>{}}: RunOptions={}): { status: 0 } {
   if(!Array.isArray(argv)||!argv.length||typeof argv[0]!=='string'||!argv[0].startsWith('/')||argv.some(x=>typeof x!=='string'||x.includes('\0')))throw new Error('invalid child argv');
   const result=spawnSync(argv[0],argv.slice(1),{env,cwd,timeout,maxBuffer,stdio:['ignore','pipe','pipe']});
   // Logs contain only structural properties, never argv, environment values or output.

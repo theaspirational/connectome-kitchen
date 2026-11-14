@@ -5,7 +5,18 @@
   "type": "module",
   "license": "MIT",
   "engines": {"node": ">=24"},
-  "bin": {"kitchen": "src/cli.js"},
-  "exports": {".": "./src/index.js", "./contract": "./src/contract.js"},
-  "scripts": {"test": "node --test test/unit/*.test.js", "check:public": "python3 scripts/check_public.py"}
+  "bin": {"kitchen": "dist/cli.js"},
+  "exports": {
+    ".": {"types": "./dist/index.d.ts", "default": "./dist/index.js"},
+    "./contract": {"types": "./dist/contract.d.ts", "default": "./dist/contract.js"}
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "pretest": "npm run build",
+    "test": "node --test test/unit/*.test.js",
+    "check:public": "python3 scripts/check_public.py",
+    "check:public:dist": "find dist -type f -exec python3 scripts/check_public.py {} +"
+  },
+  "devDependencies": {"@types/node": "24.19.2", "typescript": "5.9.3"}
 }

@@ -4,10 +4,15 @@ Offline phase-0/1/2 seed at Python baseline `a49b5dc`. **Not deployable. Phase 1
 is incomplete and its acceptance gate is red.** No engine port, acquisition,
 remotes or publication are included. The only runtime imports are Node builtins
 and in-tree modules; Python/PyYAML are development/oracle tools already present
-on this machine. Nothing was installed.
+on this machine. The TypeScript compiler and Node typings are development-only
+pins, installed offline from sealed tarballs; there are still zero runtime
+dependencies.
 
 ## Layout and status
 
+- `src/`: TypeScript, `strict`. `tsc` emits ESM JavaScript and declarations to
+  ignored `dist/`; `bin` and `exports` name `dist` only. The unit tests import
+  the compiled output, never the sources.
 - `src/pylike/`: typed strict JSON, Python encoders, Unicode tables, text,
   component-wise paths, limited regex helpers, shlex, URL split/unquote, bounded
   tar reader. USTAR and a conservative per-file PAX subset are supported;
@@ -40,10 +45,23 @@ on this machine. Nothing was installed.
 
 ## Offline commands
 
-Use the supplied Node 22 test executable explicitly. Production metadata keeps
-Node >=24. There is no offline `tsc`, so this seed uses ESM JS with JSDoc instead
-of experimental stripping: no compiler/bundler or type-erasure dependency is
-needed. `test/public-syntax.ts` also exercises the publication gate on TS syntax.
+Production metadata keeps Node >=24. The compiler is TypeScript 5.9.3 with the
+Node 24.19.2 typings (and their dependency, undici-types 7.24.6), pinned by
+sha512 in `package-lock.json`. Install them from a directory holding the three
+sealed tarballs; no registry is contacted and no install script runs:
+
+```
+scripts/install-offline.sh /path/to/typescript-pins
+npm run typecheck
+npm run build
+```
+
+`npm run build` deletes `dist/` and recompiles, so stale output cannot satisfy a
+test; `npm test` builds first. `scripts/build` is a different thing: it adds the
+older publication smoke fixture to `dist/` and must run after `npm run build`.
+`test/public-syntax.ts` still exercises the publication gate on TS syntax, and
+`npm run check:public:dist` applies the gate to every compiled file.
+`scripts/unicode-tables.py` regenerates `src/pylike/unicode.ts`.
 
 ```
 node --test test/unit/*.test.js
@@ -54,11 +72,12 @@ python3 scripts/verify-history.py --source /path/to/local/source
 python3 scripts/check_public.py --range main --history-blobs
 python3 scripts/build
 python3 scripts/check_public.py test/public-syntax.ts dist/kitchen-scaffold.mjs
+npm run check:public:dist
 python3 scripts/check-module-ready
 ```
 
-The last command intentionally fails. The build is only a publication smoke
-fixture, **not** a kitchen artifact. The CLI scaffold refuses with exit 2.
+The last command intentionally fails. `scripts/build` is only a publication smoke
+fixture, **not** a kitchen artifact; the compiled `dist/` is not one either. The CLI scaffold refuses with exit 2.
 Operational CLI/schema/packaging work is phase 7, not part of this seed.
 
 Extract against a **fresh local clone** of the original source at `a49b5dc`, with
