@@ -20,8 +20,10 @@ and exit status. An entry counts as replayed only if
 Entries whose injected failure the unpatched adapter can never produce are
 listed as unreachable; they are not replayed and not relabelled.
 
-Prerequisite outside this repository: a local clone that holds the reviewed
-cook commit (`--cook-source`). Nothing is fetched. The scenario root is
+Prerequisites outside this repository: a local clone that holds the reviewed
+cook commit (`--cook-source`), and a checkout path the engine accepts as a
+deployment root (no whitespace or special characters; `root_refusal`). Without
+either the command exits 3 and counts nothing. Nothing is fetched. The scenario root is
 `.cache/scenario-root` of whatever checkout this file is in; the directories
 above it are modelled as root-owned 0755 through the frozen suite's own
 `safe_ancestors` seam, because a checkout may have group-writable ancestors
@@ -112,6 +114,14 @@ def tool_log(text,names):
  """Recorded fake-tool calls with host values named: (number of calls, digest)."""
  calls=[named(json.loads(line),names) for line in text.splitlines()]
  return len(calls),hashlib.sha256(''.join(canonical(call)+'\n' for call in calls).encode()).hexdigest()
+
+def root_refusal(path):
+ """Why the engine cannot deploy under `path`, or None. Asked of the engine's own path rule, not restated here."""
+ sys.path.insert(0,str(ROOT/'oracle/module_utils'))
+ import connectome_deploy, connectome_errors
+ try:connectome_deploy.Deployment._systemd_path(str(path))
+ except connectome_errors.SafeError as error:return 'a checkout path the engine accepts as a deployment root (it refuses this one with '+str(error.code)+': '+connectome_errors.MESSAGES[error.code]+')'
+ return None
 
 def scenarios(cook_codes):
  """name -> (fake runtime mode, config edit, archive edit, expected adapter failure)."""
@@ -216,7 +226,9 @@ def child(args):
  spec=importlib.util.spec_from_file_location('kitchen_shim',oracle/'shim/kitchen_v1.py');shim=importlib.util.module_from_spec(spec);spec.loader.exec_module(shim)
  import connectome_cook, connectome_errors
  from deploy_fixtures import safe_ancestors
- commit=connectome_cook.COOK_COMMIT
+ commit=connectome_cook.COOK_COMMIT;refused=root_refusal(SCENARIO)
+ # Every scenario path lies under the checkout. A root the engine refuses would turn all 49 into one early refusal.
+ if refused:print(json.dumps({'prerequisite':refused}));return 3
  if subprocess.run(['git','-C',str(args.cook_source),'cat-file','-e',commit+'^{commit}'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode:
   print(json.dumps({'prerequisite':'reviewed cook commit unavailable locally'}));return 3
  prepare_inputs(args.cook_source,commit)

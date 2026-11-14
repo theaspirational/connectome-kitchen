@@ -252,6 +252,13 @@ Limits of this replay:
 
 - It needs a local clone holding the reviewed cook commit (`--cook-source`).
   Nothing is fetched; without the clone the command exits 3 and counts nothing.
+- "Any checkout root" means any root the engine accepts as a deployment path.
+  The scenario root lies under the checkout, and the engine refuses a systemd
+  path with whitespace or a character outside `A-Z a-z 0-9 _ . / : @ + -`
+  (`E_SYSTEMD_PATH`). From such a checkout every scenario would end in that
+  one refusal before the adapter starts. The replay asks the engine's own path
+  rule first and exits 3 with the reason, as for a missing clone; it does not
+  report a stale golden.
 - The shim is called in process under the frozen suite's `safe_ancestors` seam,
   for the ancestor reason given in the B section. The adapter itself runs as a
   real, unpatched subprocess.

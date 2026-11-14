@@ -177,6 +177,12 @@ class HostNamingTests(unittest.TestCase):
   unbound=replay_c.evaluate({'fallback:LockError':dict(row,build_identity_error='fixture reason')},[entry],errors)[0]
   self.assertEqual((unbound['status'],unbound['reason']),('not-reproduced','tool log is not bound to one build: fixture reason'))
   self.assertEqual(replay_c.evaluate({'fallback:LockError':dict(row,build_identity_sha256='a'*64)},[entry],errors)[0]['status'],'replayed')
+ def test_a_root_the_engine_refuses_is_a_missing_prerequisite(self):
+  for path in ('/fixture/plain/.cache/scenario-root','/tmp/a-b_c.d:e@f+g/x'):self.assertIsNone(replay_c.root_refusal(path))
+  for path in ('/fixture/with space/.cache/scenario-root','/fixture/d\u00e9p\u00f4t/x','/fixture/100%/x','/fixture/a"b/x'):
+   self.assertIn('E_SYSTEMD_PATH',replay_c.root_refusal(path))
+  # The check comes before the scenarios and before the cook clone is looked at.
+  source=(ROOT/'test/differential/replay_c.py').read_text();self.assertLess(source.index("if refused:print(json.dumps({'prerequisite':refused}));return 3"),source.index("'cat-file','-e'"))
  def test_golden_holds_no_host_value(self):
   text=(ROOT/'test/vectors/cli-replay.golden').read_text()
   for host in (str(ROOT),sys.executable,'host','build_id'):self.assertNotIn(json.dumps(host),text)

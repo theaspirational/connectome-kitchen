@@ -251,8 +251,9 @@ python3 scripts/unreachable-note
 `purpose.py try --area AREA --id MUTANT --test TEST` runs one pair without
 writing anything. `sweep.py search` runs every frozen test against a mutant and
 confirms each failing test on its own. The C replay needs a local clone that
-holds the reviewed cook commit; without it the command exits 3 and counts
-nothing. Its golden does not depend on the checkout root or the interpreter
+holds the reviewed cook commit, and a checkout path the engine accepts as a
+deployment root (no whitespace or special characters); without either the
+command exits 3 and counts nothing. Its golden does not depend on the checkout root or the interpreter
 path: `relocated` reruns the gate from a second root to show that, and
 `docs/phase1-replay-limits.md` lists the four host values it names instead of
 hashing. `scenario_calls.py` re-observes all 279 recorded test methods and
