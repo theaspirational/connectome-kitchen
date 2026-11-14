@@ -246,7 +246,26 @@ to the ignored `.cache/replay-c-host.json` and never compares them.
 oracle, the harness and the two committed goldens to a new root, runs `run`
 there through a symlinked interpreter, and passes only if that copy accepts the
 goldens unchanged while the root, the interpreter path and every build id
-differ from this checkout's.
+differ from this checkout's. It does this three times:
+
+| Case | Second root | Interpreter |
+| --- | --- | --- |
+| `second-root` | a new directory | `bin/python3` under that root |
+| `long-root` | a new directory more than 255 characters deep | `bin/python3` under that root, so its path is longer still |
+| `spaced-interpreter` | a new directory | `bin/python3` in a directory outside the root whose name has a space |
+
+The last two exist because of how the fake runtime is started. It used to be
+one file whose `#!` line named the interpreter. The kernel reads at most 255
+bytes of that line (127 before Linux 5.1) and refuses a longer one, and it
+splits the line at whitespace. From a long root, or with the interpreter in a
+directory with a space, the fake never started: the adapter reported a cook
+failure, no fake call was logged, and the gate called the goldens stale though
+nothing they pin had changed. The fake is now `bin/runtime.py`, started by the
+`/bin/sh` launcher `bin/runtime`, which passes the interpreter path to `exec`
+as one quoted word. Each case also checks its own premise, so `long-root`
+fails if the interpreter path it used fits a `#!` line and
+`spaced-interpreter` fails if the path has no whitespace. The engine refuses a
+root with whitespace (below), so only the interpreter can have one.
 
 Limits of this replay:
 

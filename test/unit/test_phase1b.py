@@ -1,5 +1,5 @@
 """Evidence rules of the phase-1 deficit tooling: sites, waivers, purpose kills, C projection."""
-import hashlib, importlib.machinery, importlib.util, json, re, sys, tempfile, unittest
+import hashlib, importlib.machinery, importlib.util, json, os, re, shlex, subprocess, sys, tempfile, unittest
 from pathlib import Path
 from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2]
@@ -183,6 +183,42 @@ class HostNamingTests(unittest.TestCase):
    self.assertIn('E_SYSTEMD_PATH',replay_c.root_refusal(path))
   # The check comes before the scenarios and before the cook clone is looked at.
   source=(ROOT/'test/differential/replay_c.py').read_text();self.assertLess(source.index("if refused:print(json.dumps({'prerequisite':refused}));return 3"),source.index("'cat-file','-e'"))
+ def test_fake_runtime_starts_under_any_interpreter_path(self):
+  # A stand-in interpreter at each path writes down the path it was started by, then runs the real one.
+  stand_in='#!/bin/sh\nprintf %s "$0" >"$0.started"\nexec '+shlex.quote(sys.executable)+' "$@"\n'
+  with tempfile.TemporaryDirectory() as scratch:
+   scratch=Path(scratch);long=replay_c.lengthened(scratch/'long',len(str(scratch))+2*replay_c.SHEBANG_MAX)/'python3'
+   paths={'plain':scratch/'plain/python3','space':scratch/'python space/bin/python3','tab and newline':scratch/'a\tb\nc/python3','long':long,
+    'shell characters':scratch/"it's \"$HOME\" `id` $(id) \\ ; & * # ~/python3"}
+   self.assertGreater(len(os.fsencode(str(long))),replay_c.SHEBANG_MAX)
+   for number,(label,python) in enumerate(paths.items()):
+    python.parent.mkdir(parents=True);python.write_text(stand_in);python.chmod(0o755)
+    bin=scratch/str(number)/'bin';bin.mkdir(parents=True);launcher=replay_c.write_runtime(bin,python)
+    self.assertEqual(launcher,bin/'runtime');self.assertEqual(launcher.read_bytes().split(b'\n')[0],b'#!/bin/sh',label)
+    argv=['two words','','--out',"quote ' and $dollar",'*'];(bin/'mode').write_text('fail:E_EXAMPLE\n')
+    done=subprocess.run([str(launcher)]+argv,env={},capture_output=True,text=True,stdin=subprocess.DEVNULL)
+    self.assertEqual((done.returncode,done.stderr),(1,'E_EXAMPLE: synthetic-private-argument\n'),label)
+    self.assertEqual(Path(str(python)+'.started').read_text(),str(python),label)
+    self.assertEqual([json.loads(line) for line in (bin.parent/'fake-tools.jsonl').read_text().splitlines()],[{'tool':'runtime','argv':argv,'stdin_tty':False}],label)
+    (bin/'mode').write_text('exit0\n');self.assertEqual(subprocess.run([str(launcher)],env={},stdin=subprocess.DEVNULL).returncode,0,label)
+ def test_no_line_of_the_fake_runtime_names_the_interpreter(self):
+  # The kernel cuts and splits a `#!` line; only `/bin/sh` may be named there. The interpreter is an argument of `exec`.
+  self.assertFalse(replay_c.RUNTIME.startswith('#!'));self.assertNotIn('%',replay_c.LAUNCHER.split('\n')[0])
+  with tempfile.TemporaryDirectory() as scratch:
+   text=replay_c.write_runtime(Path(scratch)).read_text()
+   self.assertEqual(text,'#!/bin/sh\nexec '+shlex.quote(sys.executable)+' '+shlex.quote(scratch+'/runtime.py')+' "$@"\n')
+   self.assertEqual(shlex.split(text.split('\n')[1])[:3],['exec',sys.executable,scratch+'/runtime.py'])
+ def test_relocation_cases_cover_a_long_root_and_a_spaced_interpreter(self):
+  cases={case:(least,apart) for case,least,apart in replay_c.RELOCATIONS};self.assertEqual(set(cases),{'second-root','long-root','spaced-interpreter'})
+  # A long root alone puts the interpreter under it past what a `#!` line holds, wherever the first root is.
+  self.assertGreater(cases['long-root'][0],replay_c.SHEBANG_MAX);self.assertEqual(replay_c.SHEBANG_MAX,255)
+  self.assertTrue(any(c.isspace() for c in cases['spaced-interpreter'][1]))
+  for start in ('/r','/fixture/'+'a'*100,'/fixture/'+'a'*300):
+   for least in (0,1,255,256,257,1000):
+    path=replay_c.lengthened(Path(start),least);self.assertGreaterEqual(len(str(path)),least);self.assertLessEqual(len(str(path)),max(len(start),least+1))
+    self.assertTrue(str(path).startswith(start));self.assertTrue(all(len(part)<=200 for part in path.parts[len(Path(start).parts):]))
+    # Added components stay inside what the engine accepts as a deployment path.
+    self.assertIsNone(replay_c.root_refusal(path))
  def test_golden_holds_no_host_value(self):
   text=(ROOT/'test/vectors/cli-replay.golden').read_text()
   for host in (str(ROOT),sys.executable,'host','build_id'):self.assertNotIn(json.dumps(host),text)

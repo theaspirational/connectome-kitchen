@@ -7,7 +7,9 @@ patched. One `apply` request (phase `prepare`) goes through the shim; the shim
 starts the real `scripts/cook-adapter.py`; the adapter verifies a checkout of
 the reviewed cook commit and runs the cook command line. The only fake is the
 named `runtime` executable (the program the adapter runs cook with), which
-fails or writes a lock the way the scenario says.
+fails or writes a lock the way the scenario says. It is `bin/runtime.py` under
+the scenario root, started by the `/bin/sh` launcher `bin/runtime` (see
+`write_runtime` for why the launcher is not a `#!` line naming the interpreter).
 
 A fixed projection turns the shim receipt into the adapter's stdout, stderr
 and exit status. An entry counts as replayed only if
@@ -38,9 +40,11 @@ log only after `build_identity` has recomputed it from what it hashes, and
 that preimage, host values named, is pinned as `build_identity_sha256`.
 Nothing else in a tool-log argv is replaced, so any other difference changes
 the golden. The literal ids of one run go to the ignored
-`.cache/replay-c-host.json`; `relocated` runs the gate from a second root.
+`.cache/replay-c-host.json`; `relocated` runs the gate from second roots and
+through second interpreter paths, a long root and an interpreter path with a
+space among them (`RELOCATIONS`).
 """
-import argparse, gzip, hashlib, importlib.util, io, json, os, shutil, subprocess, sys, tarfile, tempfile
+import argparse, gzip, hashlib, importlib.util, io, json, os, shlex, shutil, subprocess, sys, tarfile, tempfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 SCENARIO=ROOT/'.cache/scenario-root'
@@ -53,8 +57,7 @@ DEPLOY_ONLY=('E_UNIT_VERIFY','E_UNIT_ACTIVE','E_UNIT_EXCLUSIVE','E_ANCESTOR_WRIT
 # `validate_config`, `resolve_pins` and `environment_names` are shared: the adapter
 # re-runs them on the spec the engine wrote after passing the same checks.
 SAME_VALIDATION=('E_EXTERNAL_DATA_ARG','E_DEPLOY_FAILED')
-RUNTIME=r'''#!%s
-"""Named fake: stands in for the runtime that executes cook. Mode comes from a file."""
+RUNTIME=r'''"""Named fake: stands in for the runtime that executes cook. Mode comes from a file."""
 import hashlib, json, sys
 from pathlib import Path
 here=Path(__file__).resolve().parent;mode=(here/'mode').read_text().strip();kind,_,value=mode.partition(':')
@@ -69,6 +72,10 @@ if kind=='lock':
  (out/'connectome.lock').write_text(json.dumps(lock))
 sys.exit(0)
 '''
+# What the kernel reads of a `#!` line after the two marker bytes (127 before
+# Linux 5.1). It refuses a longer line and splits a shorter one at whitespace.
+SHEBANG_MAX=255
+LAUNCHER='#!/bin/sh\nexec %s %s "$@"\n'
 
 def canonical(value):return json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=True)
 
@@ -155,13 +162,27 @@ def archive(path,edit):
    content=value.encode();member=tarfile.TarInfo('package/'+name);member.size,member.mode=len(content),0o644;tar.addfile(member,io.BytesIO(content))
  packed=gzip.compress(raw.getvalue(),mtime=0);path.write_bytes(packed);return {'path':str(path),'sha256':hashlib.sha256(packed).hexdigest()}
 
+def write_runtime(directory,python=None):
+ """Write the fake runtime into `directory` and return the executable that starts it under `python`.
+
+ The executable is a `/bin/sh` launcher that passes the interpreter path to
+ `exec` as one quoted word. A `#!` line naming the interpreter would not start
+ it from every path: the kernel reads at most SHEBANG_MAX bytes of that line
+ and splits it at whitespace, so an interpreter under a long checkout root, or
+ in a directory with a space, never ran and every scenario ended as a cook
+ failure with no fake call.
+ """
+ fake=directory/'runtime.py';fake.write_text(RUNTIME);launcher=directory/'runtime'
+ launcher.write_bytes(os.fsencode(LAUNCHER%(shlex.quote(str(python or sys.executable)),shlex.quote(str(fake)))));launcher.chmod(0o755)
+ return launcher
+
 def prepare_inputs(cook_source,commit):
  """Scenario inputs that no request changes: the reviewed cook checkout and the fake runtime."""
  shutil.rmtree(SCENARIO,ignore_errors=True);SCENARIO.mkdir(mode=0o700,parents=True)
  quiet={'stdout':subprocess.DEVNULL,'stderr':subprocess.DEVNULL,'check':True}
  subprocess.run(['git','clone','--quiet','--no-hardlinks','--no-checkout',str(cook_source),str(SCENARIO/'cook')],**quiet)
  subprocess.run(['git','-C',str(SCENARIO/'cook'),'checkout','--detach','-q',commit],**quiet)
- (SCENARIO/'bin').mkdir();runtime=SCENARIO/'bin/runtime';runtime.write_text(RUNTIME%sys.executable);runtime.chmod(0o755)
+ (SCENARIO/'bin').mkdir();write_runtime(SCENARIO/'bin')
  (SCENARIO/'host').mkdir();(SCENARIO/'inputs').mkdir()
 
 def reset(mode,archive_edit):
@@ -312,28 +333,50 @@ def host_evidence(rows):
  """What this run saw that the golden names instead of hashing. Ignored scratch, never compared."""
  return {'root':str(ROOT),'python':sys.executable,'scenarios':{name:row.get('host') for name,row in rows.items()}}
 
-def relocated(cook_source,parent):
+# `relocated` cases: (name, least length of the second root, directory prefix of an interpreter kept outside it).
+# The interpreter is a symlink at `bin/python3` under the second root unless a prefix is given. The engine
+# refuses a root with whitespace, so only the interpreter can have one.
+RELOCATIONS=[('second-root',0,None),('long-root',SHEBANG_MAX+1,None),('spaced-interpreter',0,'replay-c python ')]
+
+def lengthened(path,least):
+ """`path` with components added until it has at least `least` characters."""
+ while len(str(path))<least:path=path/('x'*min(200,max(1,least-len(str(path))-1)))
+ return path
+
+def relocate(case,least,apart,here,cook_source,parent):
  """Run the committed gate from a copy at a second root, through a second interpreter path.
 
  Passes only if the copy accepts the committed goldens unchanged while the
- interpreter path and every build id it saw differ from the ones seen here.
+ interpreter path and every build id it saw differ from the ones seen here,
+ and the interpreter path is what the case is about: longer than a `#!` line
+ for `long-root`, with whitespace for `spaced-interpreter`.
  """
- here=host_evidence(run_child(ROOT/'oracle',cook_source));parent.mkdir(parents=True,exist_ok=True);other=Path(tempfile.mkdtemp(prefix='replay-c-root-',dir=parent))
+ made=[Path(tempfile.mkdtemp(prefix='replay-c-root-',dir=parent))];other=lengthened(made[0],least)
  shutil.copytree(ROOT/'oracle',other/'oracle',ignore=shutil.ignore_patterns('__pycache__','.cache'))
  for name in ('test/differential/replay_c.py','test/vectors/cli-obligations.golden','test/vectors/cli-replay.golden'):
   (other/name).parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/name,other/name)
- python=other/'bin/python3';python.parent.mkdir();python.symlink_to(sys.executable)
+ if apart:made.append(Path(tempfile.mkdtemp(prefix=apart,dir=parent)))
+ python=(made[-1] if apart else other)/'bin/python3';python.parent.mkdir();python.symlink_to(sys.executable)
  done=subprocess.run([str(python),'-B',str(other/'test/differential/replay_c.py'),'run','--cook-source',str(cook_source)],capture_output=True,timeout=900)
- report={'second_root_gate':'current' if done.returncode==0 else 'failed: '+(done.stdout+done.stderr).decode()[-400:].strip()}
+ report={'second_root_gate':'current' if done.returncode==0 else 'failed: '+(done.stdout+done.stderr).decode()[-400:].strip(),
+  'root_length':len(str(other)),'interpreter_path_bytes':len(os.fsencode(str(python))),'interpreter_path_has_whitespace':any(c.isspace() for c in str(python))}
+ good=done.returncode==0 and {'long-root':report['interpreter_path_bytes']>SHEBANG_MAX,'spaced-interpreter':report['interpreter_path_has_whitespace']}.get(case,True)
  if done.returncode==0:
   there=json.loads((other/HOST_EVIDENCE).read_text());pairs=[(here['scenarios'][name]['build_id'],there['scenarios'][name]['build_id']) for name in here['scenarios']]
   report.update(scenarios=len(pairs),builds_compared=sum(a is not None for a,b in pairs),build_ids_differing=sum(a is not None and b is not None and a!=b for a,b in pairs),
    raw_tool_logs_differing=sum(here['scenarios'][name]['tool_log_sha256']!=there['scenarios'][name]['tool_log_sha256'] for name in here['scenarios']),
    root_differs=there['root']!=here['root'],interpreter_differs=there['python']!=here['python'])
- good=done.returncode==0 and set(there['scenarios'])==set(here['scenarios']) and report['builds_compared']>0 and report['build_ids_differing']==report['builds_compared'] and report['root_differs'] and report['interpreter_differs']
- if good:shutil.rmtree(other)
- else:report['kept']=str(other)
- print(json.dumps(report,sort_keys=True));return int(not good)
+  good=good and there['root']==str(other) and there['python']==str(python) and set(there['scenarios'])==set(here['scenarios']) and report['builds_compared']>0 and report['build_ids_differing']==report['builds_compared'] and report['root_differs'] and report['interpreter_differs']
+ if good:
+  for path in made:shutil.rmtree(path)
+ else:report['kept']=[str(path) for path in made]
+ return good,report
+
+def relocated(cook_source,parent):
+ """Every case of RELOCATIONS against one run from this checkout; one report line, exit 1 if any case fails."""
+ here=host_evidence(run_child(ROOT/'oracle',cook_source));parent.mkdir(parents=True,exist_ok=True)
+ results={case:relocate(case,least,apart,here,cook_source,parent) for case,least,apart in RELOCATIONS}
+ print(json.dumps({case:report for case,(good,report) in results.items()},sort_keys=True));return int(not all(good for good,report in results.values()))
 
 SHIM_MUTANTS=[
  ('shim.core.message',"except SafeError as error:core=error.public()","except SafeError as error:core=dict(error.public(),msg='edited')"),
@@ -349,7 +392,7 @@ def main():
   s=sub.add_parser(name);s.add_argument('--cook-source',type=Path,required=True)
   if name=='child':s.add_argument('--oracle',type=Path,required=True)
   if name=='run':s.add_argument('--write',action='store_true')
-  if name=='relocated':s.add_argument('--parent',type=Path,default=ROOT/'.cache',help='existing or new directory to create the second root in')
+  if name=='relocated':s.add_argument('--parent',type=Path,default=ROOT/'.cache',help='existing or new directory to create the second roots in')
  a=p.parse_args()
  if a.command=='child':return child(a)
  if a.command=='relocated':return relocated(a.cook_source,a.parent.resolve())
