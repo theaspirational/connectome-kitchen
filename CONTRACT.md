@@ -55,12 +55,17 @@ closed schema per command; `meta` may grow.
 
 | Command | Today | Mutates | Request keys |
 | --- | --- | --- | --- |
-| `plan` | `Deployment(check=True)`; `prepare()` then `activate()` (`deploy.py:767-768`, `:1233-1234`, `:1252-1253`). No lock is taken in check mode (`library/connectome_release.py:30-31`) | nothing | `base`, `root`, `unit_dir`, `layers` or `config`, `versions`, `engines`, `systemctl` |
+| `plan` | `Deployment(check=True)`; `prepare()` then `activate()` (`deploy.py:767-768`, `:1233-1234`, `:1252-1253`). No lock is taken in check mode (`library/connectome_release.py:30-31`) | nothing | `base`, `root`, `unit_dir`, `layers` or `config`, `versions`, `engines`, `systemctl`, optional `operator_files` |
 | `apply` | `prepare()` + `activate(secrets)` under the per-agent flock (`library/connectome_release.py:32-39`); `phase` selects `prepare`, `activate` or both | builds, units, pointer | as `plan` + `operator_files`, `phase`; secrets on the fd |
 | `verify` | no single entry point on main. Composed from the read-only `_activation_plan()` (`deploy.py:1188-1215`), `_lock()` (`:687-747`), `catalog.verify` (`catalog.py:684-735`) and the install-only health branch (`deploy.py:897-914`). `[T]` adds `health`/`mcp` operations (`[T] roles/connectome_agent/tasks/engine.yml:76-88`) | nothing | as `plan` + `build` (`requested` or `current`) |
 | `recover` | spawn `recover`/`reconcile` (`[S] spawn/cli.py:36`†), `abort` (`[T] spawn/cli.py:68`); deploy-level `cutover.reconciled` (`[S] inputs.py:136-148`, `[S] deploy.py:1039-1066`) | bookkeeping only | `target` (`deploy` or `spawn`), `operation`, `reason`, `observed`, `receipt_sha256` |
 | `spawn` | `validate`, `plan`, `dry-run`, `status` (`spawn/cli.py:20`); `[T]` adds `apply`, `verify` | per sub-command | `action`, `template`, `instance`, `catalog`, `stores`, `observed`, `seed`, `name`, `state_root`, `agent` |
 | `cutover` | `[S]`: prestage with `activation: prepare_only` (`[S] deploy.py:1461-1472`), then apply under a cutover policy (`[S] inputs.py:68-134`) | units, pointer, `state/cutover.json` | as `apply` + required `cutover` policy |
+
+`operator_files` on `plan` is what it is on `apply`: the recipe's bytes as the controller read them. The role hands
+them to its check-mode call too (`tasks/main.yml`), and without them `plan` reads the recipe at its configured path
+itself (`inputs.py:139-143`), which an account that is not the controller's may not be able to read. An optional
+request key, so a minor change (2.6).
 
 `engines` replaces the free-form `cook_command` argv
 (`roles/connectome_agent/defaults/main.yml:10-12`): a closed record

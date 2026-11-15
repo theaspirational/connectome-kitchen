@@ -53,8 +53,12 @@ class Takeover(unittest.TestCase):
         world.node, world.own_name = NODE, True
         self.name = world.request_id()
         self.input = sandbox / 'takeover.json'
+        # The configured recipe path is the controller's and is not there for the account, as on a host where it lies in
+        # another account's home: `plan` and `apply` must both live on the bytes the runner hands over.
+        pinned = next(str(path) for path in sorted(Path(world.sandbox / 'srv').rglob('*')) if path.is_file())
+        Path(recipe).unlink()
         self.document = {'schema': 'connectome.kitchen-takeover/v1', 'request': request, 'systemctl': [str(fake), '--user'],
-                         'files': {recipe: hashlib.sha256(Path(recipe).read_bytes()).hexdigest()}, 'recipe': {'source': str(self.live / 'cook-recipe.json')},
+                         'files': {pinned: hashlib.sha256(Path(pinned).read_bytes()).hexdigest()}, 'recipe': {'source': str(self.live / 'cook-recipe.json')},
                          'expect': {'home': str(world.home), 'account': os.environ.get('USER') or __import__('pwd').getpwuid(os.geteuid()).pw_name,
                                     'request_id': self.name, 'live_build': self.role['request_id']}}
         self.input.write_text(json.dumps(self.document))
@@ -171,6 +175,17 @@ class Takeover(unittest.TestCase):
         secrets.write_text(json.dumps({key: value for key, value in values.items() if key != 'CHAT_RC'}))
         refused('verify', lambda d: None, 'secrets file does not hold')
         self.assertEqual(json.loads((self.keep / 'takeover.log').read_text().splitlines()[-2])['missing'], ['CHAT_RC'])
+        secrets.write_text(json.dumps(values))
+        # A refusal of the engine: the receipt has the closed code, and the account's log the engine's own fixed words.
+        self.input.write_text(json.dumps(document))
+        state = Path(world.effective['state_dir'])
+        state.chmod(0o755)
+        done, log, verbs = self.run_mode(world, 'check')
+        state.chmod(0o700)
+        self.assertEqual((done.returncode, self.pointers(world)), (1, before), done.stderr)
+        answer = next(entry for entry in log if entry['step'] == 'plan answered')['core']
+        self.assertEqual((answer['error_code'], 'state_dir' in answer['msg']), ('E_DEPLOY_FAILED', False))
+        self.assertIn('state_dir must be a real directory, mode 0700', next(entry for entry in log if entry['step'] == 'engine refused')['reason'])
 
     def test_a_start_that_fails_is_taken_back_to_the_running_build(self):
         world = self.world('back')

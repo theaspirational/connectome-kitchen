@@ -12,7 +12,7 @@ from connectome_spawn.lifecycle import Lifecycle
 
 CONTRACT='connectome.kitchen/v1'
 KEYS={
- 'plan':{'base','root','unit_dir','layers','config','versions','engines','systemctl'},
+ 'plan':{'base','root','unit_dir','layers','config','versions','engines','systemctl','operator_files'},
  'apply':{'base','root','unit_dir','layers','config','versions','engines','systemctl','operator_files','phase'},
  'spawn':{'action','template','instance','catalog','stores','observed','seed','name','state_root','agent'},
 }

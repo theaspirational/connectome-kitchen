@@ -267,18 +267,21 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
       log('tool done', { kind, seconds: (Date.now() - started) / 1000 });
     };
     const unexpected = error => log('engine failure that is not a refusal', { error: String(error?.stack ?? error) });
+    // The engine's own fixed words for a refusal. A receipt holds the closed code only; this log is the account's, mode 0600.
+    const refused = error => log('engine refused', { code: error.code ?? null, reason: String(error?.message ?? '') });
     const call = (command, extra = {}) => {
       const body = read().get('request');
       body.set('systemctl', guard);
       for (const [key, value] of Object.entries(extra)) body.set(key, value);
       log(command + ' asked', { keys: [...body.keys()].sort(), phase: extra.phase ?? null });
-      const [receipt, status] = dispatch(dict({ contract: 'connectome.kitchen/v1', command, request: body }), null, { host, run, unexpected });
+      const [receipt, status] = dispatch(dict({ contract: 'connectome.kitchen/v1', command, request: body }), null, { host, run, unexpected, refused });
       const file = saveReceipt(command, canonical(receipt) + '\n');
       log(command + ' answered', { status, receipt: file, core: plain(receipt.get('core')) });
       return [receipt.get('core'), status];
     };
 
-    const [planned, planStatus] = call('plan');
+    // `plan` is handed the recipe as `apply` is: the configured path may be one this account cannot read.
+    const [planned, planStatus] = call('plan', { operator_files: operatorFiles });
     if (planStatus !== 0) { log('end', { status: 1, why: 'plan was refused' }); return 1; }
     const named = planned.get('prepare').get('build_dir');
     log('build named', { build_dir: named, request_id: path.basename(named), expected: wanted });

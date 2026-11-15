@@ -20,7 +20,7 @@ import type { PyDict, PyValue } from './pylike/py.js';
 import { dict } from './pylike/pydump.js';
 
 const KEYS: Readonly<Record<string, ReadonlySet<string>>> = {
-  plan: new Set(['base', 'root', 'unit_dir', 'layers', 'config', 'versions', 'engines', 'systemctl']),
+  plan: new Set(['base', 'root', 'unit_dir', 'layers', 'config', 'versions', 'engines', 'systemctl', 'operator_files']),
   apply: new Set(['base', 'root', 'unit_dir', 'layers', 'config', 'versions', 'engines', 'systemctl', 'operator_files', 'phase']),
 };
 const ENVELOPE = new Set(['contract', 'command', 'request']);
@@ -47,6 +47,11 @@ export interface EngineOptions {
   run?: Run;
   /** Told of a failure that is not a `SafeError`, before it becomes the generic refusal. For tests; nothing is returned. */
   unexpected?: (error: unknown) => void;
+  /**
+   * Told of a refusal before it is reduced to its closed diagnostic: the engine's own fixed message is no part of a
+   * receipt, and a caller on the host may keep it in a private log. Nothing is returned and the receipt is the same.
+   */
+  refused?: (error: SafeError) => void;
 }
 
 /** The first two words of the cook command a kitchen starts: the Node it runs on and the adapter of its own install. */
@@ -105,7 +110,7 @@ export function dispatch(data: PyValue, secrets: PyValue = null, options: Engine
       if (fd !== null) fs.closeSync(fd);
     }
   } catch (error) {
-    if (error instanceof SafeError) core = new Map(Object.entries(error.public()));
+    if (error instanceof SafeError) { options.refused?.(error); core = new Map(Object.entries(error.public())); }
     else { options.unexpected?.(error); core = new Map(Object.entries(diagnostic('E_DEPLOY_FAILED'))); }
   }
   core.set('phase', stage);
