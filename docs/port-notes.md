@@ -854,8 +854,17 @@ passed, with its commit and the sha256 of its report. The implementer
 recorded it on a quoted instruction of the manager of the dispatch, as it did
 the review of the second fix round (`a198042..621d78d`). That one and the
 review of `a198042`, recorded on the technical owner's instruction, are kept
-under `earlier_delta_reviews`. The closing step's own commit is later than
-the reviewed one and is covered by no recorded review.
+under `earlier_delta_reviews`, and so is the review of `621d78d..06ee0cc`
+itself since the record below replaced it.
+
+The closing step (`06ee0cc..05298e9`) had no delta review. The technical
+owner accepted it for the agreed success path, and the record holds that as
+what it is: her bounded technical acceptance, quoted as the brief relays it
+(Zulip Kitchen 2359), not an independent review. `delta_review` carries it
+with `kind` saying so. There is no review report; the digest the readiness
+check requires is the sha256 of the quotation, and the entry says that too.
+The implementer recorded it on the manager's quoted instruction. Commits
+after `05298e9` are covered by neither a review nor that acceptance.
 
 The mutant classification:
 
