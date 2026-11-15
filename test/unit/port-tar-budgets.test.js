@@ -73,7 +73,7 @@ test('the production budgets, the heap they are sized for, and the refusal',()=>
  assert.deepEqual({...tarfile.BUDGETS},{metadataBytes:2**28,paxRecords:2**24,sparseNumbers:2**20,members:2**17});
  assert.ok(Object.isFrozen(tarfile.BUDGETS));
  assert.equal(BigInt(tarfile.BUDGETS.metadataBytes),tarfile.METADATA_LIMIT);
- assert.equal(tarfile.HEAP_LIMIT_REQUIRED_MIB,2048);
+ assert.equal(tarfile.HEAP_LIMIT_REQUIRED_MIB,3072);
  const messages={metadataBytes:'tar metadata budget exceeded: metadata bytes',paxRecords:'tar metadata budget exceeded: pax records',
   sparseNumbers:'tar metadata budget exceeded: sparse numbers',members:'tar metadata budget exceeded: members'};
  for(const [budget,message] of Object.entries(messages)){
@@ -198,6 +198,25 @@ test('the gzip reader counts as the tar reader does',()=>{
  assert.equal(tarfile.gzipMembers(packed).length,9);
 });
 
+test('a name in a global header is one text among the members it reaches: no member holds a copy',()=>{
+ // A path of 4 MiB with a trailing slash in a global header, and 2,000 members. tarfile strips the slash for each member; here
+ // each member's name is a view of the one text. 2,000 copies would be 8 GiB; the listing keeps the text once and a little a member.
+ const script=`import * as tarfile from ${JSON.stringify(new URL('../../dist/pylike/tarfile.js',import.meta.url).href)};
+const header=${header.toString()};const padded=${padded.toString()};
+const value=Buffer.concat([Buffer.alloc(4*1024*1024,0x70),Buffer.from('/')]);
+const body=Buffer.concat([Buffer.from((value.length+14)+' path='),value,Buffer.from('\\n')]);
+const stream=Buffer.concat([header('PaxHeader',body.length,'g'),padded(body),...Array(2000).fill(header('member')),Buffer.alloc(1024)]);
+globalThis.gc();const before=process.memoryUsage().heapUsed;
+const members=tarfile.tarMembers(stream);
+globalThis.gc();
+console.log(JSON.stringify({members:members.length,length:members[1999].name.length,same:members[0].name===members[1999].name,keptMiB:(process.memoryUsage().heapUsed-before)/1048576}));`;
+ const done=spawnSync(process.execPath,['--expose-gc','--input-type=module','-e',script],{encoding:'utf8'});
+ assert.equal(done.stderr,'');
+ const report=JSON.parse(done.stdout);
+ assert.deepEqual([report.members,report.length,report.same],[2000,4*1024*1024,true]);
+ assert.ok(report.keptMiB<16,report.keptMiB+' MiB kept');
+});
+
 test('a size in a global header is the same for every member it reaches, and one integer among them',()=>{
  const members=tarfile.tarMembers(tar(pax([record('GNU.sparse.realsize','5')],'g'),file('a','xx'),file('b'),pax([record('GNU.sparse.realsize','3')]),file('c'),file('d'),pax([record('GNU.sparse.realsize','5')],'x'),file('e'),
   pax([record('GNU.sparse.realsize','9')],'g'),file('f'),pax([record('size','x')],'g'),file('g')));
@@ -262,8 +281,10 @@ console.log(JSON.stringify({limit:Math.floor(v8.getHeapStatistics().heap_size_li
   assert.equal(done.stderr,'');
   return JSON.parse(done.stdout);
  };
- const message='UnsupportedRuntime|false|unsupported runtime: the V8 heap limit is below the 2048 MiB the tar reader is sized for; start Node with --max-old-space-size=2048';
- for(const size of [256,1024,1792]){
+ const message='UnsupportedRuntime|false|unsupported runtime: the V8 heap limit is below the 3072 MiB the tar reader is sized for; start Node with --max-old-space-size=3072';
+ // The limit is the old space the flag sets plus the young generation, which is 48 MiB on Node 22.23.3 and 192 MiB on 24.14.0
+ // on this host: under every flag here the limit is below the requirement on both.
+ for(const size of [256,1024,2048,2800]){
   const report=under(size);
   assert.ok(report.limit<required,size+' gives '+report.limit);
   // Not an archive refusal: no class of the engine, and archive_manifest lets it escape.

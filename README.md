@@ -318,16 +318,22 @@ backlog and what is still open.
   records, sparse numbers and members over one listing and refuses an archive
   that would pass a budget. `test/differential/port_budget.py --check` meets
   each budget at its production value from three sides in both engines, with
-  the port under exactly the heap limit the budgets are sized for
+  the port at exactly the heap limit the budgets are sized for
   (`test/unit/port-budget.test.js` runs it, about three minutes and up to
   1.8 GiB). `test/unit/port-tar-budgets.test.js` and the kind `tarbudget` of
   the helper differential do the same under budgets of a few units. The
   numbers are a proposal until `test/port-rulings.golden` records them as
   approved.
-- **Heap.** The reader refuses to list under a V8 heap limit below 2,048 MiB.
-  The default limit follows the memory limit of the unit, so where it is
-  lower the suites need `NODE_OPTIONS=--max-old-space-size=2048`, and kitchen
-  itself the same flag on its command line.
+- **Heap.** The reader refuses to list under a V8 heap limit
+  (`heap_size_limit`) below 3,072 MiB. The default limit follows the memory
+  limit of the unit, so where it is lower the suites need
+  `NODE_OPTIONS=--max-old-space-size=3072`, and kitchen itself such a flag on
+  its command line. It is a requirement on the environment; no target is
+  known to meet it, and the role was not changed.
+- **Input.** The budgets are a first-version contract for archives that come
+  from a trusted source and are checked against their pinned digest before
+  they are parsed. That is a precondition on the caller, to be confirmed at
+  catalog integration (`test/port-rulings.golden`, ruling C1).
 - **Runtime.** The gzip reader steps Node's zlib through a call that is no
   documented interface. It runs on Node 24.14.0, the pin of
   `oracle/versions.yml`, and on 22.23.3, the development host's, and refuses
@@ -366,5 +372,5 @@ on. So it asks git what was committed after the reviewed commit: a later
 commit that changes anything but `docs/` and `test/port-rulings.golden`
 blocks, as work no recorded review has read. At this commit it is red on
 three lines: the budgets and the heap requirement of D4 are proposed, finding
-F4 stays open until they are approved, and the third fix round has no delta
-review.
+F4 stays open (what D4 leaves of it is residual risk of the trusted-input
+version, not fixed), and the third fix round has no delta review.

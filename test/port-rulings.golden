@@ -19,9 +19,10 @@
   {
    "round": "third fix round",
    "date": "2026-11-15",
-   "from": "the technical owner (Soma), relayed in the dispatch brief of the third fix round of TASK-XQ63S; and the manager of the dispatch, answering a question of the implementer during the round",
+   "from": "the technical owner (Soma), relayed in the dispatch brief of the third fix round of TASK-XQ63S and in two messages of the manager during the round; the owner (Vasyl), by a decision the manager relayed during the round; and the manager of the dispatch, answering a question of the implementer",
    "after": "the delta review of the second fix round (commits 15c857a, 2204553, 621d78d), verdict APPROVE with three LOW findings and three INFO notes",
-   "review_report_sha256": "e2b7be176dfa3fc02ebf4eafdeb3ecf32cff966d967016d4f7846467288a8e20"
+   "review_report_sha256": "e2b7be176dfa3fc02ebf4eafdeb3ecf32cff966d967016d4f7846467288a8e20",
+   "messages_during_the_round": "Four messages of the manager were waiting when the implementer first tried to finalize, after the first two commits of the round (cfb4421, b47d69c). They are quoted under rulings D4 and C1. The third commit of the round answers them."
   }
  ],
  "delta_review": {
@@ -254,23 +255,28 @@
      "sparseNumbers": 1048576,
      "members": 131072
     },
-    "heap_limit_required_mib": 2048,
-    "proposed_for_the_unit": "MemoryMax of at least 3 GiB plus the size of the largest archive, and `--max-old-space-size=2048` on the command line of Node (the role refuses NODE_OPTIONS in a unit environment). Kitchen has no deployed target and no unit that runs it, so this is a requirement stated for the role, not a fit that was checked.",
-    "evidence": "docs/port-notes.md, \"The admission budgets\": cost of each budget on Node 22.23.3 and 24.14.0, the survey of 323 package archives, the two combined vectors under exactly this heap, and what was measured inside cgroup scopes."
+    "heap_limit_required_mib": 3072,
+    "what_the_heap_number_is": "A bound on `v8.getHeapStatistics().heap_size_limit`, which is the old space `--max-old-space-size` sets plus the young generation. It is not the flag: on the development host a limit of exactly 3,072 MiB is `--max-old-space-size=3024` on Node 22.23.3 and `=2880` on 24.14.0, and inside a cgroup of 2 GiB the same flags give 3,048 and 2,976 MiB. The reader checks the limit itself, at run time. The measurements ran at a limit of exactly 3,072 MiB.",
+    "measured_at_that_limit": "The costliest archive found within the budgets, Node 22.23.3 / 24.14.0. One listing: 1,237 / 1,236 MiB of heap in use at the peak (1,234 to 1,239 across runs), 301 / 335 MiB of Buffers, 1,616 / 1,700 MiB resident. Three listings one after another in one process: 1,952 / 1,950 MiB in use, 2,350 / 2,487 MiB resident; completes under MemoryMax=2560M. The same with 524 MiB of caller data on the heap: 2,475 MiB in use, 2,537 / 2,610 MiB committed, inside the limit, 2,869 / 3,012 MiB resident; completes under MemoryMax=3072M and is killed under 2560M. With 1,050 MiB of caller data: 3,000 MiB in use, the limit reached (3,136 MiB committed on 24.14.0), completes. With 1,575 MiB: the process aborts.",
+    "margin": "1,120 MiB between the peak of consecutive listings (1,952 MiB) and the limit: 36% of the heap. The first number proposed, 2,048 MiB, left none: at that limit three consecutive listings had 1,950 MiB in use and 2,085 MiB committed on Node 24.14.0, and with 524 MiB of caller data the process aborted.",
+    "environment_requirement": "A V8 heap limit of at least 3,072 MiB, and memory for what the process comes to use: up to the heap limit, 301 to 377 MiB of Buffers, about 60 MiB for the runtime, and the archive file. Target memory is not known: kitchen has no deployed target and no unit that runs it. This is a requirement on the environment, not a statement that any host meets it. The role was not changed.",
+    "evidence": "docs/port-notes.md, \"The admission budgets\": cost of each budget on Node 22.23.3 and 24.14.0, the survey of 323 package archives, the two combined vectors at exactly this heap limit, consecutive listings with caller data, and what was measured inside cgroup scopes."
    },
    "choices": [
     "Byte accounting (point 1, P0): every metadata byte read is counted, kept or not. The unit is the size field of every L, K, x, g and X header whose blocks are read, plus 512 for every block read for a sparse map (the data blocks of form 1.0, old GNU extension blocks). The second part goes beyond P0: the numbers of form 1.0 are member data, up to about a thousand digits each, and no header's size field covers them.",
     "Sparse unit (point 3): numbers, in all four forms; a region is two. The count a 1.0 map states is a count of regions and is never compared with the budget: each number is counted as it is read, so 2 x count is not computed for the budget at all, and the loop bound is exact at any size. This is the second alternative the delta review gave for form 1.0.",
     "Sparse 0.0 (P1): the offset and numbytes records are no longer collected while the header is parsed; they are read from the block a second time when form 0.0 applies, and counted as they are converted. Nothing is collected before it is counted, which is what \"charge 0.0 ranges as they are collected\" asks for, by another route.",
-    "The refusal stands where the oracle's own count passes the budget. A GNU.sparse.map is not split: it is read number by number, so an invalid number before that point is tarfile's ValueError as before, and one behind it is never looked at."
+    "The refusal stands where the oracle's own count passes the budget. A GNU.sparse.map is not split: it is read number by number, so an invalid number before that point is tarfile's ValueError as before, and one behind it is never looked at.",
+    "The heap limit required: 3,072 MiB, after 2,048 was measured to leave no margin for archives listed one after another (ruling D4, `defaults`)."
    ],
    "bounds": [
     "Four budgets, each a count over one listing (one tarfile.open and getmembers): metadataBytes 2**28 = 268,435,456; paxRecords 2**24 = 16,777,216; sparseNumbers 2**20 = 1,048,576; members 2**17 = 131,072. A listing that ends exactly at a budget is read; one unit more is refused. Nothing is credited back.",
     "The refusal is an OSError with the constant message \"tar metadata budget exceeded: \" followed by \"metadata bytes\", \"pax records\", \"sparse numbers\" or \"members\"; it holds no number and nothing from the archive. archive_manifest answers \"unreadable archive or manifest\", code E_ADAPTER_INPUT.",
     "D4 covers an archive in whose listing tarfile comes to pass one of the four counts, counted as test/differential/tar_budget.py counts them on the oracle's own tarfile, and nothing else. The port refuses at that point. What the oracle refuses before that point comes first in the port as well; what it answers from there on is replaced: acceptance, the same closed refusal (the public outcome does not change), or a class no handler of the engine names.",
     "D3 is the case of one block and keeps its own refusal and vectors: a block above 2**28 bytes is refused as before, whatever the budget.",
-    "The budgets are sized for a V8 heap limit of at least 2,048 MiB (HEAP_LIMIT_REQUIRED_MIB). Under a lower limit a listing ends in UnsupportedRuntime before anything is parsed: a plain Error, not an archive refusal, without a public code (backlog B10). Measured on the costliest archive found that stays one under each budget: 1,239 MiB of heap in use at the peak on Node 24.14.0, 1,234 on 22.23.3.",
-    "What the heap requirement does not promise, each measured or shown: the limit reserves no memory; it does not count Buffers or the compressed file (up to 377 MiB of Buffers at the peak, plus the archive); V8 passes it when the heap is nearly full and a large string is asked for (2,156 MiB in use under a limit of 2,096 on Node 22.23.3, with 512 MiB of caller data on the heap); and it says nothing of what the caller holds. A process is killed by its cgroup below the heap limit if MemoryMax is lower than what it comes to use.",
+    "The budgets are sized for a V8 heap limit (`heap_size_limit`) of at least 3,072 MiB (HEAP_LIMIT_REQUIRED_MIB). Under a lower limit a listing ends in UnsupportedRuntime before anything is parsed: a plain Error, not an archive refusal, without a public code (backlog B10). Measured at exactly that limit on the costliest archive found within the budgets: 1,239 MiB of heap in use at the peak of one listing, 1,952 MiB at the peak of listings that follow one another in one process.",
+    "What the heap requirement does not promise, each measured: the limit reserves no memory (a process is killed by its cgroup below it); it does not count Buffers or the compressed file (301 to 377 MiB of Buffers at the peak, plus the archive); V8 passes it when the heap is nearly full (3,136 MiB committed under a limit of 3,072 on Node 24.14.0, with 1,050 MiB of caller data); and what the caller holds on the heap comes out of the same limit.",
+    "What is shared between members, and why that is no copy: the integer of a size in a global header and the text of a name in a global header. Both are immutable values of the runtime; a member holds a reference, and a name with trailing slashes stripped is a view of the one text. test/unit/port-tar-budgets.test.js measures both: 20,000 members under a size of 4,300 digits, 2,000 members under a path of 4 MiB. A sparse list is not shared: every expansion makes its own and is counted.",
     "Not bounded by D4: time. An archive within all four budgets can take hours in both engines (a name of 2**28 bytes in a global header, applied to every member); backlog B12."
    ],
    "evidence": [
@@ -281,6 +287,38 @@
     "test/unit/port-tar-budgets.test.js",
     "test/vectors/port-divergences.golden (entries tar-budget.*)",
     "test/mutants/reader_mutants.py and test/mutants/reader-results.golden"
+   ],
+   "as_received_during_the_round": [
+    {
+     "at": "2026-11-15T09:16:48Z",
+     "from": "the technical owner, through the manager",
+     "text": "Soma's clarifications for round 3:\n1. P1: D4's budget must cover the repeated per-member expansion and retention of structures, not only the numbers read once from the global pax. If you share one immutable structure across members instead, prove the semantics and that no hidden copies happen. P0 alone does not close P1.\n2. An explicit heap (--max-old-space-size) is allowed for calibration in your tests only. Do not change the production role or MemoryMax. The defaults need a combined peak, the off-heap peak and an honest margin.\n3. Keep reader (tarfile.ts) mutants as their own denominator, separate from 262/270. A surviving fault gets either a controlled witness or an honest, argued classification, never a formal PASS."
+    },
+    {
+     "at": "2026-11-15T10:15:16Z",
+     "from": "the technical owner, through the manager",
+     "text": "From Soma, for your final evidence (part of her earlier requirement, not new scope): \"peak just under H\" is not headroom. State exactly what H is (the old-space flag vs the resulting heap_size_limit), and show measured heap and RSS peaks, the cgroup MemoryMax used, and the remaining margin with caller data included. With target RAM unknown, state an environment requirement only. Don't claim compatibility with any host, and don't touch the role."
+    },
+    {
+     "at": "2026-11-15T10:19:57Z",
+     "from": "the manager",
+     "text": "Scope narrowing; everyone agrees on this direction (owner poll pending on the details). Kitchen's inputs are our own archives, digest-pinned and checked before reading, so the threat model is trusted and hash-verified inputs. Finish this round as a conservative first-version contract:\n- choose limits with clear margin, generous for the real package corpus you surveyed;\n- refuse everything above them with the typed D4 refusal;\n- verify the supported corpus is unchanged.\n\nDon't search for further amplification routes, and don't maximise what can be accepted. List any route you know of and haven't closed as backlog in the report, unless it bypasses the declared limits, in which case close it. A crash inside the declared range must still not ship. Then commit, run the gates and finalize."
+    }
+   ]
+  },
+  {
+   "id": "C1",
+   "subject": "precondition",
+   "as_received": "Owner decision (Vasyl, poll 2296): finish this round with the conservative first-version contract already sent. One narrow delta review follows. New routes go to backlog, then task B and the catalog. Record in the rulings that the trusted-source, digest-checked-before-parse input is a caller precondition, to be confirmed at catalog integration, not a proven property. If F4 is left as residual risk of the trusted-input version, record it as that, changing the readiness criterion honestly, not as fixed or PASS.",
+   "bounds": [
+    "The input of the archive reader is taken to come from a trusted source and to be checked against its pinned digest before it is parsed. That is a precondition on the caller. It is to be confirmed at catalog integration and is not a proven property.",
+    "What archive_manifest itself does: it compares the sha256 of the bytes it read with the digest its entry declares before the tar reader is called (archive.py:126-127, row 39). Where the entry and its digest come from, and whether that source is trusted, is the caller's.",
+    "D4 is the first version of a contract for such input: limits with a clear margin above the package archives surveyed, a typed refusal above them, the supported corpus unchanged. It does not claim to bound what an archive built to be costly can do. Further amplification routes were not searched for after this decision; the ones known and not closed are in the backlog (B12, B13, B15).",
+    "What D4 leaves of finding F4 is residual risk of this trusted-input version and is recorded as such under the finding. It is not recorded as fixed."
+   ],
+   "evidence": [
+    "test/port-rulings.golden (obligation archive.trusted-input, finding F4)",
+    "docs/port-notes.md (\"The admission budgets\")"
    ]
   }
  ],
@@ -293,6 +331,15 @@
    "due_when_any_exists": [
     "src/cook.ts",
     "src/deploy.ts"
+   ]
+  },
+  {
+   "id": "archive.trusted-input",
+   "ruling": "C1",
+   "status": "open",
+   "owed": "Confirm at catalog integration that every archive handed to archive_manifest comes from a trusted source and is checked against its pinned digest before it is parsed, or drop the precondition and treat the input of the archive reader as untrusted.",
+   "due_when_any_exists": [
+    "src/catalog.ts"
    ]
   }
  ],
@@ -309,7 +356,7 @@
   {
    "id": "F4",
    "found": "by the implementer in the second fix round, while checking that the limit of D3 is enough on its own",
-   "status": "open: built as divergence D4 in the third fix round; its budgets and heap requirement are proposed and not approved, and that round has no delta review yet",
+   "status": "open: built as divergence D4 in the third fix round; what remains is residual risk of the trusted-input version (ruling C1), not fixed; the budgets and the heap requirement are proposed and not approved, and that round has no delta review yet",
    "finding": "Valid archives at or below the metadata limit of D3 on which the oracle answers and the port does not: the port runs out of heap and the process aborts (\"JavaScript heap out of memory\", exit by SIGABRT, no receipt). The heap limit is the runtime's, about 4 GiB by default on Node 22.23.3 and 24.14.0, less on a small machine, more with --max-old-space-size; it can come before the memory of the machine does. The oracle has no such ceiling: it ends in an uncaught MemoryError only when the machine has no more. It fails closed. No limit on a single block removes it.",
    "measured": [
     "One pax header of 268,435,417 bytes (below the limit) that holds one GNU.sparse.map of 2**27 numbers: the oracle accepts in 9 s at 7.6 GiB peak; the port aborts after 29 s at 5.7 GiB resident.",
@@ -317,9 +364,16 @@
     "Read by both engines at the limit: 53.6 million pax records of five bytes (oracle 27 s, port 7 s); 2**24 + 4,096 distinct pax keywords (oracle 8 s at 2.1 GiB, port 3 s at 0.3 GiB, after the fix F3); 11.6 million records of the sparse form 0.0 (oracle 7 s, port 4 s).",
     "In the delta review of the second fix round (P1): a GNU.sparse.map of 2**20 numbers in a global header and 80 members behind one-record extended headers, 3.3 KB compressed: the oracle accepts at 2.9 GiB; the port aborts at 4.1 GiB on Node 22.23.3 and 4.0 GiB on 24.14.0. With D4 the same archive is refused at the second expansion of the map, in 0.2 s, at 173 MiB resident on Node 22.23.3 and 153 MiB on 24.14.0."
    ],
-   "asks": "Ruled in direction, twice. While the second fix round was being closed: keep it open and red, with the measurements and a written proposal, and build nothing then (the lines are quoted under ruling D4, `earlier_lines_of_the_technical_owner`). In the brief of the third fix round: \"build F4 as declared divergence D4\", with numbers \"calibrated from evidence, not asserted\", and \"F4 and port-ready stay red until a delta review of this round.\" What is still asked: approval of the proposed defaults of ruling D4, and the delta review of the third fix round.",
+   "asks": "Ruled in direction, twice. While the second fix round was being closed: keep it open and red, with the measurements and a written proposal, and build nothing then (the lines are quoted under ruling D4, `earlier_lines_of_the_technical_owner`). In the brief of the third fix round: \"build F4 as declared divergence D4\", with numbers \"calibrated from evidence, not asserted\", and \"F4 and port-ready stay red until a delta review of this round.\" By the owner's decision during that round (ruling C1) the round is finished as a conservative first version for trusted input, and what it leaves is recorded as residual risk. What is still asked: approval of the proposed defaults of ruling D4, and the one narrow delta review of the third fix round.",
    "backlog": "B11",
-   "ruling": "D4"
+   "ruling": "D4",
+   "residual_risk": [
+    "The limits are proposed, not approved, and the memory they need is stated as a requirement on an environment that does not exist yet.",
+    "The costliest archive within the budgets is the costliest that was built, not a proven maximum. After the owner's decision no further amplification routes were searched for.",
+    "The V8 heap limit is not a hard bound. With more of the caller's data on the heap than was measured to fit (524 MiB inside the limit, 1,050 MiB at it), a listing within the budgets can still end the process: at 1,575 MiB it aborted.",
+    "Time is not bounded (backlog B12): an archive within every budget can take hours, in both engines.",
+    "All of this is accepted for input that is trusted and digest-checked before it is parsed. That is a precondition on the caller (ruling C1, obligation archive.trusted-input), to be confirmed at catalog integration."
+   ]
   }
  ],
  "backlog": [
@@ -386,12 +440,17 @@
   {
    "id": "B13",
    "for": "port",
-   "entry": "`decodeUtf8` builds a long text in pieces and the first use flattens it, so a metadata block costs twice its text at the peak (up to 1,050 MiB of heap for a block of 2**28 bytes that are no UTF-8). Decoding into one flat string would halve the heap the budgets need; the heap requirement was sized with the cost as it is."
+   "entry": "`decodeUtf8` builds a long text in pieces and the first use flattens it, so a metadata block costs twice its text at the peak (up to 1,050 MiB of heap for a block of 2**28 bytes that are no UTF-8). Decoding into one flat string would take about 0.5 GiB off the peak of one listing; the heap requirement was sized with the cost as it is."
   },
   {
    "id": "B14",
    "for": "role, with the command line (plan phase 7)",
-   "entry": "Start kitchen with `--max-old-space-size=2048` on the command line of pinned Node and give the unit the memory ruling D4 proposes. The reader refuses to list under a lower heap limit, with `UnsupportedRuntime` and no public code (B10)."
+   "entry": "Whoever starts kitchen has to give it a V8 heap limit of at least 3,072 MiB (for example `--max-old-space-size=3072` on the command line of Node; the role refuses NODE_OPTIONS in a unit environment) and the memory ruling D4 states. The role was not changed in this round. The reader refuses to list under a lower limit, with `UnsupportedRuntime` and no public code (B10)."
+  },
+  {
+   "id": "B15",
+   "for": "ruling, at catalog integration",
+   "entry": "Known and not closed, by the owner's decision for the trusted-input version (ruling C1): the compressed archive is held as a whole, in both engines, and its size is bounded by nothing here; what the caller holds on the heap comes out of the limit the reader requires; and no further amplification routes were searched for. If the precondition of C1 is dropped, these are the first to look at, with B12."
   }
  ],
  "fixed_without_ruling": [

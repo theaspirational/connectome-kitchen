@@ -252,7 +252,10 @@ export const METADATA_LIMIT = 2n ** 28n;
  *                          (catalog.py:595).
  *
  * Together, on the costliest archive that stays one under each of them, a
- * listing has 1,239 MiB of heap in use at its peak.
+ * listing has 1,239 MiB of heap in use at its peak. Several such archives
+ * listed one after another in one process, as `dependency_provenance` lists
+ * its archives, have 1,952 MiB in use at the peak: what an earlier listing
+ * kept is still on the heap as garbage when the next one is at its peak.
  */
 export const BUDGETS: Budgets = Object.freeze({
   metadataBytes: 2 ** 28,
@@ -261,19 +264,24 @@ export const BUDGETS: Budgets = Object.freeze({
   members: 2 ** 17,
 });
 /**
- * The V8 heap limit, in MiB, that the budgets are sized for: what
- * `node --max-old-space-size=2048` gives (2,096 MiB on Node 22.23.3 and
- * 2,240 MiB on 24.14.0, the young generation included). A listing is
- * refused with `UnsupportedRuntime` before anything is parsed where
- * `v8.getHeapStatistics().heap_size_limit` is lower.
+ * The V8 heap limit, in MiB, that the budgets are sized for. It is a bound on
+ * `v8.getHeapStatistics().heap_size_limit`, which is the old space that
+ * `--max-old-space-size` sets plus the young generation: a listing is
+ * refused with `UnsupportedRuntime` before anything is parsed where that
+ * number is lower. The measurements behind it ran at a limit of exactly this
+ * size (`--max-old-space-size=3024` on Node 22.23.3, `=2880` on 24.14.0).
+ *
+ * At this limit the peak of archives listed one after another, 1,952 MiB, is
+ * 64% of the heap. With 524 MiB of the caller's own data on the heap the
+ * peak is 2,475 MiB and stays inside the limit; with 1,050 MiB it reaches
+ * the limit, and with 1,575 MiB the process aborts.
  *
  * This is a precondition, not a promise of memory. The limit reserves
- * nothing, it does not count Buffers or the compressed file, V8 passes it
- * for a single large string when the heap is nearly full, and it says
- * nothing of what the caller already holds on the heap: the 800 MiB between
- * the peak above and this limit are the caller's and the collector's.
+ * nothing, it does not count Buffers or the compressed file, V8 itself
+ * passes it when the heap is nearly full, and what the caller holds on the
+ * heap comes out of the same limit.
  */
-export const HEAP_LIMIT_REQUIRED_MIB = 2048;
+export const HEAP_LIMIT_REQUIRED_MIB = 3072;
 
 /** The heap this process may grow to is the one the budgets were measured under, or more. */
 function sizedHeap(): void {

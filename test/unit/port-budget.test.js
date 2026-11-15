@@ -13,8 +13,10 @@ test('the budget differential ran, under the heap limit the reader requires',()=
  assert.deepEqual(report.problems,[]);
  assert.equal(done.status,0);
  assert.deepEqual(report.budgets,{metadataBytes:2**28,paxRecords:2**24,sparseNumbers:2**20,members:2**17});
- assert.equal(report.heap_limit_required_mib,2048);
- assert.equal(report.port_ran_under_max_old_space_size_mib,2048);
+ assert.equal(report.heap_limit_required_mib,3072);
+ // Exactly the limit the reader requires, not a larger one: the flag is chosen so that heap_size_limit comes out at it.
+ assert.equal(report.port_heap_size_limit_mib,3072);
+ assert.ok(report.port_max_old_space_size_mib<3072);
 });
 for(const [kind,what] of [['members','members'],['records','pax records'],['names','many large names'],['sparse-global','a sparse map in a global header, expanded again and again']]){
  test(what+': one under the budget and at it both engines accept; one over it the oracle accepts and the port refuses (D4)',()=>{

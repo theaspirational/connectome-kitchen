@@ -133,7 +133,7 @@ class Port(unittest.TestCase):
     def test_rulings_are_recorded_as_received_and_nothing_unkilled_counts_as_killed(self):
         record = json.loads((ROOT / 'test/port-rulings.golden').read_text())
         rulings = {entry['id']: entry for entry in record['rulings']}
-        self.assertEqual(sorted(rulings), ['B9', 'D1', 'D2', 'D3', 'D4', 'L1', 'M1', 'O1', 'R6'])
+        self.assertEqual(sorted(rulings), ['B9', 'C1', 'D1', 'D2', 'D3', 'D4', 'L1', 'M1', 'O1', 'R6'])
         for entry in rulings.values():
             self.assertGreater(len(entry['as_received']), 40, entry['id'])
         results = {r['id']: r['status'] for r in json.loads(ts_mutants.RESULTS.read_text())['results']}
@@ -152,6 +152,9 @@ class Port(unittest.TestCase):
         # The witness a ruling moved to a later module is an open obligation with a trigger, not a note.
         owed = {entry['id']: entry for entry in record['obligations']}
         self.assertEqual(owed['archive.L140.4']['due_when_any_exists'], ['src/cook.ts', 'src/deploy.ts'])
+        # The trusted, digest-checked input is a precondition on the caller, not a property that was proven: it comes due with the catalog.
+        self.assertEqual((owed['archive.trusted-input']['ruling'], owed['archive.trusted-input']['status'], owed['archive.trusted-input']['due_when_any_exists']), ('C1', 'open', ['src/catalog.ts']))
+        self.assertIn('not a proven property', rulings['C1']['as_received'])
         backlog = {entry['id'] for entry in record['backlog']}
         for item in rulings['O1']['items']:
             self.assertGreater(len(item['bound']), 60, item['id'])
@@ -175,7 +178,7 @@ class Port(unittest.TestCase):
         owed = ['BLOCKED: open finding %s is not closed: %s (test/port-rulings.golden)' % (entry['id'], entry['status']) for entry in record['open_findings'] if entry['status'] != 'ruled']
         defaults = next(entry for entry in record['rulings'] if entry['id'] == 'D4')['defaults']
         if defaults['status'] != 'approved':
-            owed.append('BLOCKED: the budgets of D4 (metadataBytes 2**28, paxRecords 2**24, sparseNumbers 2**20, members 2**17) and the heap they are sized for (2048 MiB) are %s (test/port-rulings.golden, ruling D4)' % defaults['status'])
+            owed.append('BLOCKED: the budgets of D4 (metadataBytes 2**28, paxRecords 2**24, sparseNumbers 2**20, members 2**17) and the heap they are sized for (3072 MiB) are %s (test/port-rulings.golden, ruling D4)' % defaults['status'])
         for line in owed:
             self.assertIn(line, blocked, done.stdout)
         # Anything else that blocks is work no recorded review has read: commits after the reviewed one, or an edited tree.
@@ -195,6 +198,9 @@ class Port(unittest.TestCase):
         f4 = next(entry for entry in record['open_findings'] if entry['id'] == 'F4')
         self.assertTrue(f4['status'].startswith('open: built as divergence D4'), f4['status'])
         self.assertEqual((f4['ruling'], defaults['status']), ('D4', 'proposed, not approved'))
+        # What D4 leaves is recorded as residual risk of the trusted-input version, not as fixed.
+        self.assertGreaterEqual(len(f4['residual_risk']), 3)
+        self.assertIn('residual risk', f4['status'])
 
     def test_the_readiness_check_blocks_on_each_thing_it_claims_to_hold(self):
         # The check, run on copies of the evidence with one thing wrong each: every one must turn it red, with its own line.
@@ -293,9 +299,9 @@ class Port(unittest.TestCase):
             ('the admission budgets of the tar reader have no ruling', lambda root: (rulings(lambda record: record['rulings'].remove(d4(record)))(root),
                                                                               (root / 'test/vectors/port-divergences.golden').write_text(json.dumps([entry for entry in json.loads((root / 'test/vectors/port-divergences.golden').read_text()) if entry['divergence'] != 'D4'])))),
             ('deliberate divergences from the oracle without a ruling: tar-budget.sparse-numbers.map-of-one-number-more', rulings(lambda record: d4(record).update(subject='note'))),
-            ('the budgets of D4 (metadataBytes 2**28, paxRecords 2**24, sparseNumbers 2**20, members 2**17) and the heap they are sized for (2048 MiB) are proposed, not approved', rulings(lambda record: d4(record)['defaults'].update(status='proposed, not approved'))),
+            ('the budgets of D4 (metadataBytes 2**28, paxRecords 2**24, sparseNumbers 2**20, members 2**17) and the heap they are sized for (3072 MiB) are proposed, not approved', rulings(lambda record: d4(record)['defaults'].update(status='proposed, not approved'))),
             ('the budgets or the heap requirement of the reader are not the ones ruling D4 records', rulings(lambda record: d4(record)['defaults']['budgets'].update(members=2 ** 18))),
-            ('the budgets or the heap requirement of the reader are not the ones ruling D4 records', rulings(lambda record: d4(record)['defaults'].update(heap_limit_required_mib=1024))),
+            ('the budgets or the heap requirement of the reader are not the ones ruling D4 records', rulings(lambda record: d4(record)['defaults'].update(heap_limit_required_mib=2048))),
             ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['members.above'].update(classification='equal'))),
             ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['sparse-global.above']['oracle_walk'].update(crossed=None))),
             ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['names.at']['oracle_walk']['used'].update(metadataBytes=2 ** 28 - 1))),

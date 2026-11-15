@@ -568,7 +568,7 @@ at any moment of the listing.
   Many small blocks that add up to the budget cost what one block keeps and
   less at the peak: 256 names of 1 MiB keep 513 MiB, 65,536 names of 4 KiB
   keep 533 MiB. 2^28 is the constant of D3. Halving it would take about
-  0.5 GiB off the heap the reader needs.
+  0.7 GiB off the peak of consecutive listings.
 - *Pax records.* A record is at least five bytes, so the byte budget alone
   allows 53.7 million of them: 7.4 to 7.8 s in the port (27.5 s and 3.9 GiB
   in the oracle). The record budget brings that to 2.5 s. It bounds time
@@ -585,58 +585,106 @@ at any moment of the listing.
   100,000 entries (`catalog.py:595`), and sixteen times the largest package
   archive found. At 2^20, the first candidate, members alone kept 1.1 GiB.
 
-**All budgets at once.** Two archives of `port_budget.py`, read under exactly
-`--max-old-space-size=2048`:
+**All budgets at once.** Two archives of `port_budget.py`, read at a heap
+limit of exactly 3,072 MiB (Node 22.23.3 / 24.14.0):
 
-| Archive | Heap in use at the peak, Node 22.23.3 / 24.14.0 | Buffers at the peak | Resident at the peak |
+| Archive | Heap in use at the peak | Buffers at the peak | Resident at the peak |
 | --- | ---: | ---: | ---: |
 | `combined.all-below`: every count one under its budget | 817 / 836 MiB | 282 / 285 MiB | 1,112 / 1,242 MiB |
-| `combined.heap-worst`: members, sparse numbers and bytes one under their budgets, names and one pax path that are no UTF-8 | 1,234 / 1,239 MiB | 301 / 335 MiB | 1,602 / 1,739 MiB |
+| `combined.heap-worst`: members, sparse numbers and bytes one under their budgets, names and one pax path that are no UTF-8 | 1,237 / 1,236 MiB | 301 / 335 MiB | 1,616 / 1,700 MiB |
 
-Both are read as the oracle reads them (1,394 and 1,767 MiB resident there). The
-second is the costliest archive I could build within the budgets; that it is
-the costliest there is, is an argument from the table above, not a proof.
+Both are read as the oracle reads them (1,394 and 1,767 MiB resident there).
+The second is the costliest archive I could build within the budgets; that it
+is the costliest there is, is an argument from the table above, not a proof.
+The first row was measured under a larger limit; its peak does not depend on
+the limit.
+
+**Archives listed one after another.** `dependency_provenance` lists several
+archives in one process. What one listing kept is garbage when the next one
+starts, and V8 has not collected it when the next one is at its peak. Three
+listings of `combined.heap-worst` in a row, at a limit of exactly 3,072 MiB:
+
+| Caller's own data on the heap | Heap in use at the peak | Heap committed | Resident | Outcome |
+| ---: | ---: | ---: | ---: | --- |
+| none | 1,952 / 1,950 MiB | 2,005 / 2,090 MiB | 2,350 / 2,487 MiB | read, inside the limit |
+| 524 MiB | 2,475 / 2,475 MiB | 2,537 / 2,610 MiB | 2,869 / 3,012 MiB | read, inside the limit |
+| 1,050 MiB | 2,986 / 3,000 MiB | 3,069 / 3,136 MiB | 3,419 / 3,511 MiB | read; the limit is reached, and passed on 24.14.0 |
+| 1,575 MiB | | | | the process aborts, on both |
+
+The peak that counts is therefore 1,952 MiB, not the 1,237 MiB of one
+listing.
 
 **The runtime contract.**
 
-- *The heap limit.* The reader requires
-  `v8.getHeapStatistics().heap_size_limit` to be at least 2,048 MiB
-  (`HEAP_LIMIT_REQUIRED_MIB`) and otherwise ends in `UnsupportedRuntime`
-  before anything is parsed. `node --max-old-space-size=2048` gives 2,096 MiB
-  on Node 22.23.3 and 2,240 MiB on 24.14.0. The default limit follows the
-  memory limit of the unit (1,048 or 1,120 MiB under `MemoryMax=2G`), so the
-  flag has to be given explicitly, and on the command line: the role refuses
-  `NODE_OPTIONS` in a unit environment.
-- *Headroom.* The peak above is 60% of the limit. About 800 MiB are left for
-  what the caller holds and for the collector.
+- *What the number is.* `HEAP_LIMIT_REQUIRED_MIB` = 3,072 is a bound on
+  `v8.getHeapStatistics().heap_size_limit`. That is the old space
+  `--max-old-space-size` sets plus the young generation, so it is not the
+  flag: on the development host a limit of exactly 3,072 MiB is
+  `--max-old-space-size=3024` on Node 22.23.3 and `=2880` on 24.14.0, and
+  inside a cgroup of 2 GiB the same flags give 3,048 and 2,976 MiB. The
+  reader checks the limit itself, at run time, and ends in
+  `UnsupportedRuntime` before anything is parsed where it is lower. Every
+  figure of the two tables above that names this limit was measured at
+  exactly 3,072 MiB; `port_budget.py` asks the runtime which flag gives it.
+- *Margin.* 1,120 MiB lie between the peak of consecutive listings and the
+  limit, 36% of the heap. They are the caller's and the collector's: with
+  524 MiB of caller data the heap stays inside the limit, with 1,050 MiB it
+  reaches it, with 1,575 MiB the process aborts.
+- *Why not 2,048 MiB*, the first number proposed. At that limit one listing
+  fits (1,237 MiB), but three in a row have 1,950 MiB in use and 2,085 MiB
+  committed on Node 24.14.0, above the limit, and with 524 MiB of caller data
+  the process aborted there. A peak just under the limit is no headroom.
 - *What the limit does not promise.* Four things, each measured:
-  - It reserves no memory. A process is killed by its cgroup below the limit:
-    one listing of `combined.heap-worst` completes under `MemoryMax=1792M`
-    and is killed under `1536M`.
-  - It does not count Buffers or the compressed archive: 300 to 377 MiB at
+  - It reserves no memory. A process is killed by its cgroup below the
+    limit. One listing of `combined.heap-worst` completes under
+    `MemoryMax=1792M` and is killed under `1536M`. Three in a row complete
+    under `2560M`; with 524 MiB of caller data they are killed under `2560M`
+    and complete under `3072M`.
+  - It does not count Buffers or the compressed archive: 301 to 377 MiB at
     the peak here, plus the size of the archive, which `archive_manifest`
     holds as a whole (the oracle does as well).
-  - The heap fills up to the limit with garbage before V8 collects. Three
-    listings in a row in one process: 1,937 to 1,954 MiB of heap in use at
-    the peak, 2,350 to 2,456 MiB resident.
-  - V8 passes the limit. With 512 MiB of caller data on the heap, three
-    listings peaked at 2,156 MiB in use under a limit of 2,096 (Node 22.23.3)
-    and 2,307 MiB committed under 2,240 (24.14.0), without an abort: 2,613 to
-    2,706 MiB resident. That run completes under `MemoryMax=3072M` and is
-    killed under `2560M`. For the same reason the smallest heap under which
-    an archive completes says little: `combined.heap-worst` completes under
-    `--max-old-space-size=746`, with a string of 512 MiB above the limit.
-- *What the unit needs, as a proposal.* `MemoryMax` of at least 3 GiB plus
-  the size of the largest archive. That is the heap limit on the pin
-  (2,240 MiB), what V8 was seen to pass it by, the Buffers, and the runtime
-  itself; the costliest run measured was 2,770 MiB resident.
-- *Not checked: the target.* Kitchen has no deployed target and no unit that
-  runs it, so whether these figures fit is not known. They are a requirement
-  on the role (backlog B14), not a fit that was verified.
+  - The heap fills with garbage before V8 collects, so resident memory
+    follows what V8 lets stand, not the live data alone.
+  - V8 passes the limit: 3,136 MiB committed under a limit of 3,072 in the
+    third row above. For the same reason the smallest heap under which an
+    archive completes says little: `combined.heap-worst` completes once under
+    `--max-old-space-size=746`, with a text of 512 MiB above that limit.
+- *The requirement on the environment.* A V8 heap limit of at least
+  3,072 MiB, and memory for what the process comes to use: up to that limit,
+  301 to 377 MiB of Buffers, about 60 MiB for the runtime, and the archive.
+  The costliest run that completed was 3,511 MiB resident.
+- *Not known: the target.* Kitchen has no deployed target and no unit that
+  runs it. This is a requirement, not a statement that any host meets it, and
+  the role was not changed (backlog B14). The default limit follows the
+  memory limit of the unit (1,048 or 1,120 MiB under `MemoryMax=2G`, 2,096 or
+  2,240 MiB under 4G and 8G, measured in the delta review of the second fix
+  round), so on most units the limit has to be set, on the command line of
+  Node: the role refuses `NODE_OPTIONS` in a unit environment.
 - *The test suites* pass this check on the development host only because the
   default limit there is 4 GiB. On a host where it is lower they fail at the
   first archive with `UnsupportedRuntime`; run them with
-  `NODE_OPTIONS=--max-old-space-size=2048`.
+  `NODE_OPTIONS=--max-old-space-size=3072`.
+
+**The input this contract is for.** By the owner's decision during the third
+fix round (ruling C1), D4 is the first version of a contract for input that
+comes from a trusted source and is checked against its pinned digest before
+it is parsed. That is a precondition on the caller, to be confirmed at
+catalog integration; it is not a proven property. `archive_manifest` itself
+compares the sha256 of the bytes with the digest of its entry before the tar
+reader is called; where the entry comes from is the caller's. The limits are
+chosen with a clear margin above the package archives surveyed, not to accept
+as much as the heap can take, and after that decision no further
+amplification routes were searched for. What D4 leaves of finding F4 is
+recorded as residual risk of this version, not as fixed.
+
+**What is shared between members.** Two things, and neither is a copy. The
+integer of a size in a global header is converted once (F6 below). The text
+of a name in a global header is one text; a member holds a reference to it,
+and a name whose trailing slashes are stripped is a view of it. Both are
+immutable values of the runtime. `test/unit/port-tar-budgets.test.js`
+measures both: 20,000 members under a size of 4,300 digits keep under
+20 MiB, 2,000 members under a path of 4 MiB keep under 16 MiB. A sparse list
+is not shared: every expansion makes its own, and every expansion is counted.
 
 **What is not bounded.**
 
@@ -648,7 +696,9 @@ the costliest there is, is an argument from the table above, not a proof.
   that is hours in both engines. The archive is within every budget.
 - *The archive itself.* Its compressed bytes are held as a whole, in both
   engines.
-- *The caller.* What the calling process holds on the heap is its own.
+- *The caller.* What the calling process holds on the heap comes out of the
+  limit the reader requires (table above).
+- *Routes not searched for* (backlog B15), by the owner's decision.
 
 **Two things closed on the way, without a budget.**
 
@@ -704,7 +754,7 @@ the shape `merge_layers` uses and for nothing else**:
 ## Rulings
 
 Received in three rounds, from the technical owner through the dispatch
-briefs: on 2026-11-14 after the second review of `ac5e89c` (APPROVE, three LOW
+briefs, and in the third also from the owner through the manager: on 2026-11-14 after the second review of `ac5e89c` (APPROVE, three LOW
 findings); on 2026-11-15 after the delta review of the first fix round,
 `a198042` (APPROVE, two LOW findings and one INFO); and on 2026-11-15 after
 the delta review of the second fix round, `621d78d` (APPROVE, three LOW
@@ -724,7 +774,8 @@ left a choice open; the record names each choice as the implementer's
 | D3 | a declared refusal of a long-name, long-link or pax block above a constant limit; closes F1 | 2^28 bytes of the header's size field; only where the oracle comes to read such a block; the constant was left open and is the one the reviewer suggested |
 | B9 | the undocumented zlib call, tied to the pinned Node | Node 24.14.0 (the pin of `oracle/versions.yml`) and 22.23.3 (the development host); any other runtime is refused, which was the choice left open (refuse or flag) |
 | L1 | the later passes of the gzip reader | every later pass is held to a record of the checking pass; closing the gap, not narrowing the wording, was the choice left open. L2 stays a note on B9 |
-| D4 | admission budgets as a declared divergence; it builds F4 | four counts over one listing and a heap limit they are sized for. **The numbers are proposed, not approved**: 2^28 metadata bytes, 2^24 pax records, 2^20 sparse numbers, 2^17 members, 2,048 MiB |
+| D4 | admission budgets as a declared divergence; it builds F4 | four counts over one listing and a heap limit they are sized for. **The numbers are proposed, not approved**: 2^28 metadata bytes, 2^24 pax records, 2^20 sparse numbers, 2^17 members, 3,072 MiB |
+| C1 | the input of the archive reader is trusted and digest-checked before it is parsed | a precondition on the caller, to be confirmed at catalog integration, not a proven property; what D4 leaves of F4 is residual risk of this version |
 
 The delta review of the second fix round (`a198042..621d78d`) is recorded as
 passed, with its commit and the sha256 of its report. The implementer
@@ -762,8 +813,9 @@ The mutant classification:
 | B10 | port, with the command line (plan phase 7) | check the runtime once at start and report an unverified one as a missing prerequisite with a public code, before any archive is read |
 | B11 | approval and review | finding F4, built as D4: the proposed numbers need the technical owner's approval, the round its delta review |
 | B12 | ruling | time is not bounded by D4: a name in a global pax header costs both engines a pass over it for every member |
-| B13 | port | decode a metadata block into one flat text, so that a block costs once its text and not twice |
-| B14 | role, with the command line (plan phase 7) | start kitchen with `--max-old-space-size=2048` on the command line and give the unit the memory D4 proposes |
+| B13 | port | decode a metadata block into one flat text, so that a block costs once its text and not twice (about 0.5 GiB off the peak of one listing) |
+| B14 | whoever starts kitchen | give it a V8 heap limit of at least 3,072 MiB, on the command line of Node, and the memory D4 states; the role was not changed |
+| B15 | ruling, at catalog integration | known and not closed for the trusted-input version: the archive is held whole, the caller's data comes out of the same heap limit, further amplification routes were not searched for |
 
 ## Still open
 
@@ -775,9 +827,16 @@ The mutant classification:
   the reader mutants, the readiness check). The review recorded as passed is
   the one of `621d78d`. `scripts/check-port-ready` blocks while a commit after
   the reviewed one changes anything but `docs/` and the record of rulings.
-- **Finding F4** stays open in the record until both of the above.
-- **Time** (backlog B12) and **the fit of the memory requirement to a
-  target** (backlog B14): neither is decided.
+- **Finding F4** stays open in the record until both of the above. What D4
+  leaves of it is recorded there as residual risk of the trusted-input
+  version, not as fixed.
+- **The precondition of ruling C1**: that the archives come from a trusted
+  source and are digest-checked before they are parsed. It comes due with
+  `src/catalog.ts`; `scripts/check-port-ready` turns red then until it is
+  confirmed or dropped.
+- **Time** (backlog B12), **the fit of the memory requirement to a target**
+  (backlog B14) and **the routes not searched for** (backlog B15): none is
+  decided.
 - A function without a `require`, `need` or `raise` has no oracle mutant:
   `credential_shaped`, `repository`, the errors module, the archive
   predicates, the clauses inside one-`raise` functions. The TS mutants for

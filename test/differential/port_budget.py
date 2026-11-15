@@ -33,9 +33,12 @@ budget it would have passed. A case is D4 only if that walk crosses a budget,
 the oracle accepts, the port refuses as unreadable, and the reader itself
 (test/differential/tar_budget_list.mjs) names the same budget.
 
-The port runs every case under exactly `--max-old-space-size=H`, H being the
+The port runs every case under a V8 heap limit of exactly H, H being the
 reader's own HEAP_LIMIT_REQUIRED_MIB: the budgets are a contract only together
-with the heap they were sized for. A refusal must cost little: the port stays
+with the heap they were sized for. The reader checks `heap_size_limit`, which
+is the old space `--max-old-space-size` sets plus a young generation whose
+size depends on the runtime and on the host, so `sized_heap` asks the runtime
+which flag gives a limit of exactly H and fails if none does. A refusal must cost little: the port stays
 under REFUSAL_RSS_LIMIT_MIB on every `above` case but `names.above`, which
 holds 255 names before it refuses the last. Outcomes are compared with
 test/vectors/port-budget.golden; peak memory is printed and not pinned.
@@ -296,16 +299,26 @@ def oracle_child(argument):
     return 0
 
 
-def reader_constants(node):
-    out, _rss, _seconds = child([node, str(ROOT / 'test/differential/tar_budget_list.mjs')])
+def reader_constants(node, flags=()):
+    out, _rss, _seconds = child([node, *flags, str(ROOT / 'test/differential/tar_budget_list.mjs')])
     return json.loads(out)
+
+
+def sized_heap(node, required):
+    """The `--max-old-space-size` under which this runtime, here, has a heap limit of exactly `required` MiB."""
+    young = reader_constants(node, ['--max-old-space-size=%d' % required])['heap_size_limit_mib'] - required
+    flag = required - young
+    limit = reader_constants(node, ['--max-old-space-size=%d' % flag])['heap_size_limit_mib']
+    if limit != required:
+        raise SystemExit('no --max-old-space-size gives a heap limit of exactly %d MiB here: %d gives %d' % (required, flag, limit))
+    return flag
 
 
 def build(node, heap, only, keep=None):
     shutil.rmtree(SCRATCH, ignore_errors=True)
     SCRATCH.mkdir(parents=True)
     me = [sys.executable, '-B', str(Path(__file__).resolve()), '--oracle-child']
-    sized = [node, '--max-old-space-size=%d' % heap]
+    sized = [node, '--max-old-space-size=%d' % sized_heap(node, heap)]
     unbind = lambda text: json.loads(text.replace(json.dumps(str(SCRATCH))[1:-1], '${SCRATCH}'))
     results, measured = [], {}
     try:
@@ -387,7 +400,7 @@ def main():
             problems.append('outcomes differ from test/vectors/port-budget.golden')
         elif not args.check:
             GOLDEN.write_text(text)
-    print(json.dumps({'budgets': BUDGETS, 'heap_limit_required_mib': heap, 'port_ran_under_max_old_space_size_mib': heap, 'refusal_rss_limit_mib': REFUSAL_RSS_LIMIT_MIB, 'port_rss_limit_mib': PORT_RSS_LIMIT_MIB,
+    print(json.dumps({'budgets': BUDGETS, 'heap_limit_required_mib': heap, 'port_heap_size_limit_mib': heap, 'port_max_old_space_size_mib': sized_heap(args.node, heap), 'refusal_rss_limit_mib': REFUSAL_RSS_LIMIT_MIB, 'port_rss_limit_mib': PORT_RSS_LIMIT_MIB,
                       'cases': {case['id']: case['classification'] for case in report['cases']}, 'measured': measured, 'problems': problems}))
     return int(bool(problems))
 

@@ -85,7 +85,7 @@ MUTANTS = [
     ('reader.d4.refusal.echoes-the-count', READER, "super('ETARBUDGET', 'tar metadata budget exceeded: ' + BUDGET_NAMES[budget]);", "super('ETARBUDGET', 'tar metadata budget exceeded: ' + BUDGET_NAMES[budget] + ' ' + String(BUDGETS[budget]));", 'the message holds a number'),
     # The heap the budgets are sized for.
     ('reader.heap.unchecked', READER, 'if (v8.getHeapStatistics().heap_size_limit < HEAP_LIMIT_REQUIRED_MIB * 1024 * 1024) {', 'if (false) {', 'any heap limit is accepted'),
-    ('reader.heap.requirement-halved', READER, 'export const HEAP_LIMIT_REQUIRED_MIB = 2048;', 'export const HEAP_LIMIT_REQUIRED_MIB = 1024;', 'half the heap is required'),
+    ('reader.heap.requirement-halved', READER, 'export const HEAP_LIMIT_REQUIRED_MIB = 3072;', 'export const HEAP_LIMIT_REQUIRED_MIB = 1536;', 'half the heap is required'),
     ('reader.heap.gzip-unchecked', READER, 'export function gzipMembers(data: Uint8Array, options: OpenOptions = {}): TarMember[] {\n  sizedHeap();\n', 'export function gzipMembers(data: Uint8Array, options: OpenOptions = {}): TarMember[] {\n', 'a gzip archive is listed under any heap limit'),
     ('reader.heap.tar-unchecked', READER, 'export function tarMembers(stream: Uint8Array, options: OpenOptions = {}): TarMember[] {\n  sizedHeap();\n', 'export function tarMembers(stream: Uint8Array, options: OpenOptions = {}): TarMember[] {\n', 'a tar stream is listed under any heap limit'),
     # A size in a global header.
