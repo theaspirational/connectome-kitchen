@@ -5,7 +5,9 @@ A case is the input of one deployment: the four layers, the pinned versions,
 the paths, the cook command, the recipe and the archives. `record` runs each
 case through the oracle's deploy path and writes what came out; `check` runs
 it again and compares; `compare` puts the steps kitchen has already ported
-(config, inputs, archive, lock) beside the oracle on the same files.
+(config, inputs, archive, lock) beside the oracle on the same files, and then
+runs the TS engine (deploy, cook) on the whole case at the same root and holds
+its record against the oracle's.
 
     corpus.py record  --corpus DIR [--case NAME]
     corpus.py check   --corpus DIR [--case NAME]
@@ -183,8 +185,9 @@ def lines(path):
 class World:
     """One case laid out under one sandbox root, and the oracle run on it."""
 
-    def __init__(self, case, sandbox):
+    def __init__(self, case, sandbox, node=None):
         self.case, self.sandbox = case, Path(sandbox)
+        self.node = node  # None: the oracle, in this process. Else the Node that runs the TS engine (ts_driver.mjs).
         if not SYSTEMD_PATH.fullmatch(str(self.sandbox)) or self.sandbox.resolve() != self.sandbox:
             raise CorpusError('the scratch path must be a real path of letters, digits and _./:@+- only: the engine refuses any other')
         self.account = case.data['account']
@@ -284,9 +287,29 @@ class World:
         self.request = {'base': self.base, 'root': self.root, 'unit_dir': self.unit_dir, 'layers': copy.deepcopy(self.layers),
                         'versions': self.versions, 'engines': {'cook': tools}, 'systemctl': self.systemctl}
 
+    def port(self, job):
+        """One call of the TS engine, in the same sandbox and behind the same two seams as the oracle's (ts_driver.mjs)."""
+        job.update(sandbox=str(self.sandbox), account=self.account, root_owned=list(ROOT_OWNED), seam=str(HERE / 'adapter_seam.mjs'),
+                   adapter=[sys.executable, str(ORACLE / 'scripts/cook-adapter.py')])  # the words the oracle's shim puts first: one build name for both engines
+        job_file, out_file = (self.sandbox.parent / ('%s.%s-%d.json' % (self.sandbox.name, kind, os.getpid())) for kind in ('job', 'outcome'))
+        try:
+            job_file.touch(mode=0o600)
+            job_file.write_text(json.dumps(job))
+            done = subprocess.run([self.node, str(HERE / 'ts_driver.mjs'), str(job_file), str(out_file)], cwd=ROOT, capture_output=True, text=True, timeout=600)
+            if done.returncode:
+                raise CorpusError('the TS engine stopped on case %s: %s' % (self.case.name, done.stderr[-2000:]))
+            if done.stderr:
+                sys.stderr.write(done.stderr)
+            return json.loads(out_file.read_text())
+        finally:
+            job_file.unlink(missing_ok=True)
+            out_file.unlink(missing_ok=True)
+
     def dispatch(self, command, **extra):
         import connectome_deploy, kitchen_v1
         request = dict(copy.deepcopy(self.request), **extra)
+        if self.node:
+            return self.port({'op': 'dispatch', 'command': command, 'request': request, 'secrets': self.secrets if command == 'apply' else None})
         with host_model(self.sandbox, self.account), patch.object(connectome_deploy, 'run', adapter_through_seam(connectome_deploy.run)):
             envelope, status = kitchen_v1.dispatch({'contract': kitchen_v1.CONTRACT, 'command': command, 'request': request},
                                                    self.secrets if command == 'apply' else None)
@@ -295,6 +318,9 @@ class World:
     def role_view(self):
         """The role's own call: its cook command, check mode. Nothing is run and nothing is written."""
         import connectome_deploy, connectome_inputs
+        if self.node:
+            return self.port({'op': 'role', 'role': {'root': self.root, 'unit_dir': self.unit_dir, 'base': self.base, 'effective': copy.deepcopy(self.effective),
+                                                     'versions': self.versions, 'cook_command': self.role_command}})
         with host_model(self.sandbox, self.account), patch.object(connectome_deploy, 'run', side_effect=AssertionError('check mode ran a tool')):
             try:
                 files = connectome_inputs.collect(self.effective)
@@ -399,13 +425,17 @@ def brief(value):
 MUTATIONS = (('recipe-pin', 'plan'), ('archive-pin', 'plan'), ('secrets-file-missing', 'plan'), ('external-command-missing', 'apply'))
 
 
-def run_case(case, sandbox):
-    """One case at one sandbox root. Returns the record and the world, left as `apply` made it."""
+def run_case(case, sandbox, node=None):
+    """One case at one sandbox root. Returns the record and the world, left as `apply` made it.
+
+    With `node`, every engine call (the role's view, plan, apply, the second apply, the refusals) goes to the TS engine
+    instead. The files are laid out by the same code, and the record is put together the same way.
+    """
     ts_port.initialize()
     for name in ('connectome_deploy', 'connectome_cook', 'kitchen_v1'):
         importlib.import_module(name)
     import connectome_config
-    world = World(case, sandbox)
+    world = World(case, sandbox, node)
     refusals = {}
     for mutation, command in MUTATIONS:
         world.build(mutation)
@@ -513,7 +543,7 @@ def produce(corpus, case, scratch, keep=False):
             for label, content in zip(('a', 'bb'), texts):
                 (scratch / (case.name + '.' + label + '.txt')).write_text(content)
             raise
-        return text + '\n', worlds[-1], jobs, names  # the jobs name the files of the last world
+        return text + '\n', worlds[-1], jobs, names, texts[-1]  # the jobs name the files of the last world; the last text is its record as run
     finally:
         for world in worlds[:-1] if keep and len(worlds) == 2 else worlds:
             ts_port.remove(world.sandbox)
@@ -523,7 +553,7 @@ def command_record(args, check=False):
     scratch = scratch_of(args.corpus, args.scratch)
     failed = False
     for case in cases(located(args.corpus, scratch), args.case):
-        text, _world, _jobs, _names = produce(args.corpus, case, scratch)
+        text, _world, _jobs, _names, _raw = produce(args.corpus, case, scratch)
         path = golden_of(args.corpus, case)
         if check:
             same = path.is_file() and path.read_text() == text
@@ -539,12 +569,44 @@ def command_record(args, check=False):
     return int(failed)
 
 
+def differences(oracle, port, path='', limit=12):
+    """Where two records part: the paths of the first values that differ, for a message."""
+    if type(oracle) is not type(port):
+        return [path or '.']
+    if isinstance(oracle, dict):
+        found = []
+        for key in sorted(set(oracle) | set(port)):
+            if key not in oracle or key not in port:
+                found.append('%s/%s (only in the %s)' % (path, key, 'oracle' if key in oracle else 'port'))
+            else:
+                found += differences(oracle[key], port[key], path + '/' + key, limit)
+            if len(found) >= limit:
+                break
+        return found[:limit]
+    if isinstance(oracle, list):
+        if len(oracle) != len(port):
+            return ['%s (length %d, port %d)' % (path, len(oracle), len(port))]
+        return [entry for index, (left, right) in enumerate(zip(oracle, port)) for entry in differences(left, right, '%s/%d' % (path, index), limit)][:limit]
+    return [] if oracle == port else [path]
+
+
+def engine_differences(case, world, raw, node):
+    """The TS engine on the whole case, at the root the oracle has just run at. Returns where its record differs."""
+    text, port_world, _jobs = run_case(case, world.sandbox, node=node)
+    if text == raw:
+        return []
+    return differences(json.loads(raw), json.loads(text)) or ['(the records differ in their text only)']
+
+
 def command_compare(args):
-    """The ported steps, live: oracle and TS port on the same files, outcome against outcome as canonical bytes."""
+    """The ported steps, live: oracle and TS port on the same files, outcome against outcome as canonical bytes.
+
+    Then the engine: plan, apply, what apply left, the second apply and the refusals of the TS engine against the oracle's.
+    """
     scratch = scratch_of(args.corpus, args.scratch)
     failed = False
     for case in cases(located(args.corpus, scratch), args.case):
-        text, world, jobs, names = produce(args.corpus, case, scratch, keep=True)
+        text, world, jobs, names, raw = produce(args.corpus, case, scratch, keep=True)
         try:
             oracle = oracle_outcomes(world, jobs)
             outcomes = ts_port.node_outcomes([{'id': ident, 'function': function, 'args': call_args, 'kwargs': kwargs} for ident, function, call_args, kwargs in jobs], args.node)
@@ -559,10 +621,15 @@ def command_compare(args):
             # And against the golden: what the oracle answers now is what was recorded.
             golden = golden_of(args.corpus, case)
             recorded = golden.is_file() and golden.read_text() == text
-            print('%s %s: %d ported calls, %d equal, %d mismatch; golden %s' % (
-                'PASS' if counts.get('mismatch', 0) == 0 and recorded else 'FAIL', case.name, len(jobs), counts.get('equal', 0), counts.get('mismatch', 0),
-                'reproduced' if recorded else 'NOT reproduced'))
-            failed = failed or not recorded
+            # And the engine itself. It lays the case out again at this root, so it comes after everything that reads the oracle's files.
+            parted = [] if args.steps_only else engine_differences(case, world, raw, args.node)
+            for where in parted:
+                print('  ENGINE %s differs at %s' % (case.name, where))
+            print('%s %s: %d ported calls, %d equal, %d mismatch; golden %s; engine %s' % (
+                'PASS' if counts.get('mismatch', 0) == 0 and recorded and not parted else 'FAIL', case.name, len(jobs), counts.get('equal', 0), counts.get('mismatch', 0),
+                'reproduced' if recorded else 'NOT reproduced',
+                'not run' if args.steps_only else 'equal: role view, plan, apply, tree, re-apply, refusals' if not parted else 'DIFFERS in %d places' % len(parted)))
+            failed = failed or not recorded or bool(parted)
         finally:
             ts_port.remove(world.sandbox)
     return int(failed)
@@ -702,6 +769,7 @@ def main(argv=None):
         sub.add_argument('--scratch', help='where the sandboxes are laid out (default: .cache/corpus here, or <corpus>/scratch for a corpus outside this repository)')
         if name == 'compare':
             sub.add_argument('--node', default='node')
+            sub.add_argument('--steps-only', action='store_true', help='the ported steps only; do not run the TS engine on the case')
     sub = commands.add_parser('import-layer')
     sub.add_argument('--private', required=True, help='checkout of the private layer')
     sub.add_argument('--public', required=True, help='checkout of the public role the layer pins (defaults, connectors, role defaults)')

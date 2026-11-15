@@ -11,7 +11,14 @@ python3 test/corpus/corpus.py check   --corpus synthetic     # oracle against go
 python3 test/corpus/corpus.py compare --corpus synthetic     # and the ported steps against the oracle
 ```
 
-`npm test` runs the last of these (`test/unit/corpus.test.js`). `--corpus DIR`
+`compare` also runs the TS engine (`src/deploy.ts`, `src/cook.ts`, through
+`src/engine.ts`) on each whole case, at the root the oracle has just run at,
+and holds its record against the oracle's: the role's view, plan, apply, the
+tree apply left, the calls to cook and to the service manager, the second
+apply and the refusals. `--steps-only` leaves the engine out; `--node NODE`
+names the Node both parts run on.
+
+`npm test` runs `compare` on the public cases (`test/unit/corpus.test.js`). `--corpus DIR`
 takes any other corpus; `import-layer` builds one from a private deployment
 layer. A corpus built from a private layer, its goldens and its scratch stay
 outside this repository: `import-layer` refuses an output path inside it.
@@ -39,6 +46,28 @@ One golden per case, in the order the engine works:
 `core` is the differential surface of the contract (`CONTRACT.md` 2.2). A port
 of deploy and cook is right on a case when it produces this `plan` and `apply`
 and leaves this tree.
+
+## How the TS engine is run on a case
+
+`ts_driver.mjs` takes the place of the oracle's in-process call. The files are
+laid out by the same code, and the record is put together the same way. Two
+seams stand around the engine, the same two that stand around the oracle:
+
+- **The host** (`src/io/host.ts`). The oracle's `host_model` replaces
+  `Path.lstat` and `pwd.getpwuid`; the TS engine takes a `Host` and asks it
+  wherever the oracle calls those. The driver's model answers as `host_model`
+  does.
+- **The adapter.** The oracle's shim names the cook command
+  `[python, oracle/scripts/cook-adapter.py, ...]`, and corpus.py starts
+  `adapter_seam.py` in its place. The driver hands the TS engine the same
+  first two words, so both engines give the build one name, and starts
+  `adapter_seam.mjs`, which is `src/cook.ts` with `verify_cook` recorded
+  instead of performed. A kitchen that runs for real names its own adapter
+  there and so names its builds differently (approved plan, finding 1).
+
+So what is compared is everything the TS engine and the TS adapter decide and
+write. What is not: `verify_cook` itself, the adapter's own entry script, and
+the lock a real cook writes.
 
 ## What a golden does not show
 
