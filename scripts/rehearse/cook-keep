@@ -1,0 +1,38 @@
+#!/bin/sh
+# The cook runtime for a rehearsal (scripts/rehearse.mjs): Bun, with what cook leaves kept before the adapter reads it.
+#
+# The adapter starts its runtime as
+#
+#   <runtime> <entrypoint> install <recipe> --out <build> ... --bun-path <bun> ... --user-unit connectome-<name>.service
+#
+# and afterwards rewrites the lock cook wrote (src/cook.ts adds provenance and writes the lock anew). This script
+# stands where <runtime> does. It runs <bun> with the same arguments, unchanged, and keeps under
+# $HOME/kitchen-rehearsal/<name>/ what cook printed and the lock as cook wrote it, byte for byte. Cook's standard
+# error still reaches the adapter, and the exit status is cook's. The directory must exist: the runner makes it.
+set -u
+umask 077
+bun= out= unit= previous=
+for arg in "$@"; do
+  case "$previous" in
+    --bun-path) bun=$arg ;;
+    --out) out=$arg ;;
+    --user-unit) unit=$arg ;;
+  esac
+  previous=$arg
+done
+name=${unit#connectome-}
+name=${name%.service}
+keep=${HOME:-/nonexistent}/kitchen-rehearsal/$name
+if [ -z "$bun" ] || [ -z "$out" ] || [ -z "$name" ] || [ ! -d "$keep" ]; then
+  echo 'cook-keep: not the call of a rehearsal' >&2
+  exit 96
+fi
+stamp=$(date -u +%Y%m%dT%H%M%SZ)-$$
+"$bun" "$@" >"$keep/cook-$stamp.stdout" 2>"$keep/cook-$stamp.stderr"
+status=$?
+echo "$status" >"$keep/cook-$stamp.status"
+if [ -f "$out/connectome.lock" ]; then
+  cp "$out/connectome.lock" "$keep/cook-$stamp.lock"
+fi
+cat "$keep/cook-$stamp.stderr" >&2
+exit "$status"
