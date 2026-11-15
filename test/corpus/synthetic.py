@@ -47,6 +47,10 @@ def recipe(home, connectors, runtime):
     }
 
 
+COOK_ORDER = ('version', 'backend', 'engines', 'layout', 'state', 'hostDependencies', 'external', 'recipePath', 'createdAt', 'connectomeHost', 'components',
+              'cook', 'recipe', 'build', 'credentials', 'requirements', 'localExtensions', 'outputs', 'launch')
+
+
 def replayed_build(case, content, tools):
     """The files of a build of `case` in the shape of a real one, by name. `tools` are corpus.py's own steps (see `build`)."""
     digest = lambda data: hashlib.sha256(data).hexdigest()
@@ -92,7 +96,13 @@ def replayed_build(case, content, tools):
         'layout': layout, 'state': {'path': state},
     }
     text = lambda value: (json.dumps(value, sort_keys=True, indent=2) + '\n').encode()
-    return request, {'connectome.lock': text(lock), 'deployment.json': tools['canonical'](spec).encode(), 'cook-recipe.json': content, '.prepared': request.encode(),
+    # The same lock as cook leaves it, before the adapter adds provenance and sorts: the key order the pinned cook writes.
+    cooked = {key: lock[key] for key in COOK_ORDER if key in lock}
+    assert set(cooked) == set(lock)
+    cooked['hostDependencies'] = [{key: entry[key] for key in ('name', 'originalRange', 'version', 'sha256', 'size', 'snapshot', 'packageJsonDelta')} for entry in dependencies]
+    cooked['connectomeHost'] = {key: lock['connectomeHost'][key] for key in ('url', 'ref', 'path', 'commit')}
+    cooked['build'] = {key: lock['build'][key] for key in ('dir', 'id')}
+    return request, (json.dumps(cooked, indent=2) + '\n').encode(), {'connectome.lock': text(lock), 'deployment.json': tools['canonical'](spec).encode(), 'cook-recipe.json': content, '.prepared': request.encode(),
                      'cook-layout.json': text(layout), '.cook-layout.json': (json.dumps({'phase': 'installed', 'layout': layout}, indent=2) + '\n').encode(),
                      'run.sh': launcher, 'connectome-%s.service' % name: unit}
 
@@ -160,9 +170,9 @@ def build(directory, defaults, catalog, versions, replay=None):
         case['layers']['agent']['recipe_file']['sha256'] = case['recipe']['committed_sha256']
         for entry in case['layers']['agent']['cook']['host_dependencies']:
             entry['sha256'] = hashlib.sha256(replay['archive'](entry['name'], entry['version'])).hexdigest()
-        request, files = replayed_build(case, content, replay)
-        case['cook_build'] = {'directory': 'build', 'request_id': request}
-        case['substitutions'].append('Cook is not run: test/corpus/replay_cook.py replays a made-up build in the shape of a real one.')
+        request, cooked, files = replayed_build(case, content, replay)
+        case['cook_build'] = {'directory': 'build', 'request_id': request, 'cooked': 'cooked.lock'}
+        case['substitutions'].append('Cook is not run: test/corpus/replay_cook.py replays a made-up build in the shape of a real one, and writes its lock in the key order cook writes.')
         cases.append((case, None))
     for case, content in cases:
         target = directory / 'cases' / case['name']
@@ -173,4 +183,5 @@ def build(directory, defaults, catalog, versions, replay=None):
             (target / 'build').mkdir()
             for name, data in files.items():
                 (target / 'build' / name).write_bytes(data)
+            (target / 'cooked.lock').write_bytes(cooked)
         (target / 'case.json').write_text(json.dumps(case, indent=1, sort_keys=True) + '\n')

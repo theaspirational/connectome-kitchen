@@ -729,7 +729,7 @@
  },
  "engine": {
   "combine": "stand-in of the oracle (no ansible-core here)",
-  "cook": "not run: the lock and outputs of a build kept with the case, replayed (test/corpus/replay_cook.py)",
+  "cook": "not run: the lock and outputs of a build kept with the case, replayed (test/corpus/replay_cook.py); the lock is the bytes cook wrote, in cook's key order",
   "oracle": "a49b5dc",
   "ownership": "modelled (host_model in test/corpus/corpus.py)",
   "systemctl": "fake of the oracle (oracle/tests/fixtures/systemctl.py)",
@@ -4328,6 +4328,6 @@
  },
  "substitutions": [
   "Synthetic case: nothing in it is a value of a deployed host.",
-  "Cook is not run: test/corpus/replay_cook.py replays a made-up build in the shape of a real one."
+  "Cook is not run: test/corpus/replay_cook.py replays a made-up build in the shape of a real one, and writes its lock in the key order cook writes."
  ]
 }

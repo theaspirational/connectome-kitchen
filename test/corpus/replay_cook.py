@@ -26,8 +26,13 @@ made up: the application, the engines, the per-request configuration directory.
 The snapshots of the archives are copied from the archives the adapter names,
 after their size and digest matched the lock.
 
-The key order of the lock cook wrote is not known (the copy is the lock as the
-adapter rewrote it, sorted), so the lock is written sorted.
+A copy of a build holds the lock as the adapter rewrote it, sorted, so by
+itself it does not say in which order cook wrote the keys; the lock is then
+written sorted. A case may also keep the lock as cook wrote it, taken before the
+adapter read it (`cooked` in `cook_build`; scripts/rehearse/cook-keep takes
+it). Then those bytes are written instead, carried as text, so that the key
+order, the indentation and the final newline are cook's. They must say what the
+build's lock says without the provenance, or the replay refuses.
 """
 import hashlib
 import json
@@ -161,7 +166,12 @@ def main(argv, replay):
     hidden = directory / '.cook-layout.json'
     if hidden.is_file():
         (build / hidden.name).write_text(carry.text(hidden.read_text()))
-    (build / 'connectome.lock').write_text(json.dumps(lock, sort_keys=True, indent=2) + '\n')
+    text = json.dumps(lock, sort_keys=True, indent=2) + '\n'
+    if replay.get('cooked'):
+        text = carry.text(Path(replay['cooked']).read_text())
+        if json.loads(text) != lock:
+            return refuse('the lock as cook wrote it is not the lock of the build without the provenance')
+    (build / 'connectome.lock').write_text(text)
     return 0
 
 

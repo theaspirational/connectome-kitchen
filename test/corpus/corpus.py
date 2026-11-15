@@ -13,7 +13,7 @@ its record against the oracle's.
     corpus.py check   --corpus DIR [--case NAME]
     corpus.py compare --corpus DIR [--case NAME] [--node NODE]
     corpus.py import-layer --private DIR --public DIR --out DIR --case NAME=PLAYBOOK:INVENTORY:HOST ...
-    corpus.py import-build --corpus DIR --base CASE --name NAME --build DIR
+    corpus.py import-build --corpus DIR --base CASE --name NAME --build DIR [--cooked FILE]
 
 Nothing is fetched, no unit of the host is asked or touched, and nothing is
 written outside the scratch directory and, for `record`, the corpus. See
@@ -269,7 +269,8 @@ class World:
         self.replay = None
         if 'cook_build' in data:
             self.replay = {'directory': str((self.case.directory / data['cook_build']['directory']).resolve()), 'request_id': data['cook_build']['request_id'],
-                           'sandbox': str(self.sandbox), 'absolute': ABSOLUTE.pattern}
+                           'sandbox': str(self.sandbox), 'absolute': ABSOLUTE.pattern,
+                           'cooked': str((self.case.directory / data['cook_build']['cooked']).resolve()) if data['cook_build'].get('cooked') else None}
             stand_in = '#!%s -I\nimport runpy, sys\nsys.dont_write_bytecode = True\nrunpy.run_path(%r, init_globals={"REPLAY": %r}, run_name="__main__")\n' % (
                 sys.executable, str(HERE / 'replay_cook.py'), self.replay)
         write(tools['entrypoint'], '#!/bin/sh\n# stand-in entrypoint: never executed\nexit 64\n', 0o755)
@@ -556,7 +557,8 @@ def run_case(case, sandbox, node=None):
     record = {
         'case': case.name,
         'engine': {'oracle': 'a49b5dc', 'combine': 'ansible-core' if connectome_config.combine is not connectome_config._python_combine else 'stand-in of the oracle (no ansible-core here)',
-                   'cook': 'stand-in (test/corpus/stand_in_cook.py)' if not world.replay else 'not run: the lock and outputs of a build kept with the case, replayed (test/corpus/replay_cook.py)', 'systemctl': 'fake of the oracle (oracle/tests/fixtures/systemctl.py)',
+                   'cook': 'stand-in (test/corpus/stand_in_cook.py)' if not world.replay else 'not run: the lock and outputs of a build kept with the case, replayed (test/corpus/replay_cook.py)' + (
+                       '; the lock is the bytes cook wrote, in cook\'s key order' if world.replay.get('cooked') else ''), 'systemctl': 'fake of the oracle (oracle/tests/fixtures/systemctl.py)',
                    'verify_cook': 'recorded, not performed (test/corpus/adapter_seam.py)', 'ownership': 'modelled (host_model in test/corpus/corpus.py)'},
         'substitutions': case.data.get('substitutions', []),
         'config': {'layers': world.layers, 'effective': world.effective, 'secret_names': world.names},
@@ -934,6 +936,9 @@ def command_import_build(args):
         'the request of the base case is the deployment.json of the build': connectome_deploy.canonical(spec) == (source / 'deployment.json').read_text(),
         'the request of the base case and its cook command give the name of the build': named == request,
     }
+    cooked = Path(args.cooked).read_bytes() if args.cooked else None
+    if cooked is not None:
+        checks['the lock as cook wrote it is the lock of the build without the provenance the adapter adds'] = json.loads(cooked) == replay_cook.cook_lock(lock)
     for what, holds in checks.items():
         print('%s %s' % ('ok  ' if holds else 'FAIL', what))
     if not all(checks.values()):
@@ -951,9 +956,15 @@ def command_import_build(args):
     case['layers'] = layers
     case['recipe'] = {'file': 'build/cook-recipe.json', 'committed_sha256': committed, 'matches_committed_pin': True}
     case['cook_build'] = {'directory': 'build', 'request_id': request, 'base_case': args.base}
+    order = 'the lock is written with sorted keys: the order cook wrote is not in the copy'
+    if cooked is not None:
+        (directory / 'cooked.lock').write_bytes(cooked)
+        os.chmod(directory / 'cooked.lock', 0o600)
+        case['cook_build']['cooked'] = 'cooked.lock'
+        order = 'the lock is written as cook wrote it, byte for byte once carried: the case keeps those bytes, taken before the adapter read them'
     case['substitutions'] = [text for text in base.get('substitutions', []) if 'placeholder' not in text] + [
         'The recipe is the one the real build was made from; it is the bytes the layer pins.',
-        'Cook is not run. Its runtime is replaced by test/corpus/replay_cook.py, which writes the lock, the launcher and the unit of the real build %s, carried to the sandbox root and to the request id of the run. The provenance the adapter adds is taken out first, and the lock is written with sorted keys: the order cook wrote is not in the copy.' % request[:8],
+        'Cook is not run. Its runtime is replaced by test/corpus/replay_cook.py, which writes the lock, the launcher and the unit of the real build %s, carried to the sandbox root and to the request id of the run. The provenance the adapter adds is taken out first, and %s.' % (request[:8], order),
         'The copy of the real build holds no application, engines, snapshots or per-request configuration. The snapshots are copied from the archives of the case; the rest is absent.']
     (directory / 'case.json').write_text(json.dumps(case, indent=1, sort_keys=True, ensure_ascii=False) + '\n')
     os.chmod(directory / 'case.json', 0o600)
@@ -985,6 +996,7 @@ def main(argv=None):
     sub.add_argument('--base', required=True, help='the case whose deploy inputs the build was made from')
     sub.add_argument('--name', required=True, help='name of the new case')
     sub.add_argument('--build', required=True, help='a copy of the files of one real build (lock, request, recipe, layout, launcher, unit, marker)')
+    sub.add_argument('--cooked', help='the lock of that build as cook wrote it, before the adapter rewrote it (scripts/rehearse/cook-keep keeps it)')
     args = parser.parse_args(argv)
     os.umask(0o022)  # the modes of what the adapter and the stand-in write are recorded; they must not depend on the caller's umask
     try:

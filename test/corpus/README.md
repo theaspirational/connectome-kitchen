@@ -79,7 +79,7 @@ only there.
 ## A case that replays a real build
 
 ```
-python3 test/corpus/corpus.py import-build --corpus DIR --base CASE --name NAME --build COPY
+python3 test/corpus/corpus.py import-build --corpus DIR --base CASE --name NAME --build COPY [--cooked LOCK]
 ```
 
 `COPY` holds the files of one build as a deployed host has them: the lock,
@@ -112,17 +112,58 @@ agreeing:
   staged recipe, the layout, the marker and the lock after the adapter's
   post-processing were written by the engine and its adapter.
 
-Limits. The key order of the lock as cook wrote it is not in a copy (the
-adapter has rewritten it, sorted), so the replay writes it sorted; the reader
-does not depend on the order. The application, the engines and the
-per-request configuration directory are not in a copy and are not made up.
-The snapshots are copied from the archives of the case after their size and
-digest matched the lock. Cook itself still does not run.
+The lock as cook wrote it. A copy holds the lock after the adapter rewrote
+it, sorted, so by itself it does not say in which order cook wrote the keys,
+and the replay then writes the lock sorted. `--cooked LOCK` adds the lock as
+cook left it, taken before the adapter read it (`scripts/rehearse/cook-keep`
+keeps it during a rehearsal). `import-build` refuses unless it says what the
+copy's lock says without the provenance. The replay then writes those bytes,
+carried as text: cook's key order, indentation and final newline. Both
+adapters read that and must leave the copy's lock, byte for byte.
+
+Limits. The application, the engines and the per-request configuration
+directory are not in a copy and are not made up. The snapshots are copied from
+the archives of the case after their size and digest matched the lock. Cook
+itself does not run in the corpus; a rehearsal runs it (below).
 
 The public case `example-replay` is `example` with a made-up build in that
 shape: absolute launcher and unit paths, engine records, a checkout path,
 snapshots named by digest, an output outside the build, modes 0700 and 0600, a
-credential name nobody declared.
+credential name nobody declared, and a lock in the key order cook writes.
+
+## A rehearsal: the engine and a real cook on a real account
+
+```
+node scripts/rehearse.mjs check|apply|verify --input <absolute rehearsal.json>
+```
+
+`scripts/rehearse.mjs` runs contract v1 `plan` and `apply` for one deployment
+that is installed and never started (`activation: install_only`), as the
+account that owns it, with the real adapter, the real `verify_cook` and a real
+cook. Nothing stands in. It is not the operational CLI (phase 7).
+
+- It logs every step as one JSON line and keeps the receipts.
+- It refuses to run as root, for another account or home, with any activation
+  but `install_only`, or without the user manager's runtime directory.
+- `scripts/rehearse/systemctl-readonly` stands in front of the service manager
+  and passes `is-active`, `show` and `daemon-reload` only.
+- The engine may start three things: its adapter, that reload, and
+  `systemd-analyze --user verify`.
+- `scripts/rehearse/cook-keep` is named as the cook runtime. It runs Bun with
+  the adapter's arguments unchanged and keeps what cook printed and the lock
+  as cook wrote it.
+- A secrets file is written only where none is, from a template of
+  placeholders under the declared names.
+- After `apply` it copies the build's small files in the layout `import-build`
+  takes, so the build comes back as a case with `--build` and `--cooked`.
+
+The input (`connectome.kitchen-rehearsal/v1`) holds the contract request
+without `systemctl`, the service manager's path, the secrets template, the
+pinned input files with their digests, and the home and build name the
+rehearsal was prepared for. Since the adapter's path is part of a build's
+name, a bundle moved elsewhere names another build, and the runner refuses.
+`test/unit/test_rehearse.py` runs it on the public `example` case behind the
+corpus seams (a modelled host, a stand-in cook, the fake service manager).
 
 ## What a golden does not show
 
