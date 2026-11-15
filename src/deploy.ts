@@ -532,7 +532,6 @@ function which(name: string): string | null {
 }
 const ASCII_SPACE = /^[ \t\n\r\v\f]+|[ \t\n\r\v\f]+$/gu;
 
-export type Record_ = PyDict;
 /** A planned file or link: its ownership record and, for a file, its text. */
 export type Artifact = [record: PyDict, content: string | null];
 export type Artifacts = Map<string, Artifact>;
