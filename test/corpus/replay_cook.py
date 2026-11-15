@@ -24,7 +24,9 @@ each host dependency after cook has run is taken out again, because cook did not
 write it and the adapter under test has to. What the copy does not hold is not
 made up: the application, the engines, the per-request configuration directory.
 The snapshots of the archives are copied from the archives the adapter names,
-after their size and digest matched the lock.
+after their size and digest matched the lock. The modes are the ones a build
+of the pinned cook has: the lock and the layout marker 0600, a snapshot 0400,
+the launcher and the unit as the lock says.
 
 A copy of a build holds the lock as the adapter rewrote it, sorted, so by
 itself it does not say in which order cook wrote the keys; the lock is then
@@ -158,7 +160,7 @@ def main(argv, replay):
             return refuse('a snapshot of the real build lies outside its build')
         snapshot.parent.mkdir(mode=0o700, exist_ok=True)
         shutil.copyfile(archive, snapshot)
-        snapshot.chmod(0o600)
+        snapshot.chmod(0o400)
     modes = {entry['path']: entry['mode'] for entry in lock['outputs']}
     for name in (script.name, unit.name):
         (build / name).write_bytes(files[name])
@@ -166,12 +168,14 @@ def main(argv, replay):
     hidden = directory / '.cook-layout.json'
     if hidden.is_file():
         (build / hidden.name).write_text(carry.text(hidden.read_text()))
+        (build / hidden.name).chmod(0o600)
     text = json.dumps(lock, sort_keys=True, indent=2) + '\n'
     if replay.get('cooked'):
         text = carry.text(Path(replay['cooked']).read_text())
         if json.loads(text) != lock:
             return refuse('the lock as cook wrote it is not the lock of the build without the provenance')
     (build / 'connectome.lock').write_text(text)
+    (build / 'connectome.lock').chmod(0o600)
     return 0
 
 

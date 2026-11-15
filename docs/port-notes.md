@@ -904,8 +904,85 @@ Where the real lock differs from the stand-in's, and what reads it:
 
 None of these is handled differently by the two engines. The public case
 `example-replay` holds the same shape with made-up values, so `npm test` runs
-it. What the copy cannot show: the key order cook writes, the application and
-engine trees, and whether cook's install runs without the network.
+it. What that copy could not show (the key order cook writes, the application
+and engine trees, whether cook's install runs without the network) the
+rehearsal below shows.
+
+**A rehearsal: the TS engine with a real cook (plan step 5).** One deployment,
+installed and never started (`activation: install_only`), was made on a trial
+account of a host by `scripts/rehearse.mjs`: contract v1 `plan` and `apply`
+through `src/engine.ts`, the real adapter (`dist/cook-adapter.js`), the real
+`verify_cook`, the pinned cook, the host's own service manager behind
+`scripts/rehearse/systemctl-readonly`. Its inputs have the shape of the live
+build of the section above (a recipe handed over as a pinned file, five
+host-installed servers, two archives, six secrets and a secret file, a unit to
+exclude), with the trial account's paths and placeholders for every secret.
+The inputs and the result stay outside the repository.
+
+What it showed:
+
+- *The engine names the build as the oracle would.* The request id was worked
+  out beforehand with the oracle's formula and the cook command as
+  `src/engine.ts` words it. `plan` gave that id on the host, and the
+  `deployment.json` the engine wrote is the oracle's canonical request, byte
+  for byte (`import-build` checks both).
+- *`verify_cook` passes on a real checkout.* The port's four git questions,
+  asked by an account that does not own the root-owned checkout, were
+  answered and held: the pinned commit, the reviewed tree, a clean tree.
+- *Cook ran, and the adapter took its lock.* The layout, the state path, the
+  external servers and the dependency inventory held; the provenance was
+  added; the reader accepted the result with the configuration.
+- *Activation without a start.* The unit copy under `managed-units`, the link
+  in the unit directory, the environment drop-in, `secrets.env`, the secret
+  file, the pointer and the `install_only` marker were written. No link under
+  `default.target.wants`. The manager reported the unit loaded, linked and
+  inactive, with the drop-in and the environment file accepted.
+  `systemd-analyze --user verify` passed on cook's unit text. The service
+  manager was asked `is-active`, `show` and one `daemon-reload`, nothing else.
+- *Again, nothing.* The same request a second time: `changed: false` in both
+  halves, no cook run, the verifier once more.
+- *The oracle agrees with what was left.* The build came back as a case
+  (`import-build --build --cooked`). On the replay both engines leave the
+  build's lock, layout files, staged recipe, request and marker byte for byte,
+  and the oracle's drop-in, unit link, marker and ownership entries are the
+  ones on the host. Two digests of the manifest are of texts that hold the
+  root's path, which a golden does not pin.
+
+**The lock as cook writes it.** `scripts/rehearse/cook-keep` took it before
+the adapter read it:
+
+- It is `JSON.stringify(lock, null, 2)` and a final newline.
+- The keys are not sorted. At the top: `version`, `backend`, `engines`,
+  `layout`, `state`, `hostDependencies`, `external`, `recipePath`, `createdAt`,
+  `connectomeHost`, `components`, `cook`, `recipe`, `build`, `credentials`,
+  `requirements`, `localExtensions`, `outputs`, `launch`. A dependency:
+  `name`, `originalRange`, `version`, `sha256`, `size`, `snapshot`,
+  `packageJsonDelta`. Only `layout` is sorted, because the adapter's layout
+  file is.
+- The adapter's rewrite is that document with the provenance added, sorted at
+  every level, indented by two, with a final newline. Nothing else changes:
+  the kept lock equals the build's lock without the provenance.
+- The file stays 0600 through the rewrite, in both engines.
+- It has the shape of the live build's lock, key for key. Home, name, digests
+  and the time set aside, the values are the same.
+- `outputs[0]` names the host's own recipe under the per-request
+  configuration directory, outside the build. Its digest in the lock is the
+  digest of that file. The file is cook's rendering, not the staged recipe's
+  bytes.
+
+So the question of the key order is settled: the reader and the adapter do not
+depend on it, and a case can now hold cook's own bytes (`cooked` in
+`cook_build`).
+
+**What the rehearsal found that is not the port's.**
+
+| Finding | What was seen | Consequence |
+| --- | --- | --- |
+| Cook's install needs the network | In a network namespace without an interface `bun install` in the host checkout failed: no package manifest for six packages. The engine answered `E_COOK_FAILED` with no cook code; the reason is only in cook's own output. With the network the same request built in seconds | "No network" does not hold for a build as cook makes it today, even with the cache an earlier build of the account had left |
+| The build is not pinned by its name alone | Cook replaces two dependencies of the host by the pinned archives. Bun then resolves anew and saves a lockfile that is not the host's committed one | Two builds of one request at different times may hold different versions of the packages nobody pins. The request id does not cover them |
+| Builds share inodes through Bun's cache | Bun links files from its per-account cache into `app/node_modules`. An install into one deployment raised the link count and the change time of every shared file of an older deployment of the same account. It also changed the mode of the files a package names as `bin`, from 0775 to 0755: Bun sets that mode from the umask of the install at hand, on the shared inode. Reproduced with the same Bun, two directories and one cache: of the listed fields (path, type, mode, size, modification time, link target) only that mode changed | A retained build is not immutable. Its files' metadata follows later installs, and a write in place to a linked file would reach every build and the cache. Contents and modification times were not changed here |
+| The unit verifier needs the user manager's runtime directory | Without `XDG_RUNTIME_DIR`, `systemd-analyze --user verify` fails. The engine learns that after cook, at the end of activation, and takes the activation back (`E_UNIT_VERIFY`); the build stays prepared | The runner refuses beforehand. The engine could ask in its preflight |
+| Modes follow the caller's umask | The adapter's `cook-layout.json` has no mode of its own: 0644 under umask 022, 0664 under 002 | The runner and the corpus set 022 |
 
 **Where the port knowingly differs.**
 
@@ -1019,12 +1096,16 @@ The mutant classification:
 | B17 | port | open, not fixed in the reader (LOW-2 of the same review): the sparse budget counts numbers, not their size, and a map in a global header is converted anew at every expansion. Bounded by the default instead: at 2^16 numbers about 115 MiB, inside the measured peak. Fix it (share the integers of a global map) before raising the sparse budget |
 | B18 | port | `catalog.ts`, and with it the catalog branches of `deploy.ts` and `cook.ts`. Until then an active catalog is refused. None of the five deployments activates it |
 | B19 | port, before any use on input that is not ours | `deploy.ts` and `cook.ts` have no mutants and no hostile vectors; the inventory rows they own (plan section 4.1) are not marked; exception classes on wrongly typed values are not modelled throughout. They are not listed as ported |
-| B20 | whoever allows it (plan step 5) | `verify_cook` has met no real cook checkout, and cook has not run under kitchen. The lock half is done (plan step 4): the lock of one live build is replayed in a case outside the repository, and both engines take it alike |
+| B20 | done (plan steps 4 and 5) | `verify_cook` has met a real cook checkout and cook has run under the TS engine, once, installed and not started, on a trial account (`scripts/rehearse.mjs`; "A rehearsal" above). The build is a case outside the repository, with the lock as cook wrote it, and both engines take it alike. Not done: a started agent, a later release on a real host, a release taken back there |
 | B21 | corpus | cases for the branches no case reaches: `systemd-analyze` under `install_only` and `E_UNIT_ACTIVE`, rollback, a retired unit, a dropped secret file, a health command, an engine-rendered unit, connectors from descriptors, the ownership refusals |
-| B22 | port, with the command line (plan phase 7) | there is no operational entry: `src/cli.ts` refuses. `src/engine.ts` is a library call; secrets on a descriptor, the receipt file and exit statuses are not built. A rehearsal needs a runner |
+| B22 | port, with the command line (plan phase 7) | there is no operational entry: `src/cli.ts` refuses. `src/engine.ts` is a library call; secrets on a descriptor, the receipt file and exit statuses are not built. `scripts/rehearse.mjs` is the runner of a rehearsal and nothing more: it lets the engine read the secrets file, and it installs without a start only |
 | B23 | ruling (plan Q6) | the lock tool is `/usr/bin/flock`, undigested |
 | B24 | ruling (plan Q1) | the build name of a real kitchen differs from the role's; the corpus makes them equal on purpose |
 | B25 | review | obligation `archive.L140.4` is recorded as discharged by the implementer, with the witness in `test/unit/engine.test.js`. A review has to confirm it |
+| B26 | ruling, with cook | cook's install is neither offline nor pinned beyond the two archives: Bun resolves the host's other packages at install time and saves a new lockfile (rehearsal finding). Decide whether a build must be reproducible from its request, and if so how the host's lockfile is kept or the packages are supplied |
+| B27 | ruling, with cook | builds of one account share inodes through Bun's cache (rehearsal finding). Decide whether retained builds must be immutable; Bun has a copying backend |
+| B28 | port | the engine's preflight does not ask whether the unit verifier can run; under `install_only` it fails after cook when the user manager's runtime directory is not named |
+| B29 | port | the adapter writes `cook-layout.json` with no mode of its own, as the oracle does, so its mode follows the caller's umask |
 
 ## Still open
 
