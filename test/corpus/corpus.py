@@ -332,6 +332,41 @@ class World:
             except ValueError as error:
                 return {'refused': error.public() if hasattr(error, 'public') else {'exception': type(error).__name__, 'message': str(error)}}
 
+    def shim_command(self):
+        """The cook command as the oracle's shim words it (oracle/shim/kitchen_v1.py)."""
+        cook = self.tools_moved
+        return [sys.executable, str(ORACLE / 'scripts/cook-adapter.py'), '--spec', '{recipe}', '--out', '{build_dir}', '--state', '{state_dir}',
+                '--runtime', cook['runtime'], '--entrypoint', cook['entrypoint'], '--bun-path', cook['bun'], '--node-path', cook['node']]
+
+    def install_only(self, files):
+        """The same deployment installed and not started (`activation: install_only`), twice, through the engine's own class.
+
+        Not through the contract: there the engine looks for the host's `systemd-analyze` and runs it on the installed unit,
+        and the corpus asks nothing of the host. `analyze_command=[]` is the engine's own way to say that there is no verifier.
+        The steps are the ones the module boundary takes around each call (oracle/library/connectome_release.py), without its lock.
+        """
+        import connectome_deploy
+        from connectome_errors import SafeError
+        config = dict(copy.deepcopy(self.effective), activation='install_only')
+        if self.node:
+            return self.port({'op': 'install_only', 'secrets': self.secrets, 'files': files, 'role': {
+                'root': self.root, 'unit_dir': self.unit_dir, 'base': self.base, 'effective': config, 'versions': self.versions,
+                'cook_command': self.shim_command(), 'systemctl': self.systemctl}})
+        applies = []
+        with host_model(self.sandbox, self.account), patch.object(connectome_deploy, 'run', adapter_through_seam(connectome_deploy.run)):
+            try:
+                for _ in range(2):
+                    deployment = connectome_deploy.Deployment(self.root, self.unit_dir, copy.deepcopy(config), self.versions, self.shim_command(), self.systemctl,
+                                                              base=self.base, operator_files=files, analyze_command=[])
+                    deployment.validate_paths()
+                    deployment.preflight_activation()
+                    connectome_deploy.make_directory(deployment.root)
+                    applies.append({'prepare': deployment.prepare()})
+                    applies[-1]['activate'] = deployment.activate(copy.deepcopy(self.secrets))
+            except SafeError as error:
+                return {'applies': applies, 'refused': error.public()}
+        return {'applies': applies}
+
     def operator_files(self):
         import connectome_inputs
         return connectome_inputs.collect(self.effective)
@@ -396,11 +431,8 @@ class World:
     def request_id(self):
         """The name the contract path gives the build: the engine's own, asked in check mode."""
         import connectome_deploy, kitchen_v1
-        cook = self.tools_moved
-        argv = [sys.executable, str(ORACLE / 'scripts/cook-adapter.py'), '--spec', '{recipe}', '--out', '{build_dir}', '--state', '{state_dir}',
-                '--runtime', cook['runtime'], '--entrypoint', cook['entrypoint'], '--bun-path', cook['bun'], '--node-path', cook['node']]
         with host_model(self.sandbox, self.account):
-            return connectome_deploy.Deployment(self.root, self.unit_dir, copy.deepcopy(self.effective), self.versions, argv, check=True, base=self.base).request_id
+            return connectome_deploy.Deployment(self.root, self.unit_dir, copy.deepcopy(self.effective), self.versions, self.shim_command(), check=True, base=self.base).request_id
 
 
 def oracle_outcomes(world, jobs):
@@ -444,6 +476,17 @@ def run_case(case, sandbox, node=None):
         refusals[mutation] = dict(world.dispatch(command, **({'operator_files': world.operator_files_or_none()} if command == 'apply' else {})), command=command)
         if mutation == 'external-command-missing':
             refusals[mutation]['left_behind'] = sorted(str(path) for path in Path(world.root).rglob('*') if path.name in ('.prepared', 'current'))
+    # Installed and not started, on a sandbox of its own: with the units of a started deployment active the engine refuses this.
+    world.build()
+    before = snapshot(world.sandbox)
+    installed = world.install_only(world.operator_files())
+    after = snapshot(world.sandbox)
+    kept = (world.unit_dir, str(Path(world.root) / 'state'))  # the text of what the engine itself writes; the build is the one `apply` shows
+    installed['tree'] = {path: ({key: value for key, value in row.items() if key != 'text'} if not path.startswith(kept) else row)
+                         for path, row in after.items() if before.get(path) != row}
+    installed['systemctl_calls'] = lines(Path(world.root) / 'systemctl-calls')
+    installed['systemctl_calls_before_the_root_existed'] = lines(Path(world.root).parent / 'preflight-systemctl-calls')
+    installed['cook_calls'] = len(lines(Path(world.root) / 'cook-calls.jsonl'))
     world.build()
     before = snapshot(world.sandbox)
     files = world.operator_files()
@@ -500,6 +543,7 @@ def run_case(case, sandbox, node=None):
     jobs = world.ported()
     record['ported'] = brief(oracle_outcomes(world, jobs))
     record['refusals'] = refusals
+    record['install_only'] = installed
     # Tools and fixtures of this checkout appear in argv; they are not part of what the engine decided.
     text = json.dumps(record, indent=1, sort_keys=True, ensure_ascii=False)
     for value, token in ((str(world.sandbox), '{ROOT}'), (str(ROOT), '{KITCHEN}'), (world.request_id(), '{REQUEST}')):
@@ -588,9 +632,10 @@ def command_record(args, check=False):
             path.write_text(text)
             os.chmod(path, 0o644 if args.corpus == SYNTHETIC else 0o600)
             record = json.loads(text)
-            print('%s: plan %d, apply %d, reapply %d, rebuild %d, release back %d, %d ported calls, %d refusals' % (
+            print('%s: plan %d, apply %d, reapply %d, rebuild %d, release back %d, install only %s, %d ported calls, %d refusals' % (
                 case.name, record['plan']['status'], record['apply']['status'], record['reapply']['status'], record['rebuild']['status'],
-                record['release_back']['status'], len(record['ported']), len(record['refusals'])))
+                record['release_back']['status'], 'refused' if 'refused' in record['install_only'] else '%d applies' % len(record['install_only']['applies']),
+                len(record['ported']), len(record['refusals'])))
     return int(failed)
 
 
@@ -653,7 +698,7 @@ def command_compare(args):
             print('%s %s: %d ported calls, %d equal, %d mismatch; golden %s; engine %s' % (
                 'PASS' if counts.get('mismatch', 0) == 0 and recorded and not parted else 'FAIL', case.name, len(jobs), counts.get('equal', 0), counts.get('mismatch', 0),
                 'reproduced' if recorded else 'NOT reproduced',
-                'not run' if args.steps_only else 'equal: role view, plan, apply, tree, re-apply, rebuild, release back, refusals' if not parted else 'DIFFERS in %d places' % len(parted)))
+                'not run' if args.steps_only else 'equal: role view, plan, apply, tree, re-apply, rebuild, release back, install only, refusals' if not parted else 'DIFFERS in %d places' % len(parted)))
             failed = failed or not recorded or bool(parted)
         finally:
             ts_port.remove(world.sandbox)

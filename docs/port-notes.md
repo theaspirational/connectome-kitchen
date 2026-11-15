@@ -840,7 +840,7 @@ role's own check-mode call, contract v1 `plan` and `apply`, every file, link
 and directory with modes and text, how the adapter called cook, every call to
 the service manager in order, a second apply, a plan after it, a later
 release beside the current one (another cook pin), the first release taken
-back, and four refusals. Seven cases: the two public ones in `npm test`, five
+back, the deployment installed and not started (twice), and four refusals. Seven cases: the two public ones in `npm test`, five
 of real deployments kept outside the repository. A deliberately broken build
 (drop-in text, cook argv, a refusal's code) fails the comparison.
 `test/unit/engine.test.js` covers what the corpus puts a seam over: the
@@ -882,14 +882,15 @@ the plan says. Nothing here decides plan question Q1.
 | Temporary names of atomic writes | `tempfile` alphabet | eight random characters of another alphabet; never left behind |
 
 **Ported, and reached by no case.** These branches were written from the
-oracle and nothing has run them against it: `activation: install_only`
-(staging marker, `systemd-analyze` discovery, `E_UNIT_ACTIVE`), the rollback
-after a failed activation in both outcomes, a unit that is retired or
-renamed between releases, a secret file that is dropped, a `health` command,
-a unit the engine renders itself (a lock without a unit export), connectors
-compiled from descriptors (the recipe the adapter writes with sources and
-build commands; the fifth case has none enabled), the refusals of the
-ownership manifest, and `E_UNIT_EXCLUSIVE`.
+oracle and nothing has run them against it: of `activation: install_only`
+the discovery and the run of `systemd-analyze` and the `E_UNIT_ACTIVE`
+refusal (the install itself and its repeat are in every case, with no
+verifier); the rollback after a failed activation in both outcomes; a unit
+that is retired or renamed between releases; a secret file that is dropped;
+a `health` command; a unit the engine renders itself (a lock without a unit
+export); connectors compiled from descriptors (the recipe the adapter writes
+with sources and build commands; the fifth case has none enabled); the
+refusals of the ownership manifest; `E_UNIT_EXCLUSIVE`.
 
 **Obligation `archive.L140.4` (ruling M1).** It came due with these files:
 `scripts/check-port-ready` turns red on it as soon as `src/cook.ts` or
@@ -981,7 +982,7 @@ The mutant classification:
 | B18 | port | `catalog.ts`, and with it the catalog branches of `deploy.ts` and `cook.ts`. Until then an active catalog is refused. None of the five deployments activates it |
 | B19 | port, before any use on input that is not ours | `deploy.ts` and `cook.ts` have no mutants and no hostile vectors; the inventory rows they own (plan section 4.1) are not marked; exception classes on wrongly typed values are not modelled throughout. They are not listed as ported |
 | B20 | whoever allows it (plan steps 4 and 5) | `verify_cook` has met no real cook checkout, and no lock a real cook wrote is in the corpus. The corpus lock is the stand-in's |
-| B21 | corpus | cases for the branches no case reaches: `install_only`, rollback, a retired unit, a dropped secret file, a health command, an engine-rendered unit, connectors from descriptors, the ownership refusals |
+| B21 | corpus | cases for the branches no case reaches: `systemd-analyze` under `install_only` and `E_UNIT_ACTIVE`, rollback, a retired unit, a dropped secret file, a health command, an engine-rendered unit, connectors from descriptors, the ownership refusals |
 | B22 | port, with the command line (plan phase 7) | there is no operational entry: `src/cli.ts` refuses. `src/engine.ts` is a library call; secrets on a descriptor, the receipt file and exit statuses are not built. A rehearsal needs a runner |
 | B23 | ruling (plan Q6) | the lock tool is `/usr/bin/flock`, undigested |
 | B24 | ruling (plan Q1) | the build name of a real kitchen differs from the role's; the corpus makes them equal on purpose |

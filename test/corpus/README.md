@@ -15,7 +15,8 @@ python3 test/corpus/corpus.py compare --corpus synthetic     # and the ported st
 `src/engine.ts`) on each whole case, at the root the oracle has just run at,
 and holds its record against the oracle's: the role's view, plan, apply, the
 tree apply left, the calls to cook and to the service manager, the second
-apply, the later release, the release taken back and the refusals. `--steps-only` leaves the engine out; `--node NODE`
+apply, the later release, the release taken back, the install without a
+start and the refusals. `--steps-only` leaves the engine out; `--node NODE`
 names the Node both parts run on.
 
 `npm test` runs `compare` on the public cases (`test/unit/corpus.test.js`). `--corpus DIR`
@@ -42,6 +43,7 @@ One golden per case, in the order the engine works:
 | `reapply`, `plan_after_apply` | the same request again: nothing changes |
 | `rebuild` | a later release of the same deployment (another cook pin): a second build beside the first, the pointer and the unit links moved, the unit restarted. In its tree the ownership manifest is listed by entry, in an order that does not follow the root; its digest is kept |
 | `release_back` | the first request again, which is how a release is taken back: no cook run, the first build reused, the pointer moved back |
+| `install_only` | the same deployment installed and not started, twice, on a sandbox of its own: the staging marker, no enable links, no restart, then nothing to do. Through the engine's class with no verifier, because through the contract the engine would run the host's `systemd-analyze` |
 | `ported` | every call of this deployment that has a TS port, with the oracle's outcome |
 | `refusals` | the same deployment with one thing wrong, as met in practice: a recipe or an archive that is not the bytes its pin names, no secrets file, a server command that is not installed |
 

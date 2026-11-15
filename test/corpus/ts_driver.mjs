@@ -70,5 +70,27 @@ if (job.get('op') === 'dispatch') {
     if (!(error instanceof PyValueError)) throw error;
     outcome = dict({ refused: typeof error.public === 'function' ? new Map(Object.entries(error.public())) : dict({ exception: error.pyName, message: error.message }) });
   }
+} else if (job.get('op') === 'install_only') {
+  // `World.install_only` of corpus.py: the engine's own class, no verifier, the steps of the module boundary, twice.
+  const role = job.get('role'), applies = [];
+  outcome = dict({ applies });
+  try {
+    for (let round = 0; round < 2; round++) {
+      const deployment = new deploy.Deployment({
+        root: role.get('root'), unit_dir: role.get('unit_dir'), config: role.get('effective'), versions: role.get('versions'),
+        cook_command: role.get('cook_command'), systemctl: role.get('systemctl'), base: role.get('base'), operator_files: job.get('files'),
+        analyze_command: [], host, run: throughSeam,
+      });
+      deployment.validate_paths();
+      deployment.preflight_activation();
+      deploy.make_directory(deployment.root);
+      const step = dict({ prepare: deployment.prepare() });
+      applies.push(step);
+      step.set('activate', deployment.activate(job.get('secrets')));
+    }
+  } catch (error) {
+    if (!(error instanceof PyValueError) || typeof error.public !== 'function') throw error;
+    outcome.set('refused', new Map(Object.entries(error.public())));
+  }
 } else throw new Error('unknown op');
 fs.writeFileSync(outFile, canonical(outcome) + '\n');

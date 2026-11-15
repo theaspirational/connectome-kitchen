@@ -580,7 +580,7 @@
   {
    "id": "B21",
    "for": "corpus",
-   "entry": "Open, entered by the implementer with the success-path port of deploy and cook: cases for the branches no case reaches: `install_only`, rollback, a retired unit, a dropped secret file, a health command, an engine-rendered unit, connectors from descriptors, the ownership refusals"
+   "entry": "Open, entered by the implementer with the success-path port of deploy and cook: cases for the branches no case reaches: `systemd-analyze` under `install_only` and `E_UNIT_ACTIVE`, rollback, a retired unit, a dropped secret file, a health command, an engine-rendered unit, connectors from descriptors, the ownership refusals"
   },
   {
    "id": "B22",
