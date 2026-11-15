@@ -6,7 +6,14 @@ servers, two archives as host dependencies, secrets by name and by file, a
 private data argument, a unit to exclude; and a second case with no recipe, a
 framework archive from a registry release and a mock provider. Absolute paths
 are put together from their parts, as the publication gate reads this file too.
+
+A third case is the first one again with the files of a build beside it, for
+replay_cook.py: a lock in the shape the pinned cook writes on a host (absolute
+launcher and unit paths, engine records, a checkout path, snapshots named by
+digest, an output outside the build, modes 0700 and 0600, a credential name
+nobody declared), as the adapter leaves it. The values are made up like the rest.
 """
+import hashlib
 import json
 from pathlib import Path
 
@@ -40,8 +47,60 @@ def recipe(home, connectors, runtime):
     }
 
 
-def build(directory, defaults, catalog, versions):
-    """Writes the cases under `directory`/cases. `defaults`, `catalog` and `versions` are the oracle's own public files."""
+def replayed_build(case, content, tools):
+    """The files of a build of `case` in the shape of a real one, by name. `tools` are corpus.py's own steps (see `build`)."""
+    digest = lambda data: hashlib.sha256(data).hexdigest()
+    effective, spec, request = tools['request_of'](case)
+    root, state, name = case['root'], effective['state_dir'], effective['name']
+    here = root + '/builds/' + request
+    argv = case['cook_command']
+    bun, node = (argv[argv.index(flag) + 1] for flag in ('--bun-path', '--node-path'))
+    layout = {'schema': 'connectome.host-layout/v1', 'runtime': here, 'config': root + '/cook-config/' + request,
+              'credentials': root + '/cook-credentials/' + request, 'state': state, 'workspace': root + '/workspace', 'connectorState': {}}
+    unit = ('[Unit]\nDescription=Synthetic host (connectome-%s.service)\n\n[Service]\nType=simple\nWorkingDirectory=%s\n'
+            'ExecStart=/bin/sh "%s/run.sh" --headless\nRestart=on-failure\nUMask=0077\n\n[Install]\nWantedBy=default.target\n' % (name, state, here)).encode()
+    launcher = ('#!/bin/sh\n# synthetic launcher: the corpus starts nothing\ncd \'%s\'\nexit 0\n' % state).encode()
+    dependencies = []
+    for entry in effective['cook']['host_dependencies']:
+        data = tools['archive'](entry['name'], entry['version'])
+        snapshot = here + '/host-inputs/' + digest(data) + '.tgz'
+        before = '^' + entry['version'].rpartition('.')[0] + '.0'
+        dependencies.append({
+            'name': entry['name'], 'version': entry['version'], 'sha256': digest(data), 'size': len(data), 'originalRange': before, 'snapshot': snapshot,
+            'packageJsonDelta': {'direct': {'section': 'dependencies', 'name': entry['name'], 'before': before, 'after': 'file:' + snapshot},
+                                 'override': {'section': 'overrides', 'name': entry['name'], 'before': None, 'after': 'file:' + snapshot}},
+            # What the adapter adds once cook has run (connectome_archive.provenance_record).
+            'provenance': {'name': entry['name'], 'version': entry['version'], 'sha256': digest(data), 'archive': entry['archive'], 'kind': 'artifact',
+                           'commit_verifiable': False, 'payload': 'operator-supplied prebuilt payload, verified out of band'}})
+    servers = json.loads(content)['mcpServers']
+    declared = sorted(json.loads(content)['requirements'])
+    lock = {
+        'version': 2, 'backend': 'host', 'cook': {'version': '0.0.1'}, 'createdAt': '2026-01-02T03:04:05.678Z',
+        'recipe': {'path': here + '/cook-recipe.json', 'sha256': digest(content)}, 'recipePath': here + '/cook-recipe.json',
+        'build': {'id': digest(b'synthetic build identity'), 'dir': here},
+        'connectomeHost': {'url': effective['cook']['host_repo'], 'ref': spec['pins']['runtime']['connectome-host'],
+                           'commit': spec['pins']['runtime']['connectome-host'], 'path': here + '/app'},
+        'engines': {'bun': {'path': bun, 'realPath': bun, 'version': '1.0.0'}, 'node': {'path': node, 'realPath': node, 'version': '1.0.0'}},
+        'components': [], 'localExtensions': [],
+        'requirements': [{'name': entry, 'envName': entry, 'origin': 'unresolved'} for entry in declared],
+        'credentials': sorted(declared + [record['env'] for record in effective['secret_files']] + ['EXAMPLE_AUTH_NAME']),
+        'external': [{'name': key, 'command': servers[key]['command']} for key in sorted(servers) if 'external' in servers[key].get('source', {})],
+        'hostDependencies': dependencies,
+        'outputs': [{'path': '../../cook-config/' + request + '/recipes/cook-recipe.json', 'mode': 0o600, 'sha256': digest(b'synthetic host recipe')},
+                    {'path': 'connectome-%s.service' % name, 'mode': 0o600, 'sha256': digest(unit)}, {'path': 'run.sh', 'mode': 0o700, 'sha256': digest(launcher)}],
+        'launch': {'kind': 'script', 'script': here + '/run.sh', 'userUnit': here + '/connectome-%s.service' % name},
+        'layout': layout, 'state': {'path': state},
+    }
+    text = lambda value: (json.dumps(value, sort_keys=True, indent=2) + '\n').encode()
+    return request, {'connectome.lock': text(lock), 'deployment.json': tools['canonical'](spec).encode(), 'cook-recipe.json': content, '.prepared': request.encode(),
+                     'cook-layout.json': text(layout), '.cook-layout.json': (json.dumps({'phase': 'installed', 'layout': layout}, indent=2) + '\n').encode(),
+                     'run.sh': launcher, 'connectome-%s.service' % name: unit}
+
+
+def build(directory, defaults, catalog, versions, replay=None):
+    """Writes the cases under `directory`/cases. `defaults`, `catalog` and `versions` are the oracle's own public files.
+
+    `replay` holds three steps of corpus.py (`archive`, `request_of`, `canonical`); with it the third case is written too."""
     directory = Path(directory)
     runtime = dict(versions['runtime'])
     disabled = {'connectors': {name: {'enabled': False} for name, entry in catalog.items() if entry.get('kind', 'connector') == 'connector'},
@@ -92,8 +151,26 @@ def build(directory, defaults, catalog, versions):
     for case, content in cases:
         case['versions'] = {'runtime': runtime}
         case['substitutions'] = ['Synthetic case: nothing in it is a value of a deployed host.']
+    files = {}
+    if replay:
+        # The first case again, pinned as a layer would commit it, with the files of a build of it in the shape of a real one.
+        case, content = json.loads(json.dumps(cases[0][0])), cases[0][1]
+        case['name'] = 'example-replay'
+        case['recipe'] = {'file': 'build/cook-recipe.json', 'committed_sha256': hashlib.sha256(content).hexdigest(), 'matches_committed_pin': True}
+        case['layers']['agent']['recipe_file']['sha256'] = case['recipe']['committed_sha256']
+        for entry in case['layers']['agent']['cook']['host_dependencies']:
+            entry['sha256'] = hashlib.sha256(replay['archive'](entry['name'], entry['version'])).hexdigest()
+        request, files = replayed_build(case, content, replay)
+        case['cook_build'] = {'directory': 'build', 'request_id': request}
+        case['substitutions'].append('Cook is not run: test/corpus/replay_cook.py replays a made-up build in the shape of a real one.')
+        cases.append((case, None))
+    for case, content in cases:
         target = directory / 'cases' / case['name']
         target.mkdir(parents=True)
         if content is not None:
             (target / 'recipe.json').write_bytes(content)
+        if 'cook_build' in case:
+            (target / 'build').mkdir()
+            for name, data in files.items():
+                (target / 'build' / name).write_bytes(data)
         (target / 'case.json').write_text(json.dumps(case, indent=1, sort_keys=True) + '\n')

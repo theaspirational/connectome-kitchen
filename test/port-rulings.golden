@@ -574,8 +574,8 @@
   },
   {
    "id": "B20",
-   "for": "whoever allows it (plan steps 4 and 5)",
-   "entry": "Open, entered by the implementer with the success-path port of deploy and cook: `verify_cook` has met no real cook checkout, and no lock a real cook wrote is in the corpus. The corpus lock is the stand-in's"
+   "for": "whoever allows it (plan step 5)",
+   "entry": "Open, entered by the implementer with the success-path port of deploy and cook: `verify_cook` has met no real cook checkout, and cook has not run under kitchen. The lock half is done (plan step 4): the lock of one live build is replayed in a case outside the repository, and both engines take it alike"
   },
   {
    "id": "B21",

@@ -92,5 +92,12 @@ if (job.get('op') === 'dispatch') {
     if (!(error instanceof PyValueError) || typeof error.public !== 'function') throw error;
     outcome.set('refused', new Map(Object.entries(error.public())));
   }
+} else if (job.get('op') === 'identity') {
+  // `World.identity` of corpus.py: the request of a build and its name, from a configuration as merged. No file is touched.
+  const effective = job.get('effective');
+  const config = new Map([...effective].filter(([key]) => key !== 'activation' && key !== 'exclusive_with'));
+  const spec = dict({ config, pins: deploy.resolve_pins(effective, job.get('versions')) });
+  const digest = text => createHash('sha256').update(text).digest('hex');
+  outcome = dict({ request_id: digest(deploy.canonical(dict({ spec, cook: job.get('cook_command') }))), deployment_json_sha256: digest(deploy.canonical(spec)) });
 } else throw new Error('unknown op');
 fs.writeFileSync(outFile, canonical(outcome) + '\n');

@@ -840,7 +840,7 @@ role's own check-mode call, contract v1 `plan` and `apply`, every file, link
 and directory with modes and text, how the adapter called cook, every call to
 the service manager in order, a second apply, a plan after it, a later
 release beside the current one (another cook pin), the first release taken
-back, the deployment installed and not started (twice), and four refusals. Seven cases: the two public ones in `npm test`, five
+back, the deployment installed and not started (twice), and four refusals. Nine cases: the three public ones in `npm test`, six
 of real deployments kept outside the repository. A deliberately broken build
 (drop-in text, cook argv, a refusal's code) fails the comparison.
 `test/unit/engine.test.js` covers what the corpus puts a seam over: the
@@ -868,6 +868,44 @@ compared byte for byte. A kitchen that runs for real names its own adapter
 (`process.execPath`, `dist/cook-adapter.js`), so its first apply on an agent
 the role deployed is a new build, a cook run and a restart, as finding 1 of
 the plan says. Nothing here decides plan question Q1.
+
+**A real cook lock.** One case outside the repository replays the lock of a
+live build of one agent, with that build's recipe, on the deploy inputs the
+corpus already had for it (`import-build` and `replay_cook.py`,
+`test/corpus/README.md`). Cook did not run; the files are a copy. What it
+shows:
+
+- The oracle takes the real lock, and the port answers as the oracle does on
+  every call and leaves the same tree, on Node 22.23.3 and 24.14.0. Nothing
+  in the port had to change.
+- The case reproduces the live build. From the layers, the committed recipe
+  pin and the role's cook command both engines get the build's request id and
+  the bytes of its `deployment.json`. After `apply`, the lock as the adapter
+  rewrote it, the layout file, the staged recipe and the marker are the live
+  build's files byte for byte, once paths and the request id are carried to
+  the sandbox.
+- A deliberately broken build fails the case: a launcher path joined without
+  regard to its being absolute, and the provenance left out.
+
+Where the real lock differs from the stand-in's, and what reads it:
+
+| Field | Stand-in | Real cook | Read by |
+| --- | --- | --- | --- |
+| `launch.script`, `launch.userUnit` | names in the build | absolute paths into the build | the reader (`contained_file`), `_units` |
+| `engines` | absent | Bun and Node with `path`, `realPath`, `version` | the reader |
+| `connectomeHost.path` | absent | the checkout inside the build | the reader |
+| `credentials` | the declared names | those and one more that cook adds itself | the reader: a superset is accepted |
+| `requirements` | every declared name, `process-env` | the recipe's requirements only, `unresolved`; a secret file's name is in `credentials` alone | the reader |
+| `hostDependencies[].snapshot` | `host-dependencies/<archive name>` | `host-inputs/<sha256>.tgz` | the reader (text) |
+| `hostDependencies[].originalRange` | `^` and the pinned version | the host's own range, another patch level | the reader (text) |
+| `outputs` | the launcher, 0755 | the launcher 0700, the unit 0600, and the host's recipe under the per-request configuration directory, outside the build | the reader (shape only) |
+| unit text | `ExecStart=` and a path | `ExecStart=` an interpreter, the quoted launcher and an argument; start limits, `UMask` | copied to `managed-units` as it is |
+| `cook` | a made-up version | a version, no commit | the reader |
+
+None of these is handled differently by the two engines. The public case
+`example-replay` holds the same shape with made-up values, so `npm test` runs
+it. What the copy cannot show: the key order cook writes, the application and
+engine trees, and whether cook's install runs without the network.
 
 **Where the port knowingly differs.**
 
@@ -981,7 +1019,7 @@ The mutant classification:
 | B17 | port | open, not fixed in the reader (LOW-2 of the same review): the sparse budget counts numbers, not their size, and a map in a global header is converted anew at every expansion. Bounded by the default instead: at 2^16 numbers about 115 MiB, inside the measured peak. Fix it (share the integers of a global map) before raising the sparse budget |
 | B18 | port | `catalog.ts`, and with it the catalog branches of `deploy.ts` and `cook.ts`. Until then an active catalog is refused. None of the five deployments activates it |
 | B19 | port, before any use on input that is not ours | `deploy.ts` and `cook.ts` have no mutants and no hostile vectors; the inventory rows they own (plan section 4.1) are not marked; exception classes on wrongly typed values are not modelled throughout. They are not listed as ported |
-| B20 | whoever allows it (plan steps 4 and 5) | `verify_cook` has met no real cook checkout, and no lock a real cook wrote is in the corpus. The corpus lock is the stand-in's |
+| B20 | whoever allows it (plan step 5) | `verify_cook` has met no real cook checkout, and cook has not run under kitchen. The lock half is done (plan step 4): the lock of one live build is replayed in a case outside the repository, and both engines take it alike |
 | B21 | corpus | cases for the branches no case reaches: `systemd-analyze` under `install_only` and `E_UNIT_ACTIVE`, rollback, a retired unit, a dropped secret file, a health command, an engine-rendered unit, connectors from descriptors, the ownership refusals |
 | B22 | port, with the command line (plan phase 7) | there is no operational entry: `src/cli.ts` refuses. `src/engine.ts` is a library call; secrets on a descriptor, the receipt file and exit statuses are not built. A rehearsal needs a runner |
 | B23 | ruling (plan Q6) | the lock tool is `/usr/bin/flock`, undigested |

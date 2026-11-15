@@ -13,6 +13,7 @@ its record against the oracle's.
     corpus.py check   --corpus DIR [--case NAME]
     corpus.py compare --corpus DIR [--case NAME] [--node NODE]
     corpus.py import-layer --private DIR --public DIR --out DIR --case NAME=PLAYBOOK:INVENTORY:HOST ...
+    corpus.py import-build --corpus DIR --base CASE --name NAME --build DIR
 
 Nothing is fetched, no unit of the host is asked or touched, and nothing is
 written outside the scratch directory and, for `record`, the corpus. See
@@ -28,6 +29,7 @@ ROOT = HERE.parents[1]
 ORACLE = ROOT / 'oracle'
 sys.path[:0] = [str(HERE), str(ROOT / 'test/differential'), str(ORACLE / 'module_utils'), str(ORACLE / 'shim')]
 import ts_port
+import replay_cook
 from record import encode, canonical
 
 # Top-level directories of the deployed hosts. A path under one of them is moved under the sandbox root.
@@ -98,6 +100,19 @@ class Case:
                     (('runtime', '--runtime'), ('entrypoint', '--entrypoint'), ('bun', '--bun-path'), ('node', '--node-path'))}
         except (ValueError, IndexError):
             raise CorpusError('case %s: the cook command names no runtime, entrypoint, Bun or Node' % self.name) from None
+
+
+def request_of(data):
+    """The request of a case as its layer has it: nothing moved, the committed recipe pin. Returns the merged configuration,
+    the spec the engine writes as deployment.json (deploy.py:478-480) and the name the role's cook command gives the build."""
+    import connectome_config, connectome_deploy
+    layers = copy.deepcopy(data['layers'])
+    if 'recipe_file' in layers['agent']:
+        layers['agent']['recipe_file']['sha256'] = data['recipe']['committed_sha256']
+    effective = connectome_config.merge_layers([connectome_config.public_catalog(layers['defaults'], layers['catalog']), layers['private'], layers['group'], layers['agent']])
+    spec = {'config': {key: value for key, value in effective.items() if key not in ('activation', 'exclusive_with')},
+            'pins': connectome_deploy.resolve_pins(effective, data['versions'])}
+    return effective, spec, sha256(connectome_deploy.canonical({'spec': spec, 'cook': data['cook_command']}).encode())
 
 
 def cases(corpus, only=None):
@@ -250,6 +265,13 @@ class World:
         # The engines the cook command names. The runtime is the stand-in; nothing here is Bun, Node or cook.
         tools = {key: self.moved(value) for key, value in self.case.tools().items()}
         stand_in = '#!%s -I\nimport runpy, sys\nsys.dont_write_bytecode = True\nrunpy.run_path(%r, run_name="__main__")\n' % (sys.executable, str(HERE / 'stand_in_cook.py'))
+        # A case with the files of a real build: the runtime replays that build's lock instead (replay_cook.py).
+        self.replay = None
+        if 'cook_build' in data:
+            self.replay = {'directory': str(self.case.directory / data['cook_build']['directory']), 'request_id': data['cook_build']['request_id'],
+                           'sandbox': str(self.sandbox), 'absolute': ABSOLUTE.pattern}
+            stand_in = '#!%s -I\nimport runpy, sys\nsys.dont_write_bytecode = True\nrunpy.run_path(%r, init_globals={"REPLAY": %r}, run_name="__main__")\n' % (
+                sys.executable, str(HERE / 'replay_cook.py'), self.replay)
         write(tools['entrypoint'], '#!/bin/sh\n# stand-in entrypoint: never executed\nexit 64\n', 0o755)
         for key in ('bun', 'node', 'runtime'):
             write(tools[key], stand_in if tools[key] == tools['runtime'] else '#!/bin/sh\n# stand-in engine: never executed\nexit 64\n', 0o755)
@@ -366,6 +388,47 @@ class World:
             except SafeError as error:
                 return {'applies': applies, 'refused': error.public()}
         return {'applies': applies}
+
+    def identity(self):
+        """The name and the request of the replayed build, from the case as the layer has it: nothing moved, the committed recipe pin,
+        the role's cook command. No file is read and none is written; these are the engine's own steps for both (deploy.py:478-482)."""
+        import connectome_deploy
+        data = self.case.data
+        effective, spec, request = request_of(data)
+        if self.node:
+            return self.port({'op': 'identity', 'effective': effective, 'versions': data['versions'], 'cook_command': data['cook_command']})
+        return {'request_id': request, 'deployment_json_sha256': sha256(connectome_deploy.canonical(spec).encode())}
+
+    def replayed_build(self):
+        """The build `apply` left, held against the build it replays, file by file.
+
+        A file of the kept build is carried to this root as replay_cook.py carries the lock (paths, the request id, the digests
+        of the three files this changes) and must then be the bytes the engine and its adapter left. The launcher and the unit
+        are equal by construction; the request, the recipe, the layout, the marker and above all the lock after the adapter's
+        post-processing are not: those the engine wrote.
+        """
+        directory, build = Path(self.replay['directory']), Path(self.root) / 'builds' / self.request_id()
+        carry, _lock, _files = replay_cook.carry_for(self.replay, build.name)
+        files = {}
+        for path in sorted(directory.iterdir()):
+            if not path.is_file():
+                continue
+            here = build / path.name
+            carried = carry.text(path.read_text())
+            if not here.is_file():
+                files[path.name] = 'not in the build the engine left'
+            elif here.read_text() == carried:
+                files[path.name] = 'the bytes of the replayed build, carried to this root'
+            else:
+                try:
+                    where = differences(json.loads(carried), json.loads(here.read_text()))
+                except ValueError:
+                    where = []
+                files[path.name] = {'differs': where or 'in its text'}
+        identity = self.identity()
+        real = {'request_id': self.replay['request_id'], 'deployment_json_sha256': sha256((directory / 'deployment.json').read_bytes())}
+        return {'identity': dict(identity, is_the_replayed_build=identity == real), 'files': files,
+                'only_in_the_build_the_engine_left': sorted(path.name for path in build.iterdir() if not (directory / path.name).is_file())}
 
     def operator_files(self):
         import connectome_inputs
@@ -493,7 +556,7 @@ def run_case(case, sandbox, node=None):
     record = {
         'case': case.name,
         'engine': {'oracle': 'a49b5dc', 'combine': 'ansible-core' if connectome_config.combine is not connectome_config._python_combine else 'stand-in of the oracle (no ansible-core here)',
-                   'cook': 'stand-in (test/corpus/stand_in_cook.py)', 'systemctl': 'fake of the oracle (oracle/tests/fixtures/systemctl.py)',
+                   'cook': 'stand-in (test/corpus/stand_in_cook.py)' if not world.replay else 'not run: the lock and outputs of a build kept with the case, replayed (test/corpus/replay_cook.py)', 'systemctl': 'fake of the oracle (oracle/tests/fixtures/systemctl.py)',
                    'verify_cook': 'recorded, not performed (test/corpus/adapter_seam.py)', 'ownership': 'modelled (host_model in test/corpus/corpus.py)'},
         'substitutions': case.data.get('substitutions', []),
         'config': {'layers': world.layers, 'effective': world.effective, 'secret_names': world.names},
@@ -511,6 +574,8 @@ def run_case(case, sandbox, node=None):
     record['apply']['systemctl_calls_before_the_root_existed'] = lines(Path(world.root).parent / 'preflight-systemctl-calls')
     record['apply']['cook_calls'] = lines(Path(world.root) / 'cook-calls.jsonl')
     record['apply']['verify_cook_calls'] = lines(Path(world.root) / 'verify-cook-calls.jsonl')
+    if world.replay:
+        record['replayed_build'] = world.replayed_build()
     record['reapply'] = world.dispatch('apply', operator_files=files)
     again = snapshot(world.sandbox)
     volatile = ('systemctl-calls', 'unit-states.json')
@@ -593,7 +658,9 @@ def located(corpus, scratch):
     catalog = {}
     for path in sorted((ORACLE / 'connectors').glob('*.yml')):
         catalog.update(yaml.safe_load(path.read_text()))
-    synthetic.build(generated, yaml.safe_load((ORACLE / 'defaults/agent.yml').read_text()), catalog, yaml.safe_load((ORACLE / 'versions.yml').read_text()))
+    import connectome_deploy
+    synthetic.build(generated, yaml.safe_load((ORACLE / 'defaults/agent.yml').read_text()), catalog, yaml.safe_load((ORACLE / 'versions.yml').read_text()),
+                    replay={'archive': package_archive, 'request_of': request_of, 'canonical': connectome_deploy.canonical})
     return generated
 
 
@@ -829,6 +896,71 @@ def command_import(args):
     return 0
 
 
+BUILD_FILES = ('connectome.lock', 'deployment.json', 'cook-recipe.json', 'cook-layout.json', '.cook-layout.json', '.prepared')
+
+
+def command_import_build(args):
+    """A case that replays a real build: the deploy inputs of an existing case, the real recipe, and a copy of the build's files.
+
+    Refused unless the copy is one build and the existing case is its input: the engine's own request for that case, with the
+    committed recipe pin and the role's cook command, must be the copy's deployment.json and must give the copy's request id.
+    """
+    import connectome_deploy
+    corpus, source = Path(args.corpus).resolve(), Path(args.build).resolve()
+    if corpus.is_relative_to(ROOT):
+        raise CorpusError('a case made from a real build stays outside this repository')
+    base = json.loads((corpus / 'cases' / args.base / 'case.json').read_text())
+    sums = source / 'SHA256SUMS'
+    if sums.is_file():
+        for line in sums.read_text().splitlines():
+            digest, name = line.split(None, 1)
+            if sha256((source / name.lstrip('*')).read_bytes()) != digest:
+                raise CorpusError('a file of the build copy is not the bytes its checksum list names')
+    lock = json.loads((source / 'connectome.lock').read_text())
+    request = (source / '.prepared').read_text()
+    names = BUILD_FILES + (Path(lock['launch']['script']).name, Path(lock['launch']['userUnit']).name)
+    recipe = (source / 'cook-recipe.json').read_bytes()
+    committed = base['recipe']['committed_sha256']
+    layers = copy.deepcopy(base['layers'])
+    layers['agent']['recipe_file']['sha256'] = committed
+    _effective, spec, named = request_of(base)
+    outputs = {entry['path']: entry.get('sha256') for entry in lock['outputs']}
+    checks = {
+        'the lock names one build, the one of the marker': Path(lock['build']['dir']).name == request and HEX64.fullmatch(request) is not None,
+        'the recipe is the one the lock names': sha256(recipe) == lock['recipe']['sha256'] and Path(lock['recipePath']).name == 'cook-recipe.json',
+        'the recipe is the one the layer pins': sha256(recipe) == committed,
+        'the launcher and the unit are the ones the lock names': all(outputs.get(name) == sha256((source / name).read_bytes()) for name in names[-2:]),
+        'the layout file is the layout of the lock': json.loads((source / 'cook-layout.json').read_text()) == lock['layout'],
+        'the request of the base case is the deployment.json of the build': connectome_deploy.canonical(spec) == (source / 'deployment.json').read_text(),
+        'the request of the base case and its cook command give the name of the build': named == request,
+    }
+    for what, holds in checks.items():
+        print('%s %s' % ('ok  ' if holds else 'FAIL', what))
+    if not all(checks.values()):
+        raise CorpusError('the build copy and case %s do not belong together' % args.base)
+    directory = corpus / 'cases' / args.name
+    ts_port.remove(directory)
+    directory.mkdir(parents=True, mode=0o700)
+    (directory / 'build').mkdir(mode=0o700)
+    for name in names:
+        if (source / name).is_file():
+            shutil.copyfile(source / name, directory / 'build' / name)
+            os.chmod(directory / 'build' / name, 0o600)
+    case = copy.deepcopy(base)
+    case['name'] = args.name
+    case['layers'] = layers
+    case['recipe'] = {'file': 'build/cook-recipe.json', 'committed_sha256': committed, 'matches_committed_pin': True}
+    case['cook_build'] = {'directory': 'build', 'request_id': request, 'base_case': args.base}
+    case['substitutions'] = [text for text in base.get('substitutions', []) if 'placeholder' not in text] + [
+        'The recipe is the one the real build was made from; it is the bytes the layer pins.',
+        'Cook is not run. Its runtime is replaced by test/corpus/replay_cook.py, which writes the lock, the launcher and the unit of the real build %s, carried to the sandbox root and to the request id of the run. The provenance the adapter adds is taken out first, and the lock is written with sorted keys: the order cook wrote is not in the copy.' % request[:8],
+        'The copy of the real build holds no application, engines, snapshots or per-request configuration. The snapshots are copied from the archives of the case; the rest is absent.']
+    (directory / 'case.json').write_text(json.dumps(case, indent=1, sort_keys=True, ensure_ascii=False) + '\n')
+    os.chmod(directory / 'case.json', 0o600)
+    print('%s: replays build %s on the inputs of case %s' % (args.name, request[:8], args.base))
+    return 0
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     commands = parser.add_subparsers(dest='command', required=True)
@@ -848,11 +980,18 @@ def main(argv=None):
     sub.add_argument('--archives', action='append', help='directory searched for archives with the pinned digests')
     sub.add_argument('--template', default='recipe.template.json', help='name of the recipe template in an inventory directory')
     sub.add_argument('--controller-checkout', default='/root/deploy-layer', help='where the controller is taken to keep the layer')
+    sub = commands.add_parser('import-build')
+    sub.add_argument('--corpus', required=True, help='corpus directory, outside this repository')
+    sub.add_argument('--base', required=True, help='the case whose deploy inputs the build was made from')
+    sub.add_argument('--name', required=True, help='name of the new case')
+    sub.add_argument('--build', required=True, help='a copy of the files of one real build (lock, request, recipe, layout, launcher, unit, marker)')
     args = parser.parse_args(argv)
     os.umask(0o022)  # the modes of what the adapter and the stand-in write are recorded; they must not depend on the caller's umask
     try:
         if args.command == 'import-layer':
             return command_import(args)
+        if args.command == 'import-build':
+            return command_import_build(args)
         if args.command == 'compare':
             return command_compare(args)
         return command_record(args, check=args.command == 'check')
