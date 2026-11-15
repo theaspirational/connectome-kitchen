@@ -84,7 +84,10 @@ function stepwise(data, run) {
 /** As `tar_listing` in port_primitives.py. */
 function tarListing(data, options) {
   let members;
-  try { members = tarfile.gzipMembers(data, options); } catch (error) { return failure(error); }
+  try { members = tarfile.gzipMembers(data, options); } catch (error) {
+    // Divergence D3 is told apart from every other OSError, so that it can be required exactly where it applies.
+    return error instanceof tarfile.MetadataLimit ? { ...failure(error), limit: 'metadata' } : failure(error);
+  }
   return { members: members.map(member => {
     const entry = [member.name, member.isfile, member.size.toString(), member.type];
     if ((member.isfile || !SUPPORTED_TYPES.has(member.type)) && member.size <= TAR_READ_LIMIT) {

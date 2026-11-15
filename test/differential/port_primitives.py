@@ -32,6 +32,16 @@ rather than hidden in a generator:
     in the model; on the oracle host the real bound lies between 2**36 and
     2**38 and follows the machine's memory, so no case asks for a size in
     that band.
+  * `tar` is not an equality in one place, divergence D3: where tarfile comes
+    to read a long-name, long-link or pax header that states more than 2**28
+    bytes, the TS reader must refuse with its OSError, whatever tarfile
+    answers. Those cases are counted by what the oracle does with them
+    (`metadata_limit`). No generated archive holds that many bytes: the
+    oracle reads a short block and then refuses the archive, lets a
+    MemoryError or OverflowError escape, or, where the short block is no
+    pax record and the header is not the first member, ends the listing
+    silently and so lists the archive. test/differential/port_large.py has
+    archives that really hold such a block.
   * `tardepth` runs in a fresh interpreter, in a function the script calls
     directly: chains of extension headers recurse in tarfile, and the bound
     (328 as first member, 329 later) moves with the caller's depth.
@@ -1319,6 +1329,51 @@ def py_tar(job):
     return tar_listing(base64.b64decode(job['b']))
 
 
+# Divergence D3: the TS reader refuses a long-name, long-link or pax header that states more than this many bytes.
+METADATA_LIMIT = 2 ** 28
+TAR_D3_BUCKETS = ('oracle refuses as unreadable, TS refuses', 'oracle lets an uncaught class escape, TS refuses', 'oracle lists the archive, TS refuses')
+
+
+def reaches_metadata_limit(data):
+    """Whether tarfile, listing this archive, comes to read the blocks of such a header.
+
+    A second walk with a TarInfo that looks at the size on entry to the two
+    methods that read those blocks. It is a walk of its own because the extra
+    frame would move the recursion bounds the first one is compared on.
+    """
+    import io, tarfile
+    seen = []
+
+    class Probe(tarfile.TarInfo):
+        def _proc_gnulong(self, archive):
+            seen.append(self.size > METADATA_LIMIT)
+            return super()._proc_gnulong(archive)
+
+        def _proc_pax(self, archive):
+            seen.append(self.size > METADATA_LIMIT)
+            return super()._proc_pax(archive)
+    try:
+        with tarfile.open(fileobj=io.BytesIO(data), mode='r:gz', tarinfo=Probe) as archive:
+            archive.getmembers()
+    except Exception:
+        pass
+    return any(seen)
+
+
+def judge_tar(job, want, got):
+    """(agrees, D3 bucket or None). Equal answers, except where D3 applies: there TS must refuse with its OSError."""
+    if not reaches_metadata_limit(base64.b64decode(job['b'])):
+        return want == got, None
+    if want == {'error': 'RecursionError'} and got == want:
+        return True, None  # the frame bound came first on both sides
+    import builtins, tarfile
+    kind = want.get('error')
+    # archive.py:138 turns these classes into its closed refusal; any other class escapes it.
+    caught = kind is not None and issubclass(getattr(tarfile, kind, None) or getattr(builtins, kind), (OSError, ValueError, tarfile.TarError))
+    bucket = TAR_D3_BUCKETS[2 if kind is None else 0 if caught else 1]
+    return got == {'error': 'OSError', 'limit': 'metadata'}, bucket
+
+
 # The archive.py:131-135 flow, by the outcome archive.py:136-139 would give it.
 def manifest_flow(data):
     import io, re, tarfile
@@ -1626,6 +1681,10 @@ def run(node='node', scale=1.0, only=None, full=True, processes=None, seed=20261
             agrees, bucket = judge_targz(want, got)
             entry.setdefault('buckets', {name: 0 for name in TARGZ_BUCKETS})[bucket] += 1
             examples.setdefault(bucket, job['_what'])
+        elif job['k'] == 'tar':
+            agrees, bucket = judge_tar(job, want, got)
+            if bucket is not None:
+                entry.setdefault('metadata_limit', {name: 0 for name in TAR_D3_BUCKETS})[bucket] += 1
         else:
             agrees = want == got
         if not agrees:

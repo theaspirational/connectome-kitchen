@@ -97,7 +97,7 @@ class Port(unittest.TestCase):
     def test_deliberate_divergences_are_named_and_still_hold_on_the_oracle(self):
         entries = json.loads((ROOT / 'test/vectors/port-divergences.golden').read_text())
         self.assertEqual(len({entry['id'] for entry in entries}), len(entries))
-        self.assertEqual({entry['divergence'] for entry in entries}, {'D1', 'D2'})
+        self.assertEqual({entry['divergence'] for entry in entries}, {'D1', 'D2', 'D3'})
         ts_port.initialize()
         for entry in entries:
             self.assertGreater(len(entry['reason']), 100, entry['id'])
@@ -110,14 +110,19 @@ class Port(unittest.TestCase):
                 self.assertEqual(ts_port.unordered(outcome) if entry.get('unordered') else outcome, entry['oracle'], entry['id'])
             finally:
                 vector.cleanup()
+        # D3 has one entry for each header type the limit applies to.
+        self.assertEqual(sorted(entry['id'].split('.')[1] for entry in entries if entry['divergence'] == 'D3'), ['longlink', 'longname', 'pax', 'pax-global', 'pax-solaris'])
         # D1 changes the public code where the oracle would have refused the content: that is recorded, not implied.
         by_id = {entry['id']: entry for entry in entries}
         changed = by_id['gzip.crc-trailer.identity-mismatch']
         self.assertEqual(dict(changed['oracle']['public']['$mapping'])['error_code'], 'E_ARCHIVE_IDENTITY')
         self.assertEqual(dict(changed['port']['public']['$mapping'])['error_code'], 'E_ADAPTER_INPUT')
         for entry in entries:
-            if entry['divergence'] == 'D1':
+            if entry['divergence'] in ('D1', 'D3'):
                 self.assertEqual((entry['port']['message'], dict(entry['port']['public']['$mapping'])['error_code']), ('unreadable archive or manifest', 'E_ADAPTER_INPUT'), entry['id'])
+                if entry['divergence'] == 'D3':
+                    # The small D3 entries state a size no machine allocates; the archives that hold a block at the limit are in port-large.golden.
+                    self.assertEqual(entry['oracle'], {'crash': 'MemoryError'}, entry['id'])
             else:
                 self.assertEqual(entry['port'], {'crash': 'TypeError'}, entry['id'])
                 self.assertIn({'$float': 'nan'}, entry['oracle']['result'], entry['id'])
@@ -125,7 +130,7 @@ class Port(unittest.TestCase):
     def test_rulings_are_recorded_as_received_and_nothing_unkilled_counts_as_killed(self):
         record = json.loads((ROOT / 'test/port-rulings.golden').read_text())
         rulings = {entry['id']: entry for entry in record['rulings']}
-        self.assertEqual(sorted(rulings), ['D1', 'D2', 'M1', 'O1', 'R6'])
+        self.assertEqual(sorted(rulings), ['B9', 'D1', 'D2', 'D3', 'L1', 'M1', 'O1', 'R6'])
         for entry in rulings.values():
             self.assertGreater(len(entry['as_received']), 40, entry['id'])
         results = {r['id']: r['status'] for r in json.loads(ts_mutants.RESULTS.read_text())['results']}
@@ -138,6 +143,9 @@ class Port(unittest.TestCase):
             self.assertIn(entry['id'], classes[entry['classification']])
         self.assertEqual(sum(status == 'killed' for status in results.values()), 262)
         self.assertEqual(len(results), 270)
+        # A choice a ruling left open is recorded as the implementer's, apart from the ruling's own words.
+        for ident in ('D3', 'B9', 'L1'):
+            self.assertGreater(len(rulings[ident]['left_to_the_implementer']), 20, ident)
         # The witness a ruling moved to a later module is an open obligation with a trigger, not a note.
         owed = {entry['id']: entry for entry in record['obligations']}
         self.assertEqual(owed['archive.L140.4']['due_when_any_exists'], ['src/cook.ts', 'src/deploy.ts'])
@@ -155,11 +163,105 @@ class Port(unittest.TestCase):
         lines = done.stdout.splitlines()
         self.assertEqual(lines[0], '262 of 270 TS mutants killed')
         self.assertIn('RULED: 8 TS mutants are not kills and are accepted as such by ruling M1: 5 redundant survivors, 2 compiler, 1 crash-only', lines)
-        owed = record['delta_review']['status'] != 'passed' or any(entry['status'] != 'ruled' for entry in record['open_findings'])
+        review = record['delta_review']
+        owed = review['status'] != 'passed' or any(entry['status'] != 'ruled' for entry in record['open_findings'])
         self.assertEqual(done.returncode, int(owed), done.stdout)
-        if record['delta_review']['status'] != 'passed':
+        self.assertEqual(any(line.startswith('BLOCKED: ') for line in lines), owed, done.stdout)
+        self.assertEqual(any(line.startswith('PASS port evidence') for line in lines), not owed)
+        if review['status'] != 'passed':
             self.assertTrue(any(line.startswith('BLOCKED: the delta review is ') for line in lines), done.stdout)
-        self.assertEqual('PASS port evidence' in lines, not owed)
+        else:
+            # A passed review names the commit it read and its report, and says who recorded it on whose word.
+            self.assertRegex(review['commit'], r'^[0-9a-f]{40}$')
+            self.assertRegex(review['review_report_sha256'], r'^[0-9a-f]{64}$')
+            self.assertIn('on this instruction of the technical owner', review['set_by'])
+            self.assertIn('RULED: the delta review of %s passed (%s; report sha256 %s)' % (review['commit'][:7], review['covers'], review['review_report_sha256']), lines)
+        for entry in record['open_findings']:
+            self.assertEqual(('BLOCKED: open finding %s has no ruling (test/port-rulings.golden)' % entry['id']) in lines, entry['status'] != 'ruled', entry['id'])
+
+    def test_the_readiness_check_blocks_on_each_thing_it_claims_to_hold(self):
+        # The check, run on copies of the evidence with one thing wrong each: every one must turn it red, with its own line.
+        import shutil, tempfile
+        names = ['scripts/check-port-ready', 'scripts/porting-map.py', 'PORTING.md', 'test/port-rulings.golden', 'test/vectors/port-divergences.golden', 'test/vectors/port-large.golden',
+                 'test/vectors/r6-combine.golden', 'test/mutants/ts-results.golden', 'test/mutants/ts-unkilled.golden', 'test/mutants/ts-reviewed.golden', 'oracle/versions.yml']
+
+        def run(change):
+            with tempfile.TemporaryDirectory(dir=ROOT / '.cache' if (ROOT / '.cache').is_dir() else None) as scratch:
+                root = Path(scratch)
+                for name in names:
+                    (root / name).parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy(ROOT / name, root / name)
+                for folder in ('src', 'oracle/module_utils', 'docs'):
+                    shutil.copytree(ROOT / folder, root / folder)
+                change(root)
+                done = subprocess.run([sys.executable, str(root / 'scripts/check-port-ready')], capture_output=True, text=True)
+                return done.returncode, done.stdout
+
+        def rulings(edit, settled=False):
+            def change(root):
+                record = json.loads((root / 'test/port-rulings.golden').read_text())
+                if settled:
+                    settle(record)
+                edit(record)
+                (root / 'test/port-rulings.golden').write_text(json.dumps(record))
+            return change
+
+        def settled(change):
+            def both(root):
+                rulings(lambda record: None, settled=True)(root)
+                change(root)
+            return both
+
+        def replace(name, old, new):
+            def change(root):
+                text = (root / name).read_text()
+                self.assertEqual(text.count(old), 1, old)
+                (root / name).write_text(text.replace(old, new))
+            return change
+
+        def large(edit):
+            def change(root):
+                record = json.loads((root / 'test/vectors/port-large.golden').read_text())
+                edit({case['id']: case for case in record['cases']})
+                (root / 'test/vectors/port-large.golden').write_text(json.dumps(record))
+            return change
+        # Unchanged, the copy blocks on exactly the findings that have no ruling, as the tree does.
+        unruled = ['BLOCKED: open finding %s has no ruling (test/port-rulings.golden)' % entry['id']
+                   for entry in json.loads((ROOT / 'test/port-rulings.golden').read_text())['open_findings'] if entry['status'] != 'ruled']
+        code, out = run(lambda root: None)
+        self.assertEqual([line for line in out.splitlines() if line.startswith('BLOCKED: ')], unruled, out)
+        self.assertEqual(code, int(bool(unruled)), out)
+        # With every finding ruled it passes: each line asserted below is then the only thing in the way.
+        settle = lambda record: [entry.update(status='ruled', ruling='D3') for entry in record['open_findings']]
+        code, out = run(rulings(settle))
+        self.assertEqual((code, [line for line in out.splitlines() if line.startswith('BLOCKED: ')]), (0, []), out)
+        self.assertTrue(any(line.startswith('PASS port evidence') for line in out.splitlines()), out)
+        # Outside a repository git has no answer; the check says so and does not pass in silence.
+        self.assertIn('NOTE: could not ask git which commits are later than the reviewed one', out)
+        d3 = lambda record: next(entry for entry in record['rulings'] if entry['id'] == 'D3')
+        wrong = [
+            ('the delta review is pending', rulings(lambda record: record['delta_review'].update(status='pending'))),
+            ('invalid/stale port evidence', rulings(lambda record: record['delta_review'].update(commit='a198042'))),
+            ('open finding F1 has no ruling', rulings(lambda record: record['open_findings'][0].update(status='not ruled'))),
+            # F1 is closed by D3 and the D3 entries cite it: without the ruling the record contradicts itself.
+            ('invalid/stale port evidence', rulings(lambda record: record['rulings'].remove(d3(record)))),
+            ('deliberate divergences from the oracle without a ruling: tar-metadata.longname.states-2-to-the-62', rulings(lambda record: d3(record).update(subject='note'))),
+            ('the runtime the stepwise gzip reader is tied to has no ruling', rulings(lambda record: record['rulings'].remove(next(entry for entry in record['rulings'] if entry['id'] == 'B9')))),
+            ('the pinned Node (24.15.0, oracle/versions.yml) is not what the stepwise gzip reader is verified on', replace('oracle/versions.yml', '    version: 24.14.0\n', '    version: 24.15.0\n')),
+            ('the pinned Node (24.14.0, oracle/versions.yml) is not what the stepwise gzip reader is verified on (22.23.3)', replace('src/pylike/tarfile.ts', "['22.23.3', '24.14.0']", "['22.23.3']")),
+            ('the vectors at the metadata limit do not show both of its sides in both engines', large(lambda cases: cases['metadata.pax.above-limit'].update(classification='equal'))),
+            ('the vectors at the metadata limit do not show both of its sides in both engines', large(lambda cases: cases['metadata.longname.at-limit'].update(port=cases['metadata.longname.above-limit']['port']))),
+            ('the vectors at the metadata limit do not show both of its sides in both engines', replace('src/pylike/tarfile.ts', 'export const METADATA_LIMIT = 2n ** 28n;', 'export const METADATA_LIMIT = 2n ** 29n;')),
+            ('the 4 GiB archive vectors do not show a valid archive', large(lambda cases: cases['large.valid'].update(classification='D1'))),
+        ]
+        for message, change in wrong:
+            # On a copy where every finding is ruled, so that the defect is the only thing that can block.
+            code, out = run(settled(change))
+            self.assertEqual(code, 1, message)
+            blocked = [line for line in out.splitlines() if line.startswith('BLOCKED: ')]
+            self.assertEqual(len(blocked), 1, out)
+            self.assertTrue(blocked[0].startswith('BLOCKED: ' + message), out)
+            self.assertNotIn('PASS port evidence', out, message)
 
     def test_archives_of_4_gib_are_recorded_as_read_not_as_divergent(self):
         large = json.loads((ROOT / 'test/vectors/port-large.golden').read_text())
@@ -169,6 +271,22 @@ class Port(unittest.TestCase):
         self.assertEqual(cases['large.valid']['oracle'], cases['large.valid']['port'])
         self.assertIn('result', cases['large.valid']['port'])
         self.assertEqual((cases['large.crc-trailer']['full_gzip_read'], cases['large.crc-trailer']['classification']), ('BadGzipFile', 'D1'))
+
+    def test_the_metadata_limit_is_recorded_with_both_of_its_sides_in_both_engines(self):
+        large = json.loads((ROOT / 'test/vectors/port-large.golden').read_text())
+        self.assertEqual(large['metadata_limit_bytes'], 2 ** 28)
+        self.assertIn('export const METADATA_LIMIT = 2n ** 28n;', (ROOT / 'src/pylike/tarfile.ts').read_text())
+        cases = {case['id']: case for case in large['cases'] if case['id'].startswith('metadata.')}
+        self.assertEqual(sorted(cases), ['metadata.longname.above-limit', 'metadata.longname.above-limit.cut', 'metadata.longname.at-limit', 'metadata.pax.above-limit', 'metadata.pax.at-limit'])
+        accepted = {'result': {'$mapping': [['name', 'example-package'], ['version', '1.0.0']]}}
+        for kind in ('longname', 'pax'):
+            at, above = cases['metadata.%s.at-limit' % kind], cases['metadata.%s.above-limit' % kind]
+            # Both are valid containers the oracle accepts. Only the one above the limit reads a block above it, and only that one the port refuses.
+            self.assertEqual((at['full_gzip_read'], at['reads_metadata_above_limit'], at['classification'], at['oracle'], at['port']), ('valid', False, 'equal', accepted, accepted), kind)
+            self.assertEqual((above['full_gzip_read'], above['reads_metadata_above_limit'], above['classification'], above['oracle']), ('valid', True, 'D3', accepted), kind)
+            self.assertEqual((above['port']['message'], dict(above['port']['public']['$mapping'])['error_code']), ('unreadable archive or manifest', 'E_ADAPTER_INPUT'), kind)
+        cut = cases['metadata.longname.above-limit.cut']
+        self.assertEqual((cut['reads_metadata_above_limit'], cut['classification'], cut['oracle']['message']), (True, 'equal', 'unreadable archive or manifest'))
 
 
 if __name__ == '__main__':

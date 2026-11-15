@@ -9,10 +9,15 @@ Nothing here is accepted by the implementer. A mutant that is not killed, and
 an input on which the port deliberately differs from the oracle, block until a
 ruling names them, and rulings are recorded in test/port-rulings.golden as
 they were received. A ruled mutant is reported under its classification and is
-never counted as killed. The whole check stays red while the delta review of
-the last fix round is pending, whatever else is settled.
+never counted as killed. A finding without a ruling blocks, and so does a
+delta review that is not recorded as passed with the commit it reviewed.
+
+What this check cannot know is whether the commit it runs on has been
+reviewed: a file cannot record the review of the commit that contains it. It
+prints the commits the recorded review does not cover (NOTE lines). A pass here
+means the recorded evidence is complete, not that those commits were reviewed.
 """
-import json, subprocess, sys
+import json, re, subprocess, sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 STATUS_OF = {'redundant survivor': 'survived', 'compiler': 'compiler', 'crash-only': 'crash-only'}
@@ -26,6 +31,16 @@ try:
     divergences = json.loads((ROOT / 'test/vectors/port-divergences.golden').read_text())
     r6 = json.loads((ROOT / 'test/vectors/r6-combine.golden').read_text())
     large = json.loads((ROOT / 'test/vectors/port-large.golden').read_text())
+    reader = (ROOT / 'src/pylike/tarfile.ts').read_text()
+    runtimes = re.findall(r"'([^']+)'", re.search(r"^export const STEPWISE_RUNTIMES: readonly string\[\] = \[([^\]]*)\];$", reader, re.M)[1])
+    metadata_limit = re.search(r'^export const METADATA_LIMIT = 2n \*\* (\d+)n;$', reader, re.M)[1]
+    pinned = re.search(r'^artifacts:\n(?:(?:  .*)?\n)*?  node:\n(?:    .*\n)*?    version: (\S+)\n', (ROOT / 'oracle/versions.yml').read_text(), re.M)[1]
+    review = record['delta_review']
+    if review['status'] == 'passed' and not (re.fullmatch(r'[0-9a-f]{40}', review['commit']) and re.fullmatch(r'[0-9a-f]{64}', review['review_report_sha256'])):
+        raise ValueError('a passed delta review names its commit and the digest of its report')
+    for entry in record['open_findings']:
+        if entry['status'] == 'ruled' and entry['ruling'] not in rulings:
+            raise ValueError('a finding cites a ruling that is not recorded')
     status = {result['id']: result['status'] for result in results}
     for ident, entry in reviewed.items():
         ruling = rulings[entry['ruling']]
@@ -71,9 +86,30 @@ for name in sorted({entry['divergence'] for entry in divergences if entry['id'] 
 
 # D1 must not cover a container that is merely large.
 wanted = {'large.valid': ('valid', 'equal'), 'large.crc-trailer': ('BadGzipFile', 'D1')}
-seen = {case['id']: (case['full_gzip_read'], case['classification']) for case in large['cases']}
+seen = {case['id']: (case['full_gzip_read'], case['classification']) for case in large['cases'] if case['id'].startswith('large.')}
 if seen != wanted or not large['at_least_4_gib']:
     missing.append('the 4 GiB archive vectors do not show a valid archive read as the oracle reads it (test/vectors/port-large.golden)')
+
+# D3 is a constant with two sides: at the limit both engines accept, one byte above it only the oracle does.
+wanted = {'metadata.%s.%s' % (kind, side): (side == 'above-limit', 'D3' if side == 'above-limit' else 'equal') for kind in ('longname', 'pax') for side in ('at-limit', 'above-limit')}
+wanted['metadata.longname.above-limit.cut'] = (True, 'equal')
+cases = {case['id']: case for case in large['cases'] if case['id'].startswith('metadata.')}
+seen = {ident: (case['reads_metadata_above_limit'], case['classification']) for ident, case in cases.items()}
+accepted = all('result' in cases[ident]['oracle'] and ('result' in cases[ident]['port']) == ident.endswith('.at-limit') for ident in cases if not ident.endswith('.cut'))
+if 'D3' not in rulings:
+    missing.append('the metadata limit of the tar reader has no ruling')
+elif seen != wanted or not accepted or large['metadata_limit_bytes'] != 2 ** int(metadata_limit):
+    missing.append('the vectors at the metadata limit do not show both of its sides in both engines (test/vectors/port-large.golden)')
+else:
+    ruled.append('the metadata limit is 2**%s bytes: at it both engines accept, one byte above it the oracle accepts and the port refuses (D3), for a long name and for a pax header' % metadata_limit)
+
+# The stepwise gzip reader is tied to the pinned Node (ruling B9).
+if 'B9' not in rulings:
+    missing.append('the runtime the stepwise gzip reader is tied to has no ruling')
+elif pinned not in runtimes or rulings['B9']['pin']['version'] != pinned or sorted(entry['node'] for entry in rulings['B9']['verified_runtimes']) != sorted(runtimes):
+    missing.append('the pinned Node (%s, oracle/versions.yml) is not what the stepwise gzip reader is verified on (%s) or not what ruling B9 records' % (pinned, ', '.join(runtimes)))
+else:
+    ruled.append('the stepwise gzip reader runs on Node %s only; %s is the pin of oracle/versions.yml' % (' and '.join(runtimes), pinned))
 
 # R6: closed for merge_layers only; the helper's known mismatches are the recorded ones.
 helper = sorted(entry['id'] for entry in r6['known_mismatches_of_the_combine_helper'])
@@ -100,14 +136,33 @@ for entry in record['obligations']:
 for entry in record['open_findings']:
     if entry['status'] != 'ruled':
         missing.append('open finding ' + entry['id'] + ' has no ruling (test/port-rulings.golden)')
-if record['delta_review']['status'] != 'passed':
-    missing.append('the delta review is ' + record['delta_review']['status'] + ': ' + record['delta_review']['of'])
+    else:
+        ruled.append('finding ' + entry['id'] + ' is closed by ruling ' + entry['ruling'])
+notes = []
+if review['status'] != 'passed':
+    missing.append('the delta review is ' + review['status'] + ': ' + review['of'])
+else:
+    ruled.append('the delta review of %s passed (%s; report sha256 %s)' % (review['commit'][:7], review['covers'], review['review_report_sha256']))
+    # Which commits that review does not cover. Git is asked, not trusted: without an answer the note says so.
+    top = subprocess.run(['git', '-C', str(ROOT), 'rev-parse', '--show-toplevel'], capture_output=True, text=True)
+    later = subprocess.run(['git', '-C', str(ROOT), 'log', '--format=%h %s', review['commit'] + '..HEAD'], capture_output=True, text=True)
+    dirty = subprocess.run(['git', '-C', str(ROOT), 'status', '--porcelain'], capture_output=True, text=True)
+    # An answer about a repository this tree merely lies in is no answer about this tree.
+    if top.returncode or later.returncode or dirty.returncode or Path(top.stdout.strip()).resolve() != ROOT:
+        notes.append('could not ask git which commits are later than the reviewed one; anything after %s is not covered by the recorded review' % review['commit'][:7])
+    else:
+        for line in later.stdout.splitlines():
+            notes.append('not covered by the recorded delta review: ' + line)
+        if dirty.stdout.strip():
+            notes.append('not covered by the recorded delta review: uncommitted changes in the working tree')
 
 print('%d of %d TS mutants killed' % (killed, len(results)))
 for message in ruled:
     print('RULED: ' + message)
 for message in missing:
     print('BLOCKED: ' + message)
+for message in notes:
+    print('NOTE: ' + message)
 if not missing:
-    print('PASS port evidence')
+    print('PASS port evidence' + (' (recorded rulings and reviews; see the NOTE lines for what no review covers yet)' if notes else ''))
 sys.exit(int(bool(missing)))

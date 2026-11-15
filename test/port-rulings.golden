@@ -1,16 +1,33 @@
 {
- "about": "Rulings on the TS port of errors, lock, inputs, archive and config (plan phase 3). This file records decisions that were made by a review or by the technical owner; the implementer writes them down and does not make them. scripts/check-port-ready reads it. A ruling is quoted as it was received.",
- "received": {
-  "date": "2026-11-14",
-  "from": "the technical owner, relayed in the dispatch brief of the fix round of TASK-XQ63S",
-  "after": "the second review of commit ac5e89c, verdict APPROVE with three LOW findings",
-  "review_report_sha256": "f24d0c67c7802072d069df3270bee47537d431171edb2304368cd572f75e241c",
-  "earlier_review_report_sha256": "ed31c7212ec3b8a4d9c22d19fdf72564cc5e2721894c54e1514006eab4813cd6"
- },
+ "about": "Rulings on the TS port of errors, lock, inputs, archive and config (plan phase 3). This file records decisions that were made by a review or by the technical owner; the implementer writes them down and does not make them. scripts/check-port-ready reads it. A ruling is quoted as it was received. Where a ruling left a choice to the implementer, the entry says so and names the choice (`left_to_the_implementer`).",
+ "received": [
+  {
+   "date": "2026-11-14",
+   "from": "the technical owner, relayed in the dispatch brief of the fix round of TASK-XQ63S",
+   "after": "the second review of commit ac5e89c, verdict APPROVE with three LOW findings",
+   "review_report_sha256": "f24d0c67c7802072d069df3270bee47537d431171edb2304368cd572f75e241c",
+   "earlier_review_report_sha256": "ed31c7212ec3b8a4d9c22d19fdf72564cc5e2721894c54e1514006eab4813cd6",
+   "round": "first fix round, commit a198042"
+  },
+  {
+   "round": "second fix round",
+   "date": "2026-11-15",
+   "from": "the technical owner, relayed in the dispatch brief of the second fix round of TASK-XQ63S",
+   "after": "the delta review of commit a198042, verdict APPROVE with two LOW findings (L1, L2) and one INFO",
+   "review_report_sha256": "e18e9ed5cdde2d9b8becafb63220c1b4a50a67c9c59f61ce5219db1fcf824832"
+  }
+ ],
  "delta_review": {
-  "status": "pending",
+  "status": "passed",
   "of": "the fix round after ac5e89c: the stepwise gzip reader, the vectors at 4 GiB, D2, and this record",
-  "rule": "Only a reviewer sets this to \"passed\", with the commit reviewed and the sha256 of the review report. Until then scripts/check-port-ready is red and the port is neither port-ready nor shippable."
+  "commit": "a1980424cfc33b5d86331d9dff71d03829632b6b",
+  "covers": "ac5e89c..a198042",
+  "verdict": "APPROVE: no HIGH or MEDIUM reproduced; two LOW findings (L1, L2) and one INFO",
+  "review": "the delta review dispatched on TASK-XQ63S, run-01M7E06WBWZKKWNJKWA9R5KDGY",
+  "review_report_sha256": "e18e9ed5cdde2d9b8becafb63220c1b4a50a67c9c59f61ce5219db1fcf824832",
+  "set_by": "The implementer, in the second fix round, on this instruction of the technical owner: \"Set `delta_review.status: passed` citing that review, so `check-port-ready` reflects reality.\" The reviewer approved and was not allowed to edit the tree.",
+  "not_covered": "Everything committed after a198042, the second fix round first of all: divergence D3, the runtime check, the step record, and the two fixes below the metadata limit. By the same brief that round gets a delta review of its own before the port is called port-ready. A file cannot record the review of the commit that contains it; scripts/check-port-ready names the commits this review does not cover.",
+  "rule": "A status of \"passed\" names the commit reviewed and the sha256 of the review report. It is set by a reviewer, or by the implementer on a quoted instruction of the technical owner, never on the implementer's own judgement."
  },
  "rulings": [
   {
@@ -39,6 +56,27 @@
    "evidence": [
     "test/vectors/port-divergences.golden (entries required-names.*)",
     "src/config.ts (comment on `sorted`)"
+   ]
+  },
+  {
+   "id": "D3",
+   "subject": "divergence",
+   "closes": "open finding F1",
+   "as_received": "F1 -> D3. A declared, controlled refusal with a stable diagnostic. Use a constant bound checked before decoding (the reviewer suggests 2^28 bytes on a long-name or pax block), with the unit stated. Answer with the closed \"unreadable archive or manifest\" / E_ADAPTER_INPUT, and add named vectors on both sides of the bound in both engines. Record it in port-rulings.golden and port-notes.",
+   "left_to_the_implementer": "The constant. It is the one the reviewer suggested: 2**28.",
+   "bounds": [
+    "The limit is METADATA_LIMIT = 2**28 = 268,435,456. Unit: bytes, as the size field of a tar header of type L (GNU long name), K (GNU long link), x (pax extended), g (pax global) or X (Solaris extended) states them, before tarfile rounds the count up to whole 512-byte blocks. A header that states exactly the limit is read; one byte more is refused.",
+    "D3 covers an archive in whose listing tarfile comes to read the blocks of such a header that states more than the limit, and nothing else. The port refuses at the point where the oracle makes that read, before reading the blocks, with an OSError whose message is the constant \"tar metadata block above 268435456 bytes\"; archive_manifest answers \"unreadable archive or manifest\", code E_ADAPTER_INPUT.",
+    "What the oracle refuses about the header before that read comes first in the port as well (a negative size, the frame limit). What the oracle answers from the read on is replaced. That answer can be: acceptance (the blocks are there; or they are no pax records and the header is not the first member, which ends a listing silently, O1.tar-listing); the same closed refusal (the data is missing: ReadError); MemoryError or OverflowError, which no handler of the engine names (a size the machine cannot allocate). On the second kind the public outcome does not change.",
+    "A header of any other type may state any size. Every string the reader builds from a block at or below the limit has at most 2**28 UTF-16 units, below the longest string of both verified runtimes (2**29 - 24); the reader refuses to run where that does not hold.",
+    "Memory is not part of D3 and is not ruled: open finding F4. At the limit either engine needs a few times the block (measured: oracle 0.8 to 1.0 GiB, port 0.9 GiB). A block built to be costly, or many blocks at the limit, need more than the heap of the runtime gives the port."
+   ],
+   "evidence": [
+    "test/vectors/port-large.golden (cases metadata.*: at the limit and one byte above it, for a long name and for a pax header, both engines)",
+    "test/differential/port_large.py",
+    "test/vectors/port-divergences.golden (entries tar-metadata.*, one per header type)",
+    "test/differential/port_primitives.py (kind tar, `metadata_limit`)",
+    "test/unit/port-tar-limits.test.js"
    ]
   },
   {
@@ -126,6 +164,59 @@
     "B5",
     "B6"
    ]
+  },
+  {
+   "id": "B9",
+   "subject": "runtime",
+   "as_received": "B9. The undocumented `_processChunk` surface is tied to the pinned Node versions. State which pin it is tied to, taking the versions from kitchen's real pin, not from memory. Make a different runtime refuse or be flagged rather than silently trusted.",
+   "left_to_the_implementer": "Refuse or flag. Chosen: refuse.",
+   "pin": {
+    "source": "oracle/versions.yml, artifacts.node",
+    "version": "24.14.0",
+    "payload_sha256": "d56b7f02ecb6e18905eda074d356ff9856ac0bce029cd0aa39a79f030ebabfcd",
+    "note": "This is the only Node pin kitchen has. `engines.node` in package.json is a range (>=24), not a pin, and the Node typings (24.19.2) are a compiler input."
+   },
+   "verified_runtimes": [
+    {
+     "node": "24.14.0",
+     "role": "the pin"
+    },
+    {
+     "node": "22.23.3",
+     "role": "no pin: the Node installed on the development host, on which the gates run as well"
+    }
+   ],
+   "bounds": [
+    "STEPWISE_RUNTIMES in src/pylike/tarfile.ts lists the two versions. On any other `process.versions.node`, or under a runtime that reports itself as Bun or Deno, reading a gzip container ends in `UnsupportedRuntime` before an engine is made. That is a plain Error, not an archive refusal: no handler of the engine catches it and it carries no public code.",
+    "The list is held against the pin: test/unit/port-runtime.test.js and scripts/check-port-ready fail if the version in oracle/versions.yml is not in it. Moving the pin therefore means reading `processChunkSync`, `_close` and `zlibOnError` of the new lib/zlib.js, running the gates on the new Node, and adding the version.",
+    "The list is narrower than `engines.node`. The package metadata was not changed; it is what the approved plan states.",
+    "The payload digest of the pin could not be compared on the development host, which does not hold inputs/node.tar.gz. The Node 24.14.0 the gates ran on is the binary of the upstream node-v24.14.0-linux-x64.tar.xz (sha256 of the archive 41cd79bb7877c81605a9e68ec4c91547774f46a40c67a17e34d7179ef11729df, of bin/node e237a2839d0cbdc9a9a2adda1a184afc0f5b20306ffbe923af5686550472d8a8)."
+   ],
+   "evidence": [
+    "src/pylike/tarfile.ts (STEPWISE_RUNTIMES, verifiedRuntime)",
+    "test/unit/port-runtime.test.js",
+    "oracle/versions.yml"
+   ],
+   "backlog": [
+    "B9",
+    "B10"
+   ]
+  },
+  {
+   "id": "L1",
+   "subject": "review finding",
+   "as_received": "Review L1. Close the second-pass gap: have `scan` record per-step (length, crc32) and have GzipSource fail closed on a mismatch, or argue why that is not worth it and narrow the wording. Your call. L2 (raw crashes under engine change) can stay as a B9 note.",
+   "left_to_the_implementer": "Close the gap or narrow the wording. Chosen: close it.",
+   "bounds": [
+    "The checking pass records, for every piece of output, its length and the CRC-32 of its member up to and including it: eight bytes per step. Every later pass over the container (the listing, a backward seek, a member read) is held to that record piece by piece, and a member must end after the same number of steps at the same byte of the file.",
+    "A later pass that differs ends in `UnsupportedRuntime`, as does damage reported in a later pass: the archive has passed its check by then, so the fault is the engine's and is not answered as \"unreadable archive\".",
+    "What the record does not cover is a fault that changes a piece and leaves both its length and the running CRC-32 as they were.",
+    "L2 stays as it was ruled, a note on B9: an engine whose errors arrive only asynchronously would end in an unhandled `error` event, a crash and not a refusal."
+   ],
+   "evidence": [
+    "src/pylike/tarfile.ts (StepRecord, GzipSource)",
+    "test/unit/port-runtime.test.js (faults injected into the stepwise call)"
+   ]
   }
  ],
  "obligations": [
@@ -144,10 +235,24 @@
   {
    "id": "F1",
    "found": "by the implementer in the fix round, while measuring what the archive reader still holds in memory",
-   "status": "not ruled",
+   "status": "ruled",
    "finding": "A tar name or a pax value longer than 536,870,888 UTF-16 units (the longest string of the JavaScript runtime) ends the port in a RangeError of the runtime, where the oracle accepts the archive. Measured with a pax value and a GNU long name of 600 MiB: the oracle accepts at 2.4 GiB and 1.8 GiB peak, the port fails closed at 1.2 GiB. At 300 MiB both accept. Present at ac5e89c as well; the fix round did not change it.",
-   "asks": "Rule whether this stays a limit of the value model, or becomes a declared refusal with its own divergence entry.",
-   "backlog": "B8"
+   "asks": "Ruled in the second fix round: a declared refusal, divergence D3.",
+   "backlog": "B8",
+   "ruling": "D3"
+  },
+  {
+   "id": "F4",
+   "found": "by the implementer in the second fix round, while checking that the limit of D3 is enough on its own",
+   "status": "not ruled",
+   "finding": "Valid archives at or below the metadata limit of D3 on which the oracle answers and the port does not: the port runs out of heap and the process aborts (\"JavaScript heap out of memory\", exit by SIGABRT, no receipt). The heap limit is the runtime's, about 4 GiB by default on Node 22.23.3 and 24.14.0, less on a small machine, more with --max-old-space-size; it can come before the memory of the machine does. The oracle has no such ceiling: it ends in an uncaught MemoryError only when the machine has no more. It fails closed. No limit on a single block removes it.",
+   "measured": [
+    "One pax header of 268,435,417 bytes (below the limit) that holds one GNU.sparse.map of 2**27 numbers: the oracle accepts in 9 s at 7.9 GiB peak; the port aborts after 29 s at 6.0 GiB resident.",
+    "Sixteen members, each with a GNU long name of exactly 2**28 bytes (4 GiB of names): the oracle accepts in 5 s at 4.6 GiB peak; the port aborts after 31 s at 4.4 GiB resident. With eight such members both accept (oracle 2.6 GiB, port 4.2 GiB).",
+    "Read by both engines at the limit: 53.6 million pax records of five bytes (oracle 27 s, port 7 s); 2**24 + 4,096 distinct pax keywords (oracle 8 s at 2.2 GiB, port 3 s at 0.3 GiB, after the fix F3); 5.9 million records of the sparse form 0.0 (oracle 7 s, port 4 s)."
+   ],
+   "asks": "Rule whether this stays a stated memory limit of the runtime, or becomes a declared refusal (for example a budget on the metadata an archive may make the reader keep). The manager of the dispatch chose to leave it open and blocking, and takes it to the technical owner.",
+   "backlog": "B11"
   }
  ],
  "backlog": [
@@ -188,13 +293,37 @@
   },
   {
    "id": "B8",
-   "for": "ruling",
-   "entry": "Open finding F1: strings beyond the runtime's limit in a tar name or pax value."
+   "for": "closed",
+   "entry": "Open finding F1, ruled as divergence D3 in the second fix round."
   },
   {
    "id": "B9",
    "for": "port",
-   "entry": "The stepwise gzip reader drives Node's zlib engine through the call `inflateRawSync` uses internally. Replace it when Node documents a synchronous inflate that can be resumed."
+   "entry": "The stepwise gzip reader drives Node's zlib engine through the call `inflateRawSync` uses internally, on the Node versions of STEPWISE_RUNTIMES only (ruling B9). Replace it when Node documents a synchronous inflate that can be resumed. Until then two modes of a changed engine end as a crash and not as `UnsupportedRuntime` (review finding L2): an engine whose errors arrive only asynchronously leaves an unhandled `error` event, and a change the checks of the reader do not name surfaces as whatever the runtime throws."
+  },
+  {
+   "id": "B10",
+   "for": "port, with the command line (plan phase 7)",
+   "entry": "Check the runtime once at start and report an unverified one as a missing prerequisite with a public code, before any archive is read. Today it surfaces at the first archive, as `UnsupportedRuntime` without a code."
+  },
+  {
+   "id": "B11",
+   "for": "ruling",
+   "entry": "Open finding F4: archives at or below the metadata limit that exhaust the heap of the runtime."
+  }
+ ],
+ "fixed_without_ruling": [
+  {
+   "id": "F2",
+   "found": "by the implementer in the second fix round, while checking that the limit of D3 is enough on its own",
+   "finding": "Two patterns of the tar reader ended in `+$` and took time quadratic in a run that is not at the end: `rstrip(\"/\")` of a pax path and the blanks around a pax number. Measured at a198042: 6 to 8 s for a run of 160,000 characters, so hours for a few MiB, where the oracle takes milliseconds. Present at ac5e89c as well. No wrong answer, no answer.",
+   "fix": "Both are one pass now (`rstripSlash`, `DecimalScanner`), and no more than 4,300 digits of a number are kept. The helper differential compares `int()` on 9,688 generated texts and the tar listing on 12,000 archives; test/unit/port-tar-limits.test.js bounds the time on runs of 2 MiB."
+  },
+  {
+   "id": "F3",
+   "found": "as F2",
+   "finding": "A pax header with very many records ended the port where the oracle accepts the archive. The port kept every record of every header: two Buffers in a list and an entry in a Map, as the oracle keeps them in a dict; global headers accumulate over the archive. Measured with one header of 2**24 + 4,096 distinct keywords (185 MB of records, below the limit of D3): the oracle accepts in 8 s at 2.2 GiB; the build of a198042 aborts with \"JavaScript heap out of memory\" at 4.7 GiB. A Map of the runtime also ends at 2**24 keys (\"RangeError: Map maximum size exceeded\"), which that build would have met next. Present at ac5e89c as well.",
+   "fix": "Only the nine keywords the reader looks at are kept, in the order and with the values the dict would give them; no other record can reach a name, a size or an exception. The values of the two keywords the sparse form 0.0 reads from the raw records are kept as byte ranges. The same header now: accepted in 3 s at 0.3 GiB."
   }
  ]
 }

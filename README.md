@@ -279,7 +279,8 @@ Plan section 3.1, modules 1–5, ported from the oracle at `a49b5dc`.
 `docs/port-notes.md` has the details: how each Python/JavaScript divergence of
 plan section 3.2 is handled, what the oracle does that the plan did not list,
 the lazy imports, where the port deliberately differs from the oracle (D1,
-D2), the rulings on those points, the backlog and what is still open.
+D2, D3), the runtime the gzip reader is tied to, the rulings on those points,
+the backlog and what is still open.
 
 - **Differential.** `test/differential/ts_port.py run` calls the oracle live on
   every vector and the TS port on the same input at the same paths, and compares
@@ -302,8 +303,15 @@ D2), the rulings on those points, the backlog and what is still open.
   mutant and `ts-unkilled.golden` the written analysis of each one that is not
   killed. Guard-site and named-check ids are those of the oracle mutants.
 - **Large archives.** `test/differential/port_large.py --check` builds an
-  archive of 4.1 GiB, asks both engines, and bounds the port's peak memory;
-  `test/unit/port-large.test.js` runs it (about half a minute).
+  archive of 4.1 GiB and four with a long-name or pax block at the metadata
+  limit of 2^28 bytes and one byte above it, asks both engines, and bounds
+  the port's peak memory; `test/unit/port-large.test.js` runs it (about a
+  minute).
+- **Runtime.** The gzip reader steps Node's zlib through a call that is no
+  documented interface. It runs on Node 24.14.0, the pin of
+  `oracle/versions.yml`, and on 22.23.3, the development host's, and refuses
+  any other (`test/unit/port-runtime.test.js`). `engines.node` (`>=24`, from
+  the approved plan) is wider; the reader is the narrower of the two.
 - **Rulings.** `test/port-rulings.golden` quotes the rulings received on the
   divergences, on the mutants that are not killed, on the reproduced oracle
   behaviours and on plan risk R6, with the obligations and the backlog that
@@ -327,5 +335,8 @@ The last command prints what was ruled and fails on what is still owed. A
 mutant that is not killed and an input on which the port differs from the
 oracle block until a ruling names them; a ruled mutant is listed under its
 classification (`test/mutants/ts-reviewed.golden`) and is never counted as
-killed. The command stays red while the delta review of the last fix round is
-pending and while a finding has no ruling.
+killed. The command stays red while a finding has no ruling and while no
+delta review is recorded as passed with the commit it read. It cannot know
+whether the commit it runs on was reviewed, and prints the commits the
+recorded review does not cover as `NOTE` lines. At this commit it is red on
+one open finding, F4 (memory below the metadata limit).

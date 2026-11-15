@@ -1,10 +1,12 @@
 {
  "decompressed_bytes": 4404021760,
  "at_least_4_gib": true,
+ "metadata_limit_bytes": 268435456,
  "cases": [
   {
    "id": "large.valid",
    "full_gzip_read": "valid",
+   "reads_metadata_above_limit": false,
    "oracle": {
     "result": {
      "$mapping": [
@@ -38,6 +40,7 @@
   {
    "id": "large.crc-trailer",
    "full_gzip_read": "BadGzipFile",
+   "reads_metadata_above_limit": false,
    "oracle": {
     "result": {
      "$mapping": [
@@ -69,6 +72,184 @@
     }
    },
    "classification": "D1"
+  },
+  {
+   "id": "metadata.longname.at-limit",
+   "full_gzip_read": "valid",
+   "reads_metadata_above_limit": false,
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "metadata.longname.above-limit",
+   "full_gzip_read": "valid",
+   "reads_metadata_above_limit": true,
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
+     "$mapping": [
+      [
+       "error_code",
+       "E_ADAPTER_INPUT"
+      ],
+      [
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
+      ]
+     ]
+    }
+   },
+   "classification": "D3"
+  },
+  {
+   "id": "metadata.pax.at-limit",
+   "full_gzip_read": "valid",
+   "reads_metadata_above_limit": false,
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "metadata.pax.above-limit",
+   "full_gzip_read": "valid",
+   "reads_metadata_above_limit": true,
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
+     "$mapping": [
+      [
+       "error_code",
+       "E_ADAPTER_INPUT"
+      ],
+      [
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
+      ]
+     ]
+    }
+   },
+   "classification": "D3"
+  },
+  {
+   "id": "metadata.longname.above-limit.cut",
+   "full_gzip_read": "valid",
+   "reads_metadata_above_limit": true,
+   "oracle": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
+     "$mapping": [
+      [
+       "error_code",
+       "E_ADAPTER_INPUT"
+      ],
+      [
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
+      ]
+     ]
+    }
+   },
+   "port": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
+     "$mapping": [
+      [
+       "error_code",
+       "E_ADAPTER_INPUT"
+      ],
+      [
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
+      ]
+     ]
+    }
+   },
+   "classification": "equal"
   }
  ]
 }

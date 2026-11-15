@@ -11,8 +11,8 @@
  * know) this file accepts what CPython accepts, because `archive.py` judges an
  * archive by what `tarfile` reports.
  *
- * Two deliberate differences from the oracle, both stated here and measured in
- * test/differential/port_primitives.py:
+ * Three deliberate differences from the oracle, stated here and measured in
+ * test/differential/port_primitives.py and test/differential/port_large.py:
  *
  *   1. The gzip container is checked in full before the tar stream is read
  *      (divergence D1). CPython decompresses lazily, only as far as the listing
@@ -26,18 +26,26 @@
  *   2. Exceptions that depend on the machine are modelled with constants:
  *      `MemoryError` for a read above MEMORY_LIMIT, `RecursionError` at
  *      Python's default frame limit for a caller at CALLER_FRAME.
+ *   3. A long-name, long-link or pax header whose size field is above
+ *      METADATA_LIMIT bytes is refused as an `OSError` before its blocks are
+ *      read (divergence D3). CPython has no such limit: it reads the block
+ *      and decodes it into a `str` of any length the machine can hold. A
+ *      JavaScript string cannot be longer than the runtime allows, so without
+ *      the limit such an archive ended in a `RangeError` of the runtime.
  *
  * Memory. The decompressed stream is never held as a whole. The container is
  * inflated in steps of INPUT_STEP compressed bytes, once to check it and again
  * for the listing and for each backward seek, as CPython's `GzipFile` rewinds.
  * What is held is the compressed file (the oracle holds it too, archive.py:125),
- * one step of output, and whatever a single `read` returns: a header block, a
- * long-name or pax block, the member that is read. The oracle holds the same
+ * one step of output, a record of eight bytes per step, and whatever a single
+ * `read` returns: a header block, a long-name or pax block of at most
+ * METADATA_LIMIT bytes, the member that is read. The oracle holds the same
  * `read` results.
  *
  * `tarfile.ENCODING` is taken to be UTF-8 (a UTF-8 locale, or the C locale
  * under PEP 538/540), with the `surrogateescape` handler `tarfile` uses.
  */
+import { constants as bufferLimits } from 'node:buffer';
 import zlib from 'node:zlib';
 import { decodeUtf8 } from './codec.js';
 import { PyAttributeError, PyError, PyOSError, PyRecursionError, PyValueError } from './py.js';
@@ -69,6 +77,25 @@ export class BadGzipFile extends PyOSError {
 export class GzipDamage extends PyOSError {
   constructor(message: string) { super('EGZIP', message); }
   override get pyName(): string { return 'OSError'; }
+}
+
+/**
+ * A long-name, long-link or pax block above METADATA_LIMIT (difference 3
+ * above). An `OSError`, so that `archive_manifest` answers with its closed
+ * refusal. The message is constant.
+ */
+export class MetadataLimit extends PyOSError {
+  constructor() { super('ETARMETADATA', 'tar metadata block above ' + METADATA_LIMIT.toString() + ' bytes'); }
+  override get pyName(): string { return 'OSError'; }
+}
+/**
+ * The host is not one this reader is verified on, or its engine did not do
+ * what the reader relies on. A plain `Error`: it says nothing about the
+ * archive, and no handler of the engine catches it.
+ */
+export class UnsupportedRuntime extends Error {
+  constructor(message: string) { super('unsupported runtime: ' + message); }
+  override get name(): string { return 'UnsupportedRuntime'; }
 }
 
 export interface TarMember {
@@ -112,6 +139,19 @@ const SSIZE_MAX = 2n ** 63n - 1n;
 const BYTES_OBJECT_OVERHEAD = 33n;
 /** Largest member `read()` returns here; `archive.py` reads at most 1 MiB. */
 const READ_LIMIT = 2n ** 31n;
+/**
+ * Largest long-name, long-link or pax block that is read (divergence D3).
+ *
+ * Unit: bytes, as the size field of a header of type `L`, `K`, `x`, `g` or `X`
+ * states them, before `tarfile` rounds the count up to whole 512-byte blocks.
+ * 2**28 bytes are 268,435,456 bytes, 256 MiB. A header that states exactly
+ * this size is read; one byte more is refused.
+ *
+ * Every string the reader builds from such a block has at most as many UTF-16
+ * units as the block has bytes, so none can exceed the runtime's longest
+ * string (2**29 - 24 units on the two verified runtimes; `listing` checks it).
+ */
+export const METADATA_LIMIT = 2n ** 28n;
 
 function enter(frame: number): void {
   if (frame > FRAME_LIMIT) throw new PyRecursionError('maximum recursion depth exceeded');
@@ -128,6 +168,37 @@ const TRUNCATED = 'Compressed file ended before the end-of-stream marker was rea
  * every container at several values of it.
  */
 export const INPUT_STEP = 4 * 1024;
+/** Largest step a caller may ask for: at most a little over 1 GiB of output. */
+const INPUT_STEP_MAX = 1024 * 1024;
+
+/**
+ * The Node versions on which the stepwise call of `Inflater` is verified: its
+ * source in `lib/zlib.js` (`processChunkSync`, `_close`, `zlibOnError`) was
+ * read for both, and the gates of the port run on both.
+ *
+ *   24.14.0  the pin. `artifacts.node.version` in oracle/versions.yml: the
+ *            Node the role places on a host and starts every unit with, and
+ *            the one that runs kitchen in production.
+ *   22.23.3  no pin. The Node installed on the development host, on which the
+ *            gates run as well.
+ *
+ * `engines.node` in package.json allows every Node from 24 up; this list is
+ * narrower on purpose. The call is no documented interface, so on any other
+ * version the reader refuses before it touches the engine rather than trust
+ * that the call still means the same. To move the pin: read those three
+ * functions in the new `lib/zlib.js`, run the gates on the new Node, add the
+ * version here. test/unit/port-runtime.test.js holds this list against the
+ * pin in oracle/versions.yml.
+ */
+export const STEPWISE_RUNTIMES: readonly string[] = ['22.23.3', '24.14.0'];
+
+function verifiedRuntime(): void {
+  const versions: Readonly<Record<string, string | undefined>> = process.versions;
+  const version = versions['node'];
+  if (typeof version !== 'string' || !STEPWISE_RUNTIMES.includes(version) || versions['bun'] !== undefined || versions['deno'] !== undefined) {
+    throw new UnsupportedRuntime('the stepwise gzip reader is verified on Node ' + STEPWISE_RUNTIMES.join(' and ') + ' only');
+  }
+}
 
 /** What `zlib.inflateRawSync` itself drives (Node lib/zlib.js, `zlibBufferSync`), as far as it is used here. */
 interface SyncEngine {
@@ -157,10 +228,16 @@ const held = (): void => { /* the engine stays open between steps */ };
  *     `step`, and every caller copies what it keeps.
  *
  * npm's gzip layer (minizlib, shipped inside the Node 22 and 24 distributions)
- * drives Node's zlib the same way. A Node whose engine has another shape ends
- * here with a plain `Error`, which no handler of the engine catches. A piece
- * of output that is lost or repeated cannot pass `scan`, which checks every
- * member's CRC-32 and length through this class.
+ * drives Node's zlib the same way. The call is tied to the Node versions of
+ * STEPWISE_RUNTIMES; `scan` refuses any other before an engine is made. An
+ * engine that has another shape all the same ends here with
+ * `UnsupportedRuntime`, which no handler of the engine catches.
+ *
+ * A piece of output that is lost, repeated or changed cannot pass `scan`,
+ * which checks every member's CRC-32 and length through this class. `scan`
+ * also records each step it saw, and `GzipSource` holds every later read of
+ * the same container to that record, so the bytes the tar reader works on are
+ * the bytes that were checked.
  */
 class Inflater {
   private engine: SyncEngine | null;
@@ -168,7 +245,8 @@ class Inflater {
   /** Offset in the file of the next compressed byte; once the stream has ended, of the first byte behind it. */
   at: number;
   constructor(private readonly input: Buffer, start: number, private readonly inputStep: number) {
-    if (!Number.isInteger(inputStep) || inputStep < 1) throw new Error('inflate step must be a positive integer');
+    // One step of output must stay far below 4 GiB: `zlib.crc32` and the step record count a piece in 32 bits.
+    if (!Number.isInteger(inputStep) || inputStep < 1 || inputStep > INPUT_STEP_MAX) throw new Error('inflate step must be an integer from 1 to ' + String(INPUT_STEP_MAX));
     this.at = start;
     this.engine = zlib.createInflateRaw({ chunkSize: 64 * 1024 }) as unknown as SyncEngine;
   }
@@ -179,7 +257,7 @@ class Inflater {
       const slice = this.input.subarray(this.at, Math.min(this.at + this.inputStep, this.input.length));
       const piece = this.feed(slice);
       const taken = this.engine!.bytesWritten;
-      if (!Number.isInteger(taken) || taken < 0 || taken > slice.length) throw new Error('unsupported zlib engine: input accounting');
+      if (!Number.isInteger(taken) || taken < 0 || taken > slice.length) throw new UnsupportedRuntime('zlib engine: input accounting');
       this.at += taken;
       // zlib takes all the input it is given unless the stream ends inside it.
       if (taken < slice.length) { this.ended = true; this.close(); }
@@ -191,7 +269,7 @@ class Inflater {
     const engine = this.engine;
     const handle = engine === null ? null : engine._handle;
     if (engine === null || typeof engine._processChunk !== 'function' || handle === null || typeof handle !== 'object' || typeof handle.close !== 'function') {
-      throw new Error('unsupported zlib engine: no synchronous step');
+      throw new UnsupportedRuntime('zlib engine: no synchronous step');
     }
     const close = handle.close;
     handle.close = held;
@@ -209,7 +287,7 @@ class Inflater {
     handle.close = close;
     engine._handle = handle;
     engine.removeAllListeners('error');
-    if (!Buffer.isBuffer(piece)) throw new Error('unsupported zlib engine: output');
+    if (!Buffer.isBuffer(piece)) throw new UnsupportedRuntime('zlib engine: output');
     return piece;
   }
   /** Frees the engine; a stream left unfinished must not wait for the collector. */
@@ -220,8 +298,34 @@ class Inflater {
   }
 }
 
-/** One gzip member: where its deflate data starts in the file, and which decompressed bytes it holds. */
-interface GzipMember { readonly deflate: number; readonly start: number; readonly end: number; }
+/**
+ * What `scan` saw the engine produce, step by step: for every piece of output
+ * its length and the CRC-32 of its member up to and including it. Two 32-bit
+ * numbers per step, which is eight bytes per INPUT_STEP of compressed input
+ * at the most.
+ */
+class StepRecord {
+  private cells = new Uint32Array(256);
+  count = 0;
+  add(length: number, crc: number): void {
+    if (2 * this.count === this.cells.length) { const grown = new Uint32Array(2 * this.cells.length); grown.set(this.cells); this.cells = grown; }
+    this.cells[2 * this.count] = length;
+    this.cells[2 * this.count + 1] = crc;
+    this.count++;
+  }
+  /** Whether step `index` gave a piece of this length that brought its member's CRC-32 to this value. */
+  matches(index: number, length: number, crc: number): boolean {
+    return index < this.count && this.cells[2 * index] === length && this.cells[2 * index + 1] === crc >>> 0;
+  }
+}
+
+/**
+ * One gzip member: where its deflate data starts and ends in the file, which
+ * decompressed bytes it holds, and which steps of the record are its own.
+ */
+interface GzipMember { readonly deflate: number; readonly tail: number; readonly start: number; readonly end: number; readonly firstStep: number; readonly steps: number; }
+/** A checked container: its members and the record of the steps that produced them. */
+interface Scanned { readonly members: GzipMember[]; readonly record: StepRecord; }
 
 /**
  * What `gzip.GzipFile(...).read()` checks when it reads the whole file: every
@@ -233,8 +337,10 @@ interface GzipMember { readonly deflate: number; readonly start: number; readonl
  * 24.14.0 takes the length of its argument modulo 2**32, so on a buffer of
  * 4 GiB or more it answers for a prefix; no piece here comes near that size.
  */
-function scan(input: Buffer, inputStep: number, sink?: (piece: Buffer) => void): GzipMember[] {
+function scan(input: Buffer, inputStep: number, sink?: (piece: Buffer) => void): Scanned {
+  verifiedRuntime();
   const members: GzipMember[] = [];
+  const record = new StepRecord();
   let at = 0, total = 0;
   const exact = (count: number): number => {
     if (input.length - at < count) throw new GzipDamage(TRUNCATED);
@@ -251,25 +357,27 @@ function scan(input: Buffer, inputStep: number, sink?: (piece: Buffer) => void):
     if (flag & FNAME) text();
     if (flag & FCOMMENT) text();
     if (flag & FHCRC) exact(2);
-    const deflate = at, start = total;
+    const deflate = at, start = total, firstStep = record.count;
     const inflater = new Inflater(input, deflate, inputStep);
     let crc = 0, length = 0;
     try {
       for (let piece = inflater.step(); piece !== null; piece = inflater.step()) {
         crc = zlib.crc32(piece, crc);
         length += piece.length;
+        record.add(piece.length, crc);
         sink?.(piece);
       }
     } finally { inflater.close(); }
     at = inflater.at;
+    const tail = at;
     total += length;
     const trailer = exact(8);
     if (input.readUInt32LE(trailer) !== crc) throw new BadGzipFile('CRC check failed');
     if (input.readUInt32LE(trailer + 4) !== length % 4294967296) throw new BadGzipFile('Incorrect length of data produced');
-    members.push({ deflate, start, end: total });
+    members.push({ deflate, tail, start, end: total, firstStep, steps: record.count - firstStep });
     while (at < input.length && input[at] === 0) at++;
   }
-  return members;
+  return { members, record };
 }
 
 /** `gzip.GzipFile(...).read()` of the whole file, in memory. The archive reader does not use it; the helper differential does. */
@@ -299,17 +407,31 @@ class MemorySource implements Source {
  * holding them. Reading forward inflates forward and drops what was passed;
  * reading behind the piece at hand starts again at the member that holds the
  * position, as `GzipFile.seek` rewinds.
+ *
+ * Inflating again is not checking again: the trailer was compared once, in
+ * `scan`. So every piece a later pass produces is held to the record `scan`
+ * made of that step, its length and the member's CRC-32 up to it, and a
+ * member must end after the same number of steps at the same byte of the
+ * file. A pass that differs is the engine's fault, not the archive's, which
+ * has passed its check: it ends in `UnsupportedRuntime` and nothing is
+ * returned from it.
  */
 class GzipSource implements Source {
   readonly length: number;
   private readonly members: GzipMember[];
+  private readonly record: StepRecord;
   private inflater: Inflater | null = null;
   private member = 0;
   private piece: Buffer = Buffer.alloc(0);
   /** Decompressed offset of `piece[0]`. */
   private pieceStart = 0;
+  /** Steps taken in the member at hand, and its CRC-32 over them. */
+  private step = 0;
+  private crc = 0;
   constructor(private readonly input: Buffer, private readonly inputStep: number) {
-    this.members = scan(input, inputStep);
+    const scanned = scan(input, inputStep);
+    this.members = scanned.members;
+    this.record = scanned.record;
     this.length = this.members.length === 0 ? 0 : this.members[this.members.length - 1]!.end;
   }
   read(position: number, count: number): Buffer {
@@ -332,14 +454,33 @@ class GzipSource implements Source {
       this.open();
     }
     while (position >= this.pieceStart + this.piece.length) {
-      const next = this.inflater!.step();
+      const member = this.members[this.member]!;
+      let next: Buffer | null;
+      try {
+        next = this.inflater!.step();
+      } catch (error) {
+        // `scan` read this member to its end, so damage reported now is not the archive's.
+        if (error instanceof GzipDamage) throw this.differs();
+        throw error;
+      }
       this.pieceStart += this.piece.length;
-      if (next !== null) { this.piece = next; continue; }
-      // The member ends where `scan` saw it end; the next one continues the stream.
+      if (next !== null) {
+        this.crc = zlib.crc32(next, this.crc);
+        if (this.step >= member.steps || !this.record.matches(member.firstStep + this.step, next.length, this.crc)) throw this.differs();
+        this.step++;
+        this.piece = next;
+        continue;
+      }
+      // The member must end where `scan` saw it end; the next one continues the stream.
+      if (this.step !== member.steps || this.inflater!.at !== member.tail) throw this.differs();
       this.inflater!.close();
       this.member++;
       this.open();
     }
+  }
+  private differs(): UnsupportedRuntime {
+    this.close();
+    return new UnsupportedRuntime('zlib engine: a repeated read of the container differs from the read that was checked');
   }
   private open(): void {
     const member = this.members[this.member];
@@ -347,6 +488,8 @@ class GzipSource implements Source {
     this.inflater = new Inflater(this.input, member.deflate, this.inputStep);
     this.piece = Buffer.alloc(0);
     this.pieceStart = member.start;
+    this.step = 0;
+    this.crc = 0;
   }
   close(): void {
     this.inflater?.close();
@@ -359,34 +502,65 @@ class GzipSource implements Source {
 /* ---- Python number parsing ------------------------------------------------ */
 
 const OCTAL = /^[+-]?(?:0[oO]_?)?[0-7]+(?:_[0-7]+)*$/u;
-const DECIMAL = /^[+-]?[0-9]+(?:_[0-9]+)*$/u;
 /** `sys.int_info.default_max_str_digits`. */
 const MAX_INT_DIGITS = 4300;
 
-function decimalValue(text: string): bigint | null {
-  const stripped = text.replace(/^[ \t\n\v\f\r]+/u, '').replace(/[ \t\n\v\f\r]+$/u, '');
-  if (!DECIMAL.test(stripped)) return null;
-  const digits = stripped.replace(/[+_-]/gu, '');
-  if (digits.length > MAX_INT_DIGITS) return null;
-  return stripped.startsWith('-') ? -BigInt(digits) : BigInt(digits);
+/**
+ * `int(text)` in base 10 for text already reduced to ASCII, one character at
+ * a time: blanks, a sign, digits with single underscores between them, blanks.
+ * It is one pass with early exit, and it keeps no more than MAX_INT_DIGITS
+ * digits: a pax value may be as long as METADATA_LIMIT, and a pattern with a
+ * trailing `+$` takes time quadratic in a run that is not at the end.
+ */
+class DecimalScanner {
+  /** 0 before the number, 1 after a sign, 2 after a digit, 3 after an underscore, 4 behind the number. */
+  private state = 0;
+  private negative = false;
+  private digits = '';
+  /** Takes one character; `false` where no integer can come of it any more. */
+  take(code: number): boolean {
+    const blank = code === 0x20 || (code >= 0x09 && code <= 0x0d);
+    if (code >= 0x30 && code <= 0x39 && this.state <= 3) {
+      this.digits += String.fromCharCode(code);
+      this.state = 2;
+      return this.digits.length <= MAX_INT_DIGITS;
+    }
+    if (blank && (this.state === 0 || this.state === 4)) return true;
+    if (blank && this.state === 2) { this.state = 4; return true; }
+    if ((code === 0x2b || code === 0x2d) && this.state === 0) { this.negative = code === 0x2d; this.state = 1; return true; }
+    if (code === 0x5f && this.state === 2) { this.state = 3; return true; }
+    return false;
+  }
+  value(): bigint | null {
+    if (this.state !== 2 && this.state !== 4) return null;
+    return this.negative ? -BigInt(this.digits) : BigInt(this.digits);
+  }
 }
 /** `int(text)` for a str; `null` where Python raises `ValueError`. */
 export function pyIntStr(text: string): bigint | null {
-  let ascii = '';
-  for (const char of text) {
-    const code = char.codePointAt(0)!;
-    if (code < 127) { ascii += char; continue; }
-    if (contains(space, char)) { ascii += ' '; continue; }
-    const range = decimal.find(([low, high]) => code >= low && code <= high);
-    if (!range) return null;
-    ascii += String((code - range[0]) % 10);
+  const scanner = new DecimalScanner();
+  for (let index = 0; index < text.length; index++) {
+    let code = text.codePointAt(index)!;
+    if (code >= 127) {
+      const char = String.fromCodePoint(code);
+      if (code > 0xffff) index++;
+      if (contains(space, char)) code = 0x20;
+      else {
+        const range = decimal.find(([low, high]) => code >= low && code <= high);
+        if (!range) return null;
+        code = 0x30 + (code - range[0]) % 10;
+      }
+    }
+    if (!scanner.take(code)) return null;
   }
-  return decimalValue(ascii);
+  return scanner.value();
 }
 /** `int(data)` for bytes; `null` where Python raises `ValueError`. */
 export function pyIntBytes(data: Uint8Array): bigint | null {
-  for (const byte of data) if (byte >= 0x80) return null;
-  return decimalValue(Buffer.from(data.buffer, data.byteOffset, data.byteLength).toString('latin1'));
+  const scanner = new DecimalScanner();
+  // A byte of 0x80 or more is no blank, no sign and no digit, so the scanner refuses it.
+  for (let index = 0; index < data.length; index++) if (!scanner.take(data[index]!)) return null;
+  return scanner.value();
 }
 
 /* ---- tar stream ------------------------------------------------------------ */
@@ -486,7 +660,12 @@ function nti(field: Uint8Array, frame: number): bigint {
   const magnitude = BigInt('0o' + digits.replace(/^[+-]/u, '').replace(/^0[oO]/u, '').replace(/_/gu, ''));
   return digits.startsWith('-') ? -magnitude : magnitude;
 }
-const rstripSlash = (name: string): string => name.replace(/\/+$/u, '');
+/** `name.rstrip('/')`, in one pass from the end: a pattern `/+$` is quadratic in a run of slashes that is not at the end. */
+function rstripSlash(name: string): string {
+  let end = name.length;
+  while (end > 0 && name.charCodeAt(end - 1) === 0x2f) end--;
+  return end === name.length ? name : name.slice(0, end);
+}
 
 /** `TarInfo._frombuf(buf, encoding, errors, dircheck=...)`. */
 function frombuf(buf: Buffer, frame: number, dircheck: boolean): TarInfo {
@@ -570,10 +749,25 @@ function procBuiltin(info: TarInfo, tar: TarFile, frame: number): TarInfo {
   return info;
 }
 
+/**
+ * `tarfile.fileobj.read(self._block(self.size))` for the blocks of a
+ * long-name, long-link or pax header. A header that states more than
+ * METADATA_LIMIT bytes is refused here and its blocks are not read
+ * (divergence D3). The refusal stands where the oracle makes the read, so
+ * what the oracle refuses about the header before that point comes first, and
+ * whatever the oracle would have answered from the read on is replaced.
+ */
+function metadataBlocks(info: TarInfo, tar: TarFile, frame: number): Buffer {
+  const count = info.block(info.size, frame);
+  enter(frame + 2); // GzipFile.read, _check_not_closed
+  if (info.size > METADATA_LIMIT) throw new MetadataLimit();
+  return tar.file.read(count, frame);
+}
+
 /** The blocks that hold a GNU longname or longlink member. */
 function procGnulong(info: TarInfo, tar: TarFile, frame: number): TarInfo {
   enter(frame);
-  const buf = tar.file.read(info.block(info.size, frame), frame);
+  const buf = metadataBlocks(info, tar, frame);
   let next: TarInfo;
   try {
     next = fromtarfile(tar, frame + 1, false);
@@ -619,20 +813,34 @@ function procSparse(info: TarInfo, tar: TarFile, frame: number): TarInfo {
   return info;
 }
 
-const ascii = (value: string): Buffer => Buffer.from(value, 'latin1');
-const SPARSE_OFFSET = ascii('GNU.sparse.offset'), SPARSE_NUMBYTES = ascii('GNU.sparse.numbytes');
-type RawHeader = [keyword: Buffer, value: Buffer];
+/**
+ * The pax keywords whose values the reader looks at: the ones
+ * `_apply_pax_info` turns into a name or a size and the ones the three GNU
+ * sparse forms read. The oracle keeps every record of every header in a
+ * dict, the global ones for the rest of the archive. Nothing but these nine
+ * can reach a name, a size or an exception (decoding a record cannot fail,
+ * the handler is `surrogateescape`), so only these are kept here, in the
+ * order the dict would hold them. A `Map` of all records would also end at
+ * 2**24 keys, the most a `Map` of the runtime takes.
+ */
+const PAX_OBSERVED = new Set(['GNU.sparse.map', 'GNU.sparse.size', 'GNU.sparse.major', 'GNU.sparse.minor', 'GNU.sparse.name', 'GNU.sparse.realsize', 'path', 'linkpath', 'size']);
+const PAX_KEYWORD_MAX = 19; // 'GNU.sparse.realsize'
+/** Byte ranges `[start, end)` inside a pax block, flat: two numbers per record. */
+type Ranges = number[];
 
 /** An extended or global header as described in POSIX.1-2008. */
 function procPax(info: TarInfo, tar: TarFile, frame: number): TarInfo {
   enter(frame);
-  const buf = tar.file.read(info.block(info.size, frame), frame);
+  const buf = metadataBlocks(info, tar, frame);
   // A pax header stores supplemental information for either the following
   // file (extended) or all following files (global).
   const pax = info.type === XGLTYPE ? tar.pax_headers : new Map(tar.pax_headers);
   // A record looks like "%d %s=%s\n" % (length, keyword, value).
-  let pos = 0;
-  const raw: RawHeader[] = [];
+  let pos = 0, records = 0;
+  // For each observed keyword of this header the value of its last record, in the order of the first.
+  const values = new Map<string, [start: number, end: number]>();
+  // The values of the two keywords the sparse form 0.0 reads from the raw records, every record in order.
+  const offsetValues: Ranges = [], numbytesValues: Ranges = [];
   while (buf.length > pos && buf[pos] !== 0) {
     let digits = 0;
     while (digits < 20 && buf[pos + digits]! >= 0x30 && buf[pos + digits]! <= 0x39) digits++;
@@ -643,21 +851,28 @@ function procPax(info: TarInfo, tar: TarFile, frame: number): TarInfo {
     if (BigInt(pos) + length > BigInt(buf.length)) throw new InvalidHeaderError('invalid header');
     const last = pos + Number(length) - 1; // Last byte of the header
     const start = pos + digits + 1;
-    const record = buf.subarray(start, Math.max(start, last));
-    const equals = record.indexOf(0x3d);
-    const keyword = equals < 0 ? record : record.subarray(0, equals);
+    const end = Math.max(start, last);
+    const found = buf.subarray(start, end).indexOf(0x3d);
     // Check the framing of the header. The last character must be '\n' (0x0A)
-    if (keyword.length === 0 || equals < 0 || buf[last] !== 0x0a) throw new InvalidHeaderError('invalid header');
-    raw.push([keyword, record.subarray(equals + 1)]);
+    if (found <= 0 || buf[last] !== 0x0a) throw new InvalidHeaderError('invalid header');
+    const equals = start + found;
+    if (found <= PAX_KEYWORD_MAX) {
+      // Keywords this short are compared as text; the observed ones are ASCII, so equal text is equal bytes.
+      const keyword = buf.toString('latin1', start, equals);
+      if (PAX_OBSERVED.has(keyword)) values.set(keyword, [equals + 1, end]);
+      else if (keyword === 'GNU.sparse.offset') offsetValues.push(equals + 1, end);
+      else if (keyword === 'GNU.sparse.numbytes') numbytesValues.push(equals + 1, end);
+    }
+    records++;
     pos += Number(length);
   }
   // A `hdrcharset` record selects between UTF-8 and the archive encoding for the
   // name fields. Both are UTF-8 here, and a field that is not valid UTF-8 falls
   // back to the archive encoding with surrogateescape either way.
-  for (const [keyword, value] of raw) {
-    enter(frame + 1); // _decode_pax_field, twice
-    pax.set(text(keyword), text(value));
-  }
+  // The oracle decodes every record here, in two calls of _decode_pax_field
+  // each; the frames are entered once, as they are the same for every record.
+  if (records > 0) enter(frame + 1);
+  for (const [keyword, [start, end]] of values) pax.set(keyword, text(buf.subarray(start, end)));
   // Fetch the next header.
   let next: TarInfo;
   try {
@@ -679,15 +894,18 @@ function procPax(info: TarInfo, tar: TarFile, frame: number): TarInfo {
   } else if (pax.has('GNU.sparse.size')) {
     // GNU extended sparse format version 0.0.
     enter(frame + 1);
-    const offsets: bigint[] = [], numbytes: bigint[] = [];
-    for (const [keyword, value] of raw) {
-      const list = keyword.equals(SPARSE_OFFSET) ? offsets : keyword.equals(SPARSE_NUMBYTES) ? numbytes : null;
-      if (list === null) continue;
-      let number: bigint | null;
-      try { number = pyIntStr(decodeUtf8(value, 'strict')); } catch (error) { if (!(error instanceof PyValueError)) throw error; number = null; }
-      if (number === null) throw new InvalidHeaderError('invalid header');
-      list.push(number);
-    }
+    // `int(value.decode())` for each record of the two keywords; which of them fails first is not observable.
+    const numbers = (ranges: Ranges): bigint[] => {
+      const list: bigint[] = [];
+      for (let index = 0; index < ranges.length; index += 2) {
+        let number: bigint | null;
+        try { number = pyIntStr(decodeUtf8(buf.subarray(ranges[index]!, ranges[index + 1]!), 'strict')); } catch (error) { if (!(error instanceof PyValueError)) throw error; number = null; }
+        if (number === null) throw new InvalidHeaderError('invalid header');
+        list.push(number);
+      }
+      return list;
+    };
+    const offsets = numbers(offsetValues), numbytes = numbers(numbytesValues);
     next.sparse = offsets.slice(0, numbytes.length).map((offset, index) => [offset, numbytes[index]!]);
   } else if (pax.get('GNU.sparse.major') === '1' && pax.get('GNU.sparse.minor') === '0') {
     // GNU extended sparse format version 1.0.
@@ -826,6 +1044,8 @@ function listing(source: Source, options: OpenOptions): TarMember[] {
   const file = new Stream(source);
   const tar: TarFile = { file, offset: 0n, pax_headers: new Map(), members: [] };
   try {
+    // METADATA_LIMIT keeps every string below the longest one the runtime holds only where that is long enough.
+    if (METADATA_LIMIT > BigInt(bufferLimits.MAX_STRING_LENGTH)) throw new UnsupportedRuntime('the longest string of this runtime is shorter than a tar metadata block may be');
     // open, gzopen, taropen, TarFile.__init__, then the first next().
     enter(caller + 4);
     let member = next(tar, caller + 5);

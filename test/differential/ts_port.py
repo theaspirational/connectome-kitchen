@@ -183,7 +183,11 @@ def tgz(members):
         head[329:337], head[337:345] = b'0000000\0', b'0000000\0'
         head[148:156] = b'%06o\0 ' % sum(head)
         tar += bytes(head) + data + b'\0' * (-len(data) % 512)
-    tar += b'\0' * 1024
+    return stored_gzip(tar + b'\0' * 1024)
+
+
+def stored_gzip(tar):
+    """These bytes as one gzip member of stored blocks."""
     out = bytearray(b'\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff')
     for start in range(0, len(tar), 65535):
         chunk = tar[start:start + 65535]

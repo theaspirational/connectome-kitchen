@@ -2,7 +2,7 @@
 """Write test/vectors/port-divergences.golden: inputs on which the TS port deliberately answers differently.
 
 Each entry has the input, the oracle's outcome, the port's outcome, the reason
-and the divergence it belongs to (D1, D2). The oracle outcome is taken from the
+and the divergence it belongs to (D1, D2, D3). The oracle outcome is taken from the
 oracle here; the port outcome is taken from the compiled port here. Afterwards
 both are pinned: the unit suites fail if either engine stops answering what its
 entry says (test_ts_port.py for the oracle, port.test.js for the port).
@@ -14,7 +14,7 @@ when a ruling arrives, never derived.
 
     python3 test/differential/port_divergences.py [--check]
 """
-import base64, hashlib, json, subprocess, sys
+import base64, hashlib, json, subprocess, sys, tarfile
 from pathlib import Path
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -28,8 +28,13 @@ GZIP = ('D1: the port reads the gzip container of an archive strictly. CPython r
 CODE = ('On a damaged container the port answers before it looks at the tar stream, so a refusal the oracle would have given for the content is replaced: ')
 NAN = ('D2: `required_names` sorts a set. With a NaN among two or more numbers Python does not refuse; every comparison with NaN is false and the order that '
        'comes out follows the address of the float object, so it is not pinned here (`unordered`). The port raises TypeError instead of modelling it. ')
+LIMIT = ('D3: the port refuses a long-name, long-link or pax header whose size field states more than 2**28 bytes (268,435,456), before it reads the blocks, as '
+         '"unreadable archive or manifest". CPython has no such limit: it reads what the header states and decodes it into a str of any length. The archives on '
+         'both sides of the limit, which hold a block of that size, are built by test/differential/port_large.py; the entries here are small. ')
+HUGE = ('Here: a header of type %s states 2**62 bytes and nothing follows it. The oracle asks for a read of that size and ends in MemoryError, a runtime error '
+        'no handler of the engine names; the port refuses with the closed archive refusal.')
 # Which ruling accepted which divergence (test/port-rulings.golden). Edited by hand when a ruling arrives.
-RULED = {'D1': 'D1', 'D2': 'D2'}
+RULED = {'D1': 'D1', 'D2': 'D2', 'D3': 'D3'}
 MANIFEST = '{"name": "example-package", "version": "1.0.0"}'
 
 
@@ -69,6 +74,18 @@ def cases():
     ]
 
 
+def metadata_cases():
+    """A manifest, then one header that states 2**62 bytes, for each of the five header types the limit applies to."""
+    def member(name, size, kind):
+        info = tarfile.TarInfo(name)
+        info.size, info.type = size, kind
+        return info.tobuf(format=tarfile.GNU_FORMAT)
+    manifest = member('package/package.json', len(MANIFEST), tarfile.REGTYPE) + MANIFEST.encode() + b'\0' * (-len(MANIFEST) % 512)
+    kinds = (('longname', tarfile.GNUTYPE_LONGNAME, 'L (GNU long name)'), ('longlink', tarfile.GNUTYPE_LONGLINK, 'K (GNU long link)'), ('pax', tarfile.XHDTYPE, 'x (pax extended header)'),
+             ('pax-global', tarfile.XGLTYPE, 'g (pax global header)'), ('pax-solaris', tarfile.SOLARIS_XHDTYPE, 'X (Solaris extended header)'))
+    return [('tar-metadata.%s.states-2-to-the-62' % ident, ts_port.stored_gzip(manifest + member('metadata', 2 ** 62, kind)), HUGE % what) for ident, kind, what in kinds]
+
+
 def number(text):
     return {'$float': text}
 
@@ -89,6 +106,9 @@ def build():
     for ident, data, why in cases():
         data = bytes(data)
         rows.append({'id': ident, 'divergence': 'D1', 'reason': GZIP + why, 'function': 'connectome_archive.archive_manifest', 'args': [entry_for(data, R)], 'kwargs': {},
+                     'tree': {'archives/case.tgz': {'file': base64.b64encode(data).decode()}}})
+    for ident, data, why in metadata_cases():
+        rows.append({'id': ident, 'divergence': 'D3', 'reason': LIMIT + why, 'function': 'connectome_archive.archive_manifest', 'args': [entry_for(data, R)], 'kwargs': {},
                      'tree': {'archives/case.tgz': {'file': base64.b64encode(data).decode()}}})
     for ident, config, why in nan_cases():
         rows.append({'id': ident, 'divergence': 'D2', 'reason': NAN + why, 'function': 'connectome_config.required_names', 'args': [config], 'kwargs': {}, 'unordered': True})
