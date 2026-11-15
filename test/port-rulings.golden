@@ -247,9 +247,9 @@
    "status": "not ruled",
    "finding": "Valid archives at or below the metadata limit of D3 on which the oracle answers and the port does not: the port runs out of heap and the process aborts (\"JavaScript heap out of memory\", exit by SIGABRT, no receipt). The heap limit is the runtime's, about 4 GiB by default on Node 22.23.3 and 24.14.0, less on a small machine, more with --max-old-space-size; it can come before the memory of the machine does. The oracle has no such ceiling: it ends in an uncaught MemoryError only when the machine has no more. It fails closed. No limit on a single block removes it.",
    "measured": [
-    "One pax header of 268,435,417 bytes (below the limit) that holds one GNU.sparse.map of 2**27 numbers: the oracle accepts in 9 s at 7.9 GiB peak; the port aborts after 29 s at 6.0 GiB resident.",
+    "One pax header of 268,435,417 bytes (below the limit) that holds one GNU.sparse.map of 2**27 numbers: the oracle accepts in 9 s at 7.6 GiB peak; the port aborts after 29 s at 5.7 GiB resident.",
     "Sixteen members, each with a GNU long name of exactly 2**28 bytes (4 GiB of names): the oracle accepts in 5 s at 4.6 GiB peak; the port aborts after 31 s at 4.4 GiB resident. With eight such members both accept (oracle 2.6 GiB, port 4.2 GiB).",
-    "Read by both engines at the limit: 53.6 million pax records of five bytes (oracle 27 s, port 7 s); 2**24 + 4,096 distinct pax keywords (oracle 8 s at 2.2 GiB, port 3 s at 0.3 GiB, after the fix F3); 5.9 million records of the sparse form 0.0 (oracle 7 s, port 4 s)."
+    "Read by both engines at the limit: 53.6 million pax records of five bytes (oracle 27 s, port 7 s); 2**24 + 4,096 distinct pax keywords (oracle 8 s at 2.1 GiB, port 3 s at 0.3 GiB, after the fix F3); 11.6 million records of the sparse form 0.0 (oracle 7 s, port 4 s)."
    ],
    "asks": "Rule whether this stays a stated memory limit of the runtime, or becomes a declared refusal (for example a budget on the metadata an archive may make the reader keep). The manager of the dispatch chose to leave it open and blocking, and takes it to the technical owner.",
    "backlog": "B11"
@@ -316,13 +316,13 @@
   {
    "id": "F2",
    "found": "by the implementer in the second fix round, while checking that the limit of D3 is enough on its own",
-   "finding": "Two patterns of the tar reader ended in `+$` and took time quadratic in a run that is not at the end: `rstrip(\"/\")` of a pax path and the blanks around a pax number. Measured at a198042: 6 to 8 s for a run of 160,000 characters, so hours for a few MiB, where the oracle takes milliseconds. Present at ac5e89c as well. No wrong answer, no answer.",
+   "finding": "Two patterns of the tar reader ended in `+$` and took time quadratic in a run that is not at the end: `rstrip(\"/\")` of a pax path and the blanks around a pax number. Measured at a198042: 6 to 9 s for a run of 160,000 characters, so hours for a few MiB, where the oracle takes milliseconds. Present at ac5e89c as well. No wrong answer, no answer.",
    "fix": "Both are one pass now (`rstripSlash`, `DecimalScanner`), and no more than 4,300 digits of a number are kept. The helper differential compares `int()` on 9,688 generated texts and the tar listing on 12,000 archives; test/unit/port-tar-limits.test.js bounds the time on runs of 2 MiB."
   },
   {
    "id": "F3",
    "found": "as F2",
-   "finding": "A pax header with very many records ended the port where the oracle accepts the archive. The port kept every record of every header: two Buffers in a list and an entry in a Map, as the oracle keeps them in a dict; global headers accumulate over the archive. Measured with one header of 2**24 + 4,096 distinct keywords (185 MB of records, below the limit of D3): the oracle accepts in 8 s at 2.2 GiB; the build of a198042 aborts with \"JavaScript heap out of memory\" at 4.7 GiB. A Map of the runtime also ends at 2**24 keys (\"RangeError: Map maximum size exceeded\"), which that build would have met next. Present at ac5e89c as well.",
+   "finding": "A pax header with very many records ended the port where the oracle accepts the archive. The port kept every record of every header: two Buffers in a list and an entry in a Map, as the oracle keeps them in a dict; global headers accumulate over the archive. Measured with one header of 2**24 + 4,096 distinct keywords (176 MiB of records, below the limit of D3): the oracle accepts in 8 s at 2.1 GiB; the build of a198042 aborts with \"JavaScript heap out of memory\" at 4.5 GiB. A Map of the runtime also ends at 2**24 keys (\"RangeError: Map maximum size exceeded\"), which that build would have met next. Present at ac5e89c as well.",
    "fix": "Only the nine keywords the reader looks at are kept, in the order and with the values the dict would give them; no other record can reach a name, a size or an exception. The values of the two keywords the sparse form 0.0 reads from the raw records are kept as byte ranges. The same header now: accepted in 3 s at 0.3 GiB."
   }
  ]

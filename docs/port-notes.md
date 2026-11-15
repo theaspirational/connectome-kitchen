@@ -421,7 +421,7 @@ open finding.
 - *F2, fixed: time.* Two patterns of the tar reader ended in `+$`:
   `rstrip('/')` of a pax path and the blanks around a pax number. A pattern
   like that takes time quadratic in a run that is not at the end. Measured at
-  `a198042`: 6 to 8 s for a run of 160,000 characters, so hours for a few MiB
+  `a198042`: 6 to 9 s for a run of 160,000 characters, so hours for a few MiB
   of slashes or blanks followed by one other character, where the oracle
   takes milliseconds. No wrong answer came of it, and no answer either. Both
   are one pass now (`rstripSlash`, `DecimalScanner`), and no more than 4,300
@@ -429,9 +429,9 @@ open finding.
 - *F3, fixed: many pax records.* The port kept every record of every header,
   as two Buffers in a list and an entry in a `Map`, the way the oracle keeps
   them in a dict; global headers accumulate over the archive. One header of
-  2^24 + 4,096 distinct keywords (185 MB of records): the oracle accepts in
-  8 s at 2.2 GiB, the build of `a198042` aborts with "JavaScript heap out of
-  memory" at 4.7 GiB. A `Map` of the runtime also ends at 2^24 keys. Now only
+  2^24 + 4,096 distinct keywords (176 MiB of records): the oracle accepts in
+  8 s at 2.1 GiB, the build of `a198042` aborts with "JavaScript heap out of
+  memory" at 4.5 GiB. A `Map` of the runtime also ends at 2^24 keys. Now only
   the nine keywords the reader looks at are kept (`PAX_OBSERVED`), in the
   order and with the values the dict would give them. Decoding a record
   cannot fail (the handler is `surrogateescape`), so no other record can
@@ -447,14 +447,14 @@ open finding.
   does, so there are valid archives the oracle reads and the port does not.
   Measured on the development host (86 GiB), Node 22.23.3:
   - one pax header just below the limit that holds a `GNU.sparse.map` of 2^27
-    numbers: the oracle accepts in 9 s at 7.9 GiB; the port aborts after 29 s
-    at 6.0 GiB resident;
+    numbers: the oracle accepts in 9 s at 7.6 GiB; the port aborts after 29 s
+    at 5.7 GiB resident;
   - sixteen members, each with a long name of exactly 2^28 bytes: the oracle
     accepts in 5 s at 4.6 GiB; the port aborts after 31 s at 4.4 GiB. With
     eight such members both accept (oracle 2.6 GiB, port 4.2 GiB).
 
   Other costly blocks at the limit are read by both: 53.6 million records of
-  five bytes (oracle 27 s, port 7 s), 5.9 million records of the sparse form
+  five bytes (oracle 27 s, port 7 s), 11.6 million records of the sparse form
   0.0 (7 s, 4 s). F4 fails closed. No limit on a single block removes it. It
   is not ruled and blocks `scripts/check-port-ready` (see "Still open").
 
