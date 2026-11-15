@@ -344,7 +344,7 @@
  "fixtures": {
   "test/corpus/adapter_contract.py": "1aff370b68f9caec527d59b439f60679dd4d3633cb61d7c46856fd383b4ddf58",
   "test/corpus/adapter_seam.mjs": "b9eb96b84096680ae1ad5baa7b6e0d1740d9d3890e3a8b497d8fb14c0f152be7",
-  "test/corpus/corpus.py": "0dd8a5a972690db37a0171a209c5ff10d01f33e9851dcf61d1095cd5fbccdaca",
+  "test/corpus/corpus.py": "17ecade03a874f62322c39dbd9586c118039bc641be64b9a14453eca59b4eb57",
   "test/corpus/replay_cook.py": "220af6901d2ab98472817500f764d78bac452fb7855e5d653d15aa658c411174",
   "test/corpus/stand_in_cook.py": "bee0ec00c841ee2c147f2bc1a672ec74ab9aeb9f7fa7e09484a4930475dd1f18",
   "test/corpus/synthetic.py": "8c024898374997e3400cd240f0e366eeec6e583e57f794e734a295a026e8e046"
