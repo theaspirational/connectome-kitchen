@@ -280,7 +280,7 @@
     "where_each_number_comes_from": [
      "metadataBytes 2**24: the technical owner's decision, relayed in the brief of the closing step (point 1). 50 times the most a package archive was seen to hold (333,319 bytes among 323).",
      "paxRecords 2**21: a consequence of the byte budget, not a decision of its own. The shortest pax record is five bytes, so 2**24 bytes hold at most 3,355,443 records, and the 2**24 proposed before could not be reached or shown from both sides. 2**21 is the largest power of two that can. It bounds time only. Lowered by the implementer on the manager's answer quoted under `as_received_in_the_closing_step`; in the approval relayed above.",
-     "sparseNumbers 2**16: the brief of the closing step (point 2), after the delta review's LOW-2. The brief left the implementer the choice of sharing the integers of a global map instead; the implementer lowered the budget (`choices`).",
+     "sparseNumbers 2**16: the technical owner's decision, with the instruction not to share the integers of a global map instead (the manager's message of 14:14 UTC, quoted under `as_received_in_the_closing_step`). The brief of the closing step (point 2) had left that choice to the implementer, who had made the same one before the message reached it (`choices`).",
      "members 2**17: unchanged from the proposal of the third fix round; the delta review found it sound.",
      "heap limit 2,048 MiB: the brief of the closing step (point 3) asks for a requirement of at most 2,048 MiB that Node's default heap meets in a unit of 4 GiB or more, measured at exactly that limit with the review's wide global map included. The implementer measured it (`measured_at_that_limit`)."
     ],
@@ -297,7 +297,7 @@
     "Sparse 0.0 (P1): the offset and numbytes records are no longer collected while the header is parsed; they are read from the block a second time when form 0.0 applies, and counted as they are converted. Nothing is collected before it is counted, which is what \"charge 0.0 ranges as they are collected\" asks for, by another route.",
     "The refusal stands where the oracle's own count passes the budget. A GNU.sparse.map is not split: it is read number by number, so an invalid number before that point is tarfile's ValueError as before, and one behind it is never looked at.",
     "The heap limit required, in the third fix round: 3,072 MiB, after 2,048 was measured to leave no margin under the budgets then proposed. Superseded by the closing step (`defaults`).",
-    "Closing step, LOW-2 (the brief's point 2): the sparse budget is lowered to 2**16 and the integers of a global map are not shared. Lowering is the smaller and safer change: it touches no line of the reader that the delta review read, where sharing would add a cache that has to place the charge and a ValueError exactly where the oracle's walk puts them and would need mutants and a review of its own. Its price is that the cost of a wide map stays uncounted, bounded only through the count: about 115 MiB at 2**16, which is inside the measured peak (`defaults`). Sharing stays open as backlog B17 and comes first if the sparse budget is ever raised.",
+    "Closing step, LOW-2 (the brief's point 2): the sparse budget is lowered to 2**16 and the integers of a global map are not shared. Lowering is the smaller and safer change: it touches no line of the reader that the delta review read, where sharing would add a cache that has to place the charge and a ValueError exactly where the oracle's walk puts them and would need mutants and a review of its own. Its price is that the cost of a wide map stays uncounted, bounded only through the count: about 115 MiB at 2**16, which is inside the measured peak (`defaults`). Sharing stays open as backlog B17 and comes first if the sparse budget is ever raised. The technical owner decided the same (\"Don't switch to shared BigInts\"), in a message that reached the implementer only after the commit; so this is her decision, and the reasons here are the implementer's own for having arrived at it.",
     "Closing step, pax records: 2**21 instead of a bound nothing reaches (`defaults`, `where_each_number_comes_from`). The vectors keep their three sides for every budget."
    ],
    "bounds": [
@@ -370,7 +370,15 @@
       "question": "Record the delta review of the third fix round as passed for 621d78d..06ee0cc, and set finding F4 from open to ruled by D4, with its residual risk kept and printed as accepted and not fixed?",
       "answer": "Yes, both. For (2), the defaults were approved by Soma in Zulip Kitchen 2339 and 2341: metadata 2^24, paxRecords 2^21, sparseNumbers 2^16, members 2^17, and the heap from your short result. That sits under the owner's success-path direction of 13:04. Quote that as the source. Keep the rule that this step's commit blocks until reviewed. I'll settle with Soma how that line is cleared."
      }
-    ]
+    ],
+    "message_of_the_manager": {
+     "at": "2026-11-15T14:14:11Z",
+     "from": "the technical owner, through the manager",
+     "text": "Soma approves sparseNumbers 2^16 (65,536 numbers per listing). Don't switch to shared BigInts. Defaults: metadata 2^24, sparse 2^16, paxRecords and members unchanged, H <= 2,048 MiB if the short run confirms normal use without a flag. LOW-2 stays a described risk, not fixed. LOW-1 goes to backlog. In the report, give the final HEAD, the actual defaults, a short result, and the durations of test and qualify.",
+     "transcription": "The message writes a \"less than or equal\" sign before 2,048 (here \"<=\"). Nothing else is changed.",
+     "reached_the_implementer": "When finalize was first refused, after the closing step was committed (b4a9271) and its gates had run. It was sent before both answers quoted under `answers_of_the_manager` (14:15 and 14:36 UTC).",
+     "how_it_stands_against_what_was_built": "It agrees with the commit on the byte budget, the sparse budget, the members, the heap limit, on not sharing the integers of a global map, and on LOW-1 and LOW-2. It differs in one point: it leaves paxRecords unchanged. The implementer's question about pax records was answered a minute later (\"ok 2^21\"), and the manager's second answer names paxRecords 2^21 among the defaults the technical owner approved; both are later than this message, and the commit follows them."
+    }
    }
   },
   {
