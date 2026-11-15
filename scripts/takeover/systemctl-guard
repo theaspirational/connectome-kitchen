@@ -1,0 +1,35 @@
+#!/bin/sh
+# The service manager for a takeover (scripts/takeover.mjs).
+#
+#   systemctl-guard MODE LOG UNIT SYSTEMCTL ARGS...
+#
+# MODE `readonly`: runs SYSTEMCTL ARGS... when the verb is `is-active` or `show`, and nothing else.
+# MODE `start`:    the same, and `daemon-reload`, and `restart UNIT` for exactly the one UNIT named here.
+# Every other call exits 97 without running anything: no start, stop, enable, disable, mask or kill reaches the
+# service manager through here, and no restart of another unit. Every call is written to LOG first, refused or not.
+set -eu
+umask 077
+mode=$1
+log=$2
+unit=$3
+real=$4
+shift 4
+verb=
+operands=
+count=0
+for arg in "$@"; do
+  case "$arg" in
+    -*) ;;
+    *)
+      if [ -z "$verb" ]; then verb=$arg; else operands=$arg; count=$((count + 1)); fi ;;
+  esac
+done
+allowed=refused
+case "$mode:$verb" in
+  readonly:is-active|readonly:show|start:is-active|start:show) allowed=allowed ;;
+  start:daemon-reload) [ "$count" -eq 0 ] && allowed=allowed ;;
+  start:restart) [ "$count" -eq 1 ] && [ "$operands" = "$unit" ] && allowed=allowed ;;
+esac
+printf '%s %s %s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$mode" "$allowed" "$*" >>"$log"
+[ "$allowed" = allowed ] || exit 97
+exec "$real" "$@"

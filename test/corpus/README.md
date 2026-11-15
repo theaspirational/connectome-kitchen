@@ -249,6 +249,48 @@ the bundle and Node are no longer matters to the name (ruling D5).
 `test/unit/test_rehearse.py` runs it on the public `example` case behind the
 corpus seams (a modelled host, a stand-in cook, the fake service manager).
 
+## A takeover: a running deployment of the role, in two steps
+
+```
+node scripts/takeover.mjs check|prepare|verify|start --input <absolute takeover.json>
+```
+
+`scripts/takeover.mjs` runs contract v1 `plan` and `apply` for one deployment
+that the role made and that is running (`activation: start`), as the account
+that owns it, with the real adapter and a real cook. It is not the operational
+CLI either. The build and the restart are two steps, so that two operators can
+run them:
+
+- `prepare` is `apply` with `phase: prepare`. Cook makes the new build beside
+  the running one; the engine adds the build directory and one entry of
+  `state/ownership.json`. The pointer, the unit, its drop-in, the enable link
+  and the secrets are not touched, and the runner fails if any of them, or the
+  unit's process, is not what it was before the step.
+- `start` is `apply` with both phases on a prepared build: the environment
+  file, the pointer, the links, one `daemon-reload`, one `restart`, health.
+  It refuses a build that is not prepared, so it never runs cook.
+- `activation: install_only` is not a first step here: the engine refuses it
+  while the unit is active (`E_UNIT_ACTIVE`), and the runner refuses any
+  activation but `start`.
+- `scripts/takeover/systemctl-guard` stands in front of the service manager.
+  In `check`, `prepare` and `verify` it passes `is-active` and `show` only; in
+  `start` also `daemon-reload` and `restart` of the deployment's one unit.
+- `verify` reads the secrets file in place and says, by name and yes or no,
+  whether every declared name is there and whether `start` would write the
+  environment file the running build has. No value, length or digest of a
+  secret is logged.
+- The recipe is read where the input says its bytes are (the running build's
+  staged copy will do) and held against the pin of the configuration, so the
+  configured path need not be readable by the account.
+
+The input (`connectome.kitchen-takeover/v1`) holds the contract request
+without `systemctl`, the service manager's path, the pinned input files, the
+recipe's source, and the home, the account, the name of the running build and
+the name of the new one. `test/unit/test_takeover.py` runs the four modes on
+the public `example` case after the role's own apply through the Python
+engine, behind the corpus seams, and a `start` whose restart fails: the engine
+takes it back to the running build.
+
 ## What a golden does not show
 
 These are stand-ins, and a golden says so under `engine`:
