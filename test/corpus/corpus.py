@@ -268,7 +268,7 @@ class World:
         # A case with the files of a real build: the runtime replays that build's lock instead (replay_cook.py).
         self.replay = None
         if 'cook_build' in data:
-            self.replay = {'directory': str(self.case.directory / data['cook_build']['directory']), 'request_id': data['cook_build']['request_id'],
+            self.replay = {'directory': str((self.case.directory / data['cook_build']['directory']).resolve()), 'request_id': data['cook_build']['request_id'],
                            'sandbox': str(self.sandbox), 'absolute': ABSOLUTE.pattern}
             stand_in = '#!%s -I\nimport runpy, sys\nsys.dont_write_bytecode = True\nrunpy.run_path(%r, init_globals={"REPLAY": %r}, run_name="__main__")\n' % (
                 sys.executable, str(HERE / 'replay_cook.py'), self.replay)
