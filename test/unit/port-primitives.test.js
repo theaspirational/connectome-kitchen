@@ -9,7 +9,7 @@ let report={};
 try{report=JSON.parse(lines[0]??'');}catch{/* reported by the first test */}
 test('helper differential ran every kind',()=>{
  assert.equal(done.stderr,'');
- assert.deepEqual(Object.keys(report).sort(),['adapter','b64','cook_code','cook_stream','depth','diagnostic','eq','fsencode','iso','json','pathfs','pathpure','pyint','pyops','readtext','repository','sweep','tar','tardepth','targz','unquote','url','utf8']);
+ assert.deepEqual(Object.keys(report).sort(),['adapter','b64','cook_code','cook_stream','depth','diagnostic','eq','fsencode','iso','json','pathfs','pathpure','pyint','pyops','readtext','repository','sweep','tar','tarbudget','tardepth','targz','unquote','url','utf8']);
  for(const [kind,entry] of Object.entries(report))assert.ok(entry.cases>0,kind);
  console.log('helper differential cases: '+Object.values(report).reduce((sum,entry)=>sum+entry.cases,0));
 });
@@ -20,5 +20,10 @@ test('a damaged gzip container is never accepted, and every kind of disagreement
  const buckets=report.targz.buckets;
  assert.equal(buckets['TS ACCEPTS A DAMAGED CONTAINER'],0);
  for(const name of ['valid container','both refuse as unreadable','oracle accepts, TS refuses','oracle lets an uncaught class escape, TS refuses'])assert.ok(buckets[name]>0,name);
+});
+test('under small budgets every budget refuses somewhere, and archives the oracle reads are among the refused',()=>{
+ const budgets=report.tarbudget.budgets;
+ for(const name of ['no budget is passed: equal listings','metadataBytes','paxRecords','sparseNumbers','members'])assert.ok(budgets[name]>0,name);
+ assert.ok(report.tarbudget.oracle_lists_and_ts_refuses>0);
 });
 test('helper differential exit status',()=>{assert.equal(done.status,0);});

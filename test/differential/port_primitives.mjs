@@ -86,6 +86,8 @@ function tarListing(data, options) {
   let members;
   try { members = tarfile.gzipMembers(data, options); } catch (error) {
     // Divergence D3 is told apart from every other OSError, so that it can be required exactly where it applies.
+    // So is divergence D4, with the budget that refused.
+    if (error instanceof tarfile.MetadataBudget) return { ...failure(error), budget: error.budget };
     return error instanceof tarfile.MetadataLimit ? { ...failure(error), limit: 'metadata' } : failure(error);
   }
   return { members: members.map(member => {
@@ -120,6 +122,7 @@ function sortedJson(value) {
 
 const KINDS = {
   tar: job => { const data = bytes(job); return stepwise(data, options => tarListing(data, options)); },
+  tarbudget: job => { const data = bytes(job); return stepwise(data, options => tarListing(data, { ...options, budgets: job.budgets })); },
   tardepth: job => { const data = bytes(job); return stepwise(data, options => { try { return 'members:' + tarfile.gzipMembers(data, options).length; } catch (error) { return failure(error).error; } }); },
   targz: job => {
     const data = bytes(job);

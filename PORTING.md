@@ -19,14 +19,14 @@ oracle-only.
 | ported | `connectome_archive.validate_dependency` | `oracle/module_utils/connectome_archive.py:61` | `src/archive.ts:93` | 1, 39 |
 | ported | `connectome_archive.legacy_dependency` | `oracle/module_utils/connectome_archive.py:88` | `src/archive.ts:138` | 39 |
 | ported | `connectome_archive.dependency_inputs` | `oracle/module_utils/connectome_archive.py:109` | `src/archive.ts:168` | 39 |
-| ported | `connectome_archive.archive_manifest` | `oracle/module_utils/connectome_archive.py:121` | `src/archive.ts:184` | 39 |
-| ported | `connectome_archive.dependency_provenance` | `oracle/module_utils/connectome_archive.py:148` | `src/archive.ts:226` | 39 |
-| ported | `connectome_archive.provenance_record` | `oracle/module_utils/connectome_archive.py:166` | `src/archive.ts:251` | 39 |
-| ported | `connectome_archive.records_metadata` | `oracle/module_utils/connectome_archive.py:175` | `src/archive.ts:262` | 39 |
-| ported | `connectome_archive.framework_provenance` | `oracle/module_utils/connectome_archive.py:181` | `src/archive.ts:270` |  |
-| ported | `connectome_archive.validate_dependency_record` | `oracle/module_utils/connectome_archive.py:192` | `src/archive.ts:286` | 39 |
-| ported | `connectome_archive.check_dependencies` | `oracle/module_utils/connectome_archive.py:206` | `src/archive.ts:305` | 9 |
-| ported | `connectome_archive.validate_provenance` | `oracle/module_utils/connectome_archive.py:229` | `src/archive.ts:339` | 39 |
+| ported | `connectome_archive.archive_manifest` | `oracle/module_utils/connectome_archive.py:121` | `src/archive.ts:200` | 39 |
+| ported | `connectome_archive.dependency_provenance` | `oracle/module_utils/connectome_archive.py:148` | `src/archive.ts:242` | 39 |
+| ported | `connectome_archive.provenance_record` | `oracle/module_utils/connectome_archive.py:166` | `src/archive.ts:267` | 39 |
+| ported | `connectome_archive.records_metadata` | `oracle/module_utils/connectome_archive.py:175` | `src/archive.ts:278` | 39 |
+| ported | `connectome_archive.framework_provenance` | `oracle/module_utils/connectome_archive.py:181` | `src/archive.ts:286` |  |
+| ported | `connectome_archive.validate_dependency_record` | `oracle/module_utils/connectome_archive.py:192` | `src/archive.ts:302` | 39 |
+| ported | `connectome_archive.check_dependencies` | `oracle/module_utils/connectome_archive.py:206` | `src/archive.ts:321` | 9 |
+| ported | `connectome_archive.validate_provenance` | `oracle/module_utils/connectome_archive.py:229` | `src/archive.ts:355` | 39 |
 | oracle-only | `connectome_catalog.need` | `oracle/module_utils/connectome_catalog.py:25` | | |
 | oracle-only | `connectome_catalog.active` | `oracle/module_utils/connectome_catalog.py:30` | | |
 | oracle-only | `connectome_catalog.canonical` | `oracle/module_utils/connectome_catalog.py:34` | | |
@@ -256,9 +256,9 @@ shared with modules that are not ported yet; only the sites listed here are done
 | 8 | `lock.pin-names-external` | ported | `src/lock.ts:458` | `lock.py:238` | unique external server names |
 | 8 | `lock.pin-names-external` | ported | `src/lock.ts:462` | `lock.py:240-241` | sorted as cook writes them |
 | 8 | `lock.pin-names-external` | ported | `src/lock.ts:467` | `lock.py:243-244` | connector state never names an external server |
-| 9 | `lock.host-deps` | ported | `src/archive.ts:309` | `archive.py:210-211` | the lock lists exactly the declared dependencies, in order |
-| 9 | `lock.host-deps` | ported | `src/archive.ts:320` | `archive.py:219-221` | digest and version are the declared ones |
-| 9 | `lock.host-deps` | ported | `src/archive.ts:330` | `archive.py:226` | recorded provenance is what the declaration implies |
+| 9 | `lock.host-deps` | ported | `src/archive.ts:325` | `archive.py:210-211` | the lock lists exactly the declared dependencies, in order |
+| 9 | `lock.host-deps` | ported | `src/archive.ts:336` | `archive.py:219-221` | digest and version are the declared ones |
+| 9 | `lock.host-deps` | ported | `src/archive.ts:346` | `archive.py:226` | recorded provenance is what the declaration implies |
 | 9 | `lock.host-deps` | ported | `src/lock.ts:474` | `lock.py:246` | the inventory is a list |
 | 9 | `lock.host-deps` | ported | `src/lock.ts:478` | `lock.py:249-254` | closed dependency record |
 | 9 | `lock.host-deps` | ported | `src/lock.ts:486` | `lock.py:259-260` | an npm name, once |
@@ -306,22 +306,22 @@ shared with modules that are not ported yet; only the sites listed here are done
 | 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:152` | `archive.py:99` | name and version only with the mark |
 | 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:171` | `archive.py:112` | host dependencies are a list |
 | 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:176` | `archive.py:117` | one declaration per dependency |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:189` | `archive.py:123` | the archive is a regular file, not a link to one |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:194` | `archive.py:126-127` | the bytes have the declared digest |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:199` | `archive.py:130` | and the declared registry integrity |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:203` | `archive.py:134` | exactly one bounded package manifest |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:208` | `archive.py:136-137` | a declared refusal keeps its own code and message |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:212` | `archive.py:138-139` | an unreadable archive is one refusal |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:215` | `archive.py:140` | the manifest is a mapping |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:217` | `archive.py:141-144` | package name and version are the declared identity |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:234` | `archive.py:155-156` | the framework archive was built from the requested pin |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:238` | `archive.py:158-160` | a git commit archive names that commit |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:252` | `archive.py:167-171` | what a record claims follows from its kind alone |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:264` | `archive.py:177-178` | records are written for declared dependencies and for a marked release |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:287` | `archive.py:193` | a provenance record is a mapping |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:296` | `archive.py:197-203` | the derived fields are exactly what the kind implies |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:342` | `archive.py:233-241` | a retained framework record is closed and equals what config and pin imply |
-| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:353` | `archive.py:243` | one closed refusal |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:205` | `archive.py:123` | the archive is a regular file, not a link to one |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:210` | `archive.py:126-127` | the bytes have the declared digest |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:215` | `archive.py:130` | and the declared registry integrity |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:219` | `archive.py:134` | exactly one bounded package manifest |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:224` | `archive.py:136-137` | a declared refusal keeps its own code and message |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:228` | `archive.py:138-139` | an unreadable archive is one refusal |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:231` | `archive.py:140` | the manifest is a mapping |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:233` | `archive.py:141-144` | package name and version are the declared identity |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:250` | `archive.py:155-156` | the framework archive was built from the requested pin |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:254` | `archive.py:158-160` | a git commit archive names that commit |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:268` | `archive.py:167-171` | what a record claims follows from its kind alone |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:280` | `archive.py:177-178` | records are written for declared dependencies and for a marked release |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:303` | `archive.py:193` | a provenance record is a mapping |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:312` | `archive.py:197-203` | the derived fields are exactly what the kind implies |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:358` | `archive.py:233-241` | a retained framework record is closed and equals what config and pin imply |
+| 39 | `cook.provenance` | ported (row partial: the provenance checks of cook.ts and deploy.ts are not ported) | `src/archive.ts:369` | `archive.py:243` | one closed refusal |
 | 49 | `secrets.reserved.file-env` | ported (row partial: only the .file-env check; catalog.ts, deploy.ts and cook.ts own the others) | `src/inputs.ts:167` | `inputs.py:97-98` | not twice, and never an engine-set variable |
 | 59 | `lock.schema.cook` | ported | `src/lock.ts:317` | `lock.py:137-138` | closed cook record with a concrete version |
 | 59 | `lock.schema.cook` | ported | `src/lock.ts:321` | `lock.py:140` | a recorded commit is a full id |

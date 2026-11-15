@@ -196,6 +196,60 @@ def stored_gzip(tar):
     return bytes(out) + zlib.crc32(tar).to_bytes(4, 'little') + (len(tar) & 0xffffffff).to_bytes(4, 'little')
 
 
+def packed_gzip(tar):
+    """These bytes as one gzip member, deflated here: fixed Huffman codes, and matches against the byte or the two bytes before.
+
+    For streams that are long runs (a sparse map of a million numbers, zero blocks). No compressor of the host takes part, so
+    the bytes are the same anywhere, as with `stored_gzip`; zlib is asked only to read the result back.
+    """
+    import zlib
+    from array import array
+    size = len(tar)
+    # run[d][i]: for how many bytes from i on each byte equals the one d before it.
+    runs = {}
+    for distance in (1, 2):
+        run = array('I', bytes(4 * (size + 1)))
+        for index in range(size - 1, distance - 1, -1):
+            if tar[index] == tar[index - distance]:
+                run[index] = run[index + 1] + 1
+        runs[distance] = run
+    bits, count, out = 0, 0, bytearray(b'\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff')
+
+    def put(value, width):
+        nonlocal bits, count
+        bits |= value << count
+        count += width
+        while count >= 8:
+            out.append(bits & 0xff)
+            bits >>= 8
+            count -= 8
+
+    def code(value, width):  # a Huffman code goes out most significant bit first
+        put(int(format(value, '0%db' % width)[::-1], 2), width)
+    put(1, 1)  # the last block
+    put(1, 2)  # fixed codes
+    index = 0
+    while index < size:
+        distance = 1 if runs[1][index] >= runs[2][index] else 2
+        length = min(runs[distance][index], 258)
+        if length >= 3:
+            length = 258 if length == 258 else min(length, 10)  # the lengths whose codes take no extra bits
+            code(0xc5, 8) if length == 258 else code(length - 2, 7)
+            code(distance - 1, 5)
+            index += length
+        else:
+            byte = tar[index]
+            code(0x30 + byte, 8) if byte < 144 else code(0x190 + byte - 144, 9)
+            index += 1
+    code(0, 7)  # end of block
+    if count:
+        put(0, 8 - count)
+    packed = bytes(out) + zlib.crc32(tar).to_bytes(4, 'little') + (size & 0xffffffff).to_bytes(4, 'little')
+    if zlib.decompress(packed, 31) != tar:
+        raise ValueError('the deflate writer of the harness wrote a stream zlib reads otherwise')
+    return packed
+
+
 def expand(value, root):
     """`$generate` and `$join` (a string written in pieces so that no committed file holds it whole)."""
     if isinstance(value, list):

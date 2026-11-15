@@ -1,0 +1,669 @@
+{
+ "sources": {
+  "src/pylike/tarfile.ts": "ab3d9001bdd517f5d896db00b3da3dfbd247b2c3de8beca33e43599254c1ac1b",
+  "src/archive.ts": "b30af64d93c21e411398dbec52c700016447ddb07559b05e7a4a92feaec11bbb"
+ },
+ "unit": [
+  "port-tar-budgets.test.js",
+  "port-tar-limits.test.js",
+  "port-runtime.test.js",
+  "port-manifest-name.test.js"
+ ],
+ "differential": "--kind tar --kind tarbudget --kind pyint --scale 0.34 --processes 2",
+ "mutants": 64,
+ "counts": {
+  "killed": 64
+ },
+ "results": [
+  {
+   "id": "reader.d3.at-limit-refused",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a block of exactly the limit is refused",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-limits.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.d3.removed",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "no limit on one block",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js",
+    "port-tar-limits.test.js"
+   ],
+   "differential": "differs: tar, tarbudget"
+  },
+  {
+   "id": "reader.d3.limit-doubled",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the limit is 2**29",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js",
+    "port-tar-limits.test.js",
+    "port-runtime.test.js",
+    "port-manifest-name.test.js"
+   ],
+   "differential": "differs: tar, tarbudget"
+  },
+  {
+   "id": "reader.d3.not-for-pax",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a pax block is read without limit or budget",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js",
+    "port-tar-limits.test.js"
+   ],
+   "differential": "differs: tar, tarbudget"
+  },
+  {
+   "id": "reader.d4.charge.at-budget-refused",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a count that ends exactly at its budget is refused",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js",
+    "port-tar-limits.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.charge.not-cumulative",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "each amount is held against the whole budget: nothing adds up",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.charge.never",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "no budget refuses",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.bytes.block-uncounted",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the bytes of long-name and pax blocks are not counted",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.bytes.old-gnu-blocks-uncounted",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "old GNU extension blocks are not counted as bytes",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.bytes.sparse-1.0-blocks-uncounted",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the blocks of a sparse map of form 1.0 are not counted as bytes",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.records.uncounted",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "pax records are not counted",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.sparse.old-header-uncounted",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the four structs of an old GNU header are not counted",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.sparse.old-header-as-regions",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "an old GNU header is counted in regions, half of its numbers",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.sparse.old-extension-uncounted",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the structs of old GNU extension blocks are not counted",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.sparse.old-extension-as-regions",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "an old GNU extension struct is counted as one number",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.sparse.map-uncounted",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the numbers of a GNU.sparse.map are not counted",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.sparse.inherited-map-uncounted",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a map inherited from a global header is expanded without being counted: the amplification the delta review found",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.sparse.map-counted-before-it-is-a-number",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the budget answers before tarfile would have refused the number",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.sparse.records-0.0-uncounted",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the records of form 0.0 are not counted",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.sparse.lines-1.0-uncounted",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the numbers of form 1.0 are not counted",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.sparse.lines-1.0-as-regions",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "form 1.0 is counted in regions: a hidden factor of two against the other forms",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.members.uncounted",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "members are not counted",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.default.metadata-bytes",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "another production budget",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.d4.default.pax-records",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "another production budget",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.d4.default.sparse-numbers",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "another production budget",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.d4.default.members",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "another production budget",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.d4.options.ignored",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the budgets a test passes are not the ones applied",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tarbudget"
+  },
+  {
+   "id": "reader.d4.options.unchecked",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a budget may be any value",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.d4.refusal.echoes-the-count",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the message holds a number",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.heap.unchecked",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "any heap limit is accepted",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.heap.requirement-halved",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "half the heap is required",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.heap.gzip-unchecked",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a gzip archive is listed under any heap limit",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.heap.tar-unchecked",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a tar stream is listed under any heap limit",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.pax.global-size-not-shared",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a global size is converted anew for every member: memory no budget counts",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.pax.global-size-stale",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the first size converted answers for every later one",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tar, tarbudget"
+  },
+  {
+   "id": "reader.runtime.check-removed",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "any runtime is trusted",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-runtime.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.runtime.list-wider",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "one more Node version is trusted",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-runtime.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.runtime.pin-dropped",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the pinned Node is refused",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-runtime.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.runtime.bun-trusted",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "Bun is trusted",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-runtime.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.record.not-compared",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a later pass is not held to the step record",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-runtime.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.record.length-only",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "only the length of a piece is compared",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-runtime.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.record.crc-only",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "only the running CRC-32 of a piece is compared",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-runtime.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.record.member-end-not-compared",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a member may end elsewhere than the checking pass saw",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-runtime.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.record.later-damage-as-archive-damage",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "an engine fault in a later pass is reported as a damaged archive",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-runtime.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.record.step-unbounded",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a step may be any size",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-runtime.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.f2.slashes-not-stripped",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "trailing slashes stay",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-limits.test.js",
+    "port-manifest-name.test.js"
+   ],
+   "differential": "differs: tar, tarbudget"
+  },
+  {
+   "id": "reader.f2.one-slash-stripped",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "one trailing slash is stripped, not all",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-limits.test.js",
+    "port-manifest-name.test.js"
+   ],
+   "differential": "differs: tar, tarbudget"
+  },
+  {
+   "id": "reader.f2.double-underscore",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "two underscores in a row are taken",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-limits.test.js"
+   ],
+   "differential": "differs: pyint"
+  },
+  {
+   "id": "reader.f2.trailing-underscore",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a number may end in an underscore",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-limits.test.js"
+   ],
+   "differential": "differs: pyint"
+  },
+  {
+   "id": "reader.f2.digit-limit",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "4,301 digits are taken",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-limits.test.js"
+   ],
+   "differential": "differs: pyint, tar, tarbudget"
+  },
+  {
+   "id": "reader.f2.blanks",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "vertical tab, form feed and carriage return are no blanks",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-limits.test.js"
+   ],
+   "differential": "differs: pyint"
+  },
+  {
+   "id": "reader.f2.blank-after-sign",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a blank may follow the sign",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-limits.test.js"
+   ],
+   "differential": "differs: pyint"
+  },
+  {
+   "id": "reader.f3.first-value-kept",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "of two records of one keyword the first value counts",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-limits.test.js"
+   ],
+   "differential": "differs: tar, tarbudget"
+  },
+  {
+   "id": "reader.f3.repeat-moves-to-the-end",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a repeated keyword takes the place of its last record",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-limits.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.f3.keyword-length",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the longest observed keywords are not seen",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js",
+    "port-tar-limits.test.js"
+   ],
+   "differential": "differs: tar, tarbudget"
+  },
+  {
+   "id": "reader.f3.empty-keyword",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "a record without a keyword is taken",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-limits.test.js"
+   ],
+   "differential": "differs: tar, tarbudget"
+  },
+  {
+   "id": "reader.f3.realsize-not-kept",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "GNU.sparse.realsize is dropped",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js",
+    "port-tar-limits.test.js"
+   ],
+   "differential": "differs: tar, tarbudget"
+  },
+  {
+   "id": "reader.f3.sparse-offset-not-read",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the offsets of form 0.0 are not read",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-tar-budgets.test.js"
+   ],
+   "differential": "differs: tar, tarbudget"
+  },
+  {
+   "id": "reader.manifest.empty-first-component",
+   "file": "src/archive.ts",
+   "mutation": "a name that begins with the slash is taken",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-manifest-name.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.manifest.any-prefix",
+   "file": "src/archive.ts",
+   "mutation": "the word before the dot is not looked at",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-manifest-name.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.manifest.any-suffix",
+   "file": "src/archive.ts",
+   "mutation": "the word after the dot is not looked at",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-manifest-name.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.manifest.newline-taken",
+   "file": "src/archive.ts",
+   "mutation": "a newline is taken for the dot",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-manifest-name.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.manifest.longer-tail",
+   "file": "src/archive.ts",
+   "mutation": "more than one character may stand for the dot",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-manifest-name.test.js"
+   ],
+   "differential": "agrees"
+  },
+  {
+   "id": "reader.manifest.astral-is-two",
+   "file": "src/archive.ts",
+   "mutation": "a character outside the BMP is not taken for the dot",
+   "status": "killed",
+   "unit_files_failing": [
+    "port-manifest-name.test.js"
+   ],
+   "differential": "agrees"
+  }
+ ]
+}

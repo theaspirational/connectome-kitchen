@@ -1,0 +1,1142 @@
+{
+ "budgets": {
+  "metadataBytes": 268435456,
+  "paxRecords": 16777216,
+  "sparseNumbers": 1048576,
+  "members": 131072
+ },
+ "cases": [
+  {
+   "id": "members.below",
+   "built_to_count": {
+    "metadataBytes": 0,
+    "paxRecords": 0,
+    "sparseNumbers": 0,
+    "members": 131071
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 0,
+     "paxRecords": 0,
+     "sparseNumbers": 0,
+     "members": 131071
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 131071
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "records.below",
+   "built_to_count": {
+    "metadataBytes": 83886075,
+    "paxRecords": 16777215,
+    "sparseNumbers": 0,
+    "members": 2
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 83886075,
+     "paxRecords": 16777215,
+     "sparseNumbers": 0,
+     "members": 2
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 2
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "names.below",
+   "built_to_count": {
+    "metadataBytes": 268435455,
+    "paxRecords": 0,
+    "sparseNumbers": 0,
+    "members": 257
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 268435455,
+     "paxRecords": 0,
+     "sparseNumbers": 0,
+     "members": 257
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 257
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "sparse-global.below",
+   "built_to_count": {
+    "metadataBytes": 17420,
+    "paxRecords": 1024,
+    "sparseNumbers": 1048575,
+    "members": 1025
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 17420,
+     "paxRecords": 1024,
+     "sparseNumbers": 1048575,
+     "members": 1025
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 1025
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "members.at",
+   "built_to_count": {
+    "metadataBytes": 0,
+    "paxRecords": 0,
+    "sparseNumbers": 0,
+    "members": 131072
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 0,
+     "paxRecords": 0,
+     "sparseNumbers": 0,
+     "members": 131072
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 131072
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "records.at",
+   "built_to_count": {
+    "metadataBytes": 83886080,
+    "paxRecords": 16777216,
+    "sparseNumbers": 0,
+    "members": 2
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 83886080,
+     "paxRecords": 16777216,
+     "sparseNumbers": 0,
+     "members": 2
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 2
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "names.at",
+   "built_to_count": {
+    "metadataBytes": 268435456,
+    "paxRecords": 0,
+    "sparseNumbers": 0,
+    "members": 257
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 268435456,
+     "paxRecords": 0,
+     "sparseNumbers": 0,
+     "members": 257
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 257
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "sparse-global.at",
+   "built_to_count": {
+    "metadataBytes": 17422,
+    "paxRecords": 1024,
+    "sparseNumbers": 1048576,
+    "members": 1025
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 17422,
+     "paxRecords": 1024,
+     "sparseNumbers": 1048576,
+     "members": 1025
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 1025
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "members.above",
+   "built_to_count": {
+    "metadataBytes": 0,
+    "paxRecords": 0,
+    "sparseNumbers": 0,
+    "members": 131073
+   },
+   "oracle_walk": {
+    "crossed": "members",
+    "used": {
+     "metadataBytes": 0,
+     "paxRecords": 0,
+     "sparseNumbers": 0,
+     "members": 131072
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
+     "$mapping": [
+      [
+       "error_code",
+       "E_ADAPTER_INPUT"
+      ],
+      [
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "error": "OSError",
+    "message": "tar metadata budget exceeded: members",
+    "budget": "members"
+   },
+   "classification": "D4"
+  },
+  {
+   "id": "records.above",
+   "built_to_count": {
+    "metadataBytes": 83886085,
+    "paxRecords": 16777217,
+    "sparseNumbers": 0,
+    "members": 2
+   },
+   "oracle_walk": {
+    "crossed": "paxRecords",
+    "used": {
+     "metadataBytes": 83886085,
+     "paxRecords": 16777216,
+     "sparseNumbers": 0,
+     "members": 1
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
+     "$mapping": [
+      [
+       "error_code",
+       "E_ADAPTER_INPUT"
+      ],
+      [
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "error": "OSError",
+    "message": "tar metadata budget exceeded: pax records",
+    "budget": "paxRecords"
+   },
+   "classification": "D4"
+  },
+  {
+   "id": "names.above",
+   "built_to_count": {
+    "metadataBytes": 268435457,
+    "paxRecords": 0,
+    "sparseNumbers": 0,
+    "members": 257
+   },
+   "oracle_walk": {
+    "crossed": "metadataBytes",
+    "used": {
+     "metadataBytes": 267386880,
+     "paxRecords": 0,
+     "sparseNumbers": 0,
+     "members": 256
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
+     "$mapping": [
+      [
+       "error_code",
+       "E_ADAPTER_INPUT"
+      ],
+      [
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "error": "OSError",
+    "message": "tar metadata budget exceeded: metadata bytes",
+    "budget": "metadataBytes"
+   },
+   "classification": "D4"
+  },
+  {
+   "id": "sparse-global.above",
+   "built_to_count": {
+    "metadataBytes": 17424,
+    "paxRecords": 1024,
+    "sparseNumbers": 1048577,
+    "members": 1025
+   },
+   "oracle_walk": {
+    "crossed": "sparseNumbers",
+    "used": {
+     "metadataBytes": 17424,
+     "paxRecords": 1024,
+     "sparseNumbers": 1048576,
+     "members": 1024
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
+     "$mapping": [
+      [
+       "error_code",
+       "E_ADAPTER_INPUT"
+      ],
+      [
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "error": "OSError",
+    "message": "tar metadata budget exceeded: sparse numbers",
+    "budget": "sparseNumbers"
+   },
+   "classification": "D4"
+  },
+  {
+   "id": "sparse-0.1.at",
+   "built_to_count": {
+    "metadataBytes": 2097175,
+    "paxRecords": 1,
+    "sparseNumbers": 1048576,
+    "members": 2
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 2097175,
+     "paxRecords": 1,
+     "sparseNumbers": 1048576,
+     "members": 2
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 2
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "sparse-0.0.at",
+   "built_to_count": {
+    "metadataBytes": 25165845,
+    "paxRecords": 1048577,
+    "sparseNumbers": 1048576,
+    "members": 2
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 25165845,
+     "paxRecords": 1048577,
+     "sparseNumbers": 1048576,
+     "members": 2
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 2
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "sparse-1.0.at",
+   "built_to_count": {
+    "metadataBytes": 2097708,
+    "paxRecords": 2,
+    "sparseNumbers": 1048576,
+    "members": 2
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 2097708,
+     "paxRecords": 2,
+     "sparseNumbers": 1048576,
+     "members": 2
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 2
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "sparse-old.at",
+   "built_to_count": {
+    "metadataBytes": 12782592,
+    "paxRecords": 0,
+    "sparseNumbers": 1048576,
+    "members": 2
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 12782592,
+     "paxRecords": 0,
+     "sparseNumbers": 1048576,
+     "members": 2
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 2
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "sparse-0.1.above",
+   "built_to_count": {
+    "metadataBytes": 2097177,
+    "paxRecords": 1,
+    "sparseNumbers": 1048577,
+    "members": 2
+   },
+   "oracle_walk": {
+    "crossed": "sparseNumbers",
+    "used": {
+     "metadataBytes": 2097177,
+     "paxRecords": 1,
+     "sparseNumbers": 1048576,
+     "members": 1
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
+     "$mapping": [
+      [
+       "error_code",
+       "E_ADAPTER_INPUT"
+      ],
+      [
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "error": "OSError",
+    "message": "tar metadata budget exceeded: sparse numbers",
+    "budget": "sparseNumbers"
+   },
+   "classification": "D4"
+  },
+  {
+   "id": "sparse-0.0.above",
+   "built_to_count": {
+    "metadataBytes": 25165868,
+    "paxRecords": 1048578,
+    "sparseNumbers": 1048577,
+    "members": 2
+   },
+   "oracle_walk": {
+    "crossed": "sparseNumbers",
+    "used": {
+     "metadataBytes": 25165868,
+     "paxRecords": 1048578,
+     "sparseNumbers": 1048576,
+     "members": 1
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
+     "$mapping": [
+      [
+       "error_code",
+       "E_ADAPTER_INPUT"
+      ],
+      [
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "error": "OSError",
+    "message": "tar metadata budget exceeded: sparse numbers",
+    "budget": "sparseNumbers"
+   },
+   "classification": "D4"
+  },
+  {
+   "id": "sparse-1.0.above",
+   "built_to_count": {
+    "metadataBytes": 2097708,
+    "paxRecords": 2,
+    "sparseNumbers": 1048578,
+    "members": 2
+   },
+   "oracle_walk": {
+    "crossed": "sparseNumbers",
+    "used": {
+     "metadataBytes": 2097708,
+     "paxRecords": 2,
+     "sparseNumbers": 1048576,
+     "members": 1
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
+     "$mapping": [
+      [
+       "error_code",
+       "E_ADAPTER_INPUT"
+      ],
+      [
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "error": "OSError",
+    "message": "tar metadata budget exceeded: sparse numbers",
+    "budget": "sparseNumbers"
+   },
+   "classification": "D4"
+  },
+  {
+   "id": "sparse-old.above",
+   "built_to_count": {
+    "metadataBytes": 12782592,
+    "paxRecords": 0,
+    "sparseNumbers": 1048578,
+    "members": 2
+   },
+   "oracle_walk": {
+    "crossed": "sparseNumbers",
+    "used": {
+     "metadataBytes": 12782592,
+     "paxRecords": 0,
+     "sparseNumbers": 1048576,
+     "members": 1
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
+     "$mapping": [
+      [
+       "error_code",
+       "E_ADAPTER_INPUT"
+      ],
+      [
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "error": "OSError",
+    "message": "tar metadata budget exceeded: sparse numbers",
+    "budget": "sparseNumbers"
+   },
+   "classification": "D4"
+  },
+  {
+   "id": "combined.all-below",
+   "built_to_count": {
+    "metadataBytes": 268435455,
+    "paxRecords": 16777215,
+    "sparseNumbers": 1048575,
+    "members": 131071
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 268435455,
+     "paxRecords": 16777215,
+     "sparseNumbers": 1048575,
+     "members": 131071
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 131071
+   },
+   "classification": "equal"
+  },
+  {
+   "id": "combined.heap-worst",
+   "built_to_count": {
+    "metadataBytes": 268435455,
+    "paxRecords": 1025,
+    "sparseNumbers": 1048575,
+    "members": 131071
+   },
+   "oracle_walk": {
+    "crossed": null,
+    "used": {
+     "metadataBytes": 268435455,
+     "paxRecords": 1025,
+     "sparseNumbers": 1048575,
+     "members": 131071
+    }
+   },
+   "oracle": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "port": {
+    "result": {
+     "$mapping": [
+      [
+       "name",
+       "example-package"
+      ],
+      [
+       "version",
+       "1.0.0"
+      ]
+     ]
+    }
+   },
+   "reader": {
+    "members": 131071
+   },
+   "classification": "equal"
+  }
+ ]
+}

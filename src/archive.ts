@@ -178,7 +178,23 @@ export function dependency_inputs(config: PyValue, pin: PyValue): PyDict[] {
   return result;
 }
 
-const MANIFEST_NAME = /^[^/]+\/package[^\n]json$/u;
+/**
+ * `re.fullmatch(r'[^/]+/package.json', name)`: a first component, one slash,
+ * then `package`, any one character but a newline, `json`. It is spelled out
+ * and not a pattern because of the runtime: on a name that is not Latin-1,
+ * V8 answers `/^[^/]+\/package[^\n]json$/u` with "RangeError: Maximum call
+ * stack size exceeded" from about 8.4 million UTF-16 units on (Node 22.23.3
+ * and 24.14.0), and the tar reader lets a name be 2**28 bytes long.
+ */
+const MANIFEST_NAME = {
+  test(name: string): boolean {
+    const slash = name.indexOf('/');
+    if (slash < 1 || !name.startsWith('package', slash + 1) || !name.endsWith('json')) return false;
+    // Between the two words stands one character and no more. It takes two UTF-16 units if it lies outside the BMP.
+    const any = name.codePointAt(slash + 8)!;
+    return any !== 0x0a && name.length - slash - 1 === (any > 0xffff ? 13 : 12);
+  },
+};
 
 /** archive.py:121-145 */
 export function archive_manifest(entry: PyValue): PyDict {

@@ -70,6 +70,21 @@ test('another runtime is refused before the engine is touched, and not as a dama
 test('a pass after the checking one cannot hand over other bytes than were checked',()=>{
  const proto=Object.getPrototypeOf(zlib.createInflateRaw()),original=proto._processChunk;
  let mode=null,target=-1,calls=0,changed=false;
+ // Four bytes that, appended to a piece, bring the CRC-32 back to what it was without them: a piece of another length
+ // with the same running CRC-32. Only the length in the step record tells it from the piece that was checked.
+ const table=new Uint32Array(256).map((_,index)=>{let value=index;for(let bit=0;bit<8;bit++)value=value&1?0xedb88320^(value>>>1):value>>>1;return value>>>0;});
+ const byTop=new Uint8Array(256);table.forEach((value,index)=>{byTop[value>>>24]=index;});
+ const sameCrc=crc=>{
+  const indexes=[];
+  for(let register=~crc>>>0,step=0;step<4;step++){const index=byTop[register>>>24];indexes.push(index);register=((register^table[index])<<8)>>>0;}
+  const bytes=[];
+  for(let register=~crc>>>0,step=3;step>=0;step--){bytes.push((register^indexes[step])&0xff);register=(table[indexes[step]]^(register>>>8))>>>0;}
+  const suffix=Buffer.from(bytes);
+  assert.equal(zlib.crc32(suffix,crc),crc);
+  return suffix;
+ };
+ // The CRC-32 of each engine's output so far: an engine is made for one pass over one member.
+ const running=new WeakMap();
  const faulty=out=>{
   const copy=Buffer.from(out);
   switch(mode){
@@ -84,7 +99,13 @@ test('a pass after the checking one cannot hand over other bytes than were check
  proto._processChunk=function(chunk,flush,callback){
   if(typeof callback==='function')return original.call(this,chunk,flush,callback);
   const hit=calls++===target&&mode!==null;
-  if(!hit)return original.call(this,chunk,flush);
+  if(!hit||mode==='forge'){
+   const out=original.call(this,chunk,flush),crc=zlib.crc32(out,running.get(this)??0);
+   running.set(this,crc);
+   if(!hit)return out;
+   changed=true;
+   return Buffer.concat([out,sameCrc(crc)]);
+  }
   if(mode==='early-stop'){if(chunk.length<2)return original.call(this,chunk,flush);changed=true;return original.call(this,chunk.subarray(0,chunk.length>>1),flush);}
   // What zlib reports for invalid deflate data, as lib/zlib.js throws it from a synchronous step.
   if(mode==='zlib-error'){changed=true;throw Object.assign(new Error('invalid block type'),{code:'Z_DATA_ERROR',errno:-3});}
@@ -99,7 +120,7 @@ test('a pass after the checking one cannot hand over other bytes than were check
    assert.ok(all>=3*checking,all+' calls for '+checking+' in the checking pass');
    const later=[];
    for(let index=checking;index<all;index+=Math.max(1,Math.floor((all-checking)/120)))later.push(index);
-   for(const fault of ['drop','repeat','zero','flip','cut','early-stop','zlib-error']){
+   for(const fault of ['drop','repeat','zero','flip','cut','early-stop','zlib-error','forge']){
     for(const index of [0,checking>>1,checking-1,...later,all-1]){
      mode=fault;target=index;calls=0;changed=false;
      let outcome,error=null;

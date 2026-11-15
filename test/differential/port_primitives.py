@@ -42,6 +42,14 @@ rather than hidden in a generator:
     pax record and the header is not the first member, ends the listing
     silently and so lists the archive. test/differential/port_large.py has
     archives that really hold such a block.
+  * `tarbudget` is `tar` read under admission budgets small enough for a few
+    blocks to meet (divergence D4). The oracle has no budgets. Each archive
+    is walked a second time with the oracle's own tarfile, which counts what
+    the TS reader counts at the same points (test/differential/tar_budget.py).
+    Where that walk passes a budget, the TS reader must refuse with the
+    OSError of that very budget; where it passes none, the two listings must
+    be equal, so a budget that is not reached changes nothing. The cases are
+    counted by the budget that refused (`budgets`).
   * `tardepth` runs in a fresh interpreter, in a function the script calls
     directly: chains of extension headers recurse in tarfile, and the bound
     (328 as first member, 329 later) moves with the caller's depth.
@@ -1102,10 +1110,15 @@ def tar_item(rng):
             else:
                 value = rng.choice(PAX_VALUES)
             records.append(pax_record(key, value))
-        if rng.random() < 0.15:
-            records.append(rng.choice([b'5 x=\n', b'4 =\n', b'6 xy\n\n', b'0 x=y\n', b'99 path=x\n', b'12 path=abc', b'012 path=ab\n', b'x path=y\n', b'9 =path\n', b'00000000000000000013 path=ab\n',
+        if records and rng.random() < 0.25:
+            # the keyword of an earlier record once more, behind the others: its place in the dict is the first one, its value the last
+            first = records[0].split(b' ', 1)[1].split(b'=', 1)[0]
+            records.append(pax_record(first, rng.choice(NAMES + PAX_VALUES)))
+        elif rng.random() < 0.15:
+            records.append(rng.choice([b'5 x=\n', b'5 =x\n', b'4 =\n', b'6 xy\n\n', b'0 x=y\n', b'99 path=x\n', b'12 path=abc', b'012 path=ab\n', b'x path=y\n', b'9 =path\n', b'00000000000000000013 path=ab\n',
                                        b'000000000000000000013 path=ab\n', b'13path=abcd\n', b'6 a=b\n\0\0', b'18446744073709551616 a=b\n']))
-        rng.shuffle(records)
+        if rng.random() < 0.8:
+            rng.shuffle(records)
         kind = rng.choice([b'x', b'x', b'x', b'g', b'X'])
         follow = rng.choice([b'0', b'0', b'0', b'5', b'\0', b'S', b'2', b'Z'])
         sparse_data = rng.choice([b'', b'1\n0\n5\n', b'2\n0\n5\n10\n5\n', b'1\n0\n', b'x\n', b'-1\n', b'3\n1\n2\n3\n4\n5\n6\n', b'1\n' + b'9' * 600 + b'\n5\n', b'no newline'])
@@ -1374,6 +1387,84 @@ def judge_tar(job, want, got):
     return got == {'error': 'OSError', 'limit': 'metadata'}, bucket
 
 
+# Divergence D4: the same listing under admission budgets. Small ones, so that archives of a few blocks meet them.
+BUDGET_CHOICES = {'metadataBytes': [0, 5, 20, 100, 300, 512, 513, 1024, 2048, 10 ** 6, 10 ** 6], 'paxRecords': [0, 1, 2, 3, 5, 8, 10 ** 6, 10 ** 6],
+                  'sparseNumbers': [0, 1, 2, 3, 4, 7, 8, 9, 10, 16, 50, 10 ** 6, 10 ** 6], 'members': [0, 1, 2, 3, 5, 10 ** 6, 10 ** 6]}
+
+
+def budget_item(rng):
+    """Members that count: sparse maps of every form, maps in global headers, runs of records, names and members."""
+    data = rng.choice([MANIFEST, b'', b'x' * 600])
+    roll = rng.randrange(9)
+    numbers = lambda count: [rng.choice([b'0', b'5', b'512', b'7', b'7', b'7', b'x', b'', b'-1', b' 3 ']) if rng.random() < 0.04 else rng.choice([b'0', b'5', b'512', b'1048576']) for _ in range(count)]
+    if roll == 0:   # a map in a global header and members that expand it again
+        out = pax_block([pax_record(b'GNU.sparse.map', b','.join(numbers(rng.randrange(0, 7))))], b'g') + tar_header(b'package/first', len(data)) + padded(data)
+        for _ in range(rng.randrange(0, 5)):
+            out += (pax_block([pax_record(rng.choice([b'comment', b'path', b'GNU.sparse.map']), rng.choice([b'x', b'0,5', b'p/package.json']))]) if rng.random() < 0.8 else b'') + tar_header(rng.choice(NAMES), 0)
+        return out
+    if roll == 1:   # form 0.1
+        return pax_block([pax_record(b'GNU.sparse.map', b','.join(numbers(rng.randrange(0, 20))))]) + tar_header(rng.choice(NAMES), len(data)) + padded(data)
+    if roll == 2:   # form 0.0: offset and numbytes records in any order, with or without the size that selects the form
+        records = [pax_record(rng.choice([b'GNU.sparse.offset', b'GNU.sparse.numbytes']), value) for value in numbers(rng.randrange(0, 14))]
+        if rng.random() < 0.85:
+            records.insert(rng.randrange(len(records) + 1), pax_record(b'GNU.sparse.size', rng.choice([b'0', b'5', b'x'])))
+        return pax_block(records, rng.choice([b'x', b'x', b'g'])) + tar_header(rng.choice(NAMES), len(data)) + padded(data)
+    if roll == 3:   # form 1.0: a count of regions, then numbers that may be fewer or more than it states, over one block or several
+        lines = numbers(rng.randrange(0, 30))
+        regions = rng.choice([len(lines) // 2, len(lines) // 2, len(lines), len(lines) // 2 + 1, 0, 10 ** 30, -1])
+        body = b'%d\n' % regions + b''.join(line + b'\n' for line in lines) + rng.choice([b'', b' ' * 300, b'7' * 700 + b'\n7\n'])
+        body = padded(body) + data
+        return pax_block([pax_record(b'GNU.sparse.major', b'1'), pax_record(b'GNU.sparse.minor', b'0')], rng.choice([b'x', b'x', b'x', b'g'])) + tar_header(rng.choice(NAMES), len(body)) + padded(body)
+    if roll == 4:   # old GNU: four structs in the header, more in extension blocks, zero ones among them
+        pairs = lambda count: [(rng.choice([0, 5, 512]), rng.choice([0, 5, 5, 512])) for _ in range(count)]
+        blocks = rng.randrange(0, 4)
+        out = tar_header(rng.choice(NAMES), len(data), b'S', patch=[(386, sparse_structs(pairs(4), 4)), (482, bytes([blocks > 0])), (483, octal(len(data), 12))])
+        for index in range(blocks):
+            out += sparse_structs(pairs(21), 21) + bytes([index + 1 < blocks or rng.random() < 0.1]) + b'\0' * 7
+        return out + padded(data)
+    if roll == 5:   # a run of records
+        return pax_block([pax_record(rng.choice([b'comment', b'x', b'path', b'size']), rng.choice([b'', b'1', b'v' * 40])) for _ in range(rng.randrange(0, 12))], rng.choice([b'x', b'g', b'X'])) + tar_header(rng.choice(NAMES), len(data)) + padded(data)
+    if roll == 6:   # long names and long links of several sizes
+        out = b''
+        for _ in range(rng.randrange(1, 4)):
+            name = rng.choice([b'n' * 5, b'n' * 20, b'n' * 100, b'd/' * 150, b'n' * 512, b'n' * 513, b'n' * 1024])
+            out += tar_header(b'././@LongLink', len(name), rng.choice([b'L', b'L', b'K'])) + padded(name) + tar_header(b'short', 0)
+        return out
+    if roll == 7:   # plain members
+        return b''.join(tar_header(rng.choice(NAMES), 0) for _ in range(rng.randrange(1, 8)))
+    return tar_item(rng)
+
+
+def gen_tarbudget(rng, count):
+    jobs = []
+    for _ in range(count):
+        tar = b''.join(budget_item(rng) if rng.random() < 0.7 else tar_item(rng) for _ in range(rng.choice([1, 1, 2, 2, 3, 4])))
+        tar += rng.choice([b'\0' * 1024, b'\0' * 1024, b'\0' * 512, b''])
+        if rng.random() < 0.15:
+            tar = tar_mutation(rng, tar)
+        # Most often one budget is small and the others are out of reach, so that each is met on its own; sometimes all are small.
+        budgets = {name: 10 ** 6 for name in BUDGET_CHOICES}
+        for name in (list(BUDGET_CHOICES) if rng.random() < 0.3 else [rng.choice(list(BUDGET_CHOICES))]):
+            budgets[name] = rng.choice(BUDGET_CHOICES[name])
+        jobs.append({'b': b64(gzip_valid(rng, tar)), 'budgets': budgets})
+    return jobs
+
+
+TAR_BUDGET_BUCKETS = ('no budget is passed: equal listings', 'metadataBytes', 'paxRecords', 'sparseNumbers', 'members', 'D3')
+
+
+def judge_tarbudget(job, want, got):
+    """(agrees, bucket). Equal answers where the oracle's walk passes no budget; where it passes one, the OSError of that budget."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import tar_budget
+    crossed = tar_budget.crossing(base64.b64decode(job['b']), job['budgets'])['crossed']
+    if crossed is None:
+        return want == got, TAR_BUDGET_BUCKETS[0]
+    if want == {'error': 'RecursionError'} and got == want:
+        return True, crossed  # the frame bound came first on both sides
+    return got == ({'error': 'OSError', 'limit': 'metadata'} if crossed == 'D3' else {'error': 'OSError', 'budget': crossed}), crossed
+
+
 # The archive.py:131-135 flow, by the outcome archive.py:136-139 would give it.
 def manifest_flow(data):
     import io, re, tarfile
@@ -1554,6 +1645,9 @@ def gen_pyint(rng, count):
     pool = list('0123456789') * 3 + ['_', '_', '+', '-', ' ', '\t', '\n', '\x0b', '\x0c', '\r', '\x1c', '\x1f', '\x00', '\x7f', '\x85', '\xa0', '\u2003', '\u3000', '\ufeff', '\u0660', '\u0669', '\u06f5', '\uff10', '\uff19',
                                       '\U0001d7ce', '\U0001d7ff', '\U0001e950', '\u00b2', '\u2460', 'x', 'e', '.', 'o', '0x', '0o', '\u0966']
     jobs = [{'s': ''.join(rng.choice(pool) for _ in range(rng.choice([0, 1, 1, 2, 3, 5, 8])))} for _ in range(count)]
+    # underscores: single ones between digits and nowhere else
+    jobs += [{'s': text} for text in ('1__0', '1_0', '_1', '1_', '1___0', '1_0_', '+_1', '-_1', '1_ 0', '1 _0', '0__0', '1_0_0', '1__0_0', '__', '_', '1_+0', '\u0661_\u0662', '\u0661__\u0662', ' 1__0 ')]
+    jobs += [{'b': b64(text)} for text in (b'1__0', b'1_0', b'_1', b'1_', b'1___0', b'1_0_', b' 1__0\n')]
     jobs += [{'s': text} for text in ('9' * 4300, '9' * 4301, '-' + '9' * 4300, '-' + '9' * 4301, '0' * 4301, '1_' * 2150 + '1', '1_' * 2151 + '1', ' ' + '7' * 4300 + ' ')]
     jobs += [{'b': b64(''.join(rng.choice(pool) for _ in range(rng.choice([0, 1, 2, 3, 5]))).encode('utf-8', 'surrogatepass'))} for _ in range(count // 2)]
     # every code point CPython knows as a decimal digit, alone and after an ASCII digit
@@ -1594,6 +1688,7 @@ def kinds(full):
         'pyops': (gen_pyops, py_pyops, 20000),
         'pyint': (gen_pyint, py_pyint, 6000),
         'tar': (gen_tar, py_tar, 12000),
+        'tarbudget': (gen_tarbudget, py_tar, 12000),
         'tardepth': (gen_tardepth, None, 1),
         'targz': (gen_targz, py_targz, 4000),
     }
@@ -1685,6 +1780,12 @@ def run(node='node', scale=1.0, only=None, full=True, processes=None, seed=20261
             agrees, bucket = judge_tar(job, want, got)
             if bucket is not None:
                 entry.setdefault('metadata_limit', {name: 0 for name in TAR_D3_BUCKETS})[bucket] += 1
+        elif job['k'] == 'tarbudget':
+            agrees, bucket = judge_tarbudget(job, want, got)
+            entry.setdefault('budgets', {name: 0 for name in TAR_BUDGET_BUCKETS})[bucket] += 1
+            # A refusal must not hide an archive the oracle reads: count those apart from the ones it refuses anyway.
+            if bucket != TAR_BUDGET_BUCKETS[0] and 'members' in want:
+                entry['oracle_lists_and_ts_refuses'] = entry.get('oracle_lists_and_ts_refuses', 0) + 1
         else:
             agrees = want == got
         if not agrees:

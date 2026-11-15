@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Fail closed on what the TS port of the engine modules ported so far still owes.
 
-This reads committed evidence only; `ts_mutants.py run --check`, `ts_port.py
-run`, `port_divergences.py --check`, `port_large.py --check` and
+This reads committed evidence only; `ts_mutants.py run --check`,
+`reader_mutants.py run --check`, `ts_port.py run`, `port_divergences.py
+--check`, `port_large.py --check`, `port_budget.py --check` and
 `r6_combine.py --check` reproduce it.
 
 Nothing here is accepted by the implementer. A mutant that is not killed, and
@@ -13,11 +14,16 @@ never counted as killed. A finding without a ruling blocks, and so does a
 delta review that is not recorded as passed with the commit it reviewed.
 
 What this check cannot know is whether the commit it runs on has been
-reviewed: a file cannot record the review of the commit that contains it. It
-prints the commits the recorded review does not cover (NOTE lines). A pass here
-means the recorded evidence is complete, not that those commits were reviewed.
+reviewed: a file cannot record the review of the commit that contains it. So
+it asks git which commits are later than the reviewed one and what they
+touch. A later commit that changes anything but the notes (docs/) and the
+record of rulings (test/port-rulings.golden) blocks: it is source or evidence
+no recorded review has read. A commit that only records a review does not.
+Later commits are printed either way (NOTE lines). Where git cannot be asked,
+because the tree is no repository of its own, the check says so in a NOTE and
+judges the recorded evidence alone.
 """
-import json, re, subprocess, sys
+import hashlib, json, re, subprocess, sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 STATUS_OF = {'redundant survivor': 'survived', 'compiler': 'compiler', 'crash-only': 'crash-only'}
@@ -31,7 +37,14 @@ try:
     divergences = json.loads((ROOT / 'test/vectors/port-divergences.golden').read_text())
     r6 = json.loads((ROOT / 'test/vectors/r6-combine.golden').read_text())
     large = json.loads((ROOT / 'test/vectors/port-large.golden').read_text())
+    budget = json.loads((ROOT / 'test/vectors/port-budget.golden').read_text())
+    reader_mutants = json.loads((ROOT / 'test/mutants/reader-results.golden').read_text())
+    reader_sources = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in reader_mutants['sources']}
     reader = (ROOT / 'src/pylike/tarfile.ts').read_text()
+    budgets = {name: 2 ** int(power) for name, power in re.findall(r'^  (metadataBytes|paxRecords|sparseNumbers|members): 2 \*\* (\d+),$', re.search(r'^export const BUDGETS: Budgets = Object\.freeze\(\{\n((?:  .*\n)+)\}\);$', reader, re.M)[1], re.M)}
+    heap_required = int(re.search(r'^export const HEAP_LIMIT_REQUIRED_MIB = (\d+);$', reader, re.M)[1])
+    if sorted(budgets) != ['members', 'metadataBytes', 'paxRecords', 'sparseNumbers']:
+        raise ValueError('the reader does not state its four budgets')
     runtimes = re.findall(r"'([^']+)'", re.search(r"^export const STEPWISE_RUNTIMES: readonly string\[\] = \[([^\]]*)\];$", reader, re.M)[1])
     metadata_limit = re.search(r'^export const METADATA_LIMIT = 2n \*\* (\d+)n;$', reader, re.M)[1]
     pinned = re.search(r'^artifacts:\n(?:(?:  .*)?\n)*?  node:\n(?:    .*\n)*?    version: (\S+)\n', (ROOT / 'oracle/versions.yml').read_text(), re.M)[1]
@@ -41,6 +54,8 @@ try:
     for entry in record['open_findings']:
         if entry['status'] == 'ruled' and entry['ruling'] not in rulings:
             raise ValueError('a finding cites a ruling that is not recorded')
+    if [result for result in reader_mutants['results'] if result['status'] not in ('killed', 'survived')] or reader_mutants['mutants'] != len(reader_mutants['results']):
+        raise ValueError('a reader mutant without a result')
     status = {result['id']: result['status'] for result in results}
     for ident, entry in reviewed.items():
         ruling = rulings[entry['ruling']]
@@ -69,6 +84,12 @@ for name in sorted(by_status):
         missing.append('TS mutants with status ' + name + ': ' + ', '.join(by_status[name]))
     elif open_ids:
         missing.append('TS mutants not killed and not ruled (' + name + '): ' + ', '.join(open_ids) + ' (analysis: test/mutants/ts-unkilled.golden)')
+# The mutants of the archive reader are a set of their own (test/mutants/reader_mutants.py): none of them is ruled, each is killed or blocks.
+reader_alive = [result['id'] for result in reader_mutants['results'] if result['status'] != 'killed']
+if reader_sources != reader_mutants['sources']:
+    missing.append('the reader mutant results were taken from other sources than the ones in the tree: run test/mutants/reader_mutants.py (test/mutants/reader-results.golden)')
+elif reader_alive:
+    missing.append('reader mutants not killed: ' + ', '.join(reader_alive) + ' (test/mutants/reader-results.golden)')
 classes = {}
 for entry in reviewed.values():
     classes[entry['classification']] = classes.get(entry['classification'], 0) + 1
@@ -103,6 +124,36 @@ elif seen != wanted or not accepted or large['metadata_limit_bytes'] != 2 ** int
 else:
     ruled.append('the metadata limit is 2**%s bytes: at it both engines accept, one byte above it the oracle accepts and the port refuses (D3), for a long name and for a pax header' % metadata_limit)
 
+# D4 is four budgets with two sides each, and a heap they are sized for. The numbers stay a proposal until the technical owner approves them.
+by_id = {case['id']: case for case in budget['cases']}
+wanted_ids = {'%s.%s' % (kind, side) for kind in ('members', 'records', 'names', 'sparse-global') for side in ('below', 'at', 'above')} | \
+    {'sparse-%s.%s' % (form, side) for form in ('0.1', '0.0', '1.0', 'old') for side in ('at', 'above')} | {'combined.all-below', 'combined.heap-worst'}
+route = {'members': 'members', 'records': 'paxRecords', 'names': 'metadataBytes'}
+sound = set(by_id) == wanted_ids and budget['budgets'] == budgets
+for ident, case in by_id.items() if sound else ():
+    walk, above = case['oracle_walk'], ident.endswith('.above')
+    name = route.get(ident.split('.')[0], 'sparseNumbers')
+    sound = sound and 'result' in case['oracle'] and case['classification'] == ('D4' if above else 'equal') and ('result' in case['port']) != above
+    sound = sound and walk['crossed'] == (name if above else None) and case['reader'].get('budget') == (name if above else None)
+    if ident.endswith(('.below', '.at')) and not ident.startswith('sparse-') or ident.startswith('sparse-global.') and not above:
+        sound = sound and walk['used'][name] == budgets[name] - (1 if ident.endswith('.below') else 0)
+    elif ident.endswith('.at'):
+        sound = sound and walk['used']['sparseNumbers'] == budgets['sparseNumbers']
+sound = sound and by_id['combined.all-below']['oracle_walk']['used'] == {name: value - 1 for name, value in budgets.items()}
+if 'D4' not in rulings:
+    missing.append('the admission budgets of the tar reader have no ruling')
+elif not sound:
+    missing.append('the vectors at the admission budgets do not show both sides of each of them in both engines (test/vectors/port-budget.golden)')
+else:
+    proposal = rulings['D4']['defaults']
+    stated = ', '.join('%s 2**%d' % (name, budgets[name].bit_length() - 1) for name in ('metadataBytes', 'paxRecords', 'sparseNumbers', 'members'))
+    if proposal['budgets'] != budgets or proposal['heap_limit_required_mib'] != heap_required:
+        missing.append('the budgets or the heap requirement of the reader are not the ones ruling D4 records (test/port-rulings.golden)')
+    elif proposal['status'] != 'approved':
+        missing.append('the budgets of D4 (%s) and the heap they are sized for (%d MiB) are %s (test/port-rulings.golden, ruling D4)' % (stated, heap_required, proposal['status']))
+    else:
+        ruled.append('the admission budgets are %s, under a heap limit of at least %d MiB: one under each budget and at it both engines accept, one over it the oracle accepts and the port refuses (D4)' % (stated, heap_required))
+
 # The stepwise gzip reader is tied to the pinned Node (ruling B9).
 if 'B9' not in rulings:
     missing.append('the runtime the stepwise gzip reader is tied to has no ruling')
@@ -135,7 +186,7 @@ for entry in record['obligations']:
 
 for entry in record['open_findings']:
     if entry['status'] != 'ruled':
-        missing.append('open finding ' + entry['id'] + ' has no ruling (test/port-rulings.golden)')
+        missing.append('open finding ' + entry['id'] + ' is not closed: ' + entry['status'] + ' (test/port-rulings.golden)')
     else:
         ruled.append('finding ' + entry['id'] + ' is closed by ruling ' + entry['ruling'])
 notes = []
@@ -146,17 +197,32 @@ else:
     # Which commits that review does not cover. Git is asked, not trusted: without an answer the note says so.
     top = subprocess.run(['git', '-C', str(ROOT), 'rev-parse', '--show-toplevel'], capture_output=True, text=True)
     later = subprocess.run(['git', '-C', str(ROOT), 'log', '--format=%h %s', review['commit'] + '..HEAD'], capture_output=True, text=True)
-    dirty = subprocess.run(['git', '-C', str(ROOT), 'status', '--porcelain'], capture_output=True, text=True)
+    # What each later commit touches, one name a line under a line of its own (`-m` so that a merge is not passed over).
+    touched = subprocess.run(['git', '-C', str(ROOT), 'log', '-m', '--name-only', '--format=commit %h %s', review['commit'] + '..HEAD'], capture_output=True, text=True)
+    dirty = subprocess.run(['git', '-C', str(ROOT), 'status', '--porcelain', '--untracked-files=all'], capture_output=True, text=True)
     # An answer about a repository this tree merely lies in is no answer about this tree.
-    if top.returncode or later.returncode or dirty.returncode or Path(top.stdout.strip()).resolve() != ROOT:
+    recorded_only = lambda name: name == 'test/port-rulings.golden' or name.startswith('docs/')
+    if top.returncode or later.returncode or touched.returncode or dirty.returncode or Path(top.stdout.strip()).resolve() != ROOT:
         notes.append('could not ask git which commits are later than the reviewed one; anything after %s is not covered by the recorded review' % review['commit'][:7])
     else:
         for line in later.stdout.splitlines():
             notes.append('not covered by the recorded delta review: ' + line)
         if dirty.stdout.strip():
             notes.append('not covered by the recorded delta review: uncommitted changes in the working tree')
+        unread, commit = [], None
+        for line in touched.stdout.splitlines():
+            if line.startswith('commit '):
+                commit = line[len('commit '):]
+            elif line and not recorded_only(line) and commit not in unread:
+                unread.append(commit)
+        # A porcelain line is two status letters, a blank and the name; a rename shows the new name last.
+        if any(not recorded_only(line[3:].split(' -> ')[-1].strip('"')) for line in dirty.stdout.splitlines()):
+            unread.append('uncommitted changes in the working tree')
+        if unread:
+            missing.append('no recorded review covers what was changed after %s outside docs/ and test/port-rulings.golden: %s' % (review['commit'][:7], '; '.join(unread)))
 
 print('%d of %d TS mutants killed' % (killed, len(results)))
+print('%d of %d reader mutants killed' % (len(reader_mutants['results']) - len(reader_alive), len(reader_mutants['results'])))
 for message in ruled:
     print('RULED: ' + message)
 for message in missing:

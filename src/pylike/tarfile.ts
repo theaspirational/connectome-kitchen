@@ -11,8 +11,9 @@
  * know) this file accepts what CPython accepts, because `archive.py` judges an
  * archive by what `tarfile` reports.
  *
- * Three deliberate differences from the oracle, stated here and measured in
- * test/differential/port_primitives.py and test/differential/port_large.py:
+ * Four deliberate differences from the oracle, stated here and measured in
+ * test/differential/port_primitives.py, test/differential/port_large.py and
+ * test/differential/port_budget.py:
  *
  *   1. The gzip container is checked in full before the tar stream is read
  *      (divergence D1). CPython decompresses lazily, only as far as the listing
@@ -32,6 +33,13 @@
  *      and decodes it into a `str` of any length the machine can hold. A
  *      JavaScript string cannot be longer than the runtime allows, so without
  *      the limit such an archive ended in a `RangeError` of the runtime.
+ *   4. A listing is read under four admission budgets (BUDGETS, divergence
+ *      D4): bytes of metadata, pax records, sparse numbers and members,
+ *      each counted over the whole archive. An archive that would pass one
+ *      is refused as an `OSError` at that point. CPython has no budgets:
+ *      it reads on until the machine has no more memory. Without them a
+ *      valid archive of a few kB could fill the V8 heap, and the process
+ *      aborted instead of answering.
  *
  * Memory. The decompressed stream is never held as a whole. The container is
  * inflated in steps of INPUT_STEP compressed bytes, once to check it and again
@@ -42,10 +50,17 @@
  * METADATA_LIMIT bytes, the member that is read. The oracle holds the same
  * `read` results.
  *
+ * What a listing keeps on the V8 heap is bounded by the budgets, and the
+ * budgets are sized for a heap of HEAP_LIMIT_REQUIRED_MIB; a process with a
+ * lower limit is refused before anything is parsed. docs/port-notes.md,
+ * "The admission budgets", has the measurements and what the limit does not
+ * promise: it is a ceiling V8 itself can pass, not memory that is reserved.
+ *
  * `tarfile.ENCODING` is taken to be UTF-8 (a UTF-8 locale, or the C locale
  * under PEP 538/540), with the `surrogateescape` handler `tarfile` uses.
  */
 import { constants as bufferLimits } from 'node:buffer';
+import v8 from 'node:v8';
 import zlib from 'node:zlib';
 import { decodeUtf8 } from './codec.js';
 import { PyAttributeError, PyError, PyOSError, PyRecursionError, PyValueError } from './py.js';
@@ -89,6 +104,16 @@ export class MetadataLimit extends PyOSError {
   override get pyName(): string { return 'OSError'; }
 }
 /**
+ * A listing that would pass one of the admission budgets (BUDGETS, difference
+ * 4 above). An `OSError`, so that `archive_manifest` answers with its closed
+ * refusal. The message names the budget and is constant: it holds no number
+ * and nothing from the archive.
+ */
+export class MetadataBudget extends PyOSError {
+  constructor(readonly budget: BudgetName) { super('ETARBUDGET', 'tar metadata budget exceeded: ' + BUDGET_NAMES[budget]); }
+  override get pyName(): string { return 'OSError'; }
+}
+/**
  * The host is not one this reader is verified on, or its engine did not do
  * what the reader relies on. A plain `Error`: it says nothing about the
  * archive, and no handler of the engine catches it.
@@ -123,7 +148,61 @@ export interface OpenOptions {
   callerFrame?: number;
   /** Compressed bytes per inflate step, INPUT_STEP by default. It changes no result. */
   inputStep?: number;
+  /**
+   * Other admission budgets than BUDGETS, for tests and measurements only:
+   * vectors on both sides of a budget would otherwise need archives of the
+   * size the budgets are there to refuse. `archive_manifest` passes none
+   * (test/unit/port-tar-budgets.test.js holds that).
+   */
+  budgets?: Partial<Budgets>;
 }
+
+/**
+ * The admission budgets of one listing (divergence D4): what one call of
+ * `gzipMembers` or `tarMembers` may make the reader read and keep, counted
+ * over the whole archive. Nothing is credited back when a value is replaced
+ * or dropped, so no count depends on what the collector has freed. Each
+ * count is taken before the read or the allocation it bounds.
+ */
+export interface Budgets {
+  /**
+   * Bytes of metadata, added up over the listing: everything the reader
+   * reads that is neither a member's own 512-byte header nor member data.
+   *
+   *   - for a header of type `L`, `K`, `x`, `g` or `X` whose blocks are read,
+   *     the bytes its size field states, as D3 counts them for one header
+   *     (before `tarfile` rounds up to whole blocks). Every byte of a long
+   *     name, a long link or a pax record is in it, whether the reader keeps
+   *     the value or not;
+   *   - 512 for every block read for a sparse map: the blocks of a map of
+   *     form 1.0 at the front of a member's data, and the extension blocks
+   *     of an old GNU sparse header.
+   */
+  readonly metadataBytes: number;
+  /** Pax records: every record of every pax header, counted as the reader comes to look at it. */
+  readonly paxRecords: number;
+  /**
+   * Sparse numbers: every integer the reader appends to a sparse list. One
+   * region of a sparse file is two numbers, an offset and a length, in each
+   * of the four forms alike:
+   *
+   *   old GNU   a header holds four structs (8 numbers, zero or not); an
+   *             extension block adds 2 for every struct it contributes;
+   *   pax 0.0   1 for every `GNU.sparse.offset` and every
+   *             `GNU.sparse.numbytes` record that is converted;
+   *   pax 0.1   1 for every number of a `GNU.sparse.map`, each time a map is
+   *             expanded: a map in a global header is expanded again for
+   *             every later extended header;
+   *   pax 1.0   1 for every number read from the member's data. The count
+   *             that data states first is a count of regions; the reader
+   *             reads twice that many numbers and counts each one.
+   */
+  readonly sparseNumbers: number;
+  /** Members: every entry of the listing. */
+  readonly members: number;
+}
+export type BudgetName = keyof Budgets;
+const BUDGET_NAMES: Readonly<Record<BudgetName, string>> = { metadataBytes: 'metadata bytes', paxRecords: 'pax records', sparseNumbers: 'sparse numbers', members: 'members' };
 
 /** Python's default recursion limit, as lock.ts states it: a frame may sit at depth 1000. */
 const FRAME_LIMIT = 1000;
@@ -152,6 +231,56 @@ const READ_LIMIT = 2n ** 31n;
  * string (2**29 - 24 units on the two verified runtimes; `listing` checks it).
  */
 export const METADATA_LIMIT = 2n ** 28n;
+/**
+ * The budgets `archive_manifest` reads under (divergence D4). Each is a
+ * count over one listing; a listing that ends exactly at a budget is read,
+ * one unit more is refused. What each costs, measured on Node 22.23.3 and
+ * 24.14.0 (docs/port-notes.md, "The admission budgets"):
+ *
+ *   metadataBytes  2**28   The constant of D3, of which D3 is now the case
+ *                          of a single block. One block of that size costs
+ *                          up to 1,050 MiB of heap while it is decoded (two
+ *                          bytes a unit, once in pieces and once whole) and
+ *                          up to 514 MiB kept.
+ *   paxRecords     2**24   Time only: 2.5 s. Nothing is kept per record.
+ *   sparseNumbers  2**20   61 MiB kept (58 bytes a number), in each of the
+ *                          four forms.
+ *   members        2**17   Up to 143 MiB kept (1,091 bytes a member whose
+ *                          name and link name fill the header with bytes
+ *                          that are no UTF-8), 1.2 s. The engine's own bound
+ *                          on a catalog archive is 100,000 entries
+ *                          (catalog.py:595).
+ *
+ * Together, on the costliest archive that stays one under each of them, a
+ * listing has 1,239 MiB of heap in use at its peak.
+ */
+export const BUDGETS: Budgets = Object.freeze({
+  metadataBytes: 2 ** 28,
+  paxRecords: 2 ** 24,
+  sparseNumbers: 2 ** 20,
+  members: 2 ** 17,
+});
+/**
+ * The V8 heap limit, in MiB, that the budgets are sized for: what
+ * `node --max-old-space-size=2048` gives (2,096 MiB on Node 22.23.3 and
+ * 2,240 MiB on 24.14.0, the young generation included). A listing is
+ * refused with `UnsupportedRuntime` before anything is parsed where
+ * `v8.getHeapStatistics().heap_size_limit` is lower.
+ *
+ * This is a precondition, not a promise of memory. The limit reserves
+ * nothing, it does not count Buffers or the compressed file, V8 passes it
+ * for a single large string when the heap is nearly full, and it says
+ * nothing of what the caller already holds on the heap: the 800 MiB between
+ * the peak above and this limit are the caller's and the collector's.
+ */
+export const HEAP_LIMIT_REQUIRED_MIB = 2048;
+
+/** The heap this process may grow to is the one the budgets were measured under, or more. */
+function sizedHeap(): void {
+  if (v8.getHeapStatistics().heap_size_limit < HEAP_LIMIT_REQUIRED_MIB * 1024 * 1024) {
+    throw new UnsupportedRuntime('the V8 heap limit is below the ' + String(HEAP_LIMIT_REQUIRED_MIB) + ' MiB the tar reader is sized for; start Node with --max-old-space-size=' + String(HEAP_LIMIT_REQUIRED_MIB));
+  }
+}
 
 function enter(frame: number): void {
   if (frame > FRAME_LIMIT) throw new PyRecursionError('maximum recursion depth exceeded');
@@ -632,6 +761,28 @@ interface TarFile {
   offset: bigint;
   pax_headers: Map<string, string>;
   members: TarInfo[];
+  /** The admission budgets of this listing and what it has used of each. */
+  budgets: Budgets;
+  used: Record<BudgetName, number>;
+  /**
+   * `int(value)` of the value a global header holds for each size keyword,
+   * once it has been converted. Such a value is converted for every later
+   * member; an integer of 4,300 digits is 1.8 kB, so a new one per member
+   * would be memory no budget counts. The same text gives the same integer,
+   * which the members share. A value of an extended header is not kept
+   * here: its bytes were counted when its block was read.
+   */
+  converted: Map<string, { text: string; value: bigint | null }>;
+}
+
+/**
+ * Counts `amount` against a budget, or refuses. It is called before the read
+ * or the allocation the amount stands for. A budget is a safe integer and
+ * `used` never passes it, so the difference is exact and nothing overflows.
+ */
+function charge(tar: TarFile, budget: BudgetName, amount: number): void {
+  if (amount > tar.budgets[budget] - tar.used[budget]) throw new MetadataBudget(budget);
+  tar.used[budget] += amount;
 }
 
 const text = (bytes: Uint8Array): string => decodeUtf8(bytes, 'surrogateescape');
@@ -744,7 +895,7 @@ function procBuiltin(info: TarInfo, tar: TarFile, frame: number): TarInfo {
   if (info.isreg(frame) || !SUPPORTED_TYPES.has(info.type)) offset += info.block(info.size, frame);
   tar.offset = offset;
   // Patch the TarInfo object with saved global header information.
-  applyPaxInfo(info, tar.pax_headers, frame + 1);
+  applyPaxInfo(info, tar.pax_headers, tar, frame + 1);
   if (info.isdir(frame)) info.name = rstripSlash(info.name);
   return info;
 }
@@ -761,6 +912,8 @@ function metadataBlocks(info: TarInfo, tar: TarFile, frame: number): Buffer {
   const count = info.block(info.size, frame);
   enter(frame + 2); // GzipFile.read, _check_not_closed
   if (info.size > METADATA_LIMIT) throw new MetadataLimit();
+  // At most METADATA_LIMIT from here on, so the size is an exact number.
+  charge(tar, 'metadataBytes', Number(info.size));
   return tar.file.read(count, frame);
 }
 
@@ -788,7 +941,10 @@ function procSparse(info: TarInfo, tar: TarFile, frame: number): TarInfo {
   const { structs, origsize } = info.pending!;
   let { isextended } = info.pending!;
   info.pending = null;
+  // The four structs of the header itself, which frombuf collected whatever they hold.
+  charge(tar, 'sparseNumbers', 2 * structs.length);
   while (isextended) {
+    charge(tar, 'metadataBytes', BLOCK);
     const buf = tar.file.read(BLOCK, frame);
     let pos = 0;
     for (let index = 0; index < 21; index++) {
@@ -800,7 +956,7 @@ function procSparse(info: TarInfo, tar: TarFile, frame: number): TarInfo {
         if (error instanceof PyValueError) break;
         throw error;
       }
-      if (offset && numbytes) structs.push([offset, numbytes]);
+      if (offset && numbytes) { charge(tar, 'sparseNumbers', 2); structs.push([offset, numbytes]); }
       pos += 24;
     }
     if (buf.length <= 504) throw new PyIndexError('index out of range');
@@ -825,8 +981,7 @@ function procSparse(info: TarInfo, tar: TarFile, frame: number): TarInfo {
  */
 const PAX_OBSERVED = new Set(['GNU.sparse.map', 'GNU.sparse.size', 'GNU.sparse.major', 'GNU.sparse.minor', 'GNU.sparse.name', 'GNU.sparse.realsize', 'path', 'linkpath', 'size']);
 const PAX_KEYWORD_MAX = 19; // 'GNU.sparse.realsize'
-/** Byte ranges `[start, end)` inside a pax block, flat: two numbers per record. */
-type Ranges = number[];
+const SPARSE_OFFSET = 'GNU.sparse.offset', SPARSE_NUMBYTES = 'GNU.sparse.numbytes';
 
 /** An extended or global header as described in POSIX.1-2008. */
 function procPax(info: TarInfo, tar: TarFile, frame: number): TarInfo {
@@ -836,12 +991,11 @@ function procPax(info: TarInfo, tar: TarFile, frame: number): TarInfo {
   // file (extended) or all following files (global).
   const pax = info.type === XGLTYPE ? tar.pax_headers : new Map(tar.pax_headers);
   // A record looks like "%d %s=%s\n" % (length, keyword, value).
-  let pos = 0, records = 0;
+  let pos = 0;
   // For each observed keyword of this header the value of its last record, in the order of the first.
   const values = new Map<string, [start: number, end: number]>();
-  // The values of the two keywords the sparse form 0.0 reads from the raw records, every record in order.
-  const offsetValues: Ranges = [], numbytesValues: Ranges = [];
   while (buf.length > pos && buf[pos] !== 0) {
+    charge(tar, 'paxRecords', 1);
     let digits = 0;
     while (digits < 20 && buf[pos + digits]! >= 0x30 && buf[pos + digits]! <= 0x39) digits++;
     if (digits === 0 || buf[pos + digits] !== 0x20) throw new InvalidHeaderError('invalid header');
@@ -860,18 +1014,15 @@ function procPax(info: TarInfo, tar: TarFile, frame: number): TarInfo {
       // Keywords this short are compared as text; the observed ones are ASCII, so equal text is equal bytes.
       const keyword = buf.toString('latin1', start, equals);
       if (PAX_OBSERVED.has(keyword)) values.set(keyword, [equals + 1, end]);
-      else if (keyword === 'GNU.sparse.offset') offsetValues.push(equals + 1, end);
-      else if (keyword === 'GNU.sparse.numbytes') numbytesValues.push(equals + 1, end);
     }
-    records++;
     pos += Number(length);
   }
   // A `hdrcharset` record selects between UTF-8 and the archive encoding for the
   // name fields. Both are UTF-8 here, and a field that is not valid UTF-8 falls
   // back to the archive encoding with surrogateescape either way.
   // The oracle decodes every record here, in two calls of _decode_pax_field
-  // each; the frames are entered once, as they are the same for every record.
-  if (records > 0) enter(frame + 1);
+  // each, one frame down. That frame needs no check of its own: decoding
+  // cannot fail, and the next call below, fromtarfile, enters the same depth.
   for (const [keyword, [start, end]] of values) pax.set(keyword, text(buf.subarray(start, end)));
   // Fetch the next header.
   let next: TarInfo;
@@ -885,32 +1036,47 @@ function procPax(info: TarInfo, tar: TarFile, frame: number): TarInfo {
   if (pax.has('GNU.sparse.map')) {
     // GNU extended sparse format version 0.1.
     enter(frame + 1);
-    const numbers = pax.get('GNU.sparse.map')!.split(',').map(part => {
-      const value = pyIntStr(part);
+    // `[int(x) for x in map.split(',')]`, one part at a time: the list of parts is never built, and each
+    // number is counted before it is kept. A map inherited from a global header is expanded here again.
+    const map = pax.get('GNU.sparse.map')!;
+    const numbers: bigint[] = [];
+    for (let from = 0, comma = 0; comma >= 0; from = comma + 1) {
+      comma = map.indexOf(',', from);
+      const value = pyIntStr(comma < 0 ? map.slice(from) : map.slice(from, comma));
       if (value === null) throw new PyValueError('invalid literal for int() with base 10');
-      return value;
-    });
+      charge(tar, 'sparseNumbers', 1);
+      numbers.push(value);
+    }
     next.sparse = pairs(numbers);
   } else if (pax.has('GNU.sparse.size')) {
     // GNU extended sparse format version 0.0.
     enter(frame + 1);
-    // `int(value.decode())` for each record of the two keywords; which of them fails first is not observable.
-    const numbers = (ranges: Ranges): bigint[] => {
-      const list: bigint[] = [];
-      for (let index = 0; index < ranges.length; index += 2) {
+    // `int(value.decode())` for each record of the two keywords of this header, in the order of the records.
+    // They are read from the block a second time: the loop above has checked every frame, and keeping their
+    // places from that loop would be a list as long as the header has records, before it is known to be needed.
+    const offsets: bigint[] = [], numbytes: bigint[] = [];
+    for (let at = 0; buf.length > at && buf[at] !== 0;) {
+      const space = buf.indexOf(0x20, at);
+      const length = Number(buf.toString('latin1', at, space));
+      const equals = buf.indexOf(0x3d, space + 1);
+      const keyword = equals - space - 1 <= PAX_KEYWORD_MAX ? buf.toString('latin1', space + 1, equals) : '';
+      if (keyword === SPARSE_OFFSET || keyword === SPARSE_NUMBYTES) {
         let number: bigint | null;
-        try { number = pyIntStr(decodeUtf8(buf.subarray(ranges[index]!, ranges[index + 1]!), 'strict')); } catch (error) { if (!(error instanceof PyValueError)) throw error; number = null; }
+        try { number = pyIntStr(decodeUtf8(buf.subarray(equals + 1, at + length - 1), 'strict')); } catch (error) { if (!(error instanceof PyValueError)) throw error; number = null; }
         if (number === null) throw new InvalidHeaderError('invalid header');
-        list.push(number);
+        charge(tar, 'sparseNumbers', 1);
+        (keyword === SPARSE_OFFSET ? offsets : numbytes).push(number);
       }
-      return list;
-    };
-    const offsets = numbers(offsetValues), numbytes = numbers(numbytesValues);
+      at += length;
+    }
     next.sparse = offsets.slice(0, numbytes.length).map((offset, index) => [offset, numbytes[index]!]);
   } else if (pax.get('GNU.sparse.major') === '1' && pax.get('GNU.sparse.minor') === '0') {
     // GNU extended sparse format version 1.0.
     enter(frame + 1);
-    let rest: Buffer = tar.file.read(BLOCK, frame + 1);
+    // A number of this form is as long as its line, and the lines are member data: every block of them is
+    // counted as metadata, so that the digits of all sparse numbers are bounded as those of a pax record are.
+    const block = (): Buffer => { charge(tar, 'metadataBytes', BLOCK); return tar.file.read(BLOCK, frame + 1); };
+    let rest: Buffer = block();
     const line = (): bigint => {
       const end = rest.indexOf(0x0a);
       if (end < 0) throw new PyValueError('not enough values to unpack (expected 2, got 1)');
@@ -919,18 +1085,22 @@ function procPax(info: TarInfo, tar: TarFile, frame: number): TarInfo {
       if (value === null) throw new PyValueError('invalid literal for int() with base 10');
       return value;
     };
-    const fields = line();
+    // The first line is a count of regions. Twice as many numbers follow, and each one is counted as a
+    // number when it is read: the product is exact at any size, and the budget is never compared with it.
+    const regions = line();
     const numbers: bigint[] = [];
-    while (BigInt(numbers.length) < fields * 2n) {
-      if (!rest.includes(0x0a)) rest = Buffer.concat([rest, tar.file.read(BLOCK, frame + 1)]);
-      numbers.push(line());
+    while (BigInt(numbers.length) < regions * 2n) {
+      if (!rest.includes(0x0a)) rest = Buffer.concat([rest, block()]);
+      const number = line();
+      charge(tar, 'sparseNumbers', 1);
+      numbers.push(number);
     }
     next.offset_data = tar.file.tell(frame + 1);
     next.sparse = pairs(numbers);
   }
   if (info.type === XHDTYPE || info.type === SOLARIS_XHDTYPE) {
     // Patch the TarInfo object with the extended header info.
-    applyPaxInfo(next, pax, frame + 1);
+    applyPaxInfo(next, pax, tar, frame + 1);
     next.offset = info.offset;
     if (pax.has('size')) {
       // If the extended header replaces the size field, we need to
@@ -950,17 +1120,24 @@ const pairs = (numbers: bigint[]): Sparse => {
 };
 
 /** `TarInfo._apply_pax_info`: only the fields that reach a name, a size or an exception. */
-function applyPaxInfo(info: TarInfo, pax: Map<string, string>, frame: number): void {
+function applyPaxInfo(info: TarInfo, pax: Map<string, string>, tar: TarFile, frame: number): void {
   enter(frame);
+  const int = (keyword: string, text: string): bigint | null => {
+    const last = tar.converted.get(keyword);
+    if (last !== undefined && last.text === text) return last.value;
+    const value = pyIntStr(text);
+    if (tar.pax_headers.get(keyword) === text) tar.converted.set(keyword, { text, value });
+    return value;
+  };
   for (const [keyword, value] of pax) {
     if (keyword === 'GNU.sparse.name') { enter(frame + 1); info.name = value; }
     else if (keyword === 'GNU.sparse.size' || keyword === 'GNU.sparse.realsize') {
-      const size = pyIntStr(value);
+      const size = int(keyword, value);
       if (size === null) throw new PyValueError('invalid literal for int() with base 10');
       info.size = size;
     } else if (keyword === 'path') { enter(frame + 1); info.name = rstripSlash(value); }
     else if (keyword === 'linkpath') { enter(frame + 1); info.linkname = value; }
-    else if (keyword === 'size') info.size = pyIntStr(value) ?? 0n;
+    else if (keyword === 'size') info.size = int(keyword, value) ?? 0n;
     // mtime, uid, gid, uname, gname: a failed conversion becomes 0 and none is observed.
   }
 }
@@ -987,7 +1164,7 @@ function next(tar: TarFile, frame: number): TarInfo | null {
     else if (error instanceof SubsequentHeaderError) throw new ReadError(error.message);
     else throw error;
   }
-  if (info !== null) tar.members.push(info);
+  if (info !== null) { charge(tar, 'members', 1); tar.members.push(info); }
   return info;
 }
 
@@ -1031,19 +1208,25 @@ function readMember(info: TarInfo, file: Stream): Uint8Array {
  * member's `read`, which starts at the front of the container again.
  */
 export function gzipMembers(data: Uint8Array, options: OpenOptions = {}): TarMember[] {
+  sizedHeap();
   return listing(new GzipSource(Buffer.from(data.buffer, data.byteOffset, data.byteLength), options.inputStep ?? INPUT_STEP), options);
 }
 
 /** The same on an already decompressed tar stream. */
 export function tarMembers(stream: Uint8Array, options: OpenOptions = {}): TarMember[] {
+  sizedHeap();
   return listing(new MemorySource(Buffer.from(stream.buffer, stream.byteOffset, stream.byteLength)), options);
 }
 
 function listing(source: Source, options: OpenOptions): TarMember[] {
   const caller = options.callerFrame ?? CALLER_FRAME;
   const file = new Stream(source);
-  const tar: TarFile = { file, offset: 0n, pax_headers: new Map(), members: [] };
+  const budgets: Budgets = { ...BUDGETS, ...options.budgets };
+  const tar: TarFile = { file, offset: 0n, pax_headers: new Map(), members: [], budgets, used: { metadataBytes: 0, paxRecords: 0, sparseNumbers: 0, members: 0 }, converted: new Map() };
   try {
+    for (const name of Object.keys(BUDGET_NAMES) as BudgetName[]) {
+      if (!Number.isSafeInteger(budgets[name]) || budgets[name] < 0) throw new Error('a budget is a non-negative safe integer: ' + name);
+    }
     // METADATA_LIMIT keeps every string below the longest one the runtime holds only where that is long enough.
     if (METADATA_LIMIT > BigInt(bufferLimits.MAX_STRING_LENGTH)) throw new UnsupportedRuntime('the longest string of this runtime is shorter than a tar metadata block may be');
     // open, gzopen, taropen, TarFile.__init__, then the first next().

@@ -279,8 +279,9 @@ Plan section 3.1, modules 1–5, ported from the oracle at `a49b5dc`.
 `docs/port-notes.md` has the details: how each Python/JavaScript divergence of
 plan section 3.2 is handled, what the oracle does that the plan did not list,
 the lazy imports, where the port deliberately differs from the oracle (D1,
-D2, D3), the runtime the gzip reader is tied to, the rulings on those points,
-the backlog and what is still open.
+D2, D3, D4), the runtime the gzip reader is tied to, the memory the archive
+reader needs and the budgets that bound it, the rulings on those points, the
+backlog and what is still open.
 
 - **Differential.** `test/differential/ts_port.py run` calls the oracle live on
   every vector and the TS port on the same input at the same paths, and compares
@@ -302,11 +303,31 @@ the backlog and what is still open.
   replays the committed vectors; `ts-results.golden` records the outcome per
   mutant and `ts-unkilled.golden` the written analysis of each one that is not
   killed. Guard-site and named-check ids are those of the oracle mutants.
+  None of those mutants is in the archive reader. Its own set is
+  `test/mutants/reader_mutants.py run --check`: each mutant removes or weakens
+  one check of `src/pylike/tarfile.ts` or of the manifest-name test, and must
+  fail the reader's unit files or the helper differential
+  (`reader-results.golden`). None of them is ruled; one that is not killed
+  blocks.
 - **Large archives.** `test/differential/port_large.py --check` builds an
   archive of 4.1 GiB and four with a long-name or pax block at the metadata
   limit of 2^28 bytes and one byte above it, asks both engines, and bounds
   the port's peak memory; `test/unit/port-large.test.js` runs it (about a
   minute).
+- **Admission budgets (D4).** The tar reader counts metadata bytes, pax
+  records, sparse numbers and members over one listing and refuses an archive
+  that would pass a budget. `test/differential/port_budget.py --check` meets
+  each budget at its production value from three sides in both engines, with
+  the port under exactly the heap limit the budgets are sized for
+  (`test/unit/port-budget.test.js` runs it, about three minutes and up to
+  1.8 GiB). `test/unit/port-tar-budgets.test.js` and the kind `tarbudget` of
+  the helper differential do the same under budgets of a few units. The
+  numbers are a proposal until `test/port-rulings.golden` records them as
+  approved.
+- **Heap.** The reader refuses to list under a V8 heap limit below 2,048 MiB.
+  The default limit follows the memory limit of the unit, so where it is
+  lower the suites need `NODE_OPTIONS=--max-old-space-size=2048`, and kitchen
+  itself the same flag on its command line.
 - **Runtime.** The gzip reader steps Node's zlib through a call that is no
   documented interface. It runs on Node 24.14.0, the pin of
   `oracle/versions.yml`, and on 22.23.3, the development host's, and refuses
@@ -323,9 +344,11 @@ python3 test/differential/ts_port.py run
 python3 test/differential/ts_port.py run --no-generated --recording /path/to/recording/functions.jsonl --exploratory .cache/exploratory.golden
 python3 test/differential/port_primitives.py run
 python3 test/differential/port_large.py --check
+python3 test/differential/port_budget.py --check
 python3 test/differential/port_divergences.py --check
 python3 test/differential/r6_combine.py --ansible /path/to/ansible-core/lib --check
 python3 test/mutants/ts_mutants.py run --check
+python3 test/mutants/reader_mutants.py run --check
 python3 test/mutants/shadowed_repository.py
 python3 scripts/porting-map.py --check
 python3 scripts/check-port-ready
@@ -335,8 +358,13 @@ The last command prints what was ruled and fails on what is still owed. A
 mutant that is not killed and an input on which the port differs from the
 oracle block until a ruling names them; a ruled mutant is listed under its
 classification (`test/mutants/ts-reviewed.golden`) and is never counted as
-killed. The command stays red while a finding has no ruling and while no
-delta review is recorded as passed with the commit it read. It cannot know
-whether the commit it runs on was reviewed, and prints the commits the
-recorded review does not cover as `NOTE` lines. At this commit it is red on
-one open finding, F4 (memory below the metadata limit).
+killed. A mutant of the archive reader has no classification: it is killed
+or it blocks. The command stays red while a finding is open, while a number
+is proposed and not approved, and while no delta review is recorded as passed
+with the commit it read. It cannot record the review of the commit it runs
+on. So it asks git what was committed after the reviewed commit: a later
+commit that changes anything but `docs/` and `test/port-rulings.golden`
+blocks, as work no recorded review has read. At this commit it is red on
+three lines: the budgets and the heap requirement of D4 are proposed, finding
+F4 stays open until they are approved, and the third fix round has no delta
+review.

@@ -2,7 +2,7 @@
 """Write test/vectors/port-divergences.golden: inputs on which the TS port deliberately answers differently.
 
 Each entry has the input, the oracle's outcome, the port's outcome, the reason
-and the divergence it belongs to (D1, D2, D3). The oracle outcome is taken from the
+and the divergence it belongs to (D1, D2, D3, D4). The oracle outcome is taken from the
 oracle here; the port outcome is taken from the compiled port here. Afterwards
 both are pinned: the unit suites fail if either engine stops answering what its
 entry says (test_ts_port.py for the oracle, port.test.js for the port).
@@ -33,8 +33,12 @@ LIMIT = ('D3: the port refuses a long-name, long-link or pax header whose size f
          'both sides of the limit, which hold a block of that size, are built by test/differential/port_large.py; the entries here are small. ')
 HUGE = ('Here: a header of type %s states 2**62 bytes and nothing follows it. The oracle asks for a read of that size and ends in MemoryError, a runtime error '
         'no handler of the engine names; the port refuses with the closed archive refusal.')
+BUDGET = ('D4: the port reads a tar listing under four admission budgets, each a count over the whole archive: 2**28 bytes of metadata, 2**24 pax records, 2**20 sparse numbers and '
+          '2**17 members. An archive that would pass one of them is refused at that point as "unreadable archive or manifest". CPython has no budgets: it reads on while the machine '
+          'has memory. Without them such an archive filled the V8 heap and the process aborted without an answer. The archives that meet every budget from three sides, in both '
+          'engines, are built by test/differential/port_budget.py; the entries here are the ones small enough to commit, all on the budget of sparse numbers. ')
 # Which ruling accepted which divergence (test/port-rulings.golden). Edited by hand when a ruling arrives.
-RULED = {'D1': 'D1', 'D2': 'D2', 'D3': 'D3'}
+RULED = {'D1': 'D1', 'D2': 'D2', 'D3': 'D3', 'D4': 'D4'}
 MANIFEST = '{"name": "example-package", "version": "1.0.0"}'
 
 
@@ -86,6 +90,38 @@ def metadata_cases():
     return [('tar-metadata.%s.states-2-to-the-62' % ident, ts_port.stored_gzip(manifest + member('metadata', 2 ** 62, kind)), HUGE % what) for ident, kind, what in kinds]
 
 
+def budget_cases():
+    """A manifest, then a sparse map that is one number, or one expansion, over the budget of 2**20 sparse numbers."""
+    def member(name, data=b'', kind=tarfile.REGTYPE):
+        info = tarfile.TarInfo(name)
+        info.size, info.type = len(data), kind
+        return info.tobuf(format=tarfile.GNU_FORMAT) + data + b'\0' * (-len(data) % 512)
+
+    def record(key, value):
+        body = b' ' + key + b'=' + value + b'\n'
+        length = len(body) + 1
+        while len(str(length)) + len(body) != length:
+            length = len(str(length)) + len(body)
+        return str(length).encode() + body
+
+    def pax(records, kind=tarfile.XHDTYPE):
+        return member('PaxHeader', b''.join(records), kind)
+    manifest, budget = member('package/package.json', MANIFEST.encode()), 2 ** 20
+    numbers = lambda count: b','.join([b'7'] * count)
+    lines = b'%d\n' % (budget // 2 + 1) + b'7\n' * (budget + 2)
+    return [
+        ('tar-budget.sparse-numbers.map-of-one-number-more', manifest + pax([record(b'GNU.sparse.map', numbers(budget + 1))]) + member('package/sparse.bin'),
+         'Here: one extended header holds a GNU.sparse.map of 2**20 + 1 numbers. The oracle accepts the archive; the port refuses it at the last number.'),
+        ('tar-budget.sparse-numbers.global-map-expanded-twice', manifest + pax([record(b'GNU.sparse.map', numbers(budget))], tarfile.XGLTYPE) + pax([record(b'comment', b'x')]) + member('package/sparse.bin'),
+         'Here: a global header holds a GNU.sparse.map of exactly 2**20 numbers, and one member follows behind an extended header of one record. tarfile expands the map once for that '
+         'extended header and once more for the global one; each expansion is counted. The oracle accepts the archive; the port refuses it at the second expansion. With more members '
+         'this is the archive of a few kB on which the port aborted before the budgets (finding F4, delta review of the second fix round).'),
+        ('tar-budget.sparse-numbers.form-1.0-of-one-region-more', manifest + pax([record(b'GNU.sparse.major', b'1'), record(b'GNU.sparse.minor', b'0')]) + member('package/sparse.bin', lines),
+         'Here: a sparse map of form 1.0 states 2**19 + 1 regions in the data of its member and holds the numbers of all of them. A region is two numbers, so the map is two numbers over the budget. '
+         'The oracle accepts the archive; the port refuses it at the first of the two.'),
+    ]
+
+
 def number(text):
     return {'$float': text}
 
@@ -109,6 +145,10 @@ def build():
                      'tree': {'archives/case.tgz': {'file': base64.b64encode(data).decode()}}})
     for ident, data, why in metadata_cases():
         rows.append({'id': ident, 'divergence': 'D3', 'reason': LIMIT + why, 'function': 'connectome_archive.archive_manifest', 'args': [entry_for(data, R)], 'kwargs': {},
+                     'tree': {'archives/case.tgz': {'file': base64.b64encode(data).decode()}}})
+    for ident, tar, why in budget_cases():
+        data = ts_port.packed_gzip(tar + b'\0' * 1024)
+        rows.append({'id': ident, 'divergence': 'D4', 'reason': BUDGET + why, 'function': 'connectome_archive.archive_manifest', 'args': [entry_for(data, R)], 'kwargs': {},
                      'tree': {'archives/case.tgz': {'file': base64.b64encode(data).decode()}}})
     for ident, config, why in nan_cases():
         rows.append({'id': ident, 'divergence': 'D2', 'reason': NAN + why, 'function': 'connectome_config.required_names', 'args': [config], 'kwargs': {}, 'unordered': True})

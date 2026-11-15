@@ -109,3 +109,35 @@ test('only the observed pax keywords are kept, in the order and with the values 
   END]));
  assert.deepEqual(members.map(member=>member.name),['from-global','sparse-name','again','later']);
 });
+
+test('pax records: a repeated keyword keeps the place of its first record, and a keyword is never empty',()=>{
+ // The dict tarfile fills has `path` first and GNU.sparse.name second, whatever comes later; applied in that order, the sparse name wins.
+ const repeated=tarfile.tarMembers(Buffer.concat([pax([record('path','first'),record('GNU.sparse.name','sparse'),record('path','again')]),file('short','{}'),END]));
+ assert.deepEqual(repeated.map(member=>member.name),['sparse']);
+ const reversed=tarfile.tarMembers(Buffer.concat([pax([record('GNU.sparse.name','sparse'),record('path','first'),record('GNU.sparse.name','again')]),file('short','{}'),END]));
+ assert.deepEqual(reversed.map(member=>member.name),['first']);
+ // Across a global and an extended header as well: the global record holds the place.
+ const inherited=tarfile.tarMembers(Buffer.concat([pax([record('path','global'),record('GNU.sparse.name','global-sparse')],'g'),pax([record('GNU.sparse.name','own-sparse'),record('path','own')]),file('short','{}'),END]));
+ assert.deepEqual(inherited.map(member=>member.name),['own-sparse']);
+ // `5 =x\n` has no keyword: "invalid header". As the first member that is a ReadError; later it ends the listing silently.
+ const empty=Buffer.concat([header('PaxHeader',5,'x'),padded(Buffer.from('5 =x\n'))]);
+ assert.ok(outcome(()=>tarfile.tarMembers(Buffer.concat([empty,file('after','{}'),END]))) instanceof tarfile.ReadError);
+ assert.deepEqual(tarfile.tarMembers(Buffer.concat([file('before','{}'),empty,file('after','{}'),END])).map(member=>member.name),['before']);
+ assert.deepEqual(tarfile.tarMembers(Buffer.concat([file('before','{}'),pax([record('x','=')]),file('after','{}'),END])).map(member=>member.name),['before','after']);
+});
+
+test('int() of a pax number takes single underscores between digits and nothing else of them',()=>{
+ for(const [text,value] of [['1_0',10n],['1__0',null],['_10',null],['10_',null],['1_0_0',100n],['1_ 0',null],['+_1',null],['-1_0',-10n],['1___0',null],[' 1_0 ',10n],['0_0',0n],['1_',null],['_',null]]){
+  assert.equal(tarfile.pyIntStr(text),value,JSON.stringify(text));
+  assert.equal(tarfile.pyIntBytes(Buffer.from(text)),value,JSON.stringify(text));
+ }
+ // Blanks are the six of ASCII, around the number only; a number has at most 4,300 digits.
+ for(const [text,value] of [['\v1',1n],['\f1',1n],['\r1',1n],['1\v',1n],['1\f\r\n\t ',1n],['+ 1',null],['- 1',null],['+\t1',null],['1 1',null],['9'.repeat(4300),BigInt('9'.repeat(4300))],['9'.repeat(4301),null],['0'.repeat(4301),null]]){
+  assert.equal(tarfile.pyIntStr(text),value,JSON.stringify(text.slice(0,20)));
+  assert.equal(tarfile.pyIntBytes(Buffer.from(text)),value,JSON.stringify(text.slice(0,20)));
+ }
+ // In a pax size a failed conversion is 0; in a sparse size it is a ValueError.
+ const sized=value=>tarfile.tarMembers(Buffer.concat([pax([record('size',value)]),file('package/package.json','{}'),END]))[0].size;
+ assert.deepEqual([sized('1__0'),sized('1_0'),sized('5_')],[0n,10n,0n]);
+ assert.equal(outcome(()=>tarfile.tarMembers(Buffer.concat([pax([record('GNU.sparse.realsize','1__0')]),file('a','{}'),END])))?.pyName,'ValueError');
+});

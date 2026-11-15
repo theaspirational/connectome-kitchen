@@ -97,7 +97,7 @@ class Port(unittest.TestCase):
     def test_deliberate_divergences_are_named_and_still_hold_on_the_oracle(self):
         entries = json.loads((ROOT / 'test/vectors/port-divergences.golden').read_text())
         self.assertEqual(len({entry['id'] for entry in entries}), len(entries))
-        self.assertEqual({entry['divergence'] for entry in entries}, {'D1', 'D2', 'D3'})
+        self.assertEqual({entry['divergence'] for entry in entries}, {'D1', 'D2', 'D3', 'D4'})
         ts_port.initialize()
         for entry in entries:
             self.assertGreater(len(entry['reason']), 100, entry['id'])
@@ -118,8 +118,11 @@ class Port(unittest.TestCase):
         self.assertEqual(dict(changed['oracle']['public']['$mapping'])['error_code'], 'E_ARCHIVE_IDENTITY')
         self.assertEqual(dict(changed['port']['public']['$mapping'])['error_code'], 'E_ADAPTER_INPUT')
         for entry in entries:
-            if entry['divergence'] in ('D1', 'D3'):
+            if entry['divergence'] in ('D1', 'D3', 'D4'):
                 self.assertEqual((entry['port']['message'], dict(entry['port']['public']['$mapping'])['error_code']), ('unreadable archive or manifest', 'E_ADAPTER_INPUT'), entry['id'])
+                if entry['divergence'] == 'D4':
+                    # A budget refuses archives the oracle reads; the ones that meet every budget from three sides are in port-budget.golden.
+                    self.assertEqual(entry['oracle'], {'result': {'$mapping': [['name', 'example-package'], ['version', '1.0.0']]}}, entry['id'])
                 if entry['divergence'] == 'D3':
                     # The small D3 entries state a size no machine allocates; the archives that hold a block at the limit are in port-large.golden.
                     self.assertEqual(entry['oracle'], {'crash': 'MemoryError'}, entry['id'])
@@ -130,7 +133,7 @@ class Port(unittest.TestCase):
     def test_rulings_are_recorded_as_received_and_nothing_unkilled_counts_as_killed(self):
         record = json.loads((ROOT / 'test/port-rulings.golden').read_text())
         rulings = {entry['id']: entry for entry in record['rulings']}
-        self.assertEqual(sorted(rulings), ['B9', 'D1', 'D2', 'D3', 'L1', 'M1', 'O1', 'R6'])
+        self.assertEqual(sorted(rulings), ['B9', 'D1', 'D2', 'D3', 'D4', 'L1', 'M1', 'O1', 'R6'])
         for entry in rulings.values():
             self.assertGreater(len(entry['as_received']), 40, entry['id'])
         results = {r['id']: r['status'] for r in json.loads(ts_mutants.RESULTS.read_text())['results']}
@@ -144,7 +147,7 @@ class Port(unittest.TestCase):
         self.assertEqual(sum(status == 'killed' for status in results.values()), 262)
         self.assertEqual(len(results), 270)
         # A choice a ruling left open is recorded as the implementer's, apart from the ruling's own words.
-        for ident in ('D3', 'B9', 'L1'):
+        for ident in ('D3', 'D4', 'B9', 'L1'):
             self.assertGreater(len(rulings[ident]['left_to_the_implementer']), 20, ident)
         # The witness a ruling moved to a later module is an open obligation with a trigger, not a note.
         owed = {entry['id']: entry for entry in record['obligations']}
@@ -157,33 +160,47 @@ class Port(unittest.TestCase):
         self.assertEqual(sorted(entry['id'] for entry in r6['known_mismatches_of_the_combine_helper']), sorted(rulings['R6']['known_mismatches_of_the_combine_helper']))
         self.assertEqual(r6['vectors']['connectome_config.merge_layers'].get('mismatch', 0), 0)
 
-    def test_the_readiness_check_is_red_while_a_review_or_a_ruling_is_owed(self):
+    def test_the_readiness_check_is_red_while_a_review_a_ruling_or_an_approval_is_owed(self):
         record = json.loads((ROOT / 'test/port-rulings.golden').read_text())
         done = subprocess.run([sys.executable, str(ROOT / 'scripts/check-port-ready')], capture_output=True, text=True)
         lines = done.stdout.splitlines()
         self.assertEqual(lines[0], '262 of 270 TS mutants killed')
+        reader = json.loads((ROOT / 'test/mutants/reader-results.golden').read_text())
+        self.assertEqual(lines[1], '%d of %d reader mutants killed' % (reader['mutants'], reader['mutants']))
+        self.assertGreaterEqual(reader['mutants'], 64)
         self.assertIn('RULED: 8 TS mutants are not kills and are accepted as such by ruling M1: 5 redundant survivors, 2 compiler, 1 crash-only', lines)
         review = record['delta_review']
-        owed = review['status'] != 'passed' or any(entry['status'] != 'ruled' for entry in record['open_findings'])
-        self.assertEqual(done.returncode, int(owed), done.stdout)
-        self.assertEqual(any(line.startswith('BLOCKED: ') for line in lines), owed, done.stdout)
-        self.assertEqual(any(line.startswith('PASS port evidence') for line in lines), not owed)
-        if review['status'] != 'passed':
-            self.assertTrue(any(line.startswith('BLOCKED: the delta review is ') for line in lines), done.stdout)
-        else:
-            # A passed review names the commit it read and its report, and says who recorded it on whose word.
-            self.assertRegex(review['commit'], r'^[0-9a-f]{40}$')
-            self.assertRegex(review['review_report_sha256'], r'^[0-9a-f]{64}$')
-            self.assertIn('on this instruction of the technical owner', review['set_by'])
-            self.assertIn('RULED: the delta review of %s passed (%s; report sha256 %s)' % (review['commit'][:7], review['covers'], review['review_report_sha256']), lines)
-        for entry in record['open_findings']:
-            self.assertEqual(('BLOCKED: open finding %s has no ruling (test/port-rulings.golden)' % entry['id']) in lines, entry['status'] != 'ruled', entry['id'])
+        blocked = [line for line in lines if line.startswith('BLOCKED: ')]
+        # What the record itself owes, line for line.
+        owed = ['BLOCKED: open finding %s is not closed: %s (test/port-rulings.golden)' % (entry['id'], entry['status']) for entry in record['open_findings'] if entry['status'] != 'ruled']
+        defaults = next(entry for entry in record['rulings'] if entry['id'] == 'D4')['defaults']
+        if defaults['status'] != 'approved':
+            owed.append('BLOCKED: the budgets of D4 (metadataBytes 2**28, paxRecords 2**24, sparseNumbers 2**20, members 2**17) and the heap they are sized for (2048 MiB) are %s (test/port-rulings.golden, ruling D4)' % defaults['status'])
+        for line in owed:
+            self.assertIn(line, blocked, done.stdout)
+        # Anything else that blocks is work no recorded review has read: commits after the reviewed one, or an edited tree.
+        for line in blocked:
+            if line not in owed:
+                self.assertTrue(line.startswith('BLOCKED: no recorded review covers what was changed after %s outside docs/ and test/port-rulings.golden: ' % review['commit'][:7]), done.stdout)
+        self.assertEqual(done.returncode, int(bool(blocked)), done.stdout)
+        self.assertEqual(any(line.startswith('PASS port evidence') for line in lines), not blocked)
+        # A passed review names the commit it read and its report, and says who recorded it on whose word.
+        self.assertEqual(review['status'], 'passed')
+        self.assertRegex(review['commit'], r'^[0-9a-f]{40}$')
+        self.assertRegex(review['review_report_sha256'], r'^[0-9a-f]{64}$')
+        self.assertIn('on this instruction of the manager of the dispatch', review['set_by'])
+        self.assertIn('on this instruction of the technical owner', record['earlier_delta_reviews'][0]['set_by'])
+        self.assertIn('RULED: the delta review of %s passed (%s; report sha256 %s)' % (review['commit'][:7], review['covers'], review['review_report_sha256']), lines)
+        # F4 is built and stays open: the brief keeps it red until its numbers are approved and the round is reviewed.
+        f4 = next(entry for entry in record['open_findings'] if entry['id'] == 'F4')
+        self.assertTrue(f4['status'].startswith('open: built as divergence D4'), f4['status'])
+        self.assertEqual((f4['ruling'], defaults['status']), ('D4', 'proposed, not approved'))
 
     def test_the_readiness_check_blocks_on_each_thing_it_claims_to_hold(self):
         # The check, run on copies of the evidence with one thing wrong each: every one must turn it red, with its own line.
         import shutil, tempfile
         names = ['scripts/check-port-ready', 'scripts/porting-map.py', 'PORTING.md', 'test/port-rulings.golden', 'test/vectors/port-divergences.golden', 'test/vectors/port-large.golden',
-                 'test/vectors/r6-combine.golden', 'test/mutants/ts-results.golden', 'test/mutants/ts-unkilled.golden', 'test/mutants/ts-reviewed.golden', 'oracle/versions.yml']
+                 'test/vectors/port-budget.golden', 'test/mutants/reader-results.golden', 'test/vectors/r6-combine.golden', 'test/mutants/ts-results.golden', 'test/mutants/ts-unkilled.golden', 'test/mutants/ts-reviewed.golden', 'oracle/versions.yml']
 
         def run(change):
             with tempfile.TemporaryDirectory(dir=ROOT / '.cache' if (ROOT / '.cache').is_dir() else None) as scratch:
@@ -225,14 +242,33 @@ class Port(unittest.TestCase):
                 edit({case['id']: case for case in record['cases']})
                 (root / 'test/vectors/port-large.golden').write_text(json.dumps(record))
             return change
-        # Unchanged, the copy blocks on exactly the findings that have no ruling, as the tree does.
-        unruled = ['BLOCKED: open finding %s has no ruling (test/port-rulings.golden)' % entry['id']
-                   for entry in json.loads((ROOT / 'test/port-rulings.golden').read_text())['open_findings'] if entry['status'] != 'ruled']
+        def budgets(edit):
+            def change(root):
+                record = json.loads((root / 'test/vectors/port-budget.golden').read_text())
+                dropped = edit({case['id']: case for case in record['cases']})
+                record['cases'] = [case for case in record['cases'] if case['id'] != dropped]
+                (root / 'test/vectors/port-budget.golden').write_text(json.dumps(record))
+            return change
+
+        def mutants(edit):
+            def change(root):
+                record = json.loads((root / 'test/mutants/reader-results.golden').read_text())
+                edit(record)
+                (root / 'test/mutants/reader-results.golden').write_text(json.dumps(record))
+            return change
+        d4 = lambda record: next(entry for entry in record['rulings'] if entry['id'] == 'D4')
+        # Unchanged, the copy blocks on exactly what the record owes, as the tree does: the open finding and the unapproved numbers.
+        original = json.loads((ROOT / 'test/port-rulings.golden').read_text())
+        unruled = ['open finding %s is not closed: ' % entry['id'] for entry in original['open_findings'] if entry['status'] != 'ruled']
+        unapproved = ['the budgets of D4 ('] if d4(original)['defaults']['status'] != 'approved' else []
         code, out = run(lambda root: None)
-        self.assertEqual([line for line in out.splitlines() if line.startswith('BLOCKED: ')], unruled, out)
-        self.assertEqual(code, int(bool(unruled)), out)
-        # With every finding ruled it passes: each line asserted below is then the only thing in the way.
-        settle = lambda record: [entry.update(status='ruled', ruling='D3') for entry in record['open_findings']]
+        blocked = [line[len('BLOCKED: '):] for line in out.splitlines() if line.startswith('BLOCKED: ')]
+        self.assertEqual(len(blocked), len(unapproved + unruled), out)
+        for line, start in zip(blocked, unapproved + unruled):
+            self.assertTrue(line.startswith(start), out)
+        self.assertEqual(code, int(bool(blocked)), out)
+        # With every finding ruled and the numbers approved it passes: each line asserted below is then the only thing in the way.
+        settle = lambda record: ([entry.update(status='ruled', ruling='D3') for entry in record['open_findings']], d4(record)['defaults'].update(status='approved'))
         code, out = run(rulings(settle))
         self.assertEqual((code, [line for line in out.splitlines() if line.startswith('BLOCKED: ')]), (0, []), out)
         self.assertTrue(any(line.startswith('PASS port evidence') for line in out.splitlines()), out)
@@ -242,7 +278,7 @@ class Port(unittest.TestCase):
         wrong = [
             ('the delta review is pending', rulings(lambda record: record['delta_review'].update(status='pending'))),
             ('invalid/stale port evidence', rulings(lambda record: record['delta_review'].update(commit='a198042'))),
-            ('open finding F1 has no ruling', rulings(lambda record: record['open_findings'][0].update(status='not ruled'))),
+            ('open finding F1 is not closed: not ruled', rulings(lambda record: record['open_findings'][0].update(status='not ruled'))),
             # F1 is closed by D3 and the D3 entries cite it: without the ruling the record contradicts itself.
             ('invalid/stale port evidence', rulings(lambda record: record['rulings'].remove(d3(record)))),
             ('deliberate divergences from the oracle without a ruling: tar-metadata.longname.states-2-to-the-62', rulings(lambda record: d3(record).update(subject='note'))),
@@ -253,15 +289,99 @@ class Port(unittest.TestCase):
             ('the vectors at the metadata limit do not show both of its sides in both engines', large(lambda cases: cases['metadata.longname.at-limit'].update(port=cases['metadata.longname.above-limit']['port']))),
             ('the vectors at the metadata limit do not show both of its sides in both engines', replace('src/pylike/tarfile.ts', 'export const METADATA_LIMIT = 2n ** 28n;', 'export const METADATA_LIMIT = 2n ** 29n;')),
             ('the 4 GiB archive vectors do not show a valid archive', large(lambda cases: cases['large.valid'].update(classification='D1'))),
+            # D4: the ruling, the approval of its numbers, the numbers themselves, and the vectors on the sides of each budget.
+            ('the admission budgets of the tar reader have no ruling', lambda root: (rulings(lambda record: record['rulings'].remove(d4(record)))(root),
+                                                                              (root / 'test/vectors/port-divergences.golden').write_text(json.dumps([entry for entry in json.loads((root / 'test/vectors/port-divergences.golden').read_text()) if entry['divergence'] != 'D4'])))),
+            ('deliberate divergences from the oracle without a ruling: tar-budget.sparse-numbers.map-of-one-number-more', rulings(lambda record: d4(record).update(subject='note'))),
+            ('the budgets of D4 (metadataBytes 2**28, paxRecords 2**24, sparseNumbers 2**20, members 2**17) and the heap they are sized for (2048 MiB) are proposed, not approved', rulings(lambda record: d4(record)['defaults'].update(status='proposed, not approved'))),
+            ('the budgets or the heap requirement of the reader are not the ones ruling D4 records', rulings(lambda record: d4(record)['defaults']['budgets'].update(members=2 ** 18))),
+            ('the budgets or the heap requirement of the reader are not the ones ruling D4 records', rulings(lambda record: d4(record)['defaults'].update(heap_limit_required_mib=1024))),
+            ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['members.above'].update(classification='equal'))),
+            ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['sparse-global.above']['oracle_walk'].update(crossed=None))),
+            ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['names.at']['oracle_walk']['used'].update(metadataBytes=2 ** 28 - 1))),
+            ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['sparse-1.0.above']['reader'].update(budget='metadataBytes'))),
+            ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['combined.all-below']['oracle_walk']['used'].update(members=2 ** 17 - 2))),
+            ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: 'records.below')),
+            # The reader's mutants: each is killed, and the results are of the sources in the tree.
+            ('reader mutants not killed: reader.d4.members.uncounted', mutants(lambda record: next(result for result in record['results'] if result['id'] == 'reader.d4.members.uncounted').update(status='survived'))),
+            ('invalid/stale port evidence', mutants(lambda record: record['results'].pop())),
+            ('the reader mutant results were taken from other sources than the ones in the tree', replace('src/archive.ts', 'const MANIFEST_NAME = {', 'const MANIFEST_NAME  = {')),
         ]
+        # A change of the reader's source also makes the mutant results stale; that line is expected beside the one a case is about.
+        stale = 'BLOCKED: the reader mutant results were taken from other sources than the ones in the tree'
         for message, change in wrong:
             # On a copy where every finding is ruled, so that the defect is the only thing that can block.
             code, out = run(settled(change))
             self.assertEqual(code, 1, message)
             blocked = [line for line in out.splitlines() if line.startswith('BLOCKED: ')]
+            if not message.startswith(stale[len('BLOCKED: '):]):
+                blocked = [line for line in blocked if not line.startswith(stale)]
             self.assertEqual(len(blocked), 1, out)
             self.assertTrue(blocked[0].startswith('BLOCKED: ' + message), out)
             self.assertNotIn('PASS port evidence', out, message)
+
+    def test_the_readiness_check_blocks_on_a_later_commit_that_no_recorded_review_has_read(self):
+        # In a repository of its own: a commit after the reviewed one may record a review and edit the notes, and nothing else.
+        import shutil, tempfile
+        names = ['scripts/check-port-ready', 'scripts/porting-map.py', 'PORTING.md', 'test/port-rulings.golden', 'test/vectors/port-divergences.golden', 'test/vectors/port-large.golden',
+                 'test/vectors/port-budget.golden', 'test/mutants/reader-results.golden', 'test/vectors/r6-combine.golden', 'test/mutants/ts-results.golden', 'test/mutants/ts-unkilled.golden',
+                 'test/mutants/ts-reviewed.golden', 'oracle/versions.yml']
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch).resolve()
+            git = lambda *args: subprocess.run(['git', '-C', str(root), '-c', 'user.name=check', '-c', 'user.email=check@example.invalid', '-c', 'commit.gpgsign=false', *args], capture_output=True, text=True, check=True).stdout.strip()
+            for name in names:
+                (root / name).parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy(ROOT / name, root / name)
+            for folder in ('src', 'oracle/module_utils', 'docs'):
+                shutil.copytree(ROOT / folder, root / folder)
+            git('init', '--quiet')
+            git('add', '--all')
+            git('commit', '--quiet', '-m', 'the reviewed commit')
+            reviewed = git('rev-parse', 'HEAD')
+
+            def check():
+                done = subprocess.run([sys.executable, str(root / 'scripts/check-port-ready')], capture_output=True, text=True)
+                return done.returncode, done.stdout, [line for line in done.stdout.splitlines() if line.startswith('BLOCKED: ')]
+
+            def commit(message, edits):
+                for name, text in edits.items():
+                    (root / name).parent.mkdir(parents=True, exist_ok=True)
+                    (root / name).write_text(text)
+                git('add', '--all')
+                git('commit', '--quiet', '-m', message)
+            # The record of the review itself, with every finding settled: a commit that touches only the record. It passes.
+            record = json.loads((root / 'test/port-rulings.golden').read_text())
+            for entry in record['open_findings']:
+                entry.update(status='ruled', ruling='D3')
+            next(entry for entry in record['rulings'] if entry['id'] == 'D4')['defaults']['status'] = 'approved'
+            record['delta_review']['commit'] = reviewed
+            commit('record the review', {'test/port-rulings.golden': json.dumps(record)})
+            code, out, blocked = check()
+            self.assertEqual((code, blocked), (0, []), out)
+            self.assertIn('NOTE: not covered by the recorded delta review: %s record the review' % git('rev-parse', '--short', 'HEAD'), out)
+            self.assertIn('PASS port evidence', out)
+            # So does a commit that edits the notes.
+            commit('notes', {'docs/port-notes.md': (root / 'docs/port-notes.md').read_text() + '\nA note.\n'})
+            self.assertEqual(check()[0], 0)
+            # An edit that is not committed blocks, in the tree or new beside it; and no longer once it is undone.
+            start = 'BLOCKED: no recorded review covers what was changed after %s outside docs/ and test/port-rulings.golden: ' % reviewed[:7]
+            (root / 'test/unit').mkdir(parents=True)
+            (root / 'test/unit/new.test.js').write_text('// new\n')
+            code, out, blocked = check()
+            self.assertEqual((code, blocked), (1, [start + 'uncommitted changes in the working tree']), out)
+            (root / 'test/unit/new.test.js').unlink()
+            (root / 'docs/more.md').write_text('more\n')
+            self.assertEqual(check()[0], 0)
+            # A commit that changes a source file blocks, and is named; one that changes a vector file as well.
+            source = (root / 'src/errors.ts').read_text()
+            commit('touch a source file', {'src/errors.ts': source + '\n// a later change\n', 'docs/more.md': 'more\n'})
+            first = git('rev-parse', '--short', 'HEAD')
+            code, out, blocked = check()
+            self.assertEqual((code, blocked), (1, [start + first + ' touch a source file']), out)
+            self.assertNotIn('PASS port evidence', out)
+            commit('touch a vector file', {'test/vectors/port-large.golden': (root / 'test/vectors/port-large.golden').read_text() + '\n'})
+            code, out, blocked = check()
+            self.assertEqual((code, blocked), (1, [start + git('rev-parse', '--short', 'HEAD') + ' touch a vector file; ' + first + ' touch a source file']), out)
 
     def test_archives_of_4_gib_are_recorded_as_read_not_as_divergent(self):
         large = json.loads((ROOT / 'test/vectors/port-large.golden').read_text())

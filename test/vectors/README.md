@@ -33,3 +33,8 @@ A row names its file tree by digest; a string the publication gate would refuse
 is stored in pieces (`$join`) and large inputs as a generator (`$generate`).
 `port-divergences.golden` names every input on which the port deliberately
 answers differently from the oracle, with both outcomes and the reason.
+`port-large.golden` and `port-budget.golden` hold the outcomes of both engines
+on archives too large to commit, which `test/differential/port_large.py` and
+`port_budget.py` build on the spot: 4 GiB of data and the metadata limit (D3)
+in the first, the four admission budgets from three sides each (D4) in the
+second.
