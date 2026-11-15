@@ -33,6 +33,8 @@ class Rehearsal(unittest.TestCase):
     def tearDownClass(cls):
         ts_port.remove(SCRATCH)
 
+    environment = {}
+
     def world(self, label, activation='install_only'):
         case = copy.copy(self.case)
         case.data = copy.deepcopy(self.case.data)
@@ -59,7 +61,8 @@ class Rehearsal(unittest.TestCase):
         return world
 
     def run_mode(self, world, mode):
-        env = {'HOME': str(world.home), 'PATH': '%s:/usr/bin:/bin' % (world.sandbox / 'bin'), 'LANG': 'C.UTF-8'}
+        env = {'HOME': str(world.home), 'PATH': '%s:/usr/bin:/bin' % (world.sandbox / 'bin'), 'LANG': 'C.UTF-8', 'XDG_RUNTIME_DIR': str(world.sandbox)}
+        env.update(self.environment)
         done = subprocess.run([NODE, str(ROOT / 'test/corpus/rehearse_driver.mjs'), mode, str(self.input), str(world.sandbox), world.account],
                               env=env, capture_output=True, text=True, timeout=300)
         log = [json.loads(line) for line in (self.keep / 'rehearsal.log').read_text().splitlines()] if (self.keep / 'rehearsal.log').is_file() else []
@@ -80,7 +83,7 @@ class Rehearsal(unittest.TestCase):
         self.document['expect']['request_id'] = request
         self.input.write_text(json.dumps(self.document))
         done, log = self.run_mode(world, 'apply')
-        self.assertEqual(done.returncode, 0, done.stderr + json.dumps([entry for entry in log if entry['mode'] == 'apply' and entry['step'] in ('apply answered', 'tool failed', 'tool refused', 'engine failure that is not a refusal', 'end')]))
+        self.assertEqual(done.returncode, 0, done.stderr + json.dumps([entry for entry in log if entry['run'] == 'apply' and entry['step'] in ('apply answered', 'tool failed', 'tool refused', 'engine failure that is not a refusal', 'end')]))
         receipt = json.loads((self.keep / 'apply-apply.receipt.json').read_text())['core']
         self.assertEqual((receipt['changed'], receipt['activate']['activation'], receipt['activate']['unit_state']), (True, 'install_only', 'inactive'))
         self.assertEqual((root / 'state/activation').read_text(), 'install_only\n')
@@ -90,11 +93,11 @@ class Rehearsal(unittest.TestCase):
         verbs = {next(word for word in json.loads(line) if not word.startswith('-')) for name in ('systemctl-calls', '../preflight-systemctl-calls')
                  for line in (root / name).read_text().splitlines()}
         self.assertEqual(verbs, {'is-active', 'show', 'daemon-reload'})
-        kinds = [entry['kind'] for entry in log if entry['step'] == 'tool started' and entry['mode'] == 'apply']
+        kinds = [entry['kind'] for entry in log if entry['step'] == 'tool started' and entry['run'] == 'apply']
         self.assertEqual(kinds, ['adapter', 'daemon-reload', 'unit verifier'])
         self.assertIn('--user verify', (world.sandbox / 'analyze-calls').read_text())
         # Cook's lock as cook wrote it is kept, and it is not the lock the adapter left.
-        kept = next(entry for entry in log if entry['step'] == 'cook lock as written' and entry['mode'] == 'apply')
+        kept = next(entry for entry in log if entry['step'] == 'cook lock as written' and entry['run'] == 'apply')
         cooked = Path(kept['kept'])
         build = root / 'builds' / request
         self.assertNotIn('provenance', cooked.read_text())
@@ -124,11 +127,16 @@ class Rehearsal(unittest.TestCase):
         self.assertEqual(done.returncode, 3)
         self.assertFalse(self.keep.exists() or Path(world.root).exists() or Path(world.effective['secrets_file']).exists())
 
-    def test_refuses_another_runtime_a_foreign_secrets_file_and_a_moved_bundle(self):
+    def test_refuses_another_runtime_no_user_manager_a_foreign_secrets_file_and_a_moved_bundle(self):
         world = self.world('refusals')
         self.document['request']['engines']['cook']['runtime'] = self.document['request']['engines']['cook']['bun']
         self.input.write_text(json.dumps(self.document))
         self.assertEqual(self.run_mode(world, 'check')[0].returncode, 3)
+        world = self.world('refusals')
+        self.environment = {'XDG_RUNTIME_DIR': str(world.sandbox / 'absent')}
+        done, log = self.run_mode(world, 'check')
+        self.assertEqual((done.returncode, self.keep.exists()), (3, False))
+        self.environment = {}
         world = self.world('refusals')
         secrets = Path(world.effective['secrets_file'])
         corpus.write(secrets, '{"EXAMPLE_API_KEY": "a value of the host"}', 0o600, world.home)

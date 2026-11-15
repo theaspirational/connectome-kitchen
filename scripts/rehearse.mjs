@@ -114,6 +114,10 @@ export function rehearse(mode, inputFile, { host = realHost, start = deploy.run,
     need(exclusive.every(([, other]) => other !== unit), 'the deployment excludes its own unit');
     const cook = request.get('engines')?.get?.('cook');
     need(cook instanceof Map && cook.get('runtime') === COOK_KEEP, 'the cook runtime must be ' + COOK_KEEP + ': it runs Bun and keeps cook\'s lock as cook wrote it');
+    // The user manager's runtime directory: without it the unit verifier cannot run, and the engine would learn that only
+    // after cook, at the end of activation (E_UNIT_VERIFY, and everything taken back).
+    const runtime = process.env.XDG_RUNTIME_DIR;
+    need(typeof runtime === 'string' && fs.existsSync(runtime) && fs.statSync(runtime).isDirectory(), 'XDG_RUNTIME_DIR must name the runtime directory of this account\'s user manager');
     const root = request.get('root'), unitDir = request.get('unit_dir'), stateDir = effective.get('state_dir'), secretsFile = effective.get('secrets_file');
     need([root, unitDir, stateDir, secretsFile].every(value => typeof value === 'string' && value.startsWith(home + '/')), 'root, unit_dir, state_dir and secrets_file must lie in this account\'s home');
 
@@ -124,7 +128,7 @@ export function rehearse(mode, inputFile, { host = realHost, start = deploy.run,
     const logFile = path.join(keep, 'rehearsal.log'), guardLog = path.join(keep, 'systemctl-calls.log');
     let sequence = 0;
     log = (step, detail = {}) => {
-      const line = JSON.stringify({ at: new Date().toISOString(), n: ++sequence, mode, step, ...detail });
+      const line = JSON.stringify({ at: new Date().toISOString(), n: ++sequence, run: mode, step, ...detail });
       fs.appendFileSync(logFile, line + '\n', { mode: 0o600 });
       echo(line);
     };
@@ -188,7 +192,12 @@ export function rehearse(mode, inputFile, { host = realHost, start = deploy.run,
     if (before.secrets_file.absent) {
       need(mode !== 'verify', 'verify writes nothing, and the secrets file is absent');
       const directory = path.dirname(secretsFile);
-      if (!fs.existsSync(directory)) { fs.mkdirSync(directory, { mode: 0o700 }); fs.chmodSync(directory, 0o700); log('made directory', describe(directory)); }
+      if (!fs.existsSync(directory)) {
+        // As the engine makes a directory (src/deploy.ts, `make_directory`): missing parents 0755, the directory itself 0700.
+        const missing = [];
+        for (let current = directory; !fs.existsSync(current); current = path.dirname(current)) missing.unshift(current);
+        for (const current of missing) { fs.mkdirSync(current); fs.chmodSync(current, current === directory ? 0o700 : 0o755); log('made directory', describe(current)); }
+      }
       fs.writeFileSync(secretsFile, template, { mode: 0o600, flag: 'wx' });
       fs.chmodSync(secretsFile, 0o600);
       log('wrote placeholder secrets file', { ...describe(secretsFile), names });
@@ -298,6 +307,8 @@ function keepBuild(build, requestId, root, keep, log) {
 }
 
 if (process.argv[1] && fs.realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  // What the engine and the adapter write without naming a mode must not depend on the caller's umask.
+  process.umask(0o022);
   const [mode, flag, inputFile, ...rest] = process.argv.slice(2);
   process.exitCode = flag === '--input' && !rest.length ? rehearse(mode, inputFile) : rehearse(null, null);
 }
