@@ -50,6 +50,18 @@
     "1. Close XQ63S. Soma accepted the delta 06ee0cc..05298e9455e315a26552c55e8b79968e6ca2e4bc. Record it in test/port-rulings.golden as her bounded technical acceptance (not an independent review), quoting her: \"Технічно приймаю дельту 06ee0cc..05298e9 для нашого погодженого success path — варіант(a). ... Це моє bounded technical acceptance, не нове незалежне Opus-review\" (Zulip Kitchen 2359). Run check-port-ready once and commit; expect it green apart from the two lines that were red before the task. No other gates."
    ],
    "not_seen_by_the_implementer": "Zulip Kitchen 2359, quoted here as the brief relays it."
+  },
+  {
+   "round": "plan question Q1, the identity of a build",
+   "date": "2026-11-15",
+   "from": "the owner (Vasyl), by a decision relayed in the dispatch brief of the step that builds it",
+   "after": "commit 15ee4a1, the deploy corpus with the switch of activation; a review finding L2 on what the request id hashes, which the brief cites",
+   "brief": [
+    "The owner decided Q1 (Zulip #Tarn > kitchen, 2393, option C). Today the build's request id hashes the cook-adapter argv, i.e. the paths of Node and `dist/cook-adapter.js` (review L2: src/engine.ts:68-70, src/deploy.ts:582). That means every Node upgrade or move of kitchen rebuilds and restarts every agent. With C, kitchen's request identity uses a named, versioned adapter contract instead of paths, e.g. `kitchen-cook-adapter/1`. The number moves only when what the adapter puts into a build changes. The command actually executed stays the real one. Kitchen clone `.cache/kitchen/repo` is at 15ee4a1.",
+    "This is a deliberate divergence from the oracle (which hashes `sys.executable` plus the script path). Record it as a named ruling, and make the corpus compare it on purpose rather than hide it: the oracle side keeps its own id, and the TS side must be shown to be identical in everything except the identity words. Add a guard so the version can't silently go stale: a test where the adapter's observable output (lock post-processing, modes, staged files) is pinned to the contract version, so any change in that output fails until the version is bumped.",
+    "Say what it means for taking over each of us: the first kitchen apply is a new build plus a restart, once, and none after for Node or kitchen moves. Show that in the corpus (same inputs, different Node path or install location: same id). `npm test` and the corpus on both Nodes. No cook, no accounts. Commit, write report.md as you go, and finalize."
+   ],
+   "not_seen_by_the_implementer": "The message the brief cites (Zulip #Tarn > kitchen, 2393), the options beside C, and the review whose finding L2 it names. All are recorded here as the brief relays them. The lines the brief gives for L2 are those of the reviewed commit; at 15ee4a1 the words are put together in src/engine.ts:65-68 and hashed in src/deploy.ts:585."
   }
  ],
  "delta_review": {
@@ -410,6 +422,28 @@
     "test/port-rulings.golden (obligation archive.trusted-input, finding F4)",
     "docs/port-notes.md (\"The admission budgets\")"
    ]
+  },
+  {
+   "id": "D5",
+   "subject": "divergence",
+   "closes": "plan question Q1 (approved plan 10.2) and backlog B24",
+   "as_received": "The owner decided Q1 (Zulip #Tarn > kitchen, 2393, option C). Today the build's request id hashes the cook-adapter argv, i.e. the paths of Node and `dist/cook-adapter.js` (review L2: src/engine.ts:68-70, src/deploy.ts:582). That means every Node upgrade or move of kitchen rebuilds and restarts every agent. With C, kitchen's request identity uses a named, versioned adapter contract instead of paths, e.g. `kitchen-cook-adapter/1`. The number moves only when what the adapter puts into a build changes. The command actually executed stays the real one. Kitchen clone `.cache/kitchen/repo` is at 15ee4a1. This is a deliberate divergence from the oracle (which hashes `sys.executable` plus the script path). Record it as a named ruling, and make the corpus compare it on purpose rather than hide it: the oracle side keeps its own id, and the TS side must be shown to be identical in everything except the identity words. Add a guard so the version can't silently go stale: a test where the adapter's observable output (lock post-processing, modes, staged files) is pinned to the contract version, so any change in that output fails until the version is bumped.",
+   "left_to_the_implementer": "The name of the contract and the shape of what is hashed. Chosen: the one word `kitchen-cook-adapter/1`, the example the brief gives, in the place of the two words `[interpreter, adapter script]`; every later word of the cook command is hashed as the oracle's shim words it. Also chosen: what the number covers (first bound below) and how the guard is built (third bound).",
+   "bounds": [
+    "The request id of a build is sha256 of the canonical `{\"spec\": ..., \"cook\": [...]}` in both engines (deploy.py:482; src/deploy.ts, the constructor). The oracle's `cook` is the cook command: its interpreter, the path of its adapter script, then `--spec {recipe} --out {build_dir} --state {state_dir} --runtime R --entrypoint E --bun-path B --node-path N`. A kitchen's `cook` is `kitchen-cook-adapter/<number>` and then the same fourteen words (src/engine.ts; ADAPTER_CONTRACT in src/cook.ts). Nothing else of the identity differs: the spec is the oracle's canonical request byte for byte, and the paths of cook's runtime, its entrypoint, Bun and Node stay in the name, since they go into the build.",
+    "The command that is started is not changed: this Node and `dist/cook-adapter.js` of this install, with the same later words. It is no part of the name any more.",
+    "The number is raised when, for some request, the adapter puts something else into a build: the recipe it writes or stages, the layout, `framework.lock.json`, the lock after its post-processing, a mode of one of those files, or the arguments and environment names it hands cook. It is raised for nothing else: not for another Node, another install location, a refactoring or a new refusal. test/corpus/adapter_contract.py holds that output on the public cases of the deploy corpus against a record kept under the name (test/corpus/adapter-contract/). It fails on any difference, refuses to rewrite a record for a change of the adapter, and keeps the digests of the cases and stand-ins so that a record can be replaced only when those changed. It sees what the three public cases exercise and no more: a change that shows on other input only is not caught by it and is the reviewer's to catch.",
+    "`Deployment` takes the identity as an option of its own (`cook_identity`). Without it the command names the build, as in the oracle, and that is how the role's own call is still compared (`role` in a golden). Only `dispatch` of src/engine.ts gives it. `EngineOptions.identity` lets a caller hand in other words; the deploy corpus does so for one of its two runs and nothing else may.",
+    "What it means for an agent the role deployed (finding 1 of the approved plan, unchanged by this ruling): the role's build has the role's name, which no kitchen gives. The first `apply` of a kitchen is therefore a new build beside it, one cook run and one restart of the unit, once for each agent, and `plan` says so beforehand. After that an upgrade of Node, a move of Node or a move of kitchen changes no name and causes no build and no restart. A change of the number does, once for each agent again.",
+    "A build a kitchen made before this ruling has a name with the paths in it. One exists: the rehearsal build on the trial account (installed, never started). The next `apply` there is a new build as well."
+   ],
+   "evidence": [
+    "test/corpus/corpus.py compare: the section `build_name` of a golden (the oracle's adapter words and the words after them), `own_name_differences` (the TS engine with nobody naming the build for it: the oracle's record but for the adapter words and the digests that follow the name; the harness looks for the build under the oracle's formula with the contract word in the place of the shim's two), and the first run as before, where the engine is handed the oracle's words and every byte and digest is the oracle's",
+    "test/corpus/corpus.py compare, `taking_over`: the role's apply through the Python engine, then a kitchen (another name, `plan` announces a build, one cook run with the adapter of this Node and install, one restart, then nothing), then the engine from another Node path and another install location (the same name, no cook run, no restart; a later release from there is started with that Node and that install)",
+    "test/unit/corpus.test.js",
+    "test/corpus/adapter_contract.py, test/corpus/adapter-contract/kitchen-cook-adapter-1.golden, test/unit/adapter-contract.test.js"
+   ],
+   "not_shown": "No real cook ran and no account was touched for this ruling. Cook is the stand-in or the replay of a kept build, as everywhere in the corpus."
   }
  ],
  "obligations": [
@@ -594,8 +628,8 @@
   },
   {
    "id": "B24",
-   "for": "ruling (plan Q1)",
-   "entry": "Open, entered by the implementer with the success-path port of deploy and cook: the build name of a real kitchen differs from the role's; the corpus makes them equal on purpose"
+   "for": "closed",
+   "entry": "Plan question Q1, ruled as divergence D5: a kitchen names a build by its adapter contract, not by the paths of Node and of its adapter. The corpus no longer makes the two engines' names equal without saying so: one run has the oracle's name by an explicit option and holds the bytes, the other has the kitchen's own and is held apart from the oracle's on purpose"
   },
   {
    "id": "B25",

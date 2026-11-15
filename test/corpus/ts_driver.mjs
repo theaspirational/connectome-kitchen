@@ -7,12 +7,16 @@
 // own check-mode call (`op: role`), with the sandbox it runs in. The answer is the same record the oracle side makes.
 // The two seams are the ones corpus.py puts around the oracle, no more:
 //   - the host model (`host_model` there): who owns a path under the sandbox, and where the account's home is;
-//   - the adapter (`adapter_through_seam` there): the cook command keeps the words it has for the oracle, so both
-//     engines name the build alike, and what is started in its place is adapter_seam.mjs.
+//   - the adapter (`adapter_through_seam` there): what is started in its place is adapter_seam.mjs.
+// The name of the build is no seam. A job with `identity` hands the engine the two words the oracle's shim hashes, so that
+// run has the oracle's build name and its tree is held byte for byte; a job without it is the engine as a kitchen runs
+// it, which names the build by its adapter contract (ruling D5). The driver finds `dist` beside itself, so a copy of
+// both elsewhere is an install elsewhere.
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
 import * as deploy from '../../dist/deploy.js';
-import { dispatch } from '../../dist/engine.js';
+import { ADAPTER_CONTRACT } from '../../dist/cook.js';
+import { adapter_command, dispatch } from '../../dist/engine.js';
 import * as inputs from '../../dist/inputs.js';
 import { realHost } from '../../dist/io/host.js';
 import * as pathio from '../../dist/pylike/pathio.js';
@@ -43,14 +47,23 @@ function hostModel() {
 }
 const host = hostModel();
 const seam = job.get('seam');
-const throughSeam = (argv, options = {}) => deploy.run(options.adapter ? [process.execPath, seam, ...argv.slice(2)] : argv, options);
+const started = [];
+const throughSeam = (argv, options = {}) => {
+  if (options.adapter) started.push(argv.slice(0, 2));
+  return deploy.run(options.adapter ? [process.execPath, seam, ...argv.slice(2)] : argv, options);
+};
 const unexpected = error => { if (process.env.KITCHEN_CORPUS_TRACE) process.stderr.write(String(error?.stack ?? error) + '\n'); };
 
 let outcome;
 if (job.get('op') === 'dispatch') {
   const data = dict({ contract: 'connectome.kitchen/v1', command: job.get('command'), request: job.get('request') });
-  const [receipt, status] = dispatch(data, job.get('secrets'), { host, adapter: job.get('adapter'), run: throughSeam, unexpected });
+  const [receipt, status] = dispatch(data, job.get('secrets'), { host, ...(job.has('identity') ? { identity: job.get('identity') } : {}), run: throughSeam, unexpected });
   outcome = dict({ status: loads(String(status)), core: receipt.get('core') });
+  // The first two words of each adapter command the engine asked for, before the seam took the adapter's place.
+  if (job.get('tell_adapter') === true) outcome.set('adapter_started', started);
+} else if (job.get('op') === 'where') {
+  // What this engine names its adapter in a build's identity, and the two words it starts it with: this Node, this install.
+  outcome = dict({ contract: ADAPTER_CONTRACT, adapter: adapter_command() });
 } else if (job.get('op') === 'role') {
   // The role's own call: its cook command, check mode. Nothing is run and nothing is written.
   const role = job.get('role');
@@ -78,7 +91,7 @@ if (job.get('op') === 'dispatch') {
     for (let round = 0; round < 2; round++) {
       const deployment = new deploy.Deployment({
         root: role.get('root'), unit_dir: role.get('unit_dir'), config: role.get('effective'), versions: role.get('versions'),
-        cook_command: role.get('cook_command'), systemctl: role.get('systemctl'), base: role.get('base'), operator_files: job.get('files'),
+        cook_command: role.get('cook_command'), cook_identity: role.get('cook_identity'), systemctl: role.get('systemctl'), base: role.get('base'), operator_files: job.get('files'),
         analyze_command: [], host, run: throughSeam,
       });
       deployment.validate_paths();

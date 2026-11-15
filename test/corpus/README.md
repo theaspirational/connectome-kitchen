@@ -13,7 +13,7 @@ python3 test/corpus/corpus.py compare --corpus synthetic     # and the ported st
 
 `compare` also runs the TS engine (`src/deploy.ts`, `src/cook.ts`, through
 `src/engine.ts`) on each whole case, at the root the oracle has just run at,
-and holds its record against the oracle's: the role's view, plan, apply, the
+twice ("The name of a build" below), and holds its record against the oracle's: the role's view, plan, apply, the
 tree apply left, the calls to cook and to the service manager, the second
 apply, the later release, the release taken back, the install without a
 start, the switch between an install without a start and a start in both
@@ -40,6 +40,7 @@ One golden per case, in the order the engine works:
 | `config` | the four layers as merged (`public_catalog`, `merge_layers`), the effective configuration, the secret names |
 | `inputs` | the operator files the controller would hand over, by digest |
 | `role` | the role's own call, `Deployment(check=True)` with the role's cook command: request id, pins, plan. Nothing runs |
+| `build_name` | what the engine behind the contract hashes for cook in the name of the build: the oracle's two adapter words and the words after them. A kitchen has one word for the first two ("The name of a build" below) |
 | `plan` | contract v1 `plan` through `oracle/shim/kitchen_v1.py`: status and `core`, and that nothing was written |
 | `apply` | contract v1 `apply`: status and `core`; every file, link and directory it left, with modes and text; how the adapter called cook; what it asked the service manager |
 | `reapply`, `plan_after_apply` | the same request again: nothing changes |
@@ -69,16 +70,84 @@ seams stand around the engine, the same two that stand around the oracle:
   does.
 - **The adapter.** The oracle's shim names the cook command
   `[python, oracle/scripts/cook-adapter.py, ...]`, and corpus.py starts
-  `adapter_seam.py` in its place. The driver hands the TS engine the same
-  first two words, so both engines give the build one name, and starts
-  `adapter_seam.mjs`, which is `src/cook.ts` with `verify_cook` recorded
-  instead of performed. A kitchen that runs for real names its own adapter
-  there and so names its builds differently (approved plan, finding 1).
+  `adapter_seam.py` in its place. The driver starts `adapter_seam.mjs`, which
+  is `src/cook.ts` with `verify_cook` recorded instead of performed.
 
 So what is compared is everything the TS engine and the TS adapter decide and
 write. What is not: `verify_cook` itself and the adapter's own entry script.
 The lock a real cook writes is compared in the cases that replay a build, and
 only there.
+
+## The name of a build
+
+The two engines do not name a build alike, on purpose (ruling D5 in
+`test/port-rulings.golden`). Both hash the request and what stands for cook.
+The oracle's shim hashes its cook command, which begins with the interpreter
+and the path of the adapter script. A kitchen hashes one word in the place of
+those two, the name of its adapter contract (`ADAPTER_CONTRACT` in
+`src/cook.ts`), so that the name does not follow where Node or kitchen are
+installed. The words after them are the same.
+
+A golden shows the oracle's side in `build_name`: its two adapter words, the
+words after them, and that the name is what `{REQUEST}` stands for. `compare`
+then runs the TS engine twice on each case:
+
+- **With the oracle's name.** The driver hands the engine the shim's two
+  words (`EngineOptions.identity`, which nothing but this run may use). The
+  record must be the oracle's as text: every path, byte and digest.
+- **With its own name.** Nothing is handed in. The harness works the name out
+  with the oracle's formula over the oracle's request, with the contract word
+  in the place of the shim's two, and looks for the build there; an engine
+  that hashed anything else leaves another tree. `build_name` is held apart
+  (two words against one, the same words after them, two different names).
+  Everything else must be the oracle's record but for digests, and a digest
+  may differ only as one that follows from the name: the same oracle digest
+  against the same engine digest wherever it stands. The line of a case says
+  how many there are.
+
+Then `compare` shows what the name means for an agent, on a sandbox of its
+own (`taking_over`):
+
+1. The role's own apply through the Python engine, with the role's cook
+   command: the build a deployed agent runs today.
+2. A kitchen on that root. Its name for the build is another one; `plan` says
+   a build is to be made and writes nothing; `apply` is one cook run, started
+   with this Node and the adapter of this install, and one restart, and
+   leaves the role's build in place; a second `apply` changes nothing.
+3. The same engine from another Node path (a second name of the binary, or a
+   copy) and another install location (a copy of `dist` and of the drivers):
+   the same contract name, other paths; `plan` and `apply` change nothing: no
+   cook run, no restart. A later release from there is one cook run, started
+   with that Node and that install, and the same release from the first
+   place again changes nothing.
+
+So taking an agent over costs one build and one restart, once, and a move or
+an upgrade of Node or of kitchen costs none after that.
+
+### The adapter's output under the name of its contract
+
+```
+python3 test/corpus/adapter_contract.py check  [--node NODE]
+python3 test/corpus/adapter_contract.py record [--node NODE] [--replace]
+```
+
+Since the number in the contract name is all that tells the builds of two
+adapters apart, it has to be raised when the adapter puts something else into
+a build. `check` starts the TS adapter by itself on each public case, as the
+engine starts it, and holds what it leaves against
+`adapter-contract/<name>.golden`: status, output, how cook was called, and
+every file with its mode and text (the recipe written or staged, the layout,
+the framework record, the lock after post-processing). `npm test` runs it
+(`test/unit/adapter-contract.test.js`), with three changed adapters that it
+must fail on.
+
+When it fails because the adapter changed: raise the number in `src/cook.ts`,
+build, and `record`; the new name gets a record of its own, the old record
+stays, and every agent is built anew once. `record` refuses to rewrite a
+record under a name for a change of the adapter. The cases and stand-ins can
+change the output too; the record keeps their digests, `check` fails when
+they are stale, and `record --replace` rewrites only then. The check sees
+what the three public cases exercise and nothing beyond.
 
 ## A case that replays a real build
 
@@ -170,8 +239,9 @@ cook. Nothing stands in. It is not the operational CLI (phase 7).
 The input (`connectome.kitchen-rehearsal/v1`) holds the contract request
 without `systemctl`, the service manager's path, the secrets template, the
 pinned input files with their digests, and the home and build name the
-rehearsal was prepared for. Since the adapter's path is part of a build's
-name, a bundle moved elsewhere names another build, and the runner refuses.
+rehearsal was prepared for. The runner refuses when the engine names the build
+otherwise: an input is then not what the rehearsal was prepared with. Where
+the bundle and Node are no longer matters to the name (ruling D5).
 `test/unit/test_rehearse.py` runs it on the public `example` case behind the
 corpus seams (a modelled host, a stand-in cook, the fake service manager).
 

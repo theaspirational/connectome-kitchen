@@ -7,7 +7,8 @@ case through the oracle's deploy path and writes what came out; `check` runs
 it again and compares; `compare` puts the steps kitchen has already ported
 (config, inputs, archive, lock) beside the oracle on the same files, and then
 runs the TS engine (deploy, cook) on the whole case at the same root and holds
-its record against the oracle's. That record includes the deployment installed without a start and then started, and
+its record against the oracle's, once with the oracle's name for the build and once as a kitchen names it (ruling D5),
+and shows a role's build taken over by a kitchen. That record includes the deployment installed without a start and then started, and
 the way back, through the contract with a stand-in for the unit verifier (stand_in_verifier.py).
 
     corpus.py record  --corpus DIR [--case NAME]
@@ -201,9 +202,15 @@ def lines(path):
 class World:
     """One case laid out under one sandbox root, and the oracle run on it."""
 
-    def __init__(self, case, sandbox, node=None):
+    def __init__(self, case, sandbox, node=None, own_name=False):
         self.case, self.sandbox = case, Path(sandbox)
         self.node = node  # None: the oracle, in this process. Else the Node that runs the TS engine (ts_driver.mjs).
+        # How the TS engine names the build. False: it is handed the two words the oracle's shim hashes, and the build has the
+        # oracle's name. True: it is handed nothing and names the build as a kitchen does, by its adapter contract (ruling D5).
+        self.own_name = own_name
+        self.install = HERE  # where ts_driver.mjs and adapter_seam.mjs are, with the `dist` they import two levels up
+        self.tell = False  # whether an outcome says which adapter command the engine asked for
+        self.contract = None
         if not SYSTEMD_PATH.fullmatch(str(self.sandbox)) or self.sandbox.resolve() != self.sandbox:
             raise CorpusError('the scratch path must be a real path of letters, digits and _./:@+- only: the engine refuses any other')
         self.account = case.data['account']
@@ -318,13 +325,16 @@ class World:
 
     def port(self, job):
         """One call of the TS engine, in the same sandbox and behind the same two seams as the oracle's (ts_driver.mjs)."""
-        job.update(sandbox=str(self.sandbox), account=self.account, root_owned=list(ROOT_OWNED), seam=str(HERE / 'adapter_seam.mjs'),
-                   adapter=[sys.executable, str(ORACLE / 'scripts/cook-adapter.py')])  # the words the oracle's shim puts first: one build name for both engines
+        job.update(sandbox=str(self.sandbox), account=self.account, root_owned=list(ROOT_OWNED), seam=str(self.install / 'adapter_seam.mjs'))
+        if not self.own_name:
+            job['identity'] = [sys.executable, str(ORACLE / 'scripts/cook-adapter.py')]  # the words the oracle's shim hashes: the oracle's build name
+        if self.tell:
+            job['tell_adapter'] = True
         job_file, out_file = (self.sandbox.parent / ('%s.%s-%d.json' % (self.sandbox.name, kind, os.getpid())) for kind in ('job', 'outcome'))
         try:
             job_file.touch(mode=0o600)
             job_file.write_text(json.dumps(job))
-            done = subprocess.run([self.node, str(HERE / 'ts_driver.mjs'), str(job_file), str(out_file)], cwd=ROOT, capture_output=True, text=True, timeout=600)
+            done = subprocess.run([self.node, str(self.install / 'ts_driver.mjs'), str(job_file), str(out_file)], cwd=ROOT, capture_output=True, text=True, timeout=600)
             if done.returncode:
                 raise CorpusError('the TS engine stopped on case %s: %s' % (self.case.name, done.stderr[-2000:]))
             if done.stderr:
@@ -398,6 +408,42 @@ class World:
         return [sys.executable, str(ORACLE / 'scripts/cook-adapter.py'), '--spec', '{recipe}', '--out', '{build_dir}', '--state', '{state_dir}',
                 '--runtime', cook['runtime'], '--entrypoint', cook['entrypoint'], '--bun-path', cook['bun'], '--node-path', cook['node']]
 
+    def where(self):
+        """The TS engine about itself: the name of its adapter contract, and the two words it starts its adapter with."""
+        return self.port({'op': 'where'})
+
+    def adapter_words(self):
+        """The words that stand for the adapter in the name of the build. The oracle's shim hashes its interpreter and the
+        path of its script (deploy.py:482, kitchen_v1.py). A kitchen hashes one word, the name of its adapter contract."""
+        if not self.own_name:
+            return self.shim_command()[:2]
+        if self.contract is None:
+            self.contract = self.where()['contract']
+        return [self.contract]
+
+    def naming(self):
+        """What stands for cook in the name of the build: the adapter words, then the words of the command, which are the same in both."""
+        return self.adapter_words() + self.shim_command()[2:]
+
+    def role_apply(self, files):
+        """The role's own apply, as its module makes it around the Python engine (oracle/library/connectome_release.py, without
+        its lock): the role's cook command, so the build has the name a deployed agent's build has today. The adapter is
+        started through the seam with this interpreter, since the role's own is a path of the deployed host."""
+        import connectome_deploy
+        original = connectome_deploy.run
+
+        def run(argv, cwd=None, adapter=False, unit_verify=False, env=None):
+            if adapter:
+                argv = [sys.executable, str(HERE / 'adapter_seam.py')] + list(argv[2:])
+            return original(argv, cwd=cwd, adapter=adapter, unit_verify=unit_verify, env=env)
+        with self.search_path(), host_model(self.sandbox, self.account), patch.object(connectome_deploy, 'run', run):
+            deployment = connectome_deploy.Deployment(self.root, self.unit_dir, copy.deepcopy(self.effective), self.versions, self.role_command, self.systemctl,
+                                                      base=self.base, operator_files=files)
+            deployment.validate_paths()
+            deployment.preflight_activation()
+            connectome_deploy.make_directory(deployment.root)
+            return {'request_id': deployment.request_id, 'prepare': deployment.prepare(), 'activate': deployment.activate(copy.deepcopy(self.secrets))}
+
     def install_only(self, files):
         """The same deployment installed and not started (`activation: install_only`), twice, through the engine's own class.
 
@@ -411,7 +457,7 @@ class World:
         if self.node:
             return self.port({'op': 'install_only', 'secrets': self.secrets, 'files': files, 'role': {
                 'root': self.root, 'unit_dir': self.unit_dir, 'base': self.base, 'effective': config, 'versions': self.versions,
-                'cook_command': self.shim_command(), 'systemctl': self.systemctl}})
+                'cook_command': self.shim_command(), 'cook_identity': self.naming(), 'systemctl': self.systemctl}})
         applies = []
         with host_model(self.sandbox, self.account), patch.object(connectome_deploy, 'run', adapter_through_seam(connectome_deploy.run)):
             try:
@@ -537,10 +583,14 @@ class World:
         return [[ident, function, encode(args), encode(kwargs)] for ident, function, args, kwargs in jobs]
 
     def request_id(self):
-        """The name the contract path gives the build: the engine's own, asked in check mode."""
+        """The name the contract path gives the build. For the oracle it is the engine's own, asked in check mode. For a TS
+        engine that names the build itself it is the oracle's formula over the oracle's request, with the one word of the
+        adapter contract where the shim's two words are: the name a kitchen must give the build if the two engines differ in
+        those words and in nothing else. The harness looks for the build under this name, so an engine that hashed anything
+        else leaves a tree that is not the oracle's."""
         import connectome_deploy, kitchen_v1
         with host_model(self.sandbox, self.account):
-            return connectome_deploy.Deployment(self.root, self.unit_dir, copy.deepcopy(self.effective), self.versions, self.shim_command(), check=True, base=self.base).request_id
+            return connectome_deploy.Deployment(self.root, self.unit_dir, copy.deepcopy(self.effective), self.versions, self.naming(), check=True, base=self.base).request_id
 
 
 def oracle_outcomes(world, jobs):
@@ -602,8 +652,8 @@ class Steps:
     def counts(self):
         return {name: len(lines(path)) for name, path in self.logs().items()}
 
-    def call(self, command, activation):
-        outcome = self.world.dispatch(command, activation=activation, **({'operator_files': self.files} if command == 'apply' else {}))
+    def call(self, command, activation, **extra):
+        outcome = self.world.dispatch(command, activation=activation, **extra, **({'operator_files': self.files} if command == 'apply' else {}))
         now = snapshot(self.world.sandbox)
         outcome['command'], outcome['activation'] = command, activation
         outcome['tree'] = {path: (row if path.startswith(self.kept) else {key: value for key, value in row.items() if key != 'text'})
@@ -640,17 +690,18 @@ def verifier_refuses(world):
 MUTATIONS = (('recipe-pin', 'plan'), ('archive-pin', 'plan'), ('secrets-file-missing', 'plan'), ('external-command-missing', 'apply'))
 
 
-def run_case(case, sandbox, node=None):
+def run_case(case, sandbox, node=None, own_name=False):
     """One case at one sandbox root. Returns the record and the world, left as `apply` made it.
 
     With `node`, every engine call (the role's view, plan, apply, the second apply, the refusals) goes to the TS engine
-    instead. The files are laid out by the same code, and the record is put together the same way.
+    instead. The files are laid out by the same code, and the record is put together the same way. With `own_name` the TS
+    engine names the build as a kitchen does, and `{REQUEST}` in the record stands for that name.
     """
     ts_port.initialize()
     for name in ('connectome_deploy', 'connectome_cook', 'kitchen_v1'):
         importlib.import_module(name)
     import connectome_config
-    world = World(case, sandbox, node)
+    world = World(case, sandbox, node, own_name)
     refusals = {}
     for mutation, command in MUTATIONS:
         world.build(mutation)
@@ -687,6 +738,9 @@ def run_case(case, sandbox, node=None):
         'config': {'layers': world.layers, 'effective': world.effective, 'secret_names': world.names},
         'inputs': {'operator_files': {name: {'sha256': sha256(base64.b64decode(value))} for name, value in files.items()}},
         'role': world.role_view(),
+        # What the engine behind the contract hashes for cook in the name of the build (deploy.py:482). The first two words are
+        # the oracle's own and a kitchen does not have them (ruling D5); `compare` holds this section apart, on purpose.
+        'build_name': {'adapter_words': world.adapter_words(), 'command_words': world.shim_command()[2:], 'request_id': world.request_id()},
     }
     record['plan'] = world.dispatch('plan')
     untouched = snapshot(world.sandbox)
@@ -737,13 +791,17 @@ def run_case(case, sandbox, node=None):
     record['activation_switch'] = switched
     record['activation_switch_unit_without_install_section'] = switched_without_install
     record['unit_verifier_refuses'] = refused_by_verifier
+    return located_nowhere(record, world), world, jobs
+
+
+def located_nowhere(record, world):
+    """A record as text, with what follows from where it was made given a name: the sandbox, this checkout, the name of the build, this interpreter."""
     # Tools and fixtures of this checkout appear in argv; they are not part of what the engine decided.
     text = json.dumps(record, indent=1, sort_keys=True, ensure_ascii=False)
     for value, token in ((str(world.sandbox), '{ROOT}'), (str(ROOT), '{KITCHEN}'), (world.request_id(), '{REQUEST}')):
         text = text.replace(value, token)
     text = text.replace(json.dumps(sys.executable), json.dumps('{PYTHON}'))  # as a whole argument only, never inside a moved path
-    text = re.sub(r'\{ROOT\}/(%s)(?=[/"\\])' % '|'.join(MOVED), r'{ROOT:\1}', text)
-    return text, world, jobs
+    return re.sub(r'\{ROOT\}/(%s)(?=[/"\\])' % '|'.join(MOVED), r'{ROOT:\1}', text)
 
 
 def normalize(first, second):
@@ -865,14 +923,120 @@ def engine_differences(case, world, raw, node):
     return differences(json.loads(raw), json.loads(text)) or ['(the records differ in their text only)']
 
 
+SHIM_WORDS = ['{PYTHON}', '{KITCHEN}/oracle/scripts/cook-adapter.py']
+
+
+def own_name_differences(case, world, raw, node):
+    """The TS engine as a kitchen runs it, at the same root: nobody tells it how to name the build (ruling D5).
+
+    The oracle keeps its name and the engine has its own, and each record says `{REQUEST}` for its own. The section
+    `build_name` is held apart: the oracle hashes two words for its adapter, the engine one, the name of its adapter contract,
+    and the words after them are the same. Everything else must be the oracle's record but for digests, and a digest may
+    differ only as one that follows from the name: the same oracle digest against the same engine digest wherever it stands
+    (`normalize`, the rule that holds two roots together). Their bytes are held by the other run, where the engine has the
+    oracle's name and every digest is the oracle's. Returns where the records part, the contract name and how many digests follow the name.
+    """
+    text, port_world, _jobs = run_case(case, world.sandbox, node=node, own_name=True)
+    oracle, port = json.loads(raw), json.loads(text)
+    theirs, ours = oracle.pop('build_name'), port.pop('build_name')
+    words, found = port_world.adapter_words(), []
+    if theirs['adapter_words'] != SHIM_WORDS or ours['adapter_words'] != words or len(words) != 1 or not re.fullmatch(r'[a-z][a-z-]*/[1-9][0-9]*', str(words[0])):
+        found.append('/build_name/adapter_words')
+    if theirs['command_words'] != ours['command_words']:
+        found.append('/build_name/command_words')
+    if theirs['request_id'] != '{REQUEST}' or ours['request_id'] != '{REQUEST}' or port_world.request_id() == world.request_id():
+        found.append('/build_name/request_id')
+    dump = lambda value: json.dumps(value, indent=1, sort_keys=True, ensure_ascii=False)
+    names = {}
+    try:
+        _text, names = normalize(dump(oracle), dump(port))
+    except CorpusError:
+        found += differences(json.loads(HEX64.sub('#', dump(oracle))), json.loads(HEX64.sub('#', dump(port)))) or ['(a digest follows the name of the build in one place and not in another)']
+    return found, words[0], len(names)
+
+
+def engine_elsewhere(scratch, node):
+    """The same Node at another path and the same kitchen at another install location. Returns the Node and the directory of
+    the driver there. The Node is a second name of the same file where the file system allows one, else a copy; `dist`, the
+    package file that makes it a module tree and the two test drivers are copies."""
+    there = scratch / 'elsewhere'
+    ts_port.remove(there)
+    (there / 'node/bin').mkdir(parents=True)
+    moved = there / 'node/bin/node'
+    try:
+        os.link(Path(node).resolve(), moved)
+    except OSError:
+        shutil.copy2(Path(node).resolve(), moved)
+    shutil.copytree(ROOT / 'dist', there / 'kitchen/dist')
+    shutil.copy2(ROOT / 'package.json', there / 'kitchen/package.json')
+    (there / 'kitchen/test/corpus').mkdir(parents=True)
+    for name in ('ts_driver.mjs', 'adapter_seam.mjs'):
+        shutil.copy2(HERE / name, there / 'kitchen/test/corpus' / name)
+    return str(moved), there / 'kitchen/test/corpus'
+
+
+def taking_over(case, sandbox, node, elsewhere):
+    """What it means for an agent the role deployed that a kitchen takes it over, and what a move of Node or of kitchen means after that.
+
+    On a sandbox of its own, with a stand-in unit verifier: the role's own apply through the Python engine, with the role's
+    cook command, which is the build a deployed agent runs today. Then the TS engine as a kitchen runs it: `plan`, `apply`
+    and `apply` again. Then the same engine from another Node path and another install location: `plan` and `apply`, a later
+    release (another cook pin), and that release once more from where the engine was first. Returns what does not hold, and
+    one line that says what was seen.
+    """
+    world = World(case, sandbox)
+    world.build()
+    world.stand_in_verifier()
+    files = world.operator_files()
+    steps = Steps(world, files)
+    role = world.role_apply(files)
+    steps.state, steps.seen = snapshot(world.sandbox), steps.counts()
+    world.node, world.own_name, world.tell = node, True, True
+    here, name = world.where(), world.request_id()
+    build = str(Path(world.root) / 'builds' / name)
+    unit = 'connectome-%s.service' % world.effective['name']
+    restarts = lambda step: sum(call[:2] == ['restart', unit] for call in step['systemctl_calls'])
+    quiet = lambda step: (step['status'], step['core'].get('changed'), step['cook_calls'], restarts(step), step.get('adapter_started', []), step['removed']) == (0, False, 0, 0, [], []) \
+        and step['core']['prepare']['build_dir'] == build and not [path for path in step['tree'] if '/builds/' in path or path == str(Path(world.root) / 'current')]
+    built = lambda step, where: (step['status'], step['core'].get('changed'), step['core']['prepare']['changed'], step['cook_calls'], restarts(step), step['adapter_started']) == (0, True, True, 1, 1, [where['adapter']])
+    planned, taken = steps.call('plan', None), steps.call('apply', None)
+    current = os.readlink(Path(world.root) / 'current')
+    again = steps.call('apply', None)
+    world.node, world.install = elsewhere
+    there = world.where()
+    moved_plan, moved_apply = steps.call('plan', None), steps.call('apply', None)
+    later = copy.deepcopy(world.versions)
+    pin = later['runtime']['cook']
+    later['runtime']['cook'] = pin[:-1] + ('0' if pin[-1] != '0' else '1')
+    released = steps.call('apply', None, versions=later)
+    world.node, world.install = node, HERE
+    released_again = steps.call('apply', None, versions=later)
+    holds = {
+        'the role\'s apply builds and starts the agent under the role\'s name for the build': role['prepare']['changed'] is True and role['activate']['changed'] is True and (Path(world.root) / 'builds' / role['request_id'] / '.prepared').is_file(),
+        'a kitchen gives the build another name than the role': name != role['request_id'],
+        'plan says so: a build to make, under the kitchen\'s name, and nothing written': (planned['status'], planned['core']['prepare']['changed'], planned['core']['prepare']['build_dir'], planned['tree'], planned['cook_calls']) == (0, True, build, {}, 0),
+        'the first apply is one cook run with the adapter of this Node and this install, and one restart': built(taken, here) and taken['core']['prepare']['build_dir'] == build,
+        'it leaves the kitchen\'s build current and the role\'s build in place': current == build and (Path(world.root) / 'builds' / role['request_id'] / '.prepared').is_file(),
+        'the second apply changes nothing: no cook run, no restart': quiet(again),
+        'the other Node and the other install are other paths, with the same contract name': there['contract'] == here['contract'] and all(a != b for a, b in zip(here['adapter'], there['adapter'])) and there['adapter'] == [elsewhere[0], str(elsewhere[1].parents[1] / 'dist/cook-adapter.js')],
+        'from there plan and apply change nothing: the same name, no cook run, no restart': quiet(moved_plan) and quiet(moved_apply),
+        'a later release from there is one cook run, started with the adapter of that Node and that install': built(released, there) and released['core']['prepare']['build_dir'] != build,
+        'and from here again that release changes nothing': (released_again['status'], released_again['core'].get('changed'), released_again['cook_calls'], restarts(released_again), released_again['core']['prepare']['build_dir']) == (0, False, 0, 0, released['core']['prepare']['build_dir']),
+    }
+    return [what for what, held in holds.items() if not held], 'one new build, cook run and restart, then none from another Node path and install location (%s)' % here['contract']
+
+
 def command_compare(args):
     """The ported steps, live: oracle and TS port on the same files, outcome against outcome as canonical bytes.
 
     Then the engine: plan, apply, what apply left, the second apply, the releases, the installs without a start, the switch
-    of activation and the refusals of the TS engine against the oracle's.
+    of activation and the refusals of the TS engine against the oracle's. Twice: once with the oracle's name for the build,
+    where every byte and digest is held, and once as a kitchen names it (`own_name_differences`). Last, the role's build taken
+    over by a kitchen and the engine moved (`taking_over`).
     """
     scratch = scratch_of(args.corpus, args.scratch)
     failed = False
+    elsewhere = None if args.steps_only else engine_elsewhere(scratch, args.node)
     for case in cases(located(args.corpus, scratch), args.case):
         text, world, jobs, names, raw = produce(args.corpus, case, scratch, keep=True)
         try:
@@ -893,13 +1057,27 @@ def command_compare(args):
             parted = [] if args.steps_only else engine_differences(case, world, raw, args.node)
             for where in parted:
                 print('  ENGINE %s differs at %s' % (case.name, where))
+            named, owed, said = [], [], 'not run'
+            if not args.steps_only:
+                named, contract, derived = own_name_differences(case, world, raw, args.node)
+                for where in named:
+                    print('  ENGINE %s under its own name for the build differs at %s' % (case.name, where))
+                owed, seen = taking_over(case, scratch / 'taking-over' / case.name, args.node, elsewhere)
+                for what in owed:
+                    print('  TAKING OVER %s: does not hold: %s' % (case.name, what))
+                said = '%s; build named by %s: %s; taking over: %s' % (
+                    'equal: role view, plan, apply, tree, re-apply, rebuild, release back, install only, activation switch, unit verifier, refusals' if not parted else 'DIFFERS in %d places' % len(parted),
+                    contract, 'the oracle\'s record but for the adapter words and %d digests that follow the name' % derived if not named else 'DIFFERS in %d places' % len(named),
+                    seen if not owed else '%d things do NOT hold' % len(owed))
             print('%s %s: %d ported calls, %d equal, %d mismatch; golden %s; engine %s' % (
-                'PASS' if counts.get('mismatch', 0) == 0 and recorded and not parted else 'FAIL', case.name, len(jobs), counts.get('equal', 0), counts.get('mismatch', 0),
-                'reproduced' if recorded else 'NOT reproduced',
-                'not run' if args.steps_only else 'equal: role view, plan, apply, tree, re-apply, rebuild, release back, install only, activation switch, unit verifier, refusals' if not parted else 'DIFFERS in %d places' % len(parted)))
-            failed = failed or not recorded or bool(parted)
+                'PASS' if counts.get('mismatch', 0) == 0 and recorded and not parted and not named and not owed else 'FAIL', case.name, len(jobs), counts.get('equal', 0), counts.get('mismatch', 0),
+                'reproduced' if recorded else 'NOT reproduced', said))
+            failed = failed or not recorded or bool(parted) or bool(named) or bool(owed)
         finally:
             ts_port.remove(world.sandbox)
+            ts_port.remove(scratch / 'taking-over' / case.name)
+    if elsewhere:
+        ts_port.remove(scratch / 'elsewhere')
     return int(failed)
 
 

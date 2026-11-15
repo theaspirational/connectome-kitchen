@@ -861,13 +861,43 @@ there, both outside what a deployment asks:
   fixed path and its digest is not pinned (plan Q6). Without it `apply`
   refuses with the generic code.
 
-**The build's name.** The request id hashes the cook command
-(`deploy.py:482`). In the corpus the TS engine is handed the first two words
-the oracle's shim uses, so both name the build alike and the trees can be
-compared byte for byte. A kitchen that runs for real names its own adapter
-(`process.execPath`, `dist/cook-adapter.js`), so its first apply on an agent
-the role deployed is a new build, a cook run and a restart, as finding 1 of
-the plan says. Nothing here decides plan question Q1.
+**The build's name (ruling D5, plan question Q1).** The oracle's request id
+hashes the cook command (`deploy.py:482`), and that command begins with the
+interpreter and the path of the adapter script. Until D5 the TS engine did
+the same with its own two words (`process.execPath`, `dist/cook-adapter.js`),
+so every upgrade or move of Node and every move of kitchen would have given
+every build a new name: a cook run and a restart for every agent. Since D5 a
+kitchen hashes one word in their place, the name of its adapter contract
+(`ADAPTER_CONTRACT` in `src/cook.ts`, now `kitchen-cook-adapter/1`), and then
+the same words as the oracle's shim: the three fields and the paths of cook's
+runtime, its entrypoint, Bun and Node. The command that is started is still
+this Node and the adapter of this install; `Deployment` takes what is hashed
+as an option of its own (`cook_identity`) and without it hashes the command,
+as the oracle does.
+
+This is a deliberate divergence from the oracle, and the corpus holds it as
+one (`test/corpus/README.md`, "The name of a build"). The oracle keeps its
+name. The TS engine is run twice on each case: once handed the oracle's two
+words, where its record is the oracle's byte for byte, and once as a kitchen
+runs it, where the record is the oracle's but for the adapter words and the
+digests that follow from the name.
+
+The number in the name is raised when the adapter puts something else into a
+build, and for nothing else. `test/corpus/adapter_contract.py` holds the
+adapter's output on the public cases against a record kept under the name and
+fails on a difference until the number is raised
+(`test/unit/adapter-contract.test.js`). It sees what those three cases
+exercise; a change that shows on other input only is left to review.
+
+What it means for taking over an agent the role deployed: the role's build
+has the role's name, so the first `apply` of a kitchen is a new build beside
+it, one cook run and one restart, once for each agent (finding 1 of the
+plan; `plan` says so beforehand). After that a move or an upgrade of Node or
+of kitchen causes no build and no restart. A raised contract number does,
+once again for each agent. `compare` shows the sequence on each public case,
+with the same Node under another path and a copy of the install elsewhere.
+The rehearsal build on the trial account was named before D5, with the paths
+in its name; the next `apply` there is a new build too.
 
 **A real cook lock.** One case outside the repository replays the lock of a
 live build of one agent, with that build's recipe, on the deploy inputs the
@@ -923,7 +953,8 @@ What it showed:
 
 - *The engine names the build as the oracle would.* The request id was worked
   out beforehand with the oracle's formula and the cook command as
-  `src/engine.ts` words it. `plan` gave that id on the host, and the
+  `src/engine.ts` worded it then, with the paths of Node and of the adapter
+  (before ruling D5). `plan` gave that id on the host, and the
   `deployment.json` the engine wrote is the oracle's canonical request, byte
   for byte (`import-build` checks both).
 - *`verify_cook` passes on a real checkout.* The port's four git questions,
@@ -1049,6 +1080,7 @@ left a choice open; the record names each choice as the implementer's
 | L1 | the later passes of the gzip reader | every later pass is held to a record of the checking pass; closing the gap, not narrowing the wording, was the choice left open. L2 stays a note on B9 |
 | D4 | admission budgets as a declared divergence; it builds F4 | four counts over one listing and a heap limit they are sized for. **The numbers are approved** for the success path on trusted input: 2^24 metadata bytes, 2^21 pax records, 2^16 sparse numbers, 2^17 members, 2,048 MiB. The record says where each comes from |
 | C1 | the input of the archive reader is trusted and digest-checked before it is parsed | a precondition on the caller, to be confirmed at catalog integration, not a proven property; what D4 leaves of F4 is residual risk of this version |
+| D5 | the name of a build by the adapter's contract, as a declared divergence; it decides plan question Q1 (the owner, option C) | one word, `kitchen-cook-adapter/1`, where the oracle hashes its interpreter and script path; every other hashed word and the command that is started are unchanged. The number is raised only when the adapter's output into a build changes, and a check holds that output under the name. Received after the three rounds above, on 2026-11-15, through the dispatch brief |
 
 The delta review of the third fix round (`621d78d..06ee0cc`) is recorded as
 passed, with its commit and the sha256 of its report. The implementer
@@ -1107,7 +1139,7 @@ The mutant classification:
 | B21 | corpus | cases for the branches no case reaches: rollback onto a previous release, a retired unit, a dropped secret file, a health command, an engine-rendered unit, connectors from descriptors, the ownership refusals |
 | B22 | port, with the command line (plan phase 7) | there is no operational entry: `src/cli.ts` refuses. `src/engine.ts` is a library call; secrets on a descriptor, the receipt file and exit statuses are not built. `scripts/rehearse.mjs` is the runner of a rehearsal and nothing more: it lets the engine read the secrets file, and it installs without a start only |
 | B23 | ruling (plan Q6) | the lock tool is `/usr/bin/flock`, undigested |
-| B24 | ruling (plan Q1) | the build name of a real kitchen differs from the role's; the corpus makes them equal on purpose |
+| B24 | closed | plan Q1, ruled as divergence D5: a kitchen names a build by its adapter contract. It still differs from the role's name, so taking an agent over is one build and one restart; the corpus shows both names and no longer makes them equal without saying so |
 | B25 | review | obligation `archive.L140.4` is recorded as discharged by the implementer, with the witness in `test/unit/engine.test.js`. A review has to confirm it |
 | B26 | ruling, with cook | cook's install is neither offline nor pinned beyond the two archives: Bun resolves the host's other packages at install time and saves a new lockfile (rehearsal finding). Decide whether a build must be reproducible from its request, and if so how the host's lockfile is kept or the packages are supplied |
 | B27 | ruling, with cook | builds of one account share inodes through Bun's cache (rehearsal finding). Decide whether retained builds must be immutable; Bun has a copying backend |

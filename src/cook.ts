@@ -29,6 +29,19 @@ import * as subprocess from './pylike/subprocess.js';
 import { strip } from './pylike/text.js';
 
 export const COOK_COMMIT = '1b874d9dd55b529486b8029dd9814a6c0e2147e0';
+/**
+ * The name the adapter has in a build's request identity (ruling D5, plan question Q1). The engine hashes this word where
+ * the oracle hashes the interpreter and the script path (deploy.py:482), so a build is named by what the adapter does
+ * and not by where Node or kitchen are installed.
+ *
+ * The number moves when, for some request, the adapter puts something else into a build: the recipe it writes or stages,
+ * the layout, `framework.lock.json`, the lock after its post-processing, a mode of one of those files, or the arguments
+ * and the environment names it hands cook. It moves for nothing else. A change that leaves all of that as it is (a
+ * refactoring, a new refusal, another Node, another install location) keeps the number, and no agent is rebuilt for it.
+ * `test/corpus/adapter_contract.py` holds that output against the record kept under this name
+ * (`test/corpus/adapter-contract/`), and fails on any difference until the number here is raised and a new record made.
+ */
+export const ADAPTER_CONTRACT = 'kitchen-cook-adapter/1';
 export const BASE_ENV: ReadonlySet<string> = new Set(['PATH', 'HOME', 'LANG', 'LC_ALL', 'TMPDIR']);
 
 export const AdapterError = ArchiveError;

@@ -177,6 +177,11 @@ suffix classes above extend `msg`.
   is bumped whenever emitted recipe or unit bytes change, and enters the
   release identity so that such a change shows up as an explicit rebuild in
   `plan` (Q1 decides whether the artifact digest enters it too).
+- Q1 is decided (ruling D5, `test/port-rulings.golden`): neither the artifact
+  digest nor a path of Node or of kitchen enters the release identity. What
+  stands for the cook adapter in it is the name of a versioned contract,
+  `kitchen-cook-adapter/<n>`, and `n` is raised whenever what the adapter puts
+  into a build changes.
 
 
 ## Waiver W1

@@ -138,7 +138,7 @@ class Port(unittest.TestCase):
     def test_rulings_are_recorded_as_received_and_nothing_unkilled_counts_as_killed(self):
         record = json.loads((ROOT / 'test/port-rulings.golden').read_text())
         rulings = {entry['id']: entry for entry in record['rulings']}
-        self.assertEqual(sorted(rulings), ['B9', 'C1', 'D1', 'D2', 'D3', 'D4', 'L1', 'M1', 'O1', 'R6'])
+        self.assertEqual(sorted(rulings), ['B9', 'C1', 'D1', 'D2', 'D3', 'D4', 'D5', 'L1', 'M1', 'O1', 'R6'])
         for entry in rulings.values():
             self.assertGreater(len(entry['as_received']), 40, entry['id'])
         results = {r['id']: r['status'] for r in json.loads(ts_mutants.RESULTS.read_text())['results']}
@@ -152,8 +152,12 @@ class Port(unittest.TestCase):
         self.assertEqual(sum(status == 'killed' for status in results.values()), 262)
         self.assertEqual(len(results), 270)
         # A choice a ruling left open is recorded as the implementer's, apart from the ruling's own words.
-        for ident in ('D3', 'D4', 'B9', 'L1'):
+        for ident in ('D3', 'D4', 'D5', 'B9', 'L1'):
             self.assertGreater(len(rulings[ident]['left_to_the_implementer']), 20, ident)
+        # D5: the contract name the ruling records is the one the adapter states, and a record of the adapter's output is kept under it.
+        name = re.search(r"^export const ADAPTER_CONTRACT = '([^']+)';$", (ROOT / 'src/cook.ts').read_text(), re.M)[1]
+        self.assertIn('`%s`' % name, rulings['D5']['left_to_the_implementer'])
+        self.assertEqual(json.loads((ROOT / 'test/corpus/adapter-contract' / (name.replace('/', '-') + '.golden')).read_text())['contract'], name)
         # The witness a ruling moved to a later module is an open obligation with a trigger, not a note.
         owed = {entry['id']: entry for entry in record['obligations']}
         self.assertEqual(owed['archive.L140.4']['due_when_any_exists'], ['src/cook.ts', 'src/deploy.ts'])

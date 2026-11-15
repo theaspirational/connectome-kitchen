@@ -246,7 +246,7 @@ export function rehearse(mode, inputFile, { host = realHost, start = deploy.run,
     const build = planned.get('prepare').get('build_dir'), requestId = path.basename(build);
     log('build named', { build_dir: build, request_id: requestId, expected: expect.get('request_id') ?? null });
     need(!expect.has('request_id') || expect.get('request_id') === requestId,
-      'the engine names the build otherwise than the rehearsal was prepared for: the bundle, Node or an input is not where it was taken to be');
+      'the engine names the build otherwise than the rehearsal was prepared for: an input or an engine path of the request is not what it was taken to be');
 
     let status = 0;
     if (mode === 'apply') {

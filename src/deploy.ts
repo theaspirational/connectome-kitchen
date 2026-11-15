@@ -539,8 +539,16 @@ type ActivationPlan = [lock: PyDict, units: Map<string, string>, previous: strin
 
 export interface DeploymentOptions {
   root: string; unit_dir: string; config: PyValue; versions: PyValue;
-  /** The adapter argv with `{recipe}`, `{build_dir}` and `{state_dir}` fields. It is part of the request identity. */
+  /**
+   * The adapter argv with `{recipe}`, `{build_dir}` and `{state_dir}` fields: the command that is started. It is also
+   * what stands for cook in the request identity (deploy.py:482), unless `cook_identity` is given.
+   */
   cook_command: PyValue;
+  /**
+   * What stands for cook in the request identity in place of `cook_command`. Not in the oracle (ruling D5): `src/engine.ts`
+   * gives the adapter's contract name here, where the command names the paths of Node and of the adapter. It is never started.
+   */
+  cook_identity?: PyValue;
   systemctl?: PyValue; check?: boolean; base?: string | null; operator_files?: PyValue; analyze_command?: readonly string[] | null;
   /** Who owns a path and where the account's home is. */
   host?: Host;
@@ -560,7 +568,7 @@ export class Deployment {
   readonly state_dir: string; readonly secrets_file: string; readonly manifest_path: string;
   owned = new Map<string, PyDict>();
 
-  constructor({ root, unit_dir, config, versions, cook_command, systemctl = null, check = false, base = null, operator_files = null, analyze_command = null, host = realHost, run: runner = run }: DeploymentOptions) {
+  constructor({ root, unit_dir, config, versions, cook_command, cook_identity, systemctl = null, check = false, base = null, operator_files = null, analyze_command = null, host = realHost, run: runner = run }: DeploymentOptions) {
     // This constructor must stay mutation-free: the caller creates the root/serialization lock only AFTER all identifiers are validated.
     this.host = host; this.runner = runner;
     validate_config(config);
@@ -582,7 +590,7 @@ export class Deployment {
     const build_config: PyDict = new Map([...settings].filter(([key]) => key !== 'activation' && key !== 'exclusive_with'));
     this.spec = dict({ config: build_config, pins: this.pins });
     // Deployment request identity differs from cook's emitted build identity.
-    this.request_id = sha256(canonical(dict({ spec: this.spec, cook: cook_command })));
+    this.request_id = sha256(canonical(dict({ spec: this.spec, cook: cook_identity === undefined ? cook_command : cook_identity })));
     this.builds = inside(this.root, 'builds');
     this.build = inside(this.builds, this.request_id);
     this.current = inside(this.root, 'current');

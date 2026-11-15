@@ -9,6 +9,7 @@ import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { CONTRACT, VERSION } from './contract.js';
 import { merge_layers } from './config.js';
+import { ADAPTER_CONTRACT } from './cook.js';
 import { Deployment, make_directory } from './deploy.js';
 import type { Run } from './deploy.js';
 import { SafeError, diagnostic } from './errors.js';
@@ -32,15 +33,24 @@ export class ContractError extends Error {}
 export interface EngineOptions {
   host?: Host;
   /**
-   * The first two words of the cook command, `[interpreter, adapter script]`. They are part of the request identity
-   * (deploy.py:482), so a build made with another adapter is another build. Default: this Node and `cook-adapter.js`.
+   * The first two words of the cook command, `[interpreter, adapter script]`: what is started. Default: this Node and
+   * `cook-adapter.js` beside this file. They are no part of the request identity (ruling D5).
    */
   adapter?: readonly [string, string];
+  /**
+   * The words that stand for the adapter in the request identity. Default, and the only value a kitchen runs with:
+   * `[ADAPTER_CONTRACT]`. The deploy corpus hands in the two words of the oracle's shim for one of its runs, so that the
+   * build has the oracle's name and the two trees can be held byte for byte.
+   */
+  identity?: readonly string[];
   /** `connectome_deploy.run`, replaceable as the oracle's tests replace it. */
   run?: Run;
   /** Told of a failure that is not a `SafeError`, before it becomes the generic refusal. For tests; nothing is returned. */
   unexpected?: (error: unknown) => void;
 }
+
+/** The first two words of the cook command a kitchen starts: the Node it runs on and the adapter of its own install. */
+export const adapter_command = (): [string, string] => [process.execPath, fileURLToPath(new URL('./cook-adapter.js', import.meta.url))];
 
 export const envelope = (command: PyValue, core: PyDict): PyDict =>
   dict({ contract: CONTRACT, command, core, meta: dict({ kitchen: VERSION, artifact_sha256: null }) });
@@ -62,17 +72,20 @@ export function dispatch(data: PyValue, secrets: PyValue = null, options: Engine
   const cook = item(engines, 'cook');
   if (!isDict(cook) || !keysEqual(cook, TOOLS)) throw new ContractError();
   if ([...cook.values()].some(value => !isStr(value) || !value.startsWith('/'))) throw new ContractError();
-  const adapter = options.adapter ?? [process.execPath, fileURLToPath(new URL('./cook-adapter.js', import.meta.url))];
   // This is the existing adapter's literal CLI, with no free-form shell command.
-  const argv: PyValue[] = [...adapter, '--spec', '{recipe}', '--out', '{build_dir}', '--state', '{state_dir}', '--runtime', item(cook, 'runtime'),
+  const words: PyValue[] = ['--spec', '{recipe}', '--out', '{build_dir}', '--state', '{state_dir}', '--runtime', item(cook, 'runtime'),
     '--entrypoint', item(cook, 'entrypoint'), '--bun-path', item(cook, 'bun'), '--node-path', item(cook, 'node')];
+  // What is started names this Node and this install. What the build is named by does not (ruling D5): the oracle's shim
+  // hashes its interpreter and script path there (deploy.py:482), and every other word is the same in both.
+  const argv: PyValue[] = [...(options.adapter ?? adapter_command()), ...words];
+  const identity: PyValue[] = [...(options.identity ?? [ADAPTER_CONTRACT]), ...words];
   const host = options.host ?? realHost;
   let core: PyDict;
   try {
     const config = request.has('config') ? item(request, 'config') : merge_layers(item(request, 'layers'));
     const dep = new Deployment({
       root: item(request, 'root') as string, unit_dir: item(request, 'unit_dir') as string, config, versions: item(request, 'versions'),
-      cook_command: argv, systemctl: get(request, 'systemctl'), check: command === 'plan', base: get(request, 'base') as string | null,
+      cook_command: argv, cook_identity: identity, systemctl: get(request, 'systemctl'), check: command === 'plan', base: get(request, 'base') as string | null,
       operator_files: get(request, 'operator_files'), host, ...(options.run ? { run: options.run } : {}),
     });
     let fd: number | null = null;

@@ -2070,6 +2070,29 @@
    }
   ]
  },
+ "build_name": {
+  "adapter_words": [
+   "{PYTHON}",
+   "{KITCHEN}/oracle/scripts/cook-adapter.py"
+  ],
+  "command_words": [
+   "--spec",
+   "{recipe}",
+   "--out",
+   "{build_dir}",
+   "--state",
+   "{state_dir}",
+   "--runtime",
+   "{ROOT:home}/example-trial/src/bun-1.0.0/bun",
+   "--entrypoint",
+   "{ROOT:home}/example-trial/src/connectome-cook/bin/cook",
+   "--bun-path",
+   "{ROOT:home}/example-trial/src/bun-1.0.0/bun",
+   "--node-path",
+   "{ROOT:home}/example-trial/opt/node-1.0.0/bin/node"
+  ],
+  "request_id": "{REQUEST}"
+ },
  "case": "example-trial",
  "config": {
   "effective": {
