@@ -403,9 +403,26 @@ is proposed and not approved, and while no delta review is recorded as passed
 with the commit it read. It cannot record the review of the commit it runs
 on. So it asks git what was committed after the reviewed commit: a later
 commit that changes anything but `docs/` and `test/port-rulings.golden`
-blocks, as work no recorded review has read. At this commit it is red on one
-line: the review recorded as passed is the one of `06ee0cc`, and the closing
-step after it (the approved defaults of D4 and what follows from them) is a
-later commit that no recorded review has read. Finding F4 is printed as
-ruled and not fixed: what D4 leaves of it is residual risk of the
+blocks, as work no recorded review has read. The closing step
+(`06ee0cc..05298e9`, the approved defaults of D4 and what follows from them)
+had no delta review: the record holds the technical owner's bounded technical
+acceptance of it, as that and not as an independent review, and the check
+passed at the commit that recorded it. At this commit it is red on one line
+again: the deploy corpus (`test/corpus/`, below) was committed after
+`05298e9` and neither a review nor that acceptance has read it. Finding F4 is
+printed as ruled and not fixed: what D4 leaves of it is residual risk of the
 trusted-input version.
+
+## Deploy corpus
+
+`test/corpus/` runs whole deployments through the Python oracle and keeps
+what came out as goldens: the merged configuration, the plan, the files,
+links and units an apply leaves, the adapter's call of cook, the calls of the
+service manager, and the refusals met in practice. The modules still to port
+(catalog, deploy, cook, spawn) are ported against these. The steps already
+ported are compared with the oracle on the same files; `npm test` does that
+for two synthetic cases (`test/unit/corpus.test.js`). Cook, the service
+manager and file ownership are stand-ins, and `test/corpus/README.md` says
+what a golden therefore does not show. A corpus of real deployments is built
+with `corpus.py import-layer` and is kept, with its goldens, outside this
+repository.
