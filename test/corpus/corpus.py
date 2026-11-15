@@ -473,6 +473,30 @@ def run_case(case, sandbox, node=None):
     volatile = ('systemctl-calls', 'unit-states.json')
     record['reapply']['tree_changes'] = sorted(path for path in set(after) | set(again) if after.get(path) != again.get(path) and Path(path).name not in volatile)
     record['plan_after_apply'] = world.dispatch('plan')
+    # A later release of the same deployment: another cook pin, so another build beside the one that is current. Then the
+    # first request again, which is how a release is taken back: its build is still there and only the pointer moves.
+    later = copy.deepcopy(world.versions)
+    pin = later['runtime']['cook']
+    later['runtime']['cook'] = pin[:-1] + ('0' if pin[-1] != '0' else '1')
+    logs = ('cook-calls.jsonl', 'verify-cook-calls.jsonl')
+    state = again
+    for name, extra in (('rebuild', {'versions': later}), ('release_back', {})):
+        calls = {log: len(lines(Path(world.root) / log)) for log in ('systemctl-calls',) + logs}
+        record[name] = world.dispatch('apply', operator_files=files, **extra)
+        now = snapshot(world.sandbox)
+        record[name]['tree'] = {path: row for path, row in now.items() if state.get(path) != row and Path(path).name not in volatile + logs}
+        for path, row in record[name]['tree'].items():
+            if Path(path).name == 'ownership.json':
+                # The engine sorts the entries by path, and with two builds that order follows their names, which follow the root.
+                # The digest of the file stays; the entries are listed in an order that does not: by shape, the first build first.
+                first = world.request_id()
+                entries = json.loads(row.pop('text'))['entries']
+                row['entries_by_shape'] = sorted(entries, key=lambda entry: (HEX64.sub('#', entry['path']), first not in entry['path'], HEX64.sub('#', json.dumps(entry, sort_keys=True))))
+        record[name]['removed'] = sorted(path for path in state if path not in now)
+        record[name]['systemctl_calls'] = lines(Path(world.root) / 'systemctl-calls')[calls['systemctl-calls']:]
+        record[name]['cook_calls'] = lines(Path(world.root) / 'cook-calls.jsonl')[calls['cook-calls.jsonl']:]
+        record[name]['verify_cook_calls'] = lines(Path(world.root) / 'verify-cook-calls.jsonl')[calls['verify-cook-calls.jsonl']:]
+        state = now
     jobs = world.ported()
     record['ported'] = brief(oracle_outcomes(world, jobs))
     record['refusals'] = refusals
@@ -564,8 +588,9 @@ def command_record(args, check=False):
             path.write_text(text)
             os.chmod(path, 0o644 if args.corpus == SYNTHETIC else 0o600)
             record = json.loads(text)
-            print('%s: plan %d, apply %d, reapply %d, %d ported calls, %d refusals' % (
-                case.name, record['plan']['status'], record['apply']['status'], record['reapply']['status'], len(record['ported']), len(record['refusals'])))
+            print('%s: plan %d, apply %d, reapply %d, rebuild %d, release back %d, %d ported calls, %d refusals' % (
+                case.name, record['plan']['status'], record['apply']['status'], record['reapply']['status'], record['rebuild']['status'],
+                record['release_back']['status'], len(record['ported']), len(record['refusals'])))
     return int(failed)
 
 
@@ -628,7 +653,7 @@ def command_compare(args):
             print('%s %s: %d ported calls, %d equal, %d mismatch; golden %s; engine %s' % (
                 'PASS' if counts.get('mismatch', 0) == 0 and recorded and not parted else 'FAIL', case.name, len(jobs), counts.get('equal', 0), counts.get('mismatch', 0),
                 'reproduced' if recorded else 'NOT reproduced',
-                'not run' if args.steps_only else 'equal: role view, plan, apply, tree, re-apply, refusals' if not parted else 'DIFFERS in %d places' % len(parted)))
+                'not run' if args.steps_only else 'equal: role view, plan, apply, tree, re-apply, rebuild, release back, refusals' if not parted else 'DIFFERS in %d places' % len(parted)))
             failed = failed or not recorded or bool(parted)
         finally:
             ts_port.remove(world.sandbox)

@@ -416,12 +416,18 @@
   {
    "id": "archive.L140.4",
    "ruling": "M1",
-   "status": "open",
+   "status": "discharged",
    "owed": "An end-to-end vector, through cook.main or the deployment boundary, on which the mutant gives another public code than the original.",
    "due_when_any_exists": [
     "src/cook.ts",
     "src/deploy.ts"
-   ]
+   ],
+   "discharged_with": {
+    "test": "test/unit/engine.test.js",
+    "name": "archive.L140.4 end to end: at the deployment boundary the mutant gives another public code than the original, in both engines",
+    "what_it_shows": "A package manifest that is a JSON list, in a host dependency of a contract v1 plan. Original, oracle and port: E_ADAPTER_INPUT, phase prepare. Mutant (archive.py:140 and the TS mutant of test/mutants/ts-anchors.golden), oracle and port: E_DEPLOY_FAILED. The test asks all four and writes no code down."
+   },
+   "discharged_by": "Entered by the implementer together with src/deploy.ts and src/cook.ts, which made it due. No review has read the witness yet; it is part of the slice whose review is owed (scripts/check-port-ready blocks on those commits)."
   },
   {
    "id": "archive.trusted-input",
@@ -555,6 +561,46 @@
    "id": "B17",
    "for": "port",
    "entry": "Open; not fixed in the reader; bounded by a default instead (the delta review of the third fix round, LOW-2). The sparse budget counts numbers and not their size. A GNU.sparse.map in a global header is converted into fresh integers at every expansion; a number of 4,300 digits is about 1.8 kB, and its digits are charged as metadata bytes once, with the global header. Under the budget of 2**20 then proposed, the reviewer's archive kept 1,907 MiB that no budget counted and aborted Node 24.14.0 at the heap limit then required with 524 MiB of caller data. The closing step lowers the sparse budget to 2**16, which bounds that cost at about 115 MiB; the shape is part of combined.heap-worst in test/differential/port_budget.py and of the measurements behind the heap requirement. The fix: convert a map that comes from a global header once and share the immutable integers between expansions, as `converted` does for a global size, recording where a conversion fails so that the charge and the ValueError fall where the oracle's walk puts them; or charge the map's bytes at every expansion, which adds refusals and vectors. Do this before raising the sparse budget."
+  },
+  {
+   "id": "B18",
+   "for": "port",
+   "entry": "Open, entered by the implementer with the success-path port of deploy and cook: `catalog.ts`, and with it the catalog branches of `deploy.ts` and `cook.ts`. Until then an active catalog is refused. None of the five deployments activates it"
+  },
+  {
+   "id": "B19",
+   "for": "port, before any use on input that is not ours",
+   "entry": "Open, entered by the implementer with the success-path port of deploy and cook: `deploy.ts` and `cook.ts` have no mutants and no hostile vectors; the inventory rows they own (plan section 4.1) are not marked; exception classes on wrongly typed values are not modelled throughout. They are not listed as ported"
+  },
+  {
+   "id": "B20",
+   "for": "whoever allows it (plan steps 4 and 5)",
+   "entry": "Open, entered by the implementer with the success-path port of deploy and cook: `verify_cook` has met no real cook checkout, and no lock a real cook wrote is in the corpus. The corpus lock is the stand-in's"
+  },
+  {
+   "id": "B21",
+   "for": "corpus",
+   "entry": "Open, entered by the implementer with the success-path port of deploy and cook: cases for the branches no case reaches: `install_only`, rollback, a retired unit, a dropped secret file, a health command, an engine-rendered unit, connectors from descriptors, the ownership refusals"
+  },
+  {
+   "id": "B22",
+   "for": "port, with the command line (plan phase 7)",
+   "entry": "Open, entered by the implementer with the success-path port of deploy and cook: there is no operational entry: `src/cli.ts` refuses. `src/engine.ts` is a library call; secrets on a descriptor, the receipt file and exit statuses are not built. A rehearsal needs a runner"
+  },
+  {
+   "id": "B23",
+   "for": "ruling (plan Q6)",
+   "entry": "Open, entered by the implementer with the success-path port of deploy and cook: the lock tool is `/usr/bin/flock`, undigested"
+  },
+  {
+   "id": "B24",
+   "for": "ruling (plan Q1)",
+   "entry": "Open, entered by the implementer with the success-path port of deploy and cook: the build name of a real kitchen differs from the role's; the corpus makes them equal on purpose"
+  },
+  {
+   "id": "B25",
+   "for": "review",
+   "entry": "Open, entered by the implementer with the success-path port of deploy and cook: obligation `archive.L140.4` is recorded as discharged by the implementer, with the witness in `test/unit/engine.test.js`. A review has to confirm it"
   }
  ],
  "fixed_without_ruling": [

@@ -87,7 +87,12 @@ class Port(unittest.TestCase):
 
     def test_ported_modules_and_lazy_imports(self):
         ported = sorted(path.name for path in (ROOT / 'src').glob('*.ts'))
-        self.assertEqual(ported, ['archive.ts', 'cli.ts', 'config.ts', 'contract.ts', 'errors.ts', 'index.ts', 'inputs.ts', 'lock.ts'])
+        # deploy, cook, their adapter entry and the contract dispatch are a success-path port (docs/port-notes.md): present, and not in the porting map.
+        self.assertEqual(ported, ['archive.ts', 'cli.ts', 'config.ts', 'contract.ts', 'cook-adapter.ts', 'cook.ts', 'deploy.ts', 'engine.ts', 'errors.ts', 'index.ts', 'inputs.ts', 'lock.ts'])
+        porting = (ROOT / 'PORTING.md').read_text()
+        for module in ('connectome_deploy', 'connectome_cook'):
+            self.assertNotIn('| ported | `%s.' % module, porting)
+            self.assertIn('| oracle-only | `%s.' % module, porting)
         self.assertNotIn('bind_seam', (ROOT / 'src/archive.ts').read_text())
         lock = (ROOT / 'src/lock.ts').read_text()
         self.assertNotRegex(lock, r"(?m)^import (?!type )[^;]*from '\./(inputs|archive)\.js'")
@@ -152,6 +157,13 @@ class Port(unittest.TestCase):
         # The witness a ruling moved to a later module is an open obligation with a trigger, not a note.
         owed = {entry['id']: entry for entry in record['obligations']}
         self.assertEqual(owed['archive.L140.4']['due_when_any_exists'], ['src/cook.ts', 'src/deploy.ts'])
+        # It came due with the deploy and cook port. A discharged obligation names its witness, and the witness is there under that name.
+        if owed['archive.L140.4']['status'] == 'discharged':
+            witness = owed['archive.L140.4']['discharged_with']
+            self.assertIn("test('" + witness['name'] + "'", (ROOT / witness['test']).read_text())
+            self.assertGreater(len(owed['archive.L140.4']['discharged_by']), 40)
+        else:
+            self.assertFalse(any((ROOT / name).exists() for name in owed['archive.L140.4']['due_when_any_exists']))
         # The trusted, digest-checked input is a precondition on the caller, not a property that was proven: it comes due with the catalog.
         self.assertEqual((owed['archive.trusted-input']['ruling'], owed['archive.trusted-input']['status'], owed['archive.trusted-input']['due_when_any_exists']), ('C1', 'open', ['src/catalog.ts']))
         self.assertIn('not a proven property', rulings['C1']['as_received'])

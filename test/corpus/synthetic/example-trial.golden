@@ -2192,6 +2192,235 @@
   "status": 0,
   "tree_changes": []
  },
+ "rebuild": {
+  "cook_calls": [
+   {
+    "argv": [
+     "{KITCHEN}/test/corpus/stand_in_cook.py",
+     "{ROOT:home}/example-trial/src/connectome-cook/bin/cook",
+     "install",
+     "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/cook-recipe.json",
+     "--out",
+     "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}",
+     "--no-prompts",
+     "--yes",
+     "--strict",
+     "--ch-repo",
+     "{ROOT:home}/example-trial/src/connectome-host",
+     "--ch-ref",
+     "cef933981dc0699fc00e5189b129d854ff8d43f6",
+     "--bun-path",
+     "{ROOT:home}/example-trial/src/bun-1.0.0/bun",
+     "--node-path",
+     "{ROOT:home}/example-trial/opt/node-1.0.0/bin/node",
+     "--layout",
+     "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/cook-layout.json",
+     "--host-dependency",
+     "@animalabs/agent-framework={ROOT:home}/example-trial/inputs/agent-framework-4.5.6.tgz#sha256=0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+     "--user-unit",
+     "connectome-example-trial.service"
+    ],
+    "cwd": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}",
+    "environment_names": [
+     "HOME",
+     "LANG",
+     "PATH"
+    ]
+   }
+  ],
+  "core": {
+   "activate": {
+    "build_dir": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}",
+    "build_id": "7d96aaf416333fa525259578d2ba36455cfa506c47d65bb3e628e8b5b5dba40c",
+    "changed": true
+   },
+   "changed": true,
+   "prepare": {
+    "build_dir": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}",
+    "changed": true,
+    "plan": {
+     "budgets": {},
+     "framework_archive": {
+      "commit_verifiable": false,
+      "name": "@animalabs/agent-framework",
+      "registry_release": true,
+      "requested_commit": "aa134e75fc19bc8cb3b73cb1ec53465dd9cf5c91",
+      "schema": "connectome.framework-archive/v1",
+      "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+      "version": "4.5.6"
+     },
+     "host_dependencies": [
+      {
+       "archive": "{ROOT:home}/example-trial/inputs/agent-framework-4.5.6.tgz",
+       "commit_verifiable": false,
+       "kind": "artifact",
+       "name": "@animalabs/agent-framework",
+       "payload": "operator-supplied prebuilt payload, verified out of band",
+       "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+       "version": "4.5.6"
+      }
+     ],
+     "secrets_file": "{ROOT:home}/example-trial/.config/connectome-secrets/trial.json",
+     "state_dir": "{ROOT:home}/example-trial/.local/state/connectome/example-trial"
+    },
+    "secret_names": [
+     "EXAMPLE_CANARY"
+    ]
+   }
+  },
+  "removed": [],
+  "status": 0,
+  "systemctl_calls": [
+   [
+    "daemon-reload"
+   ],
+   [
+    "restart",
+    "connectome-example-trial.service"
+   ],
+   [
+    "is-active",
+    "--quiet",
+    "connectome-example-trial.service"
+   ],
+   [
+    "show",
+    "-p",
+    "EnvironmentFiles",
+    "--value",
+    "connectome-example-trial.service"
+   ]
+  ],
+  "tree": {
+   "{ROOT:home}/example-trial/.config/systemd/user/connectome-example-trial.service": {
+    "link": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/managed-units/connectome-example-trial.service"
+   },
+   "{ROOT:home}/example-trial/.config/systemd/user/connectome-example-trial.service.d/90-connectome-env.conf": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:11}",
+    "text": "[Service]\nEnvironment=DATA_DIR={ROOT:home}/example-trial/.local/state/connectome/example-trial\nEnvironmentFile={ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/secrets.env\n"
+   },
+   "{ROOT:home}/example-trial/.config/systemd/user/default.target.wants/connectome-example-trial.service": {
+    "link": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/managed-units/connectome-example-trial.service"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}": {
+    "kind": "directory",
+    "mode": "0700"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/.prepared": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:12}",
+    "text": "{sha256:path-derived:10}"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/connectome-example-trial.service": {
+    "mode": "0644",
+    "sha256": "{sha256:path-derived:13}",
+    "text": "[Unit]\nDescription=Connectome agent (stand-in cook)\n[Service]\nType=simple\nWorkingDirectory={ROOT:home}/example-trial/.local/state/connectome/example-trial\nExecStart={ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/run.sh\nRestart=on-failure\n[Install]\nWantedBy=default.target\n"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/connectome.lock": {
+    "mode": "0644",
+    "sha256": "{sha256:path-derived:14}",
+    "text": "{\n  \"backend\": \"host\",\n  \"build\": {\n    \"dir\": \"{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}\",\n    \"id\": \"7d96aaf416333fa525259578d2ba36455cfa506c47d65bb3e628e8b5b5dba40c\"\n  },\n  \"components\": [],\n  \"connectomeHost\": {\n    \"commit\": \"cef933981dc0699fc00e5189b129d854ff8d43f6\",\n    \"ref\": \"cef933981dc0699fc00e5189b129d854ff8d43f6\",\n    \"url\": \"{ROOT:home}/example-trial/src/connectome-host\"\n  },\n  \"cook\": {\n    \"version\": \"0.0.0-stand-in\"\n  },\n  \"createdAt\": \"2026-11-15T00:00:00.000Z\",\n  \"credentials\": [\n    \"EXAMPLE_CANARY\"\n  ],\n  \"hostDependencies\": [\n    {\n      \"name\": \"@animalabs/agent-framework\",\n      \"originalRange\": \"^4.5.6\",\n      \"packageJsonDelta\": {\n        \"direct\": {\n          \"after\": \"file:{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/host-dependencies/agent-framework-4.5.6.tgz\",\n          \"before\": \"^4.5.6\",\n          \"name\": \"@animalabs/agent-framework\",\n          \"section\": \"dependencies\"\n        },\n        \"override\": {\n          \"after\": \"file:{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/host-dependencies/agent-framework-4.5.6.tgz\",\n          \"before\": null,\n          \"name\": \"@animalabs/agent-framework\",\n          \"section\": \"overrides\"\n        }\n      },\n      \"provenance\": {\n        \"archive\": \"{ROOT:home}/example-trial/inputs/agent-framework-4.5.6.tgz\",\n        \"commit_verifiable\": false,\n        \"kind\": \"artifact\",\n        \"name\": \"@animalabs/agent-framework\",\n        \"payload\": \"operator-supplied prebuilt payload, verified out of band\",\n        \"sha256\": \"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\n        \"version\": \"4.5.6\"\n      },\n      \"sha256\": \"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\n      \"size\": 2071,\n      \"snapshot\": \"{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/host-dependencies/agent-framework-4.5.6.tgz\",\n      \"version\": \"4.5.6\"\n    }\n  ],\n  \"launch\": {\n    \"kind\": \"script\",\n    \"script\": \"run.sh\",\n    \"userUnit\": \"connectome-example-trial.service\"\n  },\n  \"layout\": {\n    \"config\": \"{ROOT:home}/example-trial/.local/share/connectome/example-trial/cook-config/{sha256:path-derived:10}\",\n    \"connectorState\": {},\n    \"credentials\": \"{ROOT:home}/example-trial/.local/share/connectome/example-trial/cook-credentials/{sha256:path-derived:10}\",\n    \"runtime\": \"{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}\",\n    \"schema\": \"connectome.host-layout/v1\",\n    \"state\": \"{ROOT:home}/example-trial/.local/state/connectome/example-trial\",\n    \"workspace\": \"{ROOT:home}/example-trial/.local/share/connectome/example-trial/workspace\"\n  },\n  \"localExtensions\": [],\n  \"outputs\": [\n    {\n      \"mode\": 493,\n      \"path\": \"run.sh\",\n      \"sha256\": \"6a93a3e64f5392d01387efc8480ac17a9aec71a3c095141a8673594dc099a8fa\"\n    }\n  ],\n  \"recipe\": {\n    \"path\": \"{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/cook-recipe.json\",\n    \"sha256\": \"7d96aaf416333fa525259578d2ba36455cfa506c47d65bb3e628e8b5b5dba40c\"\n  },\n  \"recipePath\": \"{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/cook-recipe.json\",\n  \"requirements\": [\n    {\n      \"envName\": \"EXAMPLE_CANARY\",\n      \"name\": \"EXAMPLE_CANARY\",\n      \"origin\": \"process-env\"\n    }\n  ],\n  \"state\": {\n    \"path\": \"{ROOT:home}/example-trial/.local/state/connectome/example-trial\"\n  },\n  \"version\": 2\n}\n"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/cook-layout.json": {
+    "mode": "0644",
+    "sha256": "{sha256:path-derived:15}",
+    "text": "{\n  \"config\": \"{ROOT:home}/example-trial/.local/share/connectome/example-trial/cook-config/{sha256:path-derived:10}\",\n  \"connectorState\": {},\n  \"credentials\": \"{ROOT:home}/example-trial/.local/share/connectome/example-trial/cook-credentials/{sha256:path-derived:10}\",\n  \"runtime\": \"{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}\",\n  \"schema\": \"connectome.host-layout/v1\",\n  \"state\": \"{ROOT:home}/example-trial/.local/state/connectome/example-trial\",\n  \"workspace\": \"{ROOT:home}/example-trial/.local/share/connectome/example-trial/workspace\"\n}\n"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/cook-recipe.json": {
+    "mode": "0644",
+    "sha256": "7d96aaf416333fa525259578d2ba36455cfa506c47d65bb3e628e8b5b5dba40c",
+    "text": "{\n  \"agent\": {\n    \"model\": \"mock-example\",\n    \"provider\": \"mock\",\n    \"systemPrompt\": \"Synthetic prompt. Do nothing.\"\n  },\n  \"extensions\": {},\n  \"mcpServers\": {},\n  \"modules\": {},\n  \"name\": \"example-trial\",\n  \"requirements\": {\n    \"EXAMPLE_CANARY\": {\n      \"exposeAs\": \"EXAMPLE_CANARY\",\n      \"required\": false\n    }\n  }\n}\n"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/deployment.json": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:16}",
+    "text": "{\"config\":{\"agent\":{\"model\":\"mock-example\",\"provider\":\"mock\",\"systemPrompt\":\"Synthetic prompt. Do nothing.\"},\"connectors\":{},\"cook\":{\"connector_state\":{},\"framework_archive\":{\"name\":\"@animalabs/agent-framework\",\"path\":\"{ROOT:home}/example-trial/inputs/agent-framework-4.5.6.tgz\",\"registry_release\":true,\"sha256\":\"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\"version\":\"4.5.6\"},\"host_repo\":\"{ROOT:home}/example-trial/src/connectome-host\"},\"model\":\"mock-example\",\"modules\":{},\"name\":\"example-trial\",\"required_secrets\":[\"EXAMPLE_CANARY\"],\"secrets_file\":\"{ROOT:home}/example-trial/.config/connectome-secrets/trial.json\",\"state_dir\":\"{ROOT:home}/example-trial/.local/state/connectome/example-trial\"},\"pins\":{\"connectors\":{},\"runtime\":{\"agent-framework\":\"aa134e75fc19bc8cb3b73cb1ec53465dd9cf5c91\",\"connectome-host\":\"cef933981dc0699fc00e5189b129d854ff8d43f6\",\"cook\":\"1b874d9dd55b529486b8029dd9814a6c0e2147e1\"}}}"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/framework.lock.json": {
+    "mode": "0644",
+    "sha256": "68983daed135f5158a6ec53fc0491557066eea632c868c6ead22a38637878626",
+    "text": "{\n  \"commit_verifiable\": false,\n  \"name\": \"@animalabs/agent-framework\",\n  \"registry_release\": true,\n  \"requested_commit\": \"aa134e75fc19bc8cb3b73cb1ec53465dd9cf5c91\",\n  \"schema\": \"connectome.framework-archive/v1\",\n  \"sha256\": \"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\n  \"version\": \"4.5.6\"\n}\n"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/managed-units": {
+    "kind": "directory",
+    "mode": "0700"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/managed-units/connectome-example-trial.service": {
+    "mode": "0644",
+    "sha256": "{sha256:path-derived:13}",
+    "text": "[Unit]\nDescription=Connectome agent (stand-in cook)\n[Service]\nType=simple\nWorkingDirectory={ROOT:home}/example-trial/.local/state/connectome/example-trial\nExecStart={ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/run.sh\nRestart=on-failure\n[Install]\nWantedBy=default.target\n"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/run.sh": {
+    "mode": "0755",
+    "sha256": "6a93a3e64f5392d01387efc8480ac17a9aec71a3c095141a8673594dc099a8fa",
+    "text": "#!/bin/sh\n# stand-in launcher: the corpus starts nothing\nexit 0\n"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/secrets.env": {
+    "mode": "0600",
+    "sha256": "36d9493734acf2d7b092c87c0e16e405da5b907b721f8833e8b31ab45b44c231",
+    "text": "EXAMPLE_CANARY=\"corpus-placeholder-for-EXAMPLE_CANARY\"\n"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/current": {
+    "link": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/state/ownership.json": {
+    "entries_by_shape": [
+     {
+      "kind": "link",
+      "path": "{ROOT:home}/example-trial/.config/systemd/user/connectome-example-trial.service",
+      "target": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/managed-units/connectome-example-trial.service"
+     },
+     {
+      "kind": "file",
+      "path": "{ROOT:home}/example-trial/.config/systemd/user/connectome-example-trial.service.d/90-connectome-env.conf",
+      "sha256": "{sha256:path-derived:11}"
+     },
+     {
+      "kind": "link",
+      "path": "{ROOT:home}/example-trial/.config/systemd/user/default.target.wants/connectome-example-trial.service",
+      "target": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/managed-units/connectome-example-trial.service"
+     },
+     {
+      "kind": "directory",
+      "path": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{REQUEST}"
+     },
+     {
+      "kind": "directory",
+      "path": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}"
+     },
+     {
+      "kind": "file",
+      "path": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{REQUEST}/managed-units/connectome-example-trial.service",
+      "sha256": "{sha256:path-derived:3}"
+     },
+     {
+      "kind": "file",
+      "path": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/managed-units/connectome-example-trial.service",
+      "sha256": "{sha256:path-derived:13}"
+     },
+     {
+      "kind": "link",
+      "path": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/current",
+      "target": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}"
+     }
+    ],
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:17}"
+   }
+  },
+  "verify_cook_calls": [
+   {
+    "entrypoint": "{ROOT:home}/example-trial/src/connectome-cook/bin/cook",
+    "environment_names": [
+     "HOME",
+     "LANG",
+     "PATH"
+    ],
+    "pin": "1b874d9dd55b529486b8029dd9814a6c0e2147e1"
+   }
+  ]
+ },
  "refusals": {
   "archive-pin": {
    "command": "plan",
@@ -2212,11 +2441,138 @@
    "status": 1
   }
  },
+ "release_back": {
+  "cook_calls": [],
+  "core": {
+   "activate": {
+    "build_dir": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{REQUEST}",
+    "build_id": "7d96aaf416333fa525259578d2ba36455cfa506c47d65bb3e628e8b5b5dba40c",
+    "changed": true
+   },
+   "changed": true,
+   "prepare": {
+    "build_dir": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{REQUEST}",
+    "changed": false,
+    "plan": {
+     "budgets": {},
+     "framework_archive": {
+      "commit_verifiable": false,
+      "name": "@animalabs/agent-framework",
+      "registry_release": true,
+      "requested_commit": "aa134e75fc19bc8cb3b73cb1ec53465dd9cf5c91",
+      "schema": "connectome.framework-archive/v1",
+      "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+      "version": "4.5.6"
+     },
+     "host_dependencies": [
+      {
+       "archive": "{ROOT:home}/example-trial/inputs/agent-framework-4.5.6.tgz",
+       "commit_verifiable": false,
+       "kind": "artifact",
+       "name": "@animalabs/agent-framework",
+       "payload": "operator-supplied prebuilt payload, verified out of band",
+       "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+       "version": "4.5.6"
+      }
+     ],
+     "secrets_file": "{ROOT:home}/example-trial/.config/connectome-secrets/trial.json",
+     "state_dir": "{ROOT:home}/example-trial/.local/state/connectome/example-trial"
+    },
+    "secret_names": [
+     "EXAMPLE_CANARY"
+    ]
+   }
+  },
+  "removed": [],
+  "status": 0,
+  "systemctl_calls": [
+   [
+    "daemon-reload"
+   ],
+   [
+    "restart",
+    "connectome-example-trial.service"
+   ],
+   [
+    "is-active",
+    "--quiet",
+    "connectome-example-trial.service"
+   ],
+   [
+    "show",
+    "-p",
+    "EnvironmentFiles",
+    "--value",
+    "connectome-example-trial.service"
+   ]
+  ],
+  "tree": {
+   "{ROOT:home}/example-trial/.config/systemd/user/connectome-example-trial.service": {
+    "link": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{REQUEST}/managed-units/connectome-example-trial.service"
+   },
+   "{ROOT:home}/example-trial/.config/systemd/user/connectome-example-trial.service.d/90-connectome-env.conf": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:1}",
+    "text": "[Service]\nEnvironment=DATA_DIR={ROOT:home}/example-trial/.local/state/connectome/example-trial\nEnvironmentFile={ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{REQUEST}/secrets.env\n"
+   },
+   "{ROOT:home}/example-trial/.config/systemd/user/default.target.wants/connectome-example-trial.service": {
+    "link": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{REQUEST}/managed-units/connectome-example-trial.service"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/current": {
+    "link": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{REQUEST}"
+   },
+   "{ROOT:home}/example-trial/.local/share/connectome/example-trial/state/ownership.json": {
+    "entries_by_shape": [
+     {
+      "kind": "link",
+      "path": "{ROOT:home}/example-trial/.config/systemd/user/connectome-example-trial.service",
+      "target": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{REQUEST}/managed-units/connectome-example-trial.service"
+     },
+     {
+      "kind": "file",
+      "path": "{ROOT:home}/example-trial/.config/systemd/user/connectome-example-trial.service.d/90-connectome-env.conf",
+      "sha256": "{sha256:path-derived:1}"
+     },
+     {
+      "kind": "link",
+      "path": "{ROOT:home}/example-trial/.config/systemd/user/default.target.wants/connectome-example-trial.service",
+      "target": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{REQUEST}/managed-units/connectome-example-trial.service"
+     },
+     {
+      "kind": "directory",
+      "path": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{REQUEST}"
+     },
+     {
+      "kind": "directory",
+      "path": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}"
+     },
+     {
+      "kind": "file",
+      "path": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{REQUEST}/managed-units/connectome-example-trial.service",
+      "sha256": "{sha256:path-derived:3}"
+     },
+     {
+      "kind": "file",
+      "path": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}/managed-units/connectome-example-trial.service",
+      "sha256": "{sha256:path-derived:13}"
+     },
+     {
+      "kind": "link",
+      "path": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/current",
+      "target": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{REQUEST}"
+     }
+    ],
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:18}"
+   }
+  },
+  "verify_cook_calls": []
+ },
  "role": {
   "activate": {
    "changed": true
   },
-  "build_dir": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}",
+  "build_dir": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:19}",
   "cook_command": [
    "{ROOT:usr}/bin/python3",
    "{ROOT:home}/example-trial/src/connectome-agents/scripts/cook-adapter.py",
@@ -2244,7 +2600,7 @@
    }
   },
   "prepare": {
-   "build_dir": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:10}",
+   "build_dir": "{ROOT:home}/example-trial/.local/share/connectome/example-trial/builds/{sha256:path-derived:19}",
    "changed": true,
    "plan": {
     "budgets": {},
@@ -2275,7 +2631,7 @@
     "EXAMPLE_CANARY"
    ]
   },
-  "request_id": "{sha256:path-derived:10}",
+  "request_id": "{sha256:path-derived:19}",
   "spec_sha256": "{sha256:path-derived:6}"
  },
  "substitutions": [

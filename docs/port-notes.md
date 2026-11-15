@@ -823,6 +823,84 @@ the shape `merge_layers` uses and for nothing else**:
   of `src/config.ts` is the stand-in and must not get a second caller as it is
   (backlog B6).
 
+## `deploy` and `cook`: the success path (not qualified)
+
+`src/deploy.ts`, `src/cook.ts`, `src/engine.ts` and `src/io/host.ts` are a
+different kind of port from the five modules above. They follow the oracle
+function by function for the branches a deployment **without a catalog**
+takes, and they are held against it on whole deployments, not on vectors.
+They have no mutants, no vectors for hostile input and no review. PORTING.md
+therefore still lists `connectome_deploy` and `connectome_cook` as
+oracle-only, and `scripts/porting-map.py` was not changed.
+
+**What holds them.** `test/corpus/corpus.py compare` runs the oracle on a
+case, then lays the case out again at the same root and runs the TS engine
+(`test/corpus/ts_driver.mjs`). The two records must be equal as text: the
+role's own check-mode call, contract v1 `plan` and `apply`, every file, link
+and directory with modes and text, how the adapter called cook, every call to
+the service manager in order, a second apply, a plan after it, a later
+release beside the current one (another cook pin), the first release taken
+back, and four refusals. Seven cases: the two public ones in `npm test`, five
+of real deployments kept outside the repository. A deliberately broken build
+(drop-in text, cook argv, a refusal's code) fails the comparison.
+`test/unit/engine.test.js` covers what the corpus puts a seam over: the
+adapter's entry script, `verify_cook`'s refusals on a scratch repository, the
+lock, the JSON writer, each against the oracle.
+
+**The host seam.** The oracle reads owners, the account and its home through
+`Path.lstat`, `os.geteuid`, `os.getgroups` and `pwd.getpwuid`, and its tests
+replace those. The TS engine takes a `Host` and asks it at the same call
+sites. `realHost` is the host itself. Two things differ from the oracle
+there, both outside what a deployment asks:
+
+- the home of an account other than the one the engine runs as is not looked
+  up (`KeyError`, which the one caller turns into its refusal);
+- the per-agent lock is `flock(2)` on the same file, taken by util-linux
+  `flock` on the engine's open descriptor, because Node has no `flock`. The
+  two engines exclude each other on one root (tested). The tool is found at a
+  fixed path and its digest is not pinned (plan Q6). Without it `apply`
+  refuses with the generic code.
+
+**The build's name.** The request id hashes the cook command
+(`deploy.py:482`). In the corpus the TS engine is handed the first two words
+the oracle's shim uses, so both name the build alike and the trees can be
+compared byte for byte. A kitchen that runs for real names its own adapter
+(`process.execPath`, `dist/cook-adapter.js`), so its first apply on an agent
+the role deployed is a new build, a cook run and a restart, as finding 1 of
+the plan says. Nothing here decides plan question Q1.
+
+**Where the port knowingly differs.**
+
+| What | Oracle | Port |
+| --- | --- | --- |
+| Active catalog | goes on into `connectome_catalog` | refused in `validate_config`: `E_DEPLOY_FAILED`, nothing read or written |
+| `~user` in `root`, `base`, `unit_dir` | expanded | refused; `~` and `~/...` are expanded |
+| Adapter options | argparse: unique prefixes, `-h` | written out in full or `--name=value`; anything else is `E_ADAPTER_INPUT`, exit 2 |
+| Cook command fields | `str.format_map` in full | `{recipe}`, `{build_dir}`, `{state_dir}` and doubled braces; another field is the generic failure, as an unknown name is in the oracle |
+| A wrongly typed value where the oracle ends in its generic failure | a specific Python exception class | the same public code; the class is not modelled everywhere |
+| The adapter's stderr | spooled to a temporary file, first 65537 bytes read | held in memory, first 65537 bytes read |
+| Temporary names of atomic writes | `tempfile` alphabet | eight random characters of another alphabet; never left behind |
+
+**Ported, and reached by no case.** These branches were written from the
+oracle and nothing has run them against it: `activation: install_only`
+(staging marker, `systemd-analyze` discovery, `E_UNIT_ACTIVE`), the rollback
+after a failed activation in both outcomes, a unit that is retired or
+renamed between releases, a secret file that is dropped, a `health` command,
+a unit the engine renders itself (a lock without a unit export), connectors
+compiled from descriptors (the recipe the adapter writes with sources and
+build commands; the fifth case has none enabled), the refusals of the
+ownership manifest, and `E_UNIT_EXCLUSIVE`.
+
+**Obligation `archive.L140.4` (ruling M1).** It came due with these files:
+`scripts/check-port-ready` turns red on it as soon as `src/cook.ts` or
+`src/deploy.ts` exists. The vector it asks for is
+`test/unit/engine.test.js`, "archive.L140.4 end to end". A package manifest
+that is a list is refused at the deployment boundary with `E_ADAPTER_INPUT`
+by both engines, and with `E_DEPLOY_FAILED` by both mutants. The record in
+`test/port-rulings.golden` now says `discharged`, names the test, and says
+who entered it: the implementer, with no review yet. Confirming it is part of
+the review this slice is owed (backlog B25).
+
 ## Rulings
 
 Received in three rounds, from the technical owner through the dispatch
@@ -900,6 +978,14 @@ The mutant classification:
 | B15 | ruling, at catalog integration | known and not closed for the trusted-input version: the archive is held whole, the caller's data comes out of the same heap limit, further amplification routes were not searched for |
 | B16 | readiness check | open, not fixed (LOW-1 of the delta review of the third fix round): `check-port-ready` reads a source file moved under `docs/` as a change of the notes, in a commit or in the working tree. The fix is `--no-renames` on both git calls, with a test case |
 | B17 | port | open, not fixed in the reader (LOW-2 of the same review): the sparse budget counts numbers, not their size, and a map in a global header is converted anew at every expansion. Bounded by the default instead: at 2^16 numbers about 115 MiB, inside the measured peak. Fix it (share the integers of a global map) before raising the sparse budget |
+| B18 | port | `catalog.ts`, and with it the catalog branches of `deploy.ts` and `cook.ts`. Until then an active catalog is refused. None of the five deployments activates it |
+| B19 | port, before any use on input that is not ours | `deploy.ts` and `cook.ts` have no mutants and no hostile vectors; the inventory rows they own (plan section 4.1) are not marked; exception classes on wrongly typed values are not modelled throughout. They are not listed as ported |
+| B20 | whoever allows it (plan steps 4 and 5) | `verify_cook` has met no real cook checkout, and no lock a real cook wrote is in the corpus. The corpus lock is the stand-in's |
+| B21 | corpus | cases for the branches no case reaches: `install_only`, rollback, a retired unit, a dropped secret file, a health command, an engine-rendered unit, connectors from descriptors, the ownership refusals |
+| B22 | port, with the command line (plan phase 7) | there is no operational entry: `src/cli.ts` refuses. `src/engine.ts` is a library call; secrets on a descriptor, the receipt file and exit statuses are not built. A rehearsal needs a runner |
+| B23 | ruling (plan Q6) | the lock tool is `/usr/bin/flock`, undigested |
+| B24 | ruling (plan Q1) | the build name of a real kitchen differs from the role's; the corpus makes them equal on purpose |
+| B25 | review | obligation `archive.L140.4` is recorded as discharged by the implementer, with the witness in `test/unit/engine.test.js`. A review has to confirm it |
 
 ## Still open
 
