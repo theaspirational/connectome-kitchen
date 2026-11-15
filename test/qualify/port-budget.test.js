@@ -12,18 +12,18 @@ test('the budget differential ran, under the heap limit the reader requires',()=
  assert.equal(done.stderr,'');
  assert.deepEqual(report.problems,[]);
  assert.equal(done.status,0);
- assert.deepEqual(report.budgets,{metadataBytes:2**28,paxRecords:2**24,sparseNumbers:2**20,members:2**17});
- assert.equal(report.heap_limit_required_mib,3072);
+ assert.deepEqual(report.budgets,{metadataBytes:2**24,paxRecords:2**21,sparseNumbers:2**16,members:2**17});
+ assert.equal(report.heap_limit_required_mib,2048);
  // Exactly the limit the reader requires, not a larger one: the flag is chosen so that heap_size_limit comes out at it.
- assert.equal(report.port_heap_size_limit_mib,3072);
- assert.ok(report.port_max_old_space_size_mib<3072);
+ assert.equal(report.port_heap_size_limit_mib,2048);
+ assert.ok(report.port_max_old_space_size_mib<2048);
 });
 for(const [kind,what] of [['members','members'],['records','pax records'],['names','many large names'],['sparse-global','a sparse map in a global header, expanded again and again']]){
  test(what+': one under the budget and at it both engines accept; one over it the oracle accepts and the port refuses (D4)',()=>{
   assert.deepEqual([report.cases?.[kind+'.below'],report.cases?.[kind+'.at'],report.cases?.[kind+'.above']],['equal','equal','D4']);
  });
 }
-test('the four sparse forms count alike: 2**19 regions are read in each, one region or number more is refused in each',()=>{
+test('the four sparse forms count alike: 2**15 regions are read in each, one region or number more is refused in each',()=>{
  for(const form of ['0.1','0.0','1.0','old'])assert.deepEqual([report.cases?.['sparse-'+form+'.at'],report.cases?.['sparse-'+form+'.above']],['equal','D4'],form);
 });
 test('close to every budget at once, the archive is read as the oracle reads it',()=>{
@@ -34,7 +34,7 @@ test('a refusal is cheap, and no archive within the budgets costs more than the 
  assert.equal(measured.length,22);
  for(const [name,entry] of measured){
   assert.ok(entry.port_peak_rss_mib<=report.port_rss_limit_mib,name+': '+entry.port_peak_rss_mib+' MiB');
-  if(name.endsWith('.above')&&name!=='names.above')assert.ok(entry.port_peak_rss_mib<=report.refusal_rss_limit_mib,name+': '+entry.port_peak_rss_mib+' MiB');
+  if(name.endsWith('.above'))assert.ok(entry.port_peak_rss_mib<=report.refusal_rss_limit_mib,name+': '+entry.port_peak_rss_mib+' MiB');
  }
  console.log('peak resident memory in MiB, port: '+JSON.stringify(Object.fromEntries(measured.map(([name,entry])=>[name,entry.port_peak_rss_mib]))));
 });

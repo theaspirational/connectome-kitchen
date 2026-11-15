@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import * as tarfile from '../../dist/pylike/tarfile.js';
 // The metadata limit of the tar reader (divergence D3) on a bare tar stream, and the cost of what stays below it.
 // The archives that really hold a block at the limit are built by test/differential/port_large.py.
+// The limit is a bound on one block and lies above the byte budget of D4 (2**24), which the reader charges right after it.
+// So its two sides show only under a byte budget raised to the limit (RAISED), which is a test option; under the production
+// budgets a block of exactly the limit is refused by the budget, and one byte more by the limit.
 const header=(name,size,type='0')=>{
  const block=Buffer.alloc(512);block.write(name,0,'latin1');
  block.write('0000644\0',100);block.write('0000000\0',108);block.write('0000000\0',116);
@@ -15,6 +18,7 @@ const padded=data=>Buffer.concat([data,Buffer.alloc(-data.length&511)]);
 const file=(name,text)=>Buffer.concat([header(name,Buffer.byteLength(text)),padded(Buffer.from(text))]);
 const END=Buffer.alloc(1024);
 const LIMIT=2**28;
+const RAISED={budgets:{metadataBytes:LIMIT}};
 const record=(keyword,value)=>{
  const body=' '+keyword+'='+value+'\n';
  let length=body.length+1;
@@ -36,13 +40,23 @@ for(const [type,what] of [['L','long name'],['K','long link'],['x','pax extended
  test('a '+what+' header one byte above the limit is refused where its blocks would be read; at the limit it is read',()=>{
   // Nothing follows either header. At the limit the reader reads a short block and goes on as tarfile does; above it, it refuses.
   const first=file('package/package.json','{}');
-  const above=outcome(()=>tarfile.tarMembers(Buffer.concat([first,header('meta',LIMIT+1,type)])));
+  const above=outcome(()=>tarfile.tarMembers(Buffer.concat([first,header('meta',LIMIT+1,type)]),RAISED));
   assert.ok(above instanceof tarfile.MetadataLimit,String(above));
-  const at=outcome(()=>tarfile.tarMembers(Buffer.concat([first,header('meta',LIMIT,type)])));
+  const at=outcome(()=>tarfile.tarMembers(Buffer.concat([first,header('meta',LIMIT,type)]),RAISED));
   assert.ok(at instanceof tarfile.ReadError,String(at));
   // As the first member too, where tarfile turns header errors into ReadError: the refusal is not one of them.
-  assert.ok(outcome(()=>tarfile.tarMembers(header('meta',LIMIT+1,type))) instanceof tarfile.MetadataLimit);
-  assert.ok(outcome(()=>tarfile.tarMembers(header('meta',LIMIT,type))) instanceof tarfile.ReadError);
+  assert.ok(outcome(()=>tarfile.tarMembers(header('meta',LIMIT+1,type),RAISED)) instanceof tarfile.MetadataLimit);
+  assert.ok(outcome(()=>tarfile.tarMembers(header('meta',LIMIT,type),RAISED)) instanceof tarfile.ReadError);
+ });
+ test('under the production budgets a '+what+' header of exactly the limit is refused by the byte budget, and one byte above it by the limit',()=>{
+  const first=file('package/package.json','{}');
+  for(const lead of [[first],[]]){
+   const at=outcome(()=>tarfile.tarMembers(Buffer.concat([...lead,header('meta',LIMIT,type)])));
+   assert.ok(at instanceof tarfile.MetadataBudget&&at.budget==='metadataBytes',String(at));
+   // The limit is asked first: above it the refusal is the limit's, whatever the budget.
+   const above=outcome(()=>tarfile.tarMembers(Buffer.concat([...lead,header('meta',LIMIT+1,type)])));
+   assert.ok(above instanceof tarfile.MetadataLimit&&!(above instanceof tarfile.MetadataBudget),String(above));
+  }
  });
 }
 

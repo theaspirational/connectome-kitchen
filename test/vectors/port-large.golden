@@ -2,6 +2,7 @@
  "decompressed_bytes": 4404021760,
  "at_least_4_gib": true,
  "metadata_limit_bytes": 268435456,
+ "metadata_budget_bytes": 16777216,
  "cases": [
   {
    "id": "large.valid",
@@ -92,20 +93,31 @@
     }
    },
    "port": {
-    "result": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
      "$mapping": [
       [
-       "name",
-       "example-package"
+       "error_code",
+       "E_ADAPTER_INPUT"
       ],
       [
-       "version",
-       "1.0.0"
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
       ]
      ]
     }
    },
-   "classification": "equal"
+   "reader": {
+    "error": "OSError",
+    "message": "tar metadata budget exceeded: metadata bytes",
+    "budget": "metadataBytes"
+   },
+   "reader_under_a_byte_budget_of_the_limit": {
+    "members": 2
+   },
+   "oracle_lists_members": 2,
+   "classification": "D4"
   },
   {
    "id": "metadata.longname.above-limit",
@@ -141,6 +153,15 @@
      ]
     }
    },
+   "reader": {
+    "error": "OSError",
+    "message": "tar metadata block above 268435456 bytes"
+   },
+   "reader_under_a_byte_budget_of_the_limit": {
+    "error": "OSError",
+    "message": "tar metadata block above 268435456 bytes"
+   },
+   "oracle_lists_members": 2,
    "classification": "D3"
   },
   {
@@ -162,20 +183,31 @@
     }
    },
    "port": {
-    "result": {
+    "exception": "ArchiveError",
+    "message": "unreadable archive or manifest",
+    "public": {
      "$mapping": [
       [
-       "name",
-       "example-package"
+       "error_code",
+       "E_ADAPTER_INPUT"
       ],
       [
-       "version",
-       "1.0.0"
+       "msg",
+       "E_ADAPTER_INPUT: Adapter input or local prerequisite is invalid."
       ]
      ]
     }
    },
-   "classification": "equal"
+   "reader": {
+    "error": "OSError",
+    "message": "tar metadata budget exceeded: metadata bytes",
+    "budget": "metadataBytes"
+   },
+   "reader_under_a_byte_budget_of_the_limit": {
+    "members": 2
+   },
+   "oracle_lists_members": 2,
+   "classification": "D4"
   },
   {
    "id": "metadata.pax.above-limit",
@@ -211,6 +243,15 @@
      ]
     }
    },
+   "reader": {
+    "error": "OSError",
+    "message": "tar metadata block above 268435456 bytes"
+   },
+   "reader_under_a_byte_budget_of_the_limit": {
+    "error": "OSError",
+    "message": "tar metadata block above 268435456 bytes"
+   },
+   "oracle_lists_members": 2,
    "classification": "D3"
   },
   {

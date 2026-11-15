@@ -111,18 +111,25 @@ seen = {case['id']: (case['full_gzip_read'], case['classification']) for case in
 if seen != wanted or not large['at_least_4_gib']:
     missing.append('the 4 GiB archive vectors do not show a valid archive read as the oracle reads it (test/vectors/port-large.golden)')
 
-# D3 is a constant with two sides: at the limit both engines accept, one byte above it only the oracle does.
-wanted = {'metadata.%s.%s' % (kind, side): (side == 'above-limit', 'D3' if side == 'above-limit' else 'equal') for kind in ('longname', 'pax') for side in ('at-limit', 'above-limit')}
+# D3 is a constant with two sides, a bound on one block that lies above the byte budget of D4. The reader asks D3 first, so
+# archive_manifest refuses a block of exactly the limit under D4 and one byte more under D3, and the oracle accepts both. D3's
+# own two sides show only with the byte budget raised to the limit, in a test: at it the reader lists what the oracle lists.
+wanted = {'metadata.%s.%s' % (kind, side): (side == 'above-limit', 'D3' if side == 'above-limit' else 'D4') for kind in ('longname', 'pax') for side in ('at-limit', 'above-limit')}
 wanted['metadata.longname.above-limit.cut'] = (True, 'equal')
 cases = {case['id']: case for case in large['cases'] if case['id'].startswith('metadata.')}
 seen = {ident: (case['reads_metadata_above_limit'], case['classification']) for ident, case in cases.items()}
-accepted = all('result' in cases[ident]['oracle'] and ('result' in cases[ident]['port']) == ident.endswith('.at-limit') for ident in cases if not ident.endswith('.cut'))
+sides = [(case, ident.endswith('.at-limit')) for ident, case in cases.items() if not ident.endswith('.cut')]
+accepted = all('result' in case['oracle'] and 'result' not in case['port'] and case['reader'].get('budget') == ('metadataBytes' if at else None) for case, at in sides)
+raised = all(case['reader_under_a_byte_budget_of_the_limit'] == {'members': case['oracle_lists_members']} if at else
+             'members' not in case['reader_under_a_byte_budget_of_the_limit'] and 'budget' not in case['reader_under_a_byte_budget_of_the_limit'] and 'budget' not in case['reader'] for case, at in sides)
 if 'D3' not in rulings:
     missing.append('the metadata limit of the tar reader has no ruling')
-elif seen != wanted or not accepted or large['metadata_limit_bytes'] != 2 ** int(metadata_limit):
+elif seen != wanted or not accepted or not raised or large['metadata_limit_bytes'] != 2 ** int(metadata_limit) or large.get('metadata_budget_bytes') != budgets['metadataBytes'] or budgets['metadataBytes'] >= 2 ** int(metadata_limit):
     missing.append('the vectors at the metadata limit do not show both of its sides in both engines (test/vectors/port-large.golden)')
 else:
-    ruled.append('the metadata limit is 2**%s bytes: at it both engines accept, one byte above it the oracle accepts and the port refuses (D3), for a long name and for a pax header' % metadata_limit)
+    ruled.append('the metadata limit is 2**%s bytes for one block and lies above the byte budget of D4 (2**%d), so archive_manifest never reads a block of that size: at the limit the oracle accepts and the port refuses under D4 (metadata bytes), '
+                 'one byte above it the oracle accepts and the port refuses under D3; with the byte budget raised to the limit, which only a test does, the reader lists a block of exactly the limit as the oracle does and D3 alone refuses one byte more; '
+                 'for a long name and for a pax header' % (metadata_limit, budgets['metadataBytes'].bit_length() - 1))
 
 # D4 is four budgets with two sides each, and a heap they are sized for. The numbers stay a proposal until the technical owner approves them.
 by_id = {case['id']: case for case in budget['cases']}
@@ -187,6 +194,13 @@ for entry in record['obligations']:
 for entry in record['open_findings']:
     if entry['status'] != 'ruled':
         missing.append('open finding ' + entry['id'] + ' is not closed: ' + entry['status'] + ' (test/port-rulings.golden)')
+    elif entry.get('residual_risk'):
+        # Ruled is not fixed: what the ruling leaves is printed as what it is, with the ruling that accepts it.
+        accepted = entry.get('residual_risk_accepted_by')
+        if accepted not in rulings:
+            missing.append('finding ' + entry['id'] + ' is ruled with residual risk that no recorded ruling accepts (test/port-rulings.golden)')
+        else:
+            ruled.append('finding %s is ruled as %s and not fixed: %d items of residual risk are accepted for trusted input by ruling %s (test/port-rulings.golden)' % (entry['id'], entry['ruling'], len(entry['residual_risk']), accepted))
     else:
         ruled.append('finding ' + entry['id'] + ' is closed by ruling ' + entry['ruling'])
 notes = []

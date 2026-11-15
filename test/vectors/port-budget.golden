@@ -1,8 +1,8 @@
 {
  "budgets": {
-  "metadataBytes": 268435456,
-  "paxRecords": 16777216,
-  "sparseNumbers": 1048576,
+  "metadataBytes": 16777216,
+  "paxRecords": 2097152,
+  "sparseNumbers": 65536,
   "members": 131072
  },
  "cases": [
@@ -59,16 +59,16 @@
   {
    "id": "records.below",
    "built_to_count": {
-    "metadataBytes": 83886075,
-    "paxRecords": 16777215,
+    "metadataBytes": 10485755,
+    "paxRecords": 2097151,
     "sparseNumbers": 0,
     "members": 2
    },
    "oracle_walk": {
     "crossed": null,
     "used": {
-     "metadataBytes": 83886075,
-     "paxRecords": 16777215,
+     "metadataBytes": 10485755,
+     "paxRecords": 2097151,
      "sparseNumbers": 0,
      "members": 2
     }
@@ -109,18 +109,18 @@
   {
    "id": "names.below",
    "built_to_count": {
-    "metadataBytes": 268435455,
+    "metadataBytes": 16777215,
     "paxRecords": 0,
     "sparseNumbers": 0,
-    "members": 257
+    "members": 17
    },
    "oracle_walk": {
     "crossed": null,
     "used": {
-     "metadataBytes": 268435455,
+     "metadataBytes": 16777215,
      "paxRecords": 0,
      "sparseNumbers": 0,
-     "members": 257
+     "members": 17
     }
    },
    "oracle": {
@@ -152,25 +152,25 @@
     }
    },
    "reader": {
-    "members": 257
+    "members": 17
    },
    "classification": "equal"
   },
   {
    "id": "sparse-global.below",
    "built_to_count": {
-    "metadataBytes": 17420,
-    "paxRecords": 1024,
-    "sparseNumbers": 1048575,
-    "members": 1025
+    "metadataBytes": 4940,
+    "paxRecords": 64,
+    "sparseNumbers": 65535,
+    "members": 65
    },
    "oracle_walk": {
     "crossed": null,
     "used": {
-     "metadataBytes": 17420,
-     "paxRecords": 1024,
-     "sparseNumbers": 1048575,
-     "members": 1025
+     "metadataBytes": 4940,
+     "paxRecords": 64,
+     "sparseNumbers": 65535,
+     "members": 65
     }
    },
    "oracle": {
@@ -202,7 +202,7 @@
     }
    },
    "reader": {
-    "members": 1025
+    "members": 65
    },
    "classification": "equal"
   },
@@ -259,16 +259,16 @@
   {
    "id": "records.at",
    "built_to_count": {
-    "metadataBytes": 83886080,
-    "paxRecords": 16777216,
+    "metadataBytes": 10485760,
+    "paxRecords": 2097152,
     "sparseNumbers": 0,
     "members": 2
    },
    "oracle_walk": {
     "crossed": null,
     "used": {
-     "metadataBytes": 83886080,
-     "paxRecords": 16777216,
+     "metadataBytes": 10485760,
+     "paxRecords": 2097152,
      "sparseNumbers": 0,
      "members": 2
     }
@@ -309,18 +309,18 @@
   {
    "id": "names.at",
    "built_to_count": {
-    "metadataBytes": 268435456,
+    "metadataBytes": 16777216,
     "paxRecords": 0,
     "sparseNumbers": 0,
-    "members": 257
+    "members": 17
    },
    "oracle_walk": {
     "crossed": null,
     "used": {
-     "metadataBytes": 268435456,
+     "metadataBytes": 16777216,
      "paxRecords": 0,
      "sparseNumbers": 0,
-     "members": 257
+     "members": 17
     }
    },
    "oracle": {
@@ -352,25 +352,25 @@
     }
    },
    "reader": {
-    "members": 257
+    "members": 17
    },
    "classification": "equal"
   },
   {
    "id": "sparse-global.at",
    "built_to_count": {
-    "metadataBytes": 17422,
-    "paxRecords": 1024,
-    "sparseNumbers": 1048576,
-    "members": 1025
+    "metadataBytes": 4942,
+    "paxRecords": 64,
+    "sparseNumbers": 65536,
+    "members": 65
    },
    "oracle_walk": {
     "crossed": null,
     "used": {
-     "metadataBytes": 17422,
-     "paxRecords": 1024,
-     "sparseNumbers": 1048576,
-     "members": 1025
+     "metadataBytes": 4942,
+     "paxRecords": 64,
+     "sparseNumbers": 65536,
+     "members": 65
     }
    },
    "oracle": {
@@ -402,7 +402,7 @@
     }
    },
    "reader": {
-    "members": 1025
+    "members": 65
    },
    "classification": "equal"
   },
@@ -463,16 +463,16 @@
   {
    "id": "records.above",
    "built_to_count": {
-    "metadataBytes": 83886085,
-    "paxRecords": 16777217,
+    "metadataBytes": 10485765,
+    "paxRecords": 2097153,
     "sparseNumbers": 0,
     "members": 2
    },
    "oracle_walk": {
     "crossed": "paxRecords",
     "used": {
-     "metadataBytes": 83886085,
-     "paxRecords": 16777216,
+     "metadataBytes": 10485765,
+     "paxRecords": 2097152,
      "sparseNumbers": 0,
      "members": 1
     }
@@ -517,18 +517,18 @@
   {
    "id": "names.above",
    "built_to_count": {
-    "metadataBytes": 268435457,
+    "metadataBytes": 16777217,
     "paxRecords": 0,
     "sparseNumbers": 0,
-    "members": 257
+    "members": 17
    },
    "oracle_walk": {
     "crossed": "metadataBytes",
     "used": {
-     "metadataBytes": 267386880,
+     "metadataBytes": 15728640,
      "paxRecords": 0,
      "sparseNumbers": 0,
-     "members": 256
+     "members": 16
     }
    },
    "oracle": {
@@ -571,18 +571,18 @@
   {
    "id": "sparse-global.above",
    "built_to_count": {
-    "metadataBytes": 17424,
-    "paxRecords": 1024,
-    "sparseNumbers": 1048577,
-    "members": 1025
+    "metadataBytes": 4944,
+    "paxRecords": 64,
+    "sparseNumbers": 65537,
+    "members": 65
    },
    "oracle_walk": {
     "crossed": "sparseNumbers",
     "used": {
-     "metadataBytes": 17424,
-     "paxRecords": 1024,
-     "sparseNumbers": 1048576,
-     "members": 1024
+     "metadataBytes": 4944,
+     "paxRecords": 64,
+     "sparseNumbers": 65536,
+     "members": 64
     }
    },
    "oracle": {
@@ -625,17 +625,17 @@
   {
    "id": "sparse-0.1.at",
    "built_to_count": {
-    "metadataBytes": 2097175,
+    "metadataBytes": 131094,
     "paxRecords": 1,
-    "sparseNumbers": 1048576,
+    "sparseNumbers": 65536,
     "members": 2
    },
    "oracle_walk": {
     "crossed": null,
     "used": {
-     "metadataBytes": 2097175,
+     "metadataBytes": 131094,
      "paxRecords": 1,
-     "sparseNumbers": 1048576,
+     "sparseNumbers": 65536,
      "members": 2
     }
    },
@@ -675,17 +675,17 @@
   {
    "id": "sparse-0.0.at",
    "built_to_count": {
-    "metadataBytes": 25165845,
-    "paxRecords": 1048577,
-    "sparseNumbers": 1048576,
+    "metadataBytes": 1572885,
+    "paxRecords": 65537,
+    "sparseNumbers": 65536,
     "members": 2
    },
    "oracle_walk": {
     "crossed": null,
     "used": {
-     "metadataBytes": 25165845,
-     "paxRecords": 1048577,
-     "sparseNumbers": 1048576,
+     "metadataBytes": 1572885,
+     "paxRecords": 65537,
+     "sparseNumbers": 65536,
      "members": 2
     }
    },
@@ -725,17 +725,17 @@
   {
    "id": "sparse-1.0.at",
    "built_to_count": {
-    "metadataBytes": 2097708,
+    "metadataBytes": 131628,
     "paxRecords": 2,
-    "sparseNumbers": 1048576,
+    "sparseNumbers": 65536,
     "members": 2
    },
    "oracle_walk": {
     "crossed": null,
     "used": {
-     "metadataBytes": 2097708,
+     "metadataBytes": 131628,
      "paxRecords": 2,
-     "sparseNumbers": 1048576,
+     "sparseNumbers": 65536,
      "members": 2
     }
    },
@@ -775,17 +775,17 @@
   {
    "id": "sparse-old.at",
    "built_to_count": {
-    "metadataBytes": 12782592,
+    "metadataBytes": 799232,
     "paxRecords": 0,
-    "sparseNumbers": 1048576,
+    "sparseNumbers": 65536,
     "members": 2
    },
    "oracle_walk": {
     "crossed": null,
     "used": {
-     "metadataBytes": 12782592,
+     "metadataBytes": 799232,
      "paxRecords": 0,
-     "sparseNumbers": 1048576,
+     "sparseNumbers": 65536,
      "members": 2
     }
    },
@@ -825,17 +825,17 @@
   {
    "id": "sparse-0.1.above",
    "built_to_count": {
-    "metadataBytes": 2097177,
+    "metadataBytes": 131096,
     "paxRecords": 1,
-    "sparseNumbers": 1048577,
+    "sparseNumbers": 65537,
     "members": 2
    },
    "oracle_walk": {
     "crossed": "sparseNumbers",
     "used": {
-     "metadataBytes": 2097177,
+     "metadataBytes": 131096,
      "paxRecords": 1,
-     "sparseNumbers": 1048576,
+     "sparseNumbers": 65536,
      "members": 1
     }
    },
@@ -879,17 +879,17 @@
   {
    "id": "sparse-0.0.above",
    "built_to_count": {
-    "metadataBytes": 25165868,
-    "paxRecords": 1048578,
-    "sparseNumbers": 1048577,
+    "metadataBytes": 1572908,
+    "paxRecords": 65538,
+    "sparseNumbers": 65537,
     "members": 2
    },
    "oracle_walk": {
     "crossed": "sparseNumbers",
     "used": {
-     "metadataBytes": 25165868,
-     "paxRecords": 1048578,
-     "sparseNumbers": 1048576,
+     "metadataBytes": 1572908,
+     "paxRecords": 65538,
+     "sparseNumbers": 65536,
      "members": 1
     }
    },
@@ -933,17 +933,17 @@
   {
    "id": "sparse-1.0.above",
    "built_to_count": {
-    "metadataBytes": 2097708,
+    "metadataBytes": 131628,
     "paxRecords": 2,
-    "sparseNumbers": 1048578,
+    "sparseNumbers": 65538,
     "members": 2
    },
    "oracle_walk": {
     "crossed": "sparseNumbers",
     "used": {
-     "metadataBytes": 2097708,
+     "metadataBytes": 131628,
      "paxRecords": 2,
-     "sparseNumbers": 1048576,
+     "sparseNumbers": 65536,
      "members": 1
     }
    },
@@ -987,17 +987,17 @@
   {
    "id": "sparse-old.above",
    "built_to_count": {
-    "metadataBytes": 12782592,
+    "metadataBytes": 799232,
     "paxRecords": 0,
-    "sparseNumbers": 1048578,
+    "sparseNumbers": 65538,
     "members": 2
    },
    "oracle_walk": {
     "crossed": "sparseNumbers",
     "used": {
-     "metadataBytes": 12782592,
+     "metadataBytes": 799232,
      "paxRecords": 0,
-     "sparseNumbers": 1048576,
+     "sparseNumbers": 65536,
      "members": 1
     }
    },
@@ -1041,17 +1041,17 @@
   {
    "id": "combined.all-below",
    "built_to_count": {
-    "metadataBytes": 268435455,
-    "paxRecords": 16777215,
-    "sparseNumbers": 1048575,
+    "metadataBytes": 16777215,
+    "paxRecords": 2097151,
+    "sparseNumbers": 65535,
     "members": 131071
    },
    "oracle_walk": {
     "crossed": null,
     "used": {
-     "metadataBytes": 268435455,
-     "paxRecords": 16777215,
-     "sparseNumbers": 1048575,
+     "metadataBytes": 16777215,
+     "paxRecords": 2097151,
+     "sparseNumbers": 65535,
      "members": 131071
     }
    },
@@ -1091,17 +1091,17 @@
   {
    "id": "combined.heap-worst",
    "built_to_count": {
-    "metadataBytes": 268435455,
-    "paxRecords": 1025,
-    "sparseNumbers": 1048575,
+    "metadataBytes": 16777215,
+    "paxRecords": 4369,
+    "sparseNumbers": 65535,
     "members": 131071
    },
    "oracle_walk": {
     "crossed": null,
     "used": {
-     "metadataBytes": 268435455,
-     "paxRecords": 1025,
-     "sparseNumbers": 1048575,
+     "metadataBytes": 16777215,
+     "paxRecords": 4369,
+     "sparseNumbers": 65535,
      "members": 131071
     }
    },

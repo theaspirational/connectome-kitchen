@@ -13,7 +13,7 @@ both engines, through `archive_manifest` with no option:
 
     members.*          plain members
     records.*          one pax header of empty records
-    names.*            256 GNU long names of about 1 MiB each ("many large names")
+    names.*            16 GNU long names of about 1 MiB each ("many large names")
     sparse-global.*    a GNU.sparse.map in a global header, expanded again for every
                        later extended header ("sparse-map amplification")
     sparse-{0.1,0.0,1.0,old}.{at,above}
@@ -25,7 +25,10 @@ and two archives that come close to all four budgets at once:
     combined.all-below    every count ends one under its budget
     combined.heap-worst   members, sparse numbers and metadata bytes one under their
                           budgets, with the shapes that cost the reader most heap:
-                          member names and a pax path that are no UTF-8
+                          member names and a pax path that are no UTF-8, and a
+                          sparse map of numbers of 4,300 digits in a global header,
+                          expanded 4,369 times (the delta review of the third fix
+                          round, LOW-2: the budget counts numbers, not their size)
 
 For every case tar_budget.py walks the archive with the oracle's tarfile and
 counts what the reader counts; `used` is where the walk ended, `crossed` the
@@ -38,10 +41,10 @@ reader's own HEAP_LIMIT_REQUIRED_MIB: the budgets are a contract only together
 with the heap they were sized for. The reader checks `heap_size_limit`, which
 is the old space `--max-old-space-size` sets plus a young generation whose
 size depends on the runtime and on the host, so `sized_heap` asks the runtime
-which flag gives a limit of exactly H and fails if none does. A refusal must cost little: the port stays
-under REFUSAL_RSS_LIMIT_MIB on every `above` case but `names.above`, which
-holds 255 names before it refuses the last. Outcomes are compared with
-test/vectors/port-budget.golden; peak memory is printed and not pinned.
+which flag gives a limit of exactly H and fails if none does. A refusal must
+cost little: the port stays under REFUSAL_RSS_LIMIT_MIB on every `above` case.
+Outcomes are compared with test/vectors/port-budget.golden; peak memory is
+printed and not pinned.
 
     python3 test/differential/port_budget.py [--check] [--node node] [--only prefix]
 """
@@ -54,9 +57,12 @@ SCRATCH = ROOT / '.cache/port-budget' / str(os.getpid())
 UNREADABLE = 'unreadable archive or manifest'
 MANIFEST = json.dumps({'name': 'example-package', 'version': '1.0.0'}).encode()
 # The reader's production budgets. `main` fails unless the compiled reader states the same.
-BUDGETS = {'metadataBytes': 2 ** 28, 'paxRecords': 2 ** 24, 'sparseNumbers': 2 ** 20, 'members': 2 ** 17}
+BUDGETS = {'metadataBytes': 2 ** 24, 'paxRecords': 2 ** 21, 'sparseNumbers': 2 ** 16, 'members': 2 ** 17}
 REFUSAL_RSS_LIMIT_MIB = 512
-PORT_RSS_LIMIT_MIB = 3072
+# The widest sparse map the budgets admit (combined.heap-worst): `int` reads at most 4,300 digits.
+WIDE_MAP, WIDE_DIGITS = 15, 4300
+# Resident memory of the port on any case: about twice what the costliest archive, combined.heap-worst, came to when the defaults were set.
+PORT_RSS_LIMIT_MIB = 1024
 
 
 def header(name=b'package/file.js', size=0, kind=b'0', link=b'', prefix=b'', patch=()):
@@ -160,15 +166,15 @@ class Writer:
         self.put(b'\n' + pad(size) + header())
         return size, 1, 0, 1
 
-    def map_01(self, numbers, kind=b'x'):
-        """A pax header that holds a GNU.sparse.map of `numbers` numbers. tarfile expands the map for the member after the header, a global one included."""
-        size, records, _, _ = self.pax([record(b'GNU.sparse.map', b','.join([b'7'] * numbers))], kind)
+    def map_01(self, numbers, kind=b'x', digits=1):
+        """A pax header that holds a GNU.sparse.map of `numbers` numbers of `digits` digits each. tarfile expands the map for the member after the header, a global one included."""
+        size, records, _, _ = self.pax([record(b'GNU.sparse.map', b','.join([b'7' * digits] * numbers))], kind)
         return size, records, numbers, 0
 
-    def expansions(self, count, numbers):
+    def expansions(self, count, numbers, block=None):
         """`count` members, each behind an extended header of one record: each expands the map of `numbers` numbers a global header holds."""
         data = record(b'comment', b'x')
-        self.repeat(header(b'PaxHeader', len(data), b'x') + data + pad(len(data)) + header(), count)
+        self.repeat(header(b'PaxHeader', len(data), b'x') + data + pad(len(data)) + (block or header()), count)
         return len(data) * count, count, numbers * count, count
 
     def sparse_00(self, numbers):
@@ -200,6 +206,10 @@ def plan():
     """(id, builder(writer) -> expected counts). The counts a builder returns are what tar_budget.py must find."""
     B = BUDGETS
     cases = []
+    NAMES, TIMES = B['metadataBytes'] >> 20, B['sparseNumbers'] >> 10
+    # The sparse budget less one, as a map expanded so many times: 255 numbers 257 times, or 15 numbers 4,369 times.
+    ROOT_OF_SPARSE = 1 << (B['sparseNumbers'].bit_length() - 1) // 2
+    assert NAMES >= 2 and TIMES >= 3 and (ROOT_OF_SPARSE - 1) * (ROOT_OF_SPARSE + 1) == B['sparseNumbers'] - 1 and (B['sparseNumbers'] - 1) % WIDE_MAP == 0
 
     def case(ident, build):
         def run(path):
@@ -216,11 +226,11 @@ def plan():
     for side, delta in (('below', -1), ('at', 0), ('above', 1)):
         case('members.' + side, lambda w, add, delta=delta: (add(w.manifest()), add(w.members(B['members'] + delta - 1))))
         case('records.' + side, lambda w, add, delta=delta: (add(w.manifest()), add(w.empty_records(B['paxRecords'] + delta))))
-        # 256 long names: 255 of 1 MiB and one that brings the sum to the budget, give or take one byte.
-        case('names.' + side, lambda w, add, delta=delta: (add(w.manifest()), [add(w.long_name(1 << 20)) for _ in range(255)], add(w.long_name(B['metadataBytes'] - 255 * (1 << 20) + delta))))
-        # A global map of 1,024 numbers: expanded for the member after it and for 1,022 extended headers, 1,023 times in all.
+        # 16 long names: 15 of 1 MiB and one that brings the sum to the budget, give or take one byte.
+        case('names.' + side, lambda w, add, delta=delta: (add(w.manifest()), [add(w.long_name(1 << 20)) for _ in range(NAMES - 1)], add(w.long_name(B['metadataBytes'] - (NAMES - 1) * (1 << 20) + delta))))
+        # A global map of 1,024 numbers: expanded for the member after it and for 62 extended headers, 63 times in all.
         # The last extended header holds a map of its own, which brings the sum to the budget, give or take one number.
-        case('sparse-global.' + side, lambda w, add, delta=delta: (add(w.manifest()), add(w.map_01(1024, b'g')), add(w.members(1)), add(w.expansions(1022, 1024)), add(w.map_01(1024 + delta)), add(w.members(1))))
+        case('sparse-global.' + side, lambda w, add, delta=delta: (add(w.manifest()), add(w.map_01(1024, b'g')), add(w.members(1)), add(w.expansions(TIMES - 2, 1024)), add(w.map_01(1024 + delta)), add(w.members(1))))
     regions = B['sparseNumbers'] // 2
     for side, delta in (('at', 0), ('above', 1)):
         case('sparse-0.1.' + side, lambda w, add, delta=delta: (add(w.manifest()), add(w.map_01(2 * regions + delta)), add(w.members(1))))
@@ -242,12 +252,13 @@ def plan():
     def all_below(w, add):
         total, both = counted(add)
         both(w.manifest())
-        # A global map of 1,023 numbers is expanded 1,025 times: for the member after it, for 1,022 extended headers here,
+        # A global map of 255 numbers is expanded 257 times: for the member after it, for 254 extended headers here,
         # and for the two extended headers at the end, the one of the records and the one of the path.
-        both(w.map_01(1023, b'g'))
+        small = ROOT_OF_SPARSE - 1
+        both(w.map_01(small, b'g'))
         both(w.members(1))
-        both(w.expansions(1022, 1023))
-        both((0, 0, 2 * 1023, 0))
+        both(w.expansions(small - 1, small))
+        both((0, 0, 2 * small, 0))
         both(w.members(B['members'] - 1 - total[3] - 2))
         both(w.empty_records(B['paxRecords'] - 1 - total[1] - 1))
         both(w.path(B['metadataBytes'] - 1 - total[0], b'\xff'))
@@ -255,10 +266,14 @@ def plan():
     def heap_worst(w, add):
         total, both = counted(add)
         both(w.manifest())
-        both(w.map_01(1023, b'g'))
-        both(w.members(1))
-        both(w.expansions(1023, 1023))
-        both((0, 0, 1023, 0))
+        # A global map of 15 numbers of 4,300 digits, the longest `int` reads, is expanded 4,369 times: for the member after
+        # it, for 4,367 extended headers here, and for the extended header of the path. Every expansion makes its numbers
+        # anew, about 1.8 kB each, and only their count is charged: the digits are charged once, with the global header.
+        times = (B['sparseNumbers'] - 1) // WIDE_MAP
+        both(w.map_01(WIDE_MAP, b'g', WIDE_DIGITS))
+        both(w.members(1, worst))
+        both(w.expansions(times - 2, WIDE_MAP, worst))
+        both((0, 0, WIDE_MAP, 0))
         both(w.members(B['members'] - 1 - total[3] - 1, worst))
         both(w.path(B['metadataBytes'] - 1 - total[0], b'\xff'))
     case('combined.all-below', all_below)
@@ -381,7 +396,7 @@ def main():
             crossed = {'members': 'members', 'records': 'paxRecords', 'names': 'metadataBytes'}.get(ident.split('.')[0], 'sparseNumbers')
             if walk['crossed'] != crossed:
                 problems.append(ident + ': the walk of the oracle crosses ' + str(walk['crossed']) + ', not ' + crossed)
-            if ident != 'names.above' and measured[ident]['port_peak_rss_mib'] > REFUSAL_RSS_LIMIT_MIB:
+            if measured[ident]['port_peak_rss_mib'] > REFUSAL_RSS_LIMIT_MIB:
                 problems.append('%s: the port peaked at %d MiB on a refusal, over the bound of %d' % (ident, measured[ident]['port_peak_rss_mib'], REFUSAL_RSS_LIMIT_MIB))
         elif walk['used'] != case['built_to_count']:
             problems.append(ident + ': the walk of the oracle counts ' + json.dumps(walk['used']) + ', the archive was built to ' + json.dumps(case['built_to_count']))

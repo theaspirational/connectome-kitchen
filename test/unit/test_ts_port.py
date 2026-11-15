@@ -178,7 +178,7 @@ class Port(unittest.TestCase):
         owed = ['BLOCKED: open finding %s is not closed: %s (test/port-rulings.golden)' % (entry['id'], entry['status']) for entry in record['open_findings'] if entry['status'] != 'ruled']
         defaults = next(entry for entry in record['rulings'] if entry['id'] == 'D4')['defaults']
         if defaults['status'] != 'approved':
-            owed.append('BLOCKED: the budgets of D4 (metadataBytes 2**28, paxRecords 2**24, sparseNumbers 2**20, members 2**17) and the heap they are sized for (3072 MiB) are %s (test/port-rulings.golden, ruling D4)' % defaults['status'])
+            owed.append('BLOCKED: the budgets of D4 (metadataBytes 2**24, paxRecords 2**21, sparseNumbers 2**16, members 2**17) and the heap they are sized for (2048 MiB) are %s (test/port-rulings.golden, ruling D4)' % defaults['status'])
         for line in owed:
             self.assertIn(line, blocked, done.stdout)
         # Anything else that blocks is work no recorded review has read: commits after the reviewed one, or an edited tree.
@@ -194,13 +194,22 @@ class Port(unittest.TestCase):
         self.assertIn('on this instruction of the manager of the dispatch', review['set_by'])
         self.assertIn('on this instruction of the technical owner', record['earlier_delta_reviews'][0]['set_by'])
         self.assertIn('RULED: the delta review of %s passed (%s; report sha256 %s)' % (review['commit'][:7], review['covers'], review['review_report_sha256']), lines)
-        # F4 is built and stays open: the brief keeps it red until its numbers are approved and the round is reviewed.
+        # F4 is ruled as D4 since its numbers were approved and its round reviewed. Ruled is not fixed: what D4 leaves is
+        # recorded as residual risk of the trusted-input version, accepted by ruling C1, and the check prints it as that.
         f4 = next(entry for entry in record['open_findings'] if entry['id'] == 'F4')
-        self.assertTrue(f4['status'].startswith('open: built as divergence D4'), f4['status'])
-        self.assertEqual((f4['ruling'], defaults['status']), ('D4', 'proposed, not approved'))
-        # What D4 leaves is recorded as residual risk of the trusted-input version, not as fixed.
+        self.assertEqual((f4['status'], f4['ruling'], f4['residual_risk_accepted_by'], defaults['status']), ('ruled', 'D4', 'C1', 'approved'))
         self.assertGreaterEqual(len(f4['residual_risk']), 3)
-        self.assertIn('residual risk', f4['status'])
+        self.assertIn('not fixed', f4['ruled_not_fixed'])
+        self.assertIn('RULED: finding F4 is ruled as D4 and not fixed: %d items of residual risk are accepted for trusted input by ruling C1 (test/port-rulings.golden)' % len(f4['residual_risk']), lines)
+        self.assertNotIn('RULED: finding F4 is closed by ruling D4', lines)
+        # The approval names its source, and each number says where it comes from.
+        self.assertIn('The technical owner', defaults['approved_by'])
+        self.assertEqual(len(defaults['where_each_number_comes_from']), 5)
+        self.assertEqual((defaults['budgets'], defaults['heap_limit_required_mib']), ({'metadataBytes': 2 ** 24, 'paxRecords': 2 ** 21, 'sparseNumbers': 2 ** 16, 'members': 2 ** 17}, 2048))
+        # The two LOW findings of the review that was recorded are backlog entries that say they are open.
+        backlog = {entry['id']: entry['entry'] for entry in record['backlog']}
+        for ident in ('B12', 'B14', 'B16', 'B17'):
+            self.assertTrue(backlog[ident].startswith('Open'), ident)
 
     def test_the_readiness_check_blocks_on_each_thing_it_claims_to_hold(self):
         # The check, run on copies of the evidence with one thing wrong each: every one must turn it red, with its own line.
@@ -292,19 +301,26 @@ class Port(unittest.TestCase):
             ('the pinned Node (24.15.0, oracle/versions.yml) is not what the stepwise gzip reader is verified on', replace('oracle/versions.yml', '    version: 24.14.0\n', '    version: 24.15.0\n')),
             ('the pinned Node (24.14.0, oracle/versions.yml) is not what the stepwise gzip reader is verified on (22.23.3)', replace('src/pylike/tarfile.ts', "['22.23.3', '24.14.0']", "['22.23.3']")),
             ('the vectors at the metadata limit do not show both of its sides in both engines', large(lambda cases: cases['metadata.pax.above-limit'].update(classification='equal'))),
-            ('the vectors at the metadata limit do not show both of its sides in both engines', large(lambda cases: cases['metadata.longname.at-limit'].update(port=cases['metadata.longname.above-limit']['port']))),
+            # At the limit the port refuses under the byte budget of D4, and lists only under a byte budget raised to the limit; above it the limit refuses either way.
+            ('the vectors at the metadata limit do not show both of its sides in both engines', large(lambda cases: cases['metadata.longname.at-limit'].update(port=cases['metadata.longname.at-limit']['oracle']))),
+            ('the vectors at the metadata limit do not show both of its sides in both engines', large(lambda cases: cases['metadata.pax.at-limit']['reader'].pop('budget'))),
+            ('the vectors at the metadata limit do not show both of its sides in both engines', large(lambda cases: cases['metadata.pax.above-limit']['reader'].update(budget='metadataBytes'))),
+            ('the vectors at the metadata limit do not show both of its sides in both engines', large(lambda cases: cases['metadata.longname.at-limit'].update(reader_under_a_byte_budget_of_the_limit=cases['metadata.longname.above-limit']['reader_under_a_byte_budget_of_the_limit']))),
+            ('the vectors at the metadata limit do not show both of its sides in both engines', large(lambda cases: cases['metadata.pax.above-limit'].update(reader_under_a_byte_budget_of_the_limit={'members': 2}))),
             ('the vectors at the metadata limit do not show both of its sides in both engines', replace('src/pylike/tarfile.ts', 'export const METADATA_LIMIT = 2n ** 28n;', 'export const METADATA_LIMIT = 2n ** 29n;')),
             ('the 4 GiB archive vectors do not show a valid archive', large(lambda cases: cases['large.valid'].update(classification='D1'))),
             # D4: the ruling, the approval of its numbers, the numbers themselves, and the vectors on the sides of each budget.
             ('the admission budgets of the tar reader have no ruling', lambda root: (rulings(lambda record: record['rulings'].remove(d4(record)))(root),
                                                                               (root / 'test/vectors/port-divergences.golden').write_text(json.dumps([entry for entry in json.loads((root / 'test/vectors/port-divergences.golden').read_text()) if entry['divergence'] != 'D4'])))),
             ('deliberate divergences from the oracle without a ruling: tar-budget.sparse-numbers.map-of-one-number-more', rulings(lambda record: d4(record).update(subject='note'))),
-            ('the budgets of D4 (metadataBytes 2**28, paxRecords 2**24, sparseNumbers 2**20, members 2**17) and the heap they are sized for (3072 MiB) are proposed, not approved', rulings(lambda record: d4(record)['defaults'].update(status='proposed, not approved'))),
+            ('the budgets of D4 (metadataBytes 2**24, paxRecords 2**21, sparseNumbers 2**16, members 2**17) and the heap they are sized for (2048 MiB) are proposed, not approved', rulings(lambda record: d4(record)['defaults'].update(status='proposed, not approved'))),
             ('the budgets or the heap requirement of the reader are not the ones ruling D4 records', rulings(lambda record: d4(record)['defaults']['budgets'].update(members=2 ** 18))),
-            ('the budgets or the heap requirement of the reader are not the ones ruling D4 records', rulings(lambda record: d4(record)['defaults'].update(heap_limit_required_mib=2048))),
+            ('the budgets or the heap requirement of the reader are not the ones ruling D4 records', rulings(lambda record: d4(record)['defaults'].update(heap_limit_required_mib=3072))),
+            # A finding that is ruled with residual risk names the ruling that accepts the risk.
+            ('finding F4 is ruled with residual risk that no recorded ruling accepts', rulings(lambda record: next(entry for entry in record['open_findings'] if entry['id'] == 'F4').update(residual_risk_accepted_by='C9'))),
             ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['members.above'].update(classification='equal'))),
             ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['sparse-global.above']['oracle_walk'].update(crossed=None))),
-            ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['names.at']['oracle_walk']['used'].update(metadataBytes=2 ** 28 - 1))),
+            ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['names.at']['oracle_walk']['used'].update(metadataBytes=2 ** 24 - 1))),
             ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['sparse-1.0.above']['reader'].update(budget='metadataBytes'))),
             ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: cases['combined.all-below']['oracle_walk']['used'].update(members=2 ** 17 - 2))),
             ('the vectors at the admission budgets do not show both sides of each of them in both engines', budgets(lambda cases: 'records.below')),
@@ -400,17 +416,29 @@ class Port(unittest.TestCase):
 
     def test_the_metadata_limit_is_recorded_with_both_of_its_sides_in_both_engines(self):
         large = json.loads((ROOT / 'test/vectors/port-large.golden').read_text())
-        self.assertEqual(large['metadata_limit_bytes'], 2 ** 28)
+        self.assertEqual((large['metadata_limit_bytes'], large['metadata_budget_bytes']), (2 ** 28, 2 ** 24))
         self.assertIn('export const METADATA_LIMIT = 2n ** 28n;', (ROOT / 'src/pylike/tarfile.ts').read_text())
+        self.assertIn('  metadataBytes: 2 ** 24,\n', (ROOT / 'src/pylike/tarfile.ts').read_text())
+        # The helper differential judges its `tar` kind against the same production budgets the reader states.
+        import port_primitives
+        stated = re.search(r'^export const BUDGETS: Budgets = Object\.freeze\(\{\n((?:  .*\n)+)\}\);$', (ROOT / 'src/pylike/tarfile.ts').read_text(), re.M)[1]
+        self.assertEqual(port_primitives.PRODUCTION_BUDGETS, {name: 2 ** int(power) for name, power in re.findall(r'^  (\w+): 2 \*\* (\d+),$', stated, re.M)})
         cases = {case['id']: case for case in large['cases'] if case['id'].startswith('metadata.')}
         self.assertEqual(sorted(cases), ['metadata.longname.above-limit', 'metadata.longname.above-limit.cut', 'metadata.longname.at-limit', 'metadata.pax.above-limit', 'metadata.pax.at-limit'])
         accepted = {'result': {'$mapping': [['name', 'example-package'], ['version', '1.0.0']]}}
         for kind in ('longname', 'pax'):
             at, above = cases['metadata.%s.at-limit' % kind], cases['metadata.%s.above-limit' % kind]
-            # Both are valid containers the oracle accepts. Only the one above the limit reads a block above it, and only that one the port refuses.
-            self.assertEqual((at['full_gzip_read'], at['reads_metadata_above_limit'], at['classification'], at['oracle'], at['port']), ('valid', False, 'equal', accepted, accepted), kind)
+            # Both are valid containers the oracle accepts, and only the one above the limit reads a block above it. The port refuses both:
+            # the limit lies above the byte budget of D4, so at the limit the reader's refusal is the budget's, and above it the limit's.
+            self.assertEqual((at['full_gzip_read'], at['reads_metadata_above_limit'], at['classification'], at['oracle']), ('valid', False, 'D4', accepted), kind)
             self.assertEqual((above['full_gzip_read'], above['reads_metadata_above_limit'], above['classification'], above['oracle']), ('valid', True, 'D3', accepted), kind)
-            self.assertEqual((above['port']['message'], dict(above['port']['public']['$mapping'])['error_code']), ('unreadable archive or manifest', 'E_ADAPTER_INPUT'), kind)
+            for case in (at, above):
+                self.assertEqual((case['port']['message'], dict(case['port']['public']['$mapping'])['error_code']), ('unreadable archive or manifest', 'E_ADAPTER_INPUT'), kind)
+            self.assertEqual(at['reader'], {'error': 'OSError', 'message': 'tar metadata budget exceeded: metadata bytes', 'budget': 'metadataBytes'}, kind)
+            self.assertEqual(above['reader'], {'error': 'OSError', 'message': 'tar metadata block above 268435456 bytes'}, kind)
+            # D3's own two sides, with the byte budget raised to the limit: at it the reader lists what the oracle lists, above it the limit refuses.
+            self.assertEqual(at['reader_under_a_byte_budget_of_the_limit'], {'members': at['oracle_lists_members']}, kind)
+            self.assertEqual(above['reader_under_a_byte_budget_of_the_limit'], above['reader'], kind)
         cut = cases['metadata.longname.above-limit.cut']
         self.assertEqual((cut['reads_metadata_above_limit'], cut['classification'], cut['oracle']['message']), (True, 'equal', 'unreadable archive or manifest'))
 

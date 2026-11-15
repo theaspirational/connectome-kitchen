@@ -10,11 +10,18 @@ Three properties the small corpora cannot show are held here.
     archive; that is not divergence D1, which is about damaged containers.)
   * The reader does not hold the decompressed stream. Its peak resident memory
     on these archives stays under PORT_RSS_LIMIT_MIB.
-  * The metadata limit (divergence D3) is a constant with two sides. A
-    long-name or pax header that states exactly METADATA_LIMIT bytes is read
-    as the oracle reads it; one that states a single byte more is refused as
-    unreadable, where the oracle accepts the archive. The refusal is made
-    before the block is read: the port stays under PORT_RSS_LIMIT_MIB on it.
+  * The metadata limit (divergence D3) is a constant with two sides, and it
+    lies above the byte budget of D4 (METADATA_BUDGET, 2**24). The reader
+    asks D3 first and charges the budget second, so through
+    `archive_manifest`, which reads under the production budgets, a
+    long-name or pax header that states exactly METADATA_LIMIT bytes is
+    refused under D4 (metadata bytes), and one that states a single byte more
+    is refused under D3; the oracle accepts both archives. Either refusal is
+    made before the block is read: the port stays under PORT_RSS_LIMIT_MIB.
+    D3's own two sides can only be met with the byte budget raised to the
+    limit, which is a test option of the reader and nothing
+    `archive_manifest` passes: under it the reader reads a block of exactly
+    the limit, as the oracle does, and D3 alone refuses one byte more.
 
 Cases `large.*`, all on one archive of a manifest and one member of zeros:
 
@@ -30,11 +37,15 @@ Cases `metadata.*`, each on an archive of a manifest, one header with its
 blocks, and the member the header describes:
 
     longname.at-limit     a GNU long-name header (type L) that states exactly
-                          METADATA_LIMIT bytes. Both engines read it.
+                          METADATA_LIMIT bytes. D4: the oracle accepts, the
+                          port refuses, and the reader names the byte budget.
+                          With the byte budget raised to the limit the reader
+                          lists the members the oracle lists.
     longname.above-limit  the same with one byte more. D3: the oracle accepts,
-                          the port refuses.
+                          the port refuses, and the reader names the limit,
+                          with the production budgets and with the raised one.
     pax.at-limit          a pax header (type x) of exactly METADATA_LIMIT
-                          bytes: one `path` record. Both engines read it.
+                          bytes: one `path` record. D4, as longname.at-limit.
     pax.above-limit       the same with one byte more. D3.
     longname.above-limit.cut
                           the header of longname.above-limit and nothing after
@@ -44,7 +55,8 @@ blocks, and the member the header describes:
 
 For every case the oracle is also asked, with a TarInfo that looks on, whether
 its listing comes to read a metadata block above the limit; a case is D3 only
-if it does.
+if it does and the reader's own refusal is the one of the limit, and D4 only
+if it does not and the reader's own refusal names the byte budget.
 
 Outcomes are taken from both engines here and compared with
 test/vectors/port-large.golden. The archives are built on the spot (about 4 MiB
@@ -62,8 +74,11 @@ SCRATCH = ROOT / '.cache/port-large' / str(os.getpid())
 PORT_RSS_LIMIT_MIB = 256
 # Divergence D3 (METADATA_LIMIT in src/pylike/tarfile.ts): the bytes a long-name, long-link or pax header may state.
 METADATA_LIMIT = 2 ** 28
-# Reading a block of that size costs a few times its size in either engine; the bound catches a reader that costs much more.
+# Divergence D4 (BUDGETS.metadataBytes in src/pylike/tarfile.ts): the metadata bytes of one listing. `main` fails unless the compiled reader states the same.
+METADATA_BUDGET = 2 ** 24
+# Reading a block of the limit's size, under the raised budget, costs a few times its size in either engine; the bound catches a reader that costs much more.
 PORT_RSS_LIMIT_AT_METADATA_LIMIT_MIB = 2048
+D3_MESSAGE = 'tar metadata block above %d bytes' % METADATA_LIMIT
 UNREADABLE = 'unreadable archive or manifest'
 MANIFEST = json.dumps({'name': 'example-package', 'version': '1.0.0'}).encode()
 
@@ -198,6 +213,11 @@ def oracle_child(argument):
             pass
         print(json.dumps(any(seen)))
         return 0
+    if 'members' in request:
+        # How many members tarfile lists. In a child: a block of the limit's size read here would count in the peak of every later child.
+        with tarfile.open(request['members'], 'r:gz') as archive:
+            print(len(archive.getmembers()))
+        return 0
     import ts_port
     from record import canonical
     ts_port.initialize()
@@ -210,6 +230,13 @@ def port_outcome(node, record, scratch):
     jobs.write_text(json.dumps({'id': 'large', 'function': 'connectome_archive.archive_manifest', 'args': [record], 'kwargs': {}}) + '\n')
     _stdout, rss = child([node, str(ROOT / 'test/differential/ts_runner.mjs'), str(jobs), str(out)])
     return out.read_text().strip(), rss
+
+
+def reader_outcome(node, file, budgets=None):
+    """One listing by the reader itself, below archive_manifest: ({members} or {error, message, budget?}, peak resident MiB, the reader's constants)."""
+    out, rss = child([node, str(ROOT / 'test/differential/tar_budget_list.mjs'), str(file)] + ([json.dumps(budgets)] if budgets else []))
+    seen = json.loads(out)
+    return {key: seen[key] for key in ('members', 'error', 'message', 'budget') if key in seen}, rss, seen['defaults']
 
 
 def cases(mib):
@@ -249,26 +276,41 @@ def build(node, mib):
             oracle, oracle_rss = child(me + [json.dumps({'entry': record})])
             port, port_rss = port_outcome(node, record, SCRATCH)
             container, above, oracle, port = container.strip(), json.loads(above), unbind(oracle.strip()), unbind(port)
+            result = {'id': ident, 'full_gzip_read': container, 'reads_metadata_above_limit': above, 'oracle': oracle, 'port': port}
+            measured[ident] = {'oracle_peak_rss_mib': oracle_rss, 'port_peak_rss_mib': port_rss}
+            reader = {}
+            if ident.endswith(('.at-limit', '.above-limit')):
+                # The reader itself, under the production budgets and under a byte budget raised to the limit of D3.
+                reader, _rss, defaults = reader_outcome(node, file)
+                raised, raised_rss, _ = reader_outcome(node, file, {'metadataBytes': METADATA_LIMIT})
+                if defaults['metadataBytes'] != METADATA_BUDGET:
+                    raise SystemExit('the compiled reader states another byte budget than this file: %d' % defaults['metadataBytes'])
+                listed, _ = child(me + [json.dumps({'members': str(file)})])
+                result.update(reader=reader, reader_under_a_byte_budget_of_the_limit=raised, oracle_lists_members=int(listed))
+                measured[ident]['reader_under_a_byte_budget_of_the_limit_peak_rss_mib'] = raised_rss
+            refused = container == 'valid' and 'result' in oracle and port.get('message') == UNREADABLE
             if oracle == port:
                 kind = 'equal'
             elif container != 'valid' and port.get('message') == UNREADABLE:
                 kind = 'D1'
-            elif container == 'valid' and above and port.get('message') == UNREADABLE:
+            elif refused and above and reader.get('message') == D3_MESSAGE and 'budget' not in reader:
                 kind = 'D3'
+            elif refused and not above and reader.get('budget') == 'metadataBytes':
+                kind = 'D4'
             else:
                 kind = 'MISMATCH'
-            results.append({'id': ident, 'full_gzip_read': container, 'reads_metadata_above_limit': above, 'oracle': oracle, 'port': port, 'classification': kind})
-            measured[ident] = {'oracle_peak_rss_mib': oracle_rss, 'port_peak_rss_mib': port_rss}
+            result['classification'] = kind
+            results.append(result)
             if damaged is None and ident != 'large.valid':
                 file.unlink()
-        return {'decompressed_bytes': length, 'at_least_4_gib': length >= 1 << 32, 'metadata_limit_bytes': METADATA_LIMIT, 'cases': results}, measured, compressed
+        return {'decompressed_bytes': length, 'at_least_4_gib': length >= 1 << 32, 'metadata_limit_bytes': METADATA_LIMIT, 'metadata_budget_bytes': METADATA_BUDGET, 'cases': results}, measured, compressed
     finally:
         shutil.rmtree(SCRATCH, ignore_errors=True)
 
 
 WANTED = {'large.valid': 'equal', 'large.crc-trailer': 'D1',
-          'metadata.longname.at-limit': 'equal', 'metadata.longname.above-limit': 'D3',
-          'metadata.pax.at-limit': 'equal', 'metadata.pax.above-limit': 'D3',
+          'metadata.longname.at-limit': 'D4', 'metadata.longname.above-limit': 'D3',
+          'metadata.pax.at-limit': 'D4', 'metadata.pax.above-limit': 'D3',
           'metadata.longname.above-limit.cut': 'equal'}
 
 
@@ -292,22 +334,32 @@ def main():
             problems.append(case['id'] + ' is ' + case['classification'] + ', not ' + str(WANTED.get(case['id'])))
         # The limit has two sides: at it nothing is above, and the oracle accepts on both sides of it.
         if case['id'].endswith(('.at-limit', '.above-limit')):
-            if case['reads_metadata_above_limit'] != case['id'].endswith('.above-limit'):
+            at = case['id'].endswith('.at-limit')
+            if case['reads_metadata_above_limit'] == at:
                 problems.append(case['id'] + ': the oracle ' + ('reads' if case['reads_metadata_above_limit'] else 'does not read') + ' a metadata block above the limit')
             if 'result' not in case['oracle']:
                 problems.append(case['id'] + ': the oracle does not accept the archive')
+            # D3 itself, with the byte budget out of its way: a block of exactly the limit is read, one byte more is refused by the limit.
+            raised = case['reader_under_a_byte_budget_of_the_limit']
+            if at and raised != {'members': case['oracle_lists_members']}:
+                problems.append(case['id'] + ': under a byte budget of the limit the reader does not list what the oracle lists: ' + json.dumps(raised))
+            if not at and (raised.get('message') != D3_MESSAGE or 'budget' in raised):
+                problems.append(case['id'] + ': under a byte budget of the limit the refusal is not the one of the limit: ' + json.dumps(raised))
     if not report['at_least_4_gib']:
         problems.append('the archive is smaller than 4 GiB')
     for name, entry_ in measured.items():
-        bound = PORT_RSS_LIMIT_AT_METADATA_LIMIT_MIB if name.endswith('.at-limit') else PORT_RSS_LIMIT_MIB
-        if entry_['port_peak_rss_mib'] > bound:
-            problems.append('%s: the port peaked at %d MiB, over the bound of %d' % (name, entry_['port_peak_rss_mib'], bound))
+        # Every refusal is made before the block is read, the one under D4 at the limit included.
+        if entry_['port_peak_rss_mib'] > PORT_RSS_LIMIT_MIB:
+            problems.append('%s: the port peaked at %d MiB, over the bound of %d' % (name, entry_['port_peak_rss_mib'], PORT_RSS_LIMIT_MIB))
+        raised = entry_.get('reader_under_a_byte_budget_of_the_limit_peak_rss_mib', 0)
+        if raised > (PORT_RSS_LIMIT_AT_METADATA_LIMIT_MIB if name.endswith('.at-limit') else PORT_RSS_LIMIT_MIB):
+            problems.append('%s: under a byte budget of the limit the reader peaked at %d MiB' % (name, raised))
     if args.check and args.mib == 4200 and GOLDEN.read_text() != text:
         problems.append('outcomes differ from test/vectors/port-large.golden')
     elif not args.check and args.mib == 4200:
         GOLDEN.write_text(text)
     print(json.dumps({'decompressed_bytes': report['decompressed_bytes'], 'compressed_bytes': compressed, 'port_rss_limit_mib': PORT_RSS_LIMIT_MIB,
-                      'port_rss_limit_at_metadata_limit_mib': PORT_RSS_LIMIT_AT_METADATA_LIMIT_MIB, 'metadata_limit_bytes': METADATA_LIMIT,
+                      'port_rss_limit_at_metadata_limit_mib': PORT_RSS_LIMIT_AT_METADATA_LIMIT_MIB, 'metadata_limit_bytes': METADATA_LIMIT, 'metadata_budget_bytes': METADATA_BUDGET,
                       'cases': {case['id']: case['classification'] for case in report['cases']}, 'measured': measured, 'problems': problems}))
     return int(bool(problems))
 

@@ -1,7 +1,7 @@
 {
  "sources": {
-  "src/pylike/tarfile.ts": "c27aad3fc6e0f743c8d1310f554a8b0dfcdff4795a997cd9a45b500dee0b8e5e",
-  "src/archive.ts": "b30af64d93c21e411398dbec52c700016447ddb07559b05e7a4a92feaec11bbb"
+  "src/pylike/tarfile.ts": "212aeeed9e2a577ac6f37c0bc98e8a346acc3e21963c34815c6e14b364024d0e",
+  "src/archive.ts": "310a6673a9700da26505718c30ef4bc1fb4f3bc37850e8434d7d7f6f3d1016b4"
  },
  "unit": [
   "port-tar-budgets.test.js",
@@ -10,9 +10,9 @@
   "port-manifest-name.test.js"
  ],
  "differential": "--kind tar --kind tarbudget --kind pyint --scale 0.34 --processes 2",
- "mutants": 64,
+ "mutants": 65,
  "counts": {
-  "killed": 64
+  "killed": 65
  },
  "results": [
   {
@@ -31,6 +31,12 @@
    "id": "reader.d3.limit-doubled",
    "file": "src/pylike/tarfile.ts",
    "mutation": "the limit is 2**29",
+   "status": "killed"
+  },
+  {
+   "id": "reader.d3.asked-after-the-budget",
+   "file": "src/pylike/tarfile.ts",
+   "mutation": "the byte budget is charged before the limit is asked: a block above the limit is refused under D4, not D3",
    "status": "killed"
   },
   {

@@ -75,7 +75,8 @@ an emptied environment under `strace -f -e trace=network`, and fails on any IPv4
 or IPv6 socket call, loopback and DNS included.
 
 `npm run build` deletes `dist/` and recompiles, so stale output cannot satisfy a
-test; `npm test` builds first. `scripts/build` is a different thing: it adds the
+test; `npm test` builds first. `npm test` is the fast suite, `npm run qualify`
+the heavy one; see "Two test commands" below. `scripts/build` is a different thing: it adds the
 older publication smoke fixture to `dist/` and must run after `npm run build`.
 `test/public-syntax.ts` still exercises the publication gate on TS syntax, and
 `npm run check:public:dist` applies the gate to every compiled file.
@@ -311,25 +312,32 @@ backlog and what is still open.
   blocks.
 - **Large archives.** `test/differential/port_large.py --check` builds an
   archive of 4.1 GiB and four with a long-name or pax block at the metadata
-  limit of 2^28 bytes and one byte above it, asks both engines, and bounds
-  the port's peak memory; `test/unit/port-large.test.js` runs it (about a
-  minute).
+  limit of 2^28 bytes (D3) and one byte above it, asks both engines, and
+  bounds the port's peak memory. The limit lies above the byte budget of D4,
+  so `archive_manifest` refuses all four without reading the block (at the
+  limit under D4, above it under D3); the reader lists a block of exactly the
+  limit only under a byte budget raised to it, which the harness also does.
+  `test/qualify/port-large.test.js` runs it (about a minute); it is part of
+  `npm run qualify`, not of `npm test`.
 - **Admission budgets (D4).** The tar reader counts metadata bytes, pax
   records, sparse numbers and members over one listing and refuses an archive
-  that would pass a budget. `test/differential/port_budget.py --check` meets
-  each budget at its production value from three sides in both engines, with
-  the port at exactly the heap limit the budgets are sized for
-  (`test/unit/port-budget.test.js` runs it, about three minutes and up to
-  1.8 GiB). `test/unit/port-tar-budgets.test.js` and the kind `tarbudget` of
-  the helper differential do the same under budgets of a few units. The
-  numbers are a proposal until `test/port-rulings.golden` records them as
-  approved.
+  that would pass a budget: 2^24 bytes, 2^21 records, 2^16 numbers, 2^17
+  members, approved for the success path on trusted input
+  (`test/port-rulings.golden`, ruling D4). `test/differential/port_budget.py
+  --check` meets each budget at its production value from three sides in both
+  engines, with the port at exactly the heap limit the budgets are sized for
+  (`test/qualify/port-budget.test.js` runs it, about a minute and up to
+  0.6 GiB; part of `npm run qualify`). In the fast suite,
+  `test/unit/port-tar-budgets.test.js` holds each budget from both sides
+  under budgets of a few units and calls `archive_manifest` at each of the
+  four production values, and the kind `tarbudget` of the helper differential
+  runs sampled.
 - **Heap.** The reader refuses to list under a V8 heap limit
-  (`heap_size_limit`) below 3,072 MiB. The default limit follows the memory
-  limit of the unit, so where it is lower the suites need
-  `NODE_OPTIONS=--max-old-space-size=3072`, and kitchen itself such a flag on
-  its command line. It is a requirement on the environment; no target is
-  known to meet it, and the role was not changed.
+  (`heap_size_limit`) below 2,048 MiB. Node's default is above that in a unit
+  of 4 GiB of memory or more (2,096 MiB on 22.23.3, 2,240 MiB on 24.14.0), so
+  there nothing is needed. In a smaller unit the default is lower: the suites
+  need `NODE_OPTIONS=--max-old-space-size=2048` there, and kitchen itself
+  such a flag on its command line. The role was not changed.
 - **Input.** The budgets are a first-version contract for archives that come
   from a trusted source and are checked against their pinned digest before
   they are parsed. That is a precondition on the caller, to be confirmed at
@@ -344,6 +352,31 @@ backlog and what is still open.
   behaviours and on plan risk R6, with the obligations and the backlog that
   follow from them. `test/differential/r6_combine.py --ansible <lib> --check`
   reproduces the R6 comparison against an ansible-core source tree.
+
+### Two test commands
+
+| Command | What it runs | Measured on the development host |
+| --- | --- | --- |
+| `npm test` | builds, then `node --test test/unit/*.test.js`: the unit and regression tests. Budgets of a few units, each production budget once through `archive_manifest`, and the helper differential sampled (`--scale 0.05`) | about 8 s, 2,079 tests, on either Node |
+| `npm run qualify` | for each verified Node: typecheck, build, the unit suite, the boundary vectors of `test/qualify` (`port_large.py`, `port_budget.py`: archives of 4 GiB, the limit of D3, every budget of D4 from three sides at its production value), and the helper and module differentials in full | about 6 minutes for both Nodes, about 1 GiB resident at most (the oracle on a block of 2^28 bytes) |
+
+- `npm run qualify` needs one Node binary for each version of
+  `STEPWISE_RUNTIMES` and fails before it runs anything if one is missing:
+  `python3 scripts/qualify --node /path/to/22.23.3/bin/node --node
+  /path/to/24.14.0/bin/node`, or the same list in `KITCHEN_QUALIFY_NODES`,
+  separated by colons. It prints one line a step with its duration, checks
+  that the compiled output is the same under every Node, and writes one log a
+  step to `.cache/qualify`.
+- Run it before a change of the reader, of its defaults or of the pinned Node
+  is called done. The full helper differential sees what the sampled one can
+  miss: it is what found, in the closing step, that the `tar` kind judged its
+  listings without the production byte budget.
+- **Nothing runs it implicitly.** `package.json` defines no install, prepare
+  or pack hook, and `scripts/install-offline.sh` installs with
+  `--ignore-scripts`; `test/unit/package.test.js` holds both. No file of the
+  role starts kitchen or any of its tests.
+- The two mutant sets judge the tests, not the port, and are not part of
+  either command; they are in the list below.
 
 ```
 python3 test/differential/ts_port.py run
@@ -370,7 +403,9 @@ is proposed and not approved, and while no delta review is recorded as passed
 with the commit it read. It cannot record the review of the commit it runs
 on. So it asks git what was committed after the reviewed commit: a later
 commit that changes anything but `docs/` and `test/port-rulings.golden`
-blocks, as work no recorded review has read. At this commit it is red on
-three lines: the budgets and the heap requirement of D4 are proposed, finding
-F4 stays open (what D4 leaves of it is residual risk of the trusted-input
-version, not fixed), and the third fix round has no delta review.
+blocks, as work no recorded review has read. At this commit it is red on one
+line: the review recorded as passed is the one of `06ee0cc`, and the closing
+step after it (the approved defaults of D4 and what follows from them) is a
+later commit that no recorded review has read. Finding F4 is printed as
+ruled and not fixed: what D4 leaves of it is residual risk of the
+trusted-input version.

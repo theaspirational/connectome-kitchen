@@ -70,10 +70,14 @@ const sides=(budget,bound,build,what)=>{
 };
 
 test('the production budgets, the heap they are sized for, and the refusal',()=>{
- assert.deepEqual({...tarfile.BUDGETS},{metadataBytes:2**28,paxRecords:2**24,sparseNumbers:2**20,members:2**17});
+ assert.deepEqual({...tarfile.BUDGETS},{metadataBytes:2**24,paxRecords:2**21,sparseNumbers:2**16,members:2**17});
  assert.ok(Object.isFrozen(tarfile.BUDGETS));
- assert.equal(BigInt(tarfile.BUDGETS.metadataBytes),tarfile.METADATA_LIMIT);
- assert.equal(tarfile.HEAP_LIMIT_REQUIRED_MIB,3072);
+ // The limit of D3 is a bound on one block and lies above the byte budget: archive_manifest never reads a block of that size.
+ assert.equal(tarfile.METADATA_LIMIT,2n**28n);
+ assert.ok(BigInt(tarfile.BUDGETS.metadataBytes)<tarfile.METADATA_LIMIT);
+ // The pax-record budget can be met within the byte budget: the shortest record, `5 x=\n`, is five bytes.
+ assert.ok(5*tarfile.BUDGETS.paxRecords<=tarfile.BUDGETS.metadataBytes);
+ assert.equal(tarfile.HEAP_LIMIT_REQUIRED_MIB,2048);
  const messages={metadataBytes:'tar metadata budget exceeded: metadata bytes',paxRecords:'tar metadata budget exceeded: pax records',
   sparseNumbers:'tar metadata budget exceeded: sparse numbers',members:'tar metadata budget exceeded: members'};
  for(const [budget,message] of Object.entries(messages)){
@@ -170,7 +174,7 @@ test('a refusal stands where the count is passed: what tarfile refuses before th
  // A pax record that is not framed is "invalid header" before it is counted against anything but the records.
  assert.equal(outcome(tar(file('first'),pax([record('x',''),record('x',''),Buffer.from('4 =\n')]),file('s')),{paxRecords:3}),1);
  assert.equal(outcome(tar(file('first'),pax([record('x',''),record('x',''),Buffer.from('4 =\n')]),file('s')),{paxRecords:2}),'refused: paxRecords');
- // D3 is the case of one block and keeps its own refusal, whatever the budget.
+ // D3 is asked before the byte budget is charged and keeps its own refusal, whatever the budget.
  const above=Buffer.concat([file('first'),header('meta',2**28+1,'L')]);
  assert.ok((()=>{try{tarfile.tarMembers(above,{budgets:{metadataBytes:0}});}catch(error){return error instanceof tarfile.MetadataLimit;}return false;})());
  // A negative size is tarfile's "invalid offset" and counts nothing.
@@ -251,12 +255,30 @@ const MANIFEST=file('package/package.json','{"name": "example-package", "version
 test('archive_manifest reads under the production budgets: sparse numbers',()=>{
  const accepted={name:'example-package',version:'1.0.0'},refused='ArchiveError: unreadable archive or manifest';
  const map=count=>tar(MANIFEST,pax([record('GNU.sparse.map',numbers(count))]),file('package/sparse.bin'));
- assert.deepEqual(manifestOf('sparse-at',map(2**20)),accepted);
- assert.equal(manifestOf('sparse-above',map(2**20+1)),refused);
- // The same sum by amplification: a global map of 1,024 numbers, expanded 1,024 times, then once more.
+ assert.deepEqual(manifestOf('sparse-at',map(2**16)),accepted);
+ assert.equal(manifestOf('sparse-above',map(2**16+1)),refused);
+ // The same sum by amplification: a global map of 1,024 numbers, expanded 64 times, then once more.
  const amplified=members=>tar(MANIFEST,pax([record('GNU.sparse.map',numbers(1024))],'g'),file('package/first'),Buffer.concat(Array(members).fill(Buffer.concat([pax([record('comment','x')]),file('package/next')]))));
- assert.deepEqual(manifestOf('amplified-at',amplified(1023)),accepted);
- assert.equal(manifestOf('amplified-above',amplified(1024)),refused);
+ assert.deepEqual(manifestOf('amplified-at',amplified(63)),accepted);
+ assert.equal(manifestOf('amplified-above',amplified(64)),refused);
+});
+test('archive_manifest reads under the production budgets: metadata bytes',()=>{
+ const accepted={name:'example-package',version:'1.0.0'},refused='ArchiveError: unreadable archive or manifest';
+ // One long name of exactly 2**24 bytes, and of one byte more.
+ const named=size=>tar(MANIFEST,longName(size),file('package/named'));
+ assert.deepEqual(manifestOf('bytes-at',named(2**24)),accepted);
+ assert.equal(manifestOf('bytes-above',named(2**24+1)),refused);
+ // The same sum over several blocks: fifteen long names of 1 MiB and a pax header that brings it to the budget, then one byte more.
+ const spread=last=>tar(MANIFEST,...Array(15).fill([longName(2**20),file('package/named')]).flat(),pax([record('comment','c'.repeat(last-17))]),file('package/last'));
+ assert.deepEqual([record('comment','c'.repeat(2**20-17)).length,record('comment','c'.repeat(2**20-16)).length],[2**20,2**20+1]);
+ assert.deepEqual(manifestOf('bytes-spread-at',spread(2**20)),accepted);
+ assert.equal(manifestOf('bytes-spread-above',spread(2**20+1)),refused);
+});
+test('archive_manifest reads under the production budgets: pax records',()=>{
+ // One extended header of 2**21 records `5 x=\n`, the shortest there is: 10 MiB of the 16 MiB the byte budget admits.
+ const records=count=>tar(MANIFEST,Buffer.concat([header('PaxHeader',5*count,'x'),padded(Buffer.alloc(5*count,'5 x=\n','latin1'))]),file('package/described'));
+ assert.deepEqual(manifestOf('records-at',records(2**21)),{name:'example-package',version:'1.0.0'});
+ assert.equal(manifestOf('records-above',records(2**21+1)),'ArchiveError: unreadable archive or manifest');
 });
 test('archive_manifest reads under the production budgets: members',()=>{
  const members=count=>Buffer.concat([MANIFEST,Buffer.alloc(512*(count-1),header('package/member.js')),END]);
@@ -281,10 +303,10 @@ console.log(JSON.stringify({limit:Math.floor(v8.getHeapStatistics().heap_size_li
   assert.equal(done.stderr,'');
   return JSON.parse(done.stdout);
  };
- const message='UnsupportedRuntime|false|unsupported runtime: the V8 heap limit is below the 3072 MiB the tar reader is sized for; start Node with --max-old-space-size=3072';
+ const message='UnsupportedRuntime|false|unsupported runtime: the V8 heap limit is below the 2048 MiB the tar reader is sized for; start Node with --max-old-space-size=2048';
  // The limit is the old space the flag sets plus the young generation, which is 48 MiB on Node 22.23.3 and 192 MiB on 24.14.0
  // on this host: under every flag here the limit is below the requirement on both.
- for(const size of [256,1024,2048,2800]){
+ for(const size of [256,1024,1536,1800]){
   const report=under(size);
   assert.ok(report.limit<required,size+' gives '+report.limit);
   // Not an archive refusal: no class of the engine, and archive_manifest lets it escape.

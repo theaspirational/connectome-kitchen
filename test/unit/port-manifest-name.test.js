@@ -80,16 +80,19 @@ test('on generated names the spelled-out test answers as the pattern does',()=>{
 });
 
 test('a name of nine million characters that are not Latin-1 is answered, where the pattern is a RangeError',()=>{
+ // A byte that is no UTF-8 decodes to one unit that is not Latin-1 (U+DC80 to U+DCFF), so nine million of them are a name
+ // the pattern fails on that still lies within the byte budget of D4 (2**24 bytes of metadata): archive_manifest comes to
+ // judge it. A name of that many characters of two bytes or more is above the budget and is refused before its name counts.
  const long=9_000_000;
- for(const unit of [Buffer.from('一'),Buffer.from([0xff])]){
-  const run=Buffer.alloc(long*unit.length,unit);
-  assert.equal(taken(Buffer.concat([run,Buffer.from('/package.json')])),true);
-  assert.equal(taken(Buffer.concat([run,Buffer.from('/package.jsonx')])),false);
-  assert.equal(taken(Buffer.concat([Buffer.from('a/package.json'),run])),false);
-  assert.equal(taken(run),false);
- }
+ assert.ok(long+64<=2**24);
+ const run=Buffer.alloc(long,0xff);
+ assert.equal(taken(Buffer.concat([run,Buffer.from('/package.json')])),true);
+ assert.equal(taken(Buffer.concat([run,Buffer.from('/package.jsonx')])),false);
+ assert.equal(taken(Buffer.concat([Buffer.from('a/package.json'),run])),false);
+ assert.equal(taken(run),false);
  // A long run where the one character belongs is refused without being taken apart.
- assert.equal(taken(Buffer.concat([Buffer.from('a/package'),Buffer.alloc(3*long,Buffer.from('一')),Buffer.from('json')])),false);
+ assert.equal(taken(Buffer.concat([Buffer.from('a/package'),run,Buffer.from('json')])),false);
  // The pattern itself on such a name, on this runtime: the reason it is not used.
+ assert.throws(()=>SPEC.test('\udcff'.repeat(long)+'/package.json'),RangeError);
  assert.throws(()=>SPEC.test('一'.repeat(long)+'/package.json'),RangeError);
 });

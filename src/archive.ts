@@ -184,7 +184,7 @@ export function dependency_inputs(config: PyValue, pin: PyValue): PyDict[] {
  * and not a pattern because of the runtime: on a name that is not Latin-1,
  * V8 answers `/^[^/]+\/package[^\n]json$/u` with "RangeError: Maximum call
  * stack size exceeded" from about 8.4 million UTF-16 units on (Node 22.23.3
- * and 24.14.0), and the tar reader lets a name be 2**28 bytes long.
+ * and 24.14.0), and the tar reader lets a name be 2**24 bytes long.
  */
 const MANIFEST_NAME = {
   test(name: string): boolean {

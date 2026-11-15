@@ -15,6 +15,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "pretest": "npm run build",
     "test": "node --test test/unit/*.test.js",
+    "qualify": "python3 scripts/qualify",
     "check:public": "python3 scripts/check_public.py",
     "check:public:dist": "find dist -type f -exec python3 scripts/check_public.py {} +"
   },

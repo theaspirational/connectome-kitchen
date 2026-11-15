@@ -33,6 +33,13 @@
  *      and decodes it into a `str` of any length the machine can hold. A
  *      JavaScript string cannot be longer than the runtime allows, so without
  *      the limit such an archive ended in a `RangeError` of the runtime.
+ *      The limit is a bound on one block, asked before the byte budget of
+ *      difference 4 is charged, and it lies above that budget (2**28 against
+ *      2**24). So under the production budgets no block of the limit's size
+ *      is ever read: one that states more than the limit is refused here,
+ *      one that states more than the budget has left is refused there. The
+ *      limit itself is met only under a byte budget raised to it, which
+ *      tests do.
  *   4. A listing is read under four admission budgets (BUDGETS, divergence
  *      D4): bytes of metadata, pax records, sparse numbers and members,
  *      each counted over the whole archive. An archive that would pass one
@@ -47,8 +54,8 @@
  * What is held is the compressed file (the oracle holds it too, archive.py:125),
  * one step of output, a record of eight bytes per step, and whatever a single
  * `read` returns: a header block, a long-name or pax block of at most
- * METADATA_LIMIT bytes, the member that is read. The oracle holds the same
- * `read` results.
+ * BUDGETS.metadataBytes bytes (METADATA_LIMIT under a raised budget), the
+ * member that is read. The oracle holds the same `read` results.
  *
  * What a listing keeps on the V8 heap is bounded by the budgets, and the
  * budgets are sized for a heap of HEAP_LIMIT_REQUIRED_MIB; a process with a
@@ -224,7 +231,15 @@ const READ_LIMIT = 2n ** 31n;
  * Unit: bytes, as the size field of a header of type `L`, `K`, `x`, `g` or `X`
  * states them, before `tarfile` rounds the count up to whole 512-byte blocks.
  * 2**28 bytes are 268,435,456 bytes, 256 MiB. A header that states exactly
- * this size is read; one byte more is refused.
+ * this size passes this limit; one byte more is refused by it.
+ *
+ * It is a bound of its own on one block, and BUDGETS.metadataBytes, the
+ * budget over a whole listing, is smaller (2**24). `metadataBlocks` asks the
+ * limit first and charges the budget second, so through `archive_manifest` a
+ * block above 2**28 is refused under D3, and a block above what the budget
+ * has left, one of exactly 2**28 included, under D4. A block of exactly this
+ * size is read only where a test raises the byte budget to it
+ * (test/unit/port-tar-limits.test.js, test/differential/port_large.py).
  *
  * Every string the reader builds from such a block has at most as many UTF-16
  * units as the block has bytes, so none can exceed the runtime's longest
@@ -237,30 +252,42 @@ export const METADATA_LIMIT = 2n ** 28n;
  * one unit more is refused. What each costs, measured on Node 22.23.3 and
  * 24.14.0 (docs/port-notes.md, "The admission budgets"):
  *
- *   metadataBytes  2**28   The constant of D3, of which D3 is now the case
- *                          of a single block. One block of that size costs
- *                          up to 1,050 MiB of heap while it is decoded (two
- *                          bytes a unit, once in pieces and once whole) and
- *                          up to 514 MiB kept.
- *   paxRecords     2**24   Time only: 2.5 s. Nothing is kept per record.
- *   sparseNumbers  2**20   61 MiB kept (58 bytes a number), in each of the
- *                          four forms.
+ *   metadataBytes  2**24   16 MiB, 50 times the most a real package
+ *                          archive was seen to hold (333 kB). A byte that is
+ *                          no UTF-8 costs up to 4 bytes of heap while its
+ *                          block is decoded and 2 kept: 64 MiB and 32 MiB at
+ *                          the budget. METADATA_LIMIT (D3) is the separate,
+ *                          larger bound on one block.
+ *   paxRecords     2**21   Time only; nothing is kept per record. The
+ *                          largest power of two the byte budget lets a
+ *                          listing reach: the shortest record is five bytes
+ *                          (`5 x=\n`), so 2**24 bytes hold at most 3,355,443.
+ *   sparseNumbers  2**16   58 bytes a number kept where the numbers are
+ *                          short: 4 MiB. The budget counts numbers, not
+ *                          their size. A number of 4,300 digits, the longest
+ *                          `int` reads, is about 1.8 kB, and a map in a
+ *                          global header is converted anew at every
+ *                          expansion while its digits are charged as bytes
+ *                          only once: up to about 115 MiB at this budget
+ *                          that no budget counts. That is why the budget is
+ *                          no larger. Real package archives hold none.
  *   members        2**17   Up to 143 MiB kept (1,091 bytes a member whose
  *                          name and link name fill the header with bytes
  *                          that are no UTF-8), 1.2 s. The engine's own bound
  *                          on a catalog archive is 100,000 entries
  *                          (catalog.py:595).
  *
- * Together, on the costliest archive that stays one under each of them, a
- * listing has 1,239 MiB of heap in use at its peak. Several such archives
- * listed one after another in one process, as `dependency_provenance` lists
- * its archives, have 1,952 MiB in use at the peak: what an earlier listing
- * kept is still on the heap as garbage when the next one is at its peak.
+ * Together, on the costliest archive found that stays one under the byte,
+ * sparse and member budgets (wide global sparse map, names and a pax path
+ * that are no UTF-8), a listing keeps 282 MiB and has 321 to 341 MiB of heap
+ * in use at its peak. With the listing before it still referenced, which is
+ * more than `archive_manifest` does between its calls, the peak is 631 to
+ * 801 MiB.
  */
 export const BUDGETS: Budgets = Object.freeze({
-  metadataBytes: 2 ** 28,
-  paxRecords: 2 ** 24,
-  sparseNumbers: 2 ** 20,
+  metadataBytes: 2 ** 24,
+  paxRecords: 2 ** 21,
+  sparseNumbers: 2 ** 16,
   members: 2 ** 17,
 });
 /**
@@ -269,19 +296,25 @@ export const BUDGETS: Budgets = Object.freeze({
  * `--max-old-space-size` sets plus the young generation: a listing is
  * refused with `UnsupportedRuntime` before anything is parsed where that
  * number is lower. The measurements behind it ran at a limit of exactly this
- * size (`--max-old-space-size=3024` on Node 22.23.3, `=2880` on 24.14.0).
+ * size (`--max-old-space-size=2000` on Node 22.23.3, `=1856` on 24.14.0).
  *
- * At this limit the peak of archives listed one after another, 1,952 MiB, is
- * 64% of the heap. With 524 MiB of the caller's own data on the heap the
- * peak is 2,475 MiB and stays inside the limit; with 1,050 MiB it reaches
- * the limit, and with 1,575 MiB the process aborts.
+ * It is chosen so that Node's default heap passes it in a unit of 4 GiB of
+ * memory or more (default limit 2,096 MiB on Node 22.23.3 and 2,240 MiB on
+ * 24.14.0 there), with no flag. In a unit of 2 GiB the default is 1,048 or
+ * 1,120 MiB and the reader refuses until Node is given the flag.
+ *
+ * At this limit the peak of the costliest archive found, listed with the
+ * listing before it still referenced, is 801 MiB at most: 39% of the heap.
+ * With 1,076 MiB of the caller's own data on the heap besides, the peak is
+ * 1,720 to 1,799 MiB and stays inside the limit on both runtimes; with
+ * 1,344 MiB Node 24.14.0 aborts.
  *
  * This is a precondition, not a promise of memory. The limit reserves
  * nothing, it does not count Buffers or the compressed file, V8 itself
  * passes it when the heap is nearly full, and what the caller holds on the
  * heap comes out of the same limit.
  */
-export const HEAP_LIMIT_REQUIRED_MIB = 3072;
+export const HEAP_LIMIT_REQUIRED_MIB = 2048;
 
 /** The heap this process may grow to is the one the budgets were measured under, or more. */
 function sizedHeap(): void {

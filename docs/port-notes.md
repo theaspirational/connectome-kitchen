@@ -51,7 +51,7 @@ dispatch report, not here.
 | 16 whitespace sets | `\s`/`\S` in the patterns, `isspace` in `repository` | class from the oracle's table (JavaScript `\s` has U+FEFF and lacks U+001C–U+001F and U+0085) | mutant `lock.credential.unicode-space`; vectors `assign.nbsp`, `assign.fs`, `assign.bom` |
 | 17 exception class decides | `read_lock` collapses six classes into one refusal; four `except ValueError` blocks in `map_lock` | modelled classes, see above | vectors `lock.read.unhashable-*`, `lock.read.config-number`, `lock.read.loop`, `operator.config-*` |
 
-| 12 tar | `archive_manifest` lists a `.tgz` and reads one member | `pylike/tarfile.ts`: the read path of the installed `tarfile` on the decompressed bytes (formats, pax and GNU extensions, sparse members, its termination rules). Two deliberate divergences, see below: the gzip container is read strictly (D1), and a long-name or pax block above 2^28 bytes is refused (D3) | `tar` and `targz` kinds in `port_primitives.py`; vectors `archive.manifest.*`; `port_large.py` |
+| 12 tar | `archive_manifest` lists a `.tgz` and reads one member | `pylike/tarfile.ts`: the read path of the installed `tarfile` on the decompressed bytes (formats, pax and GNU extensions, sparse members, its termination rules). Three deliberate divergences, see below: the gzip container is read strictly (D1), a long-name or pax block above 2^28 bytes is refused (D3), and a listing is read under four admission budgets (D4) | `tar` and `targz` kinds in `port_primitives.py`; vectors `archive.manifest.*`; `port_large.py` |
 
 Rows 4 (path sort), 11 (shlex) and 13–15 (YAML, `openat`, flock) do not occur
 in these modules. The phase-0 `pylike/tar.ts` is a different thing: a strict
@@ -268,10 +268,23 @@ refusal; it closes finding F1 of the first fix round.
   - It applies to headers of type `L` (GNU long name), `K` (GNU long link),
     `x` (pax extended), `g` (pax global) and `X` (Solaris extended). A header
     of any other type may state any size.
-  - A header that states exactly the limit is read. One byte more is refused
+  - A header that states exactly the limit passes it. One byte more is refused
     with an `OSError` whose message is the constant "tar metadata block above
     268435456 bytes", which `archive_manifest` turns into its closed refusal,
     "unreadable archive or manifest", code `E_ADAPTER_INPUT`.
+- *A bound of its own, which production never reaches.* Since the closing
+  step after the third fix round the byte budget of D4 is 2^24, and the limit
+  stays at 2^28 by the technical owner's decision. The reader asks the limit
+  first and charges the budget second. So through `archive_manifest`:
+  - a block that states more than 2^28 bytes is refused under D3, as before;
+  - a block that states more than the budget has left, one of exactly 2^28
+    included, is refused under D4 (metadata bytes);
+  - no block of the limit's size is ever read. "At the limit both engines
+    accept" no longer holds there.
+
+  The limit's own two sides show only under a byte budget raised to the
+  limit. That is an option of the reader for tests; `archive_manifest` passes
+  none.
 - *Where the refusal stands.* At the point where the oracle makes the read.
   What the oracle refuses about the header before that point comes first in
   the port too (a negative size is "invalid offset"; the frame limit is
@@ -290,28 +303,37 @@ refusal; it closes finding F1 of the first fix round.
     state 2^62 bytes).
 - *Both sides of the limit, in both engines.* `test/differential/port_large.py`
   builds four archives that really hold such a block, a long name and a pax
-  `path` record of exactly 2^28 bytes and of 2^28 + 1, asks the oracle and the
-  port, and asks the oracle separately, with a `TarInfo` that looks on,
-  whether its listing reads a block above the limit. At the limit both accept
-  and give the same manifest; above it the oracle accepts and the port
-  refuses. On the two refused archives the port's peak memory is about a
-  tenth of what it needs at the limit (on Node 22.23.3 under 100 MiB against
-  about 900), which shows the block is not read; `port_large.py` fails if a
-  refusal costs more than 256 MiB.
+  `path` record of exactly 2^28 bytes and of 2^28 + 1. It asks the oracle and
+  the port through `archive_manifest`, asks the oracle separately, with a
+  `TarInfo` that looks on, whether its listing reads a block above the limit,
+  and asks the reader itself twice: under the production budgets and under a
+  byte budget of 2^28.
+
+  | Block | Oracle | Port, `archive_manifest` | Reader, byte budget raised to 2^28 |
+  | --- | --- | --- | --- |
+  | exactly 2^28 | accepts | refuses: D4, metadata bytes | lists the members the oracle lists |
+  | 2^28 + 1 | accepts | refuses: D3 | refuses: D3 |
+
+  On all four archives the port's peak memory through `archive_manifest` is
+  under 100 MiB on Node 22.23.3, which shows the block is not read;
+  `port_large.py` fails above 256 MiB. Under the raised budget the block of
+  exactly 2^28 is really read (0.6 to 0.9 GiB resident).
   `test/unit/port-tar-limits.test.js` holds the comparison itself for each of
-  the five header types on a bare tar stream, without the data.
+  the five header types on a bare tar stream, without the data, under the
+  raised budget and under the production ones.
 - *Direction.* Fail closed only: the port refuses archives the oracle accepts
   and accepts none the oracle refuses.
-- *Consequence for adoption.* An archive with a single name or pax header of
-  more than 256 MiB is refused by kitchen. No package holds one; the archive
-  is pinned by digest, so a refusal costs nothing that was meant to work.
+- *Consequence for adoption.* None beyond D4's: an archive with more than
+  16 MiB of names and pax headers is refused there before D3 is ever met,
+  unless its one block is above 256 MiB, in which case the refusal is D3's.
+  No package holds either.
 - *What D3 does not bound: memory.* That is D4, next.
 
 **D4. A listing is read under four admission budgets** (`pylike/tarfile.ts`,
 `BUDGETS`; three entries `tar-budget.*`, and `test/vectors/port-budget.golden`).
 Ruled as a declared divergence; it is how finding F4 is built. The numbers
-are proposed, not approved: "The admission budgets" below has them with
-their evidence.
+are approved for the success path on trusted input: "The admission budgets"
+below has them with their evidence and says where each comes from.
 
 - *Oracle.* `tarfile` keeps what an archive makes it keep: every name, every
   pax record, every number of a sparse map, every member. It ends in
@@ -321,11 +343,11 @@ their evidence.
   receipt). An archive of 3.3 kB did that (finding F4).
 - *Port.* Four counts over one listing, each held against a constant:
 
-  | Budget | Unit | Proposed |
+  | Budget | Unit | Value |
   | --- | --- | ---: |
-  | metadata bytes | the size field of every `L`, `K`, `x`, `g` and `X` header whose blocks are read, as D3 counts it; plus 512 for every block read for a sparse map (data blocks of form 1.0, old GNU extension blocks) | 2^28 |
-  | pax records | every record of every pax header, as the reader comes to look at it | 2^24 |
-  | sparse numbers | every integer appended to a sparse list; a region is two, in all four forms | 2^20 |
+  | metadata bytes | the size field of every `L`, `K`, `x`, `g` and `X` header whose blocks are read, as D3 counts it; plus 512 for every block read for a sparse map (data blocks of form 1.0, old GNU extension blocks) | 2^24 |
+  | pax records | every record of every pax header, as the reader comes to look at it | 2^21 |
+  | sparse numbers | every integer appended to a sparse list; a region is two, in all four forms | 2^16 |
   | members | every entry of the listing | 2^17 |
 
   A listing that ends exactly at a budget is read. One unit more is refused
@@ -343,7 +365,9 @@ their evidence.
   handler names. What `tarfile` refuses before that point comes first in the
   port too: a `GNU.sparse.map` is read number by number, so an invalid number
   before the budget is `ValueError` as before.
-- *D3 is the case of one block* and keeps its own refusal and vectors.
+- *D3 is a separate bound on one block*, asked before the byte budget is
+  charged, with its own refusal and vectors. It lies above the byte budget,
+  so a block between the two is refused here (see D3).
 - *One unit for sparse maps.* The budget is in numbers. Old GNU: a header's
   four structs are 8, an extension struct 2. Form 0.0: one for each offset
   and each numbytes record. Form 0.1: one for each number of the map, every
@@ -358,17 +382,28 @@ their evidence.
   12,000 generated archives under budgets of a few units (kind `tarbudget`):
   where the oracle's walk passes a budget the port refuses with that budget's
   error, and where it passes none the two listings are equal.
-- *At the production values, against the oracle.*
+- *Under the production budgets, in the helper differential.* The kind `tar`
+  lists as `archive_manifest` does, under the production values. Its
+  archives are small, but a header may state any size: one that states more
+  than 2^24 bytes and no more than 2^28 passes the byte budget before a block
+  is read. The kind judges those by the oracle's own walk, which says whether
+  the limit of D3 or a budget of D4 comes first (18 of 12,000 archives pass
+  the byte budget, 31 meet D3). Before the closing step it knew only D3,
+  which was the same thing while the byte budget was 2^28; the full run of
+  `npm run qualify` found the one archive that told them apart.
+- *At the production values, against the oracle* (part of
+  `npm run qualify`, not of `npm test`).
   `test/differential/port_budget.py` builds archives that hold one unit less
   than a budget, exactly a budget and one unit more, for each budget, the
   four sparse forms with the same number of regions, and two archives one
   under all budgets at once. Below and at a budget both engines give the same
   manifest; above it the oracle accepts and the port refuses.
 - *Direction.* Fail closed only.
-- *Consequence for adoption.* An archive with more than 131,072 members, or
-  more than 256 MiB of names and pax headers together, is refused by kitchen.
-  Of 323 package archives on the development host the largest has 8,271
-  members and 333 kB of such metadata, and none has a sparse member.
+- *Consequence for adoption.* An archive with more than 131,072 members, more
+  than 16 MiB of names and pax headers together, more than 2,097,152 pax
+  records or more than 65,536 sparse numbers is refused by kitchen. Of 323
+  package archives on the development host the largest has 8,271 members,
+  333 kB of such metadata and 21 pax records, and none has a sparse member.
 - *What D4 does not bound: time.* See "What is not bounded" below.
 
 ## Memory of the archive reader
@@ -387,12 +422,13 @@ against 18 to 22 MB in the oracle, which streams.
   archive.py:125); one step of output; a record of eight bytes per step (see
   "Later passes"); and the result of each single `read` the tar reader makes:
   a header block, the manifest (at most 1 MiB, by archive.py:134), and a
-  long-name or pax block of at most 2^28 bytes (D3). The oracle holds the
-  same blocks, without the limit. What a listing keeps beyond that (names,
-  sparse lists, members) is bounded by the admission budgets (D4); see "The
-  admission budgets" below. Measured at the limit: a long name, oracle
-  0.8 GiB, port 0.9 to 1.0 GiB; a pax `path` record, oracle 1.0 GiB, port 0.9
-  to 1.0 GiB (the higher figure on Node 24.14.0).
+  long-name or pax block of at most 2^24 bytes, the byte budget of D4. The
+  oracle holds the same blocks, without a bound. What a listing keeps beyond
+  that (names, sparse lists, members) is bounded by the admission budgets
+  (D4); see "The admission budgets" below. A block of exactly 2^28 bytes, the
+  limit of D3, is read only under a raised test budget: a long name, oracle
+  0.8 GiB, reader 0.6 GiB; a pax `path` record, oracle 1.0 GiB, reader
+  0.9 GiB.
 - *How.* Node documents no synchronous inflate that can be resumed, so
   `pylike/tarfile.ts` makes the call `inflateRawSync` itself makes on its
   engine (`_processChunk`), one slice at a time, and undoes what that call
@@ -520,12 +556,19 @@ divergence D4.
     second fix round): the oracle accepts at 2.9 GiB; the port aborted at
     4.1 GiB.
 
-  With the budgets all three are refused, on both Node versions. The first
-  in 1.5 s at 0.9 to 1.0 GiB resident: its one block is within the byte
-  budget and is read before its numbers are counted. The second in 2.4 s at
-  0.6 to 0.8 GiB, with one name held. The third in 0.2 s at 153 to 173 MiB.
-  F4 stays open in `test/port-rulings.golden` until the
-  proposed numbers are approved and the round that built them is reviewed.
+  Under the budgets the third fix round proposed, all three were refused, on
+  both Node versions: the first in 1.5 s at 0.9 to 1.0 GiB resident (its one
+  block was within the byte budget of 2^28 and was read before its numbers
+  were counted), the second in 2.4 s at 0.6 to 0.8 GiB, with one name held,
+  the third in 0.2 s at 153 to 173 MiB. Under the approved budgets each is
+  over a budget at its first block or its first expansion (the first two
+  state 2^28 bytes against a budget of 2^24, the third 2^20 numbers against
+  2^16), so each is refused before that block is read or that list built.
+  They were not timed again.
+  F4 is ruled as D4 in `test/port-rulings.golden` since the closing step: its
+  numbers are approved and its round is reviewed. Ruled is not fixed: what D4
+  leaves is recorded there as residual risk, accepted for trusted input by
+  ruling C1.
 
 The recursion bound for a chain of several hundred pax or long-name headers is
 exact for `archive_manifest` called directly and shifts with the caller's
@@ -533,137 +576,154 @@ depth, as it does in the oracle.
 
 ### The admission budgets (divergence D4)
 
-**Status: a proposal.** The direction is ruled. The four numbers and the heap
-requirement below are proposed for the technical owner to approve;
-`scripts/check-port-ready` is red until they are. Everything here was
-measured on the development host, on Node 22.23.3 and on 24.14.0, the pin.
-The probes and logs are in the evidence of the round, not in the tree; the
-tree holds `test/differential/port_budget.py`, which reproduces the
-at-budget measurements.
+**Status: approved for the success path.** The four numbers and the heap
+requirement below are the ones `test/port-rulings.golden` records as approved
+(ruling D4, `defaults`). They were set in the closing step after the third
+fix round, on the technical owner's decision of 2^24 metadata bytes and the
+owner's direction to finish the success path on trusted input and leave
+hardening for later. The third fix round had proposed 2^28 bytes, 2^24
+records, 2^20 sparse numbers and a heap limit of 3,072 MiB; figures from that
+round are kept below only where they still say something, and are marked.
+Everything was measured on the development host, on Node 22.23.3 and on
+24.14.0, the pin. The probes and logs are in the evidence of the rounds, not
+in the tree; the tree holds `test/differential/port_budget.py`, which
+reproduces the at-budget cases.
 
-**What each budget costs the port.** "Kept" is the heap still in use after a
-full collection with the listing referenced. "Peak" is the most heap in use
-at any moment of the listing.
+**The numbers, and where each comes from.** "Kept" is the heap still in use
+after a full collection with the listing referenced. "Peak" is the most heap
+in use at any moment of the listing.
 
-| Budget | Proposed | Cost at the budget, port | The oracle on the same archive | Largest of 323 package archives |
+| Budget | Value | Where it comes from | Cost at the budget, port | Largest of 323 package archives |
 | --- | ---: | --- | --- | ---: |
-| metadata bytes | 2^28 | kept: up to 514 MiB; peak: up to 1,050 MiB; 300 to 335 MiB of Buffers besides | 0.7 to 1.5 GiB resident | 333,319 |
-| pax records | 2^24 | nothing kept; 2.3 to 2.5 s | 8.5 s, 1.2 GiB resident | 21 |
-| sparse numbers | 2^20 | kept: 61 MiB; peak: 83 to 144 MiB | 49 to 222 MiB resident | 0 |
-| members | 2^17 | kept: 44 to 143 MiB; 0.8 to 1.2 s | 70 to 170 MiB resident, 1.3 to 1.5 s | 8,271 |
+| metadata bytes | 2^24 | the technical owner's decision | up to 32 MiB kept and 64 MiB at the peak | 333,319 |
+| pax records | 2^21 | follows from the byte budget | nothing kept; time only | 21 |
+| sparse numbers | 2^16 | the closing step, after LOW-2 of the delta review | 4 MiB kept for short numbers; about 115 MiB for the widest numbers in a global map | 0 |
+| members | 2^17 | unchanged from the third fix round | kept: 44 to 143 MiB; 0.8 to 1.2 s | 8,271 |
+| heap limit required | 2,048 MiB | measured, below | | |
 
 - *Metadata bytes.* What a byte costs depends on what it decodes to. A text
   of bytes that are no UTF-8 is the costliest: every byte becomes one UTF-16
   unit, two bytes of heap. The reader builds a long text in pieces and its
-  first use makes one flat copy, so for a moment both exist (backlog B13).
+  first use makes one flat copy, so for a moment both exist (backlog B13):
+  up to 2 bytes kept and 4 at the peak for every byte read. Those per-byte
+  figures are from blocks of 2^28 bytes in the third fix round; at 2^24 they
+  give 32 MiB and 64 MiB. 2^24 is 50 times the largest package archive
+  found. The limit of D3, 2^28, is a separate bound on one block and lies
+  above this budget (see D3).
+- *Pax records.* A record is at least five bytes (`5 x=` and a newline), so
+  2^24 bytes of metadata hold at most 3,355,443 records. The 2^24 records
+  proposed before could not be reached any more, or shown from both sides.
+  2^21 is the largest power of two that can. It bounds time only: the reader
+  keeps nothing per record since F3.
+- *Sparse numbers.* 58 bytes a number kept where the numbers are short, the
+  same in all four forms. **The budget counts numbers, not their size**
+  (LOW-2 of the delta review of the third fix round; not fixed in the reader,
+  backlog B17):
+  - a number can have 4,300 digits, the most `int` reads, and is then about
+    1.8 kB;
+  - in the three forms that are local to one member every digit is a metadata
+    byte, so the byte budget bounds them;
+  - a `GNU.sparse.map` in a global header is different: it is converted anew
+    at every expansion, while its digits are charged as bytes once, with the
+    global header;
+  - under the 2^20 proposed before, the reviewer's archive kept 1,907 MiB
+    that no budget counted, and aborted Node 24.14.0 at the heap limit then
+    required with 524 MiB of caller data.
 
-  | One block of 2^28 bytes | Kept | Peak |
-  | --- | ---: | ---: |
-  | long name, ASCII | 258 MiB | 279 to 321 MiB |
-  | long name, no UTF-8 | 514 MiB | 532 to 538 MiB |
-  | pax `path`, ASCII | 256 MiB | 535 to 544 MiB |
-  | pax `path`, no UTF-8 | 512 MiB | 1,038 to 1,050 MiB |
-  | pax `path`, CJK | 171 MiB | 362 to 372 MiB |
-
-  Many small blocks that add up to the budget cost what one block keeps and
-  less at the peak: 256 names of 1 MiB keep 513 MiB, 65,536 names of 4 KiB
-  keep 533 MiB. 2^28 is the constant of D3. Halving it would take about
-  0.7 GiB off the peak of consecutive listings.
-- *Pax records.* A record is at least five bytes, so the byte budget alone
-  allows 53.7 million of them: 7.4 to 7.8 s in the port (27.5 s and 3.9 GiB
-  in the oracle). The record budget brings that to 2.5 s. It bounds time
-  only: the reader keeps nothing per record since F3.
-- *Sparse numbers.* 58 bytes a number kept, the same in all four forms
-  (60 to 61 MiB for 2^20 numbers, 247 MiB for 2^22). A number can have 4,300
-  digits and is then 1.8 kB; such numbers are bounded by the byte budget,
-  which is why the blocks of a map of form 1.0 count as metadata bytes. The
-  costliest map the two budgets allow together, 62,400 numbers of 4,300
-  digits, keeps 110 MiB and peaks at 395 MiB.
+  The closing step lowers the budget instead of sharing the integers: at
+  2^16 numbers the same shape costs about 115 MiB. It is part of
+  `combined.heap-worst` and of every figure below. Do not raise this budget
+  before B17 is fixed.
 - *Members.* 336 bytes kept for a member with a short ASCII name, 763 for one
   whose name, prefix and link name fill the header, 1,091 if those bytes are
   no UTF-8. 2^17 is above the engine's own bound on a catalog archive,
   100,000 entries (`catalog.py:595`), and sixteen times the largest package
-  archive found. At 2^20, the first candidate, members alone kept 1.1 GiB.
+  archive found.
 
-**All budgets at once.** Two archives of `port_budget.py`, read at a heap
-limit of exactly 3,072 MiB (Node 22.23.3 / 24.14.0):
+**All budgets at once.** Two archives of `port_budget.py`, read through
+`archive_manifest` at a heap limit of exactly 2,048 MiB:
 
-| Archive | Heap in use at the peak | Buffers at the peak | Resident at the peak |
-| --- | ---: | ---: | ---: |
-| `combined.all-below`: every count one under its budget | 817 / 836 MiB | 282 / 285 MiB | 1,112 / 1,242 MiB |
-| `combined.heap-worst`: members, sparse numbers and bytes one under their budgets, names and one pax path that are no UTF-8 | 1,237 / 1,236 MiB | 301 / 335 MiB | 1,616 / 1,700 MiB |
+| Archive | Port, resident at the peak (22.23.3 / 24.14.0) | Oracle, resident |
+| --- | ---: | ---: |
+| `combined.all-below`: every count one under its budget | 199 / 283 MiB | 264 MiB |
+| `combined.heap-worst`: members, sparse numbers and bytes one under their budgets; member names and one pax path that are no UTF-8; a map of 15 numbers of 4,300 digits in a global header, expanded 4,369 times | 501 / 583 MiB | 407 MiB |
 
-Both are read as the oracle reads them (1,394 and 1,767 MiB resident there).
-The second is the costliest archive I could build within the budgets; that it
-is the costliest there is, is an argument from the table above, not a proof.
-The first row was measured under a larger limit; its peak does not depend on
-the limit.
+Both are read as the oracle reads them. One listing of the second, with the
+heap sampled inside the process, has 321 / 341 MiB in use at its peak, keeps
+282 MiB and holds 46 / 78 MiB of Buffers. It is the costliest archive I could
+build within the budgets; that it is the costliest there is, is an argument
+from the per-unit costs above, not a proof.
 
 **Archives listed one after another.** `dependency_provenance` lists several
-archives in one process. What one listing kept is garbage when the next one
-starts, and V8 has not collected it when the next one is at its peak. Three
-listings of `combined.heap-worst` in a row, at a limit of exactly 3,072 MiB:
+archives in one process. The sizing below is deliberately conservative: three
+listings of `combined.heap-worst` in a row, with the listing before still
+referenced while the next one runs. `archive_manifest` holds less than that
+between its calls: three calls in a row leave 387 / 389 MiB in use (the
+delta review's INFO-1). At a limit of exactly 2,048 MiB, Node 22.23.3 /
+24.14.0:
 
-| Caller's own data on the heap | Heap in use at the peak | Heap committed | Resident | Outcome |
-| ---: | ---: | ---: | ---: | --- |
-| none | 1,952 / 1,950 MiB | 2,005 / 2,090 MiB | 2,350 / 2,487 MiB | read, inside the limit |
-| 524 MiB | 2,475 / 2,475 MiB | 2,537 / 2,610 MiB | 2,869 / 3,012 MiB | read, inside the limit |
-| 1,050 MiB | 2,986 / 3,000 MiB | 3,069 / 3,136 MiB | 3,419 / 3,511 MiB | read; the limit is reached, and passed on 24.14.0 |
-| 1,575 MiB | | | | the process aborts, on both |
+| Caller's own data on the heap | Heap in use at the peak | Heap committed | Outcome |
+| ---: | ---: | ---: | --- |
+| none | 801 / 631 MiB | 831 / 727 MiB | read |
+| 536 MiB | 1,337 / 1,168 MiB | 1,377 / 1,264 MiB | read, inside the limit |
+| 1,076 MiB | 1,799 / 1,720 MiB | 1,847 / 1,804 MiB | read, inside the limit |
+| 1,344 MiB | 1,931 MiB / none | 1,993 MiB / none | read on 22.23.3; **the process aborts on 24.14.0** |
 
-The peak that counts is therefore 1,952 MiB, not the 1,237 MiB of one
-listing.
+The peak that sizes the heap is therefore 801 MiB (606 to 801 across runs on
+22.23.3), not the 321 to 341 MiB of one listing.
 
 **The runtime contract.**
 
-- *What the number is.* `HEAP_LIMIT_REQUIRED_MIB` = 3,072 is a bound on
+- *What the number is.* `HEAP_LIMIT_REQUIRED_MIB` = 2,048 is a bound on
   `v8.getHeapStatistics().heap_size_limit`. That is the old space
   `--max-old-space-size` sets plus the young generation, so it is not the
-  flag: on the development host a limit of exactly 3,072 MiB is
-  `--max-old-space-size=3024` on Node 22.23.3 and `=2880` on 24.14.0, and
-  inside a cgroup of 2 GiB the same flags give 3,048 and 2,976 MiB. The
+  flag: on the development host a limit of exactly 2,048 MiB is
+  `--max-old-space-size=2000` on Node 22.23.3 and `=1856` on 24.14.0. The
   reader checks the limit itself, at run time, and ends in
-  `UnsupportedRuntime` before anything is parsed where it is lower. Every
-  figure of the two tables above that names this limit was measured at
-  exactly 3,072 MiB; `port_budget.py` asks the runtime which flag gives it.
-- *Margin.* 1,120 MiB lie between the peak of consecutive listings and the
-  limit, 36% of the heap. They are the caller's and the collector's: with
-  524 MiB of caller data the heap stays inside the limit, with 1,050 MiB it
-  reaches it, with 1,575 MiB the process aborts.
-- *Why not 2,048 MiB*, the first number proposed. At that limit one listing
-  fits (1,237 MiB), but three in a row have 1,950 MiB in use and 2,085 MiB
-  committed on Node 24.14.0, above the limit, and with 524 MiB of caller data
-  the process aborted there. A peak just under the limit is no headroom.
-- *What the limit does not promise.* Four things, each measured:
-  - It reserves no memory. A process is killed by its cgroup below the
-    limit. One listing of `combined.heap-worst` completes under
-    `MemoryMax=1792M` and is killed under `1536M`. Three in a row complete
-    under `2560M`; with 524 MiB of caller data they are killed under `2560M`
-    and complete under `3072M`.
-  - It does not count Buffers or the compressed archive: 301 to 377 MiB at
-    the peak here, plus the size of the archive, which `archive_manifest`
-    holds as a whole (the oracle does as well).
-  - The heap fills with garbage before V8 collects, so resident memory
-    follows what V8 lets stand, not the live data alone.
-  - V8 passes the limit: 3,136 MiB committed under a limit of 3,072 in the
-    third row above. For the same reason the smallest heap under which an
-    archive completes says little: `combined.heap-worst` completes once under
-    `--max-old-space-size=746`, with a text of 512 MiB above that limit.
+  `UnsupportedRuntime` before anything is parsed where it is lower. The
+  figures above were measured at exactly 2,048 MiB; `port_budget.py` asks the
+  runtime which flag gives it.
+- *Why 2,048.* It is what Node gives by default in a unit of 4 GiB of memory
+  or more, so such a unit needs no flag. Measured with no flag, in a systemd
+  scope with the given `MemoryMax` and no swap, three calls of
+  `archive_manifest` on `combined.heap-worst`:
+
+  | `MemoryMax` | Default limit (22.23.3 / 24.14.0) | Outcome |
+  | --- | ---: | --- |
+  | 2G | 1,048 / 1,120 MiB | every call ends in `UnsupportedRuntime` |
+  | 4G | 2,096 / 2,240 MiB | read |
+  | 6G | 2,096 / 2,240 MiB | read |
+  | 8G | 2,096 / 2,240 MiB | read |
+
+- *Margin.* 1,247 MiB lie between the highest peak of consecutive listings
+  and the limit, 61% of the heap. They are the caller's and the collector's.
+  The margin is measured on the costliest archive found, not proven for every
+  archive within the budgets.
+- *Why not 1,024 MiB*, which a unit of 2 GiB would meet by default. Measured
+  for information at exactly that limit: one listing completes, with 536 MiB
+  of caller data too, but three with the listing before still referenced
+  abort on Node 24.14.0 with 269 MiB of caller data. A unit of less than
+  4 GiB needs the flag (backlog B14).
+- *What the limit does not promise.*
+  - It reserves no memory: a process is killed by its cgroup below the limit.
+  - V8 passes it when the heap is nearly full. Both of these were measured
+    in the third fix round, under the budgets then proposed and a limit of
+    3,072 MiB (3,136 MiB committed under it), and not again.
+  - It does not count Buffers or the compressed archive: 46 to 79 MiB of
+    Buffers at the peak here, plus the size of the archive, which
+    `archive_manifest` holds as a whole (the oracle does as well).
+  - What the caller holds on the heap comes out of the same limit: the last
+    row of the table above.
 - *The requirement on the environment.* A V8 heap limit of at least
-  3,072 MiB, and memory for what the process comes to use: up to that limit,
-  301 to 377 MiB of Buffers, about 60 MiB for the runtime, and the archive.
-  The costliest run that completed was 3,511 MiB resident.
-- *Not known: the target.* Kitchen has no deployed target and no unit that
-  runs it. This is a requirement, not a statement that any host meets it, and
-  the role was not changed (backlog B14). The default limit follows the
-  memory limit of the unit (1,048 or 1,120 MiB under `MemoryMax=2G`, 2,096 or
-  2,240 MiB under 4G and 8G, measured in the delta review of the second fix
-  round), so on most units the limit has to be set, on the command line of
-  Node: the role refuses `NODE_OPTIONS` in a unit environment.
-- *The test suites* pass this check on the development host only because the
-  default limit there is 4 GiB. On a host where it is lower they fail at the
-  first archive with `UnsupportedRuntime`; run them with
-  `NODE_OPTIONS=--max-old-space-size=3072`.
+  2,048 MiB, which is Node's default in a unit of 4 GiB or more, and memory
+  for what the process comes to use: about 0.5 to 0.6 GiB resident for the
+  costliest archive found, plus what the caller holds.
+- *Not known: the target.* No unit runs kitchen yet. This is a requirement,
+  not a statement that any host meets it, and the role was not changed.
+- *The test suites* pass this check wherever the default limit is 2,048 MiB
+  or more. On a host or in a unit where it is lower they fail at the first
+  archive with `UnsupportedRuntime`; run them with
+  `NODE_OPTIONS=--max-old-space-size=2048`.
 
 **The input this contract is for.** By the owner's decision during the third
 fix round (ruling C1), D4 is the first version of a contract for input that
@@ -685,15 +745,23 @@ immutable values of the runtime. `test/unit/port-tar-budgets.test.js`
 measures both: 20,000 members under a size of 4,300 digits keep under
 20 MiB, 2,000 members under a path of 4 MiB keep under 16 MiB. A sparse list
 is not shared: every expansion makes its own, and every expansion is counted.
+The integers of a map in a global header are not shared either, and their
+size is not counted (backlog B17, above under "Sparse numbers").
 
 **What is not bounded.**
 
 - *Time* (backlog B12). A name in a global pax header is applied to every
-  later member, and both engines look at the whole name for each one. With
-  one `path` of 2^28 bytes in a global header: about 0.5 s a member in the
-  port and 0.8 s in the oracle if the path is a run of slashes, about 0.1 s
-  in either otherwise, on a host that was doing other work. At 2^17 members
-  that is hours in both engines. The archive is within every budget.
+  later member, and both engines look at the whole name for each one. The
+  byte budget bounds the name, so this cost fell sixteenfold with it. With
+  one `path` of 2^24 bytes in a global header, on a shared host:
+
+  | Path | Port, a member | Oracle, a member | At 2^17 members |
+  | --- | ---: | ---: | --- |
+  | a run of slashes | 0.013 to 0.016 s | 0.031 s | about half an hour in the port, a little over an hour in the oracle |
+  | no trailing slash | 0.0002 s | 0.0065 s | half a minute in the port, a quarter of an hour in the oracle |
+
+  The archive is within every budget. A real package archive has no global
+  name. Nothing is built against it; it needs a ruling.
 - *The archive itself.* Its compressed bytes are held as a whole, in both
   engines.
 - *The caller.* What the calling process holds on the heap comes out of the
@@ -710,7 +778,11 @@ is not shared: every expansion makes its own, and every expansion is counted.
   therefore ended in a runtime error, where the oracle accepts it. Present at
   `ac5e89c` as well. The test is now spelled out in one pass
   (`MANIFEST_NAME` in `src/archive.ts`); `test/unit/port-manifest-name.test.js`
-  holds it against the pattern on generated names.
+  holds it against the pattern on generated names. Under the byte budget of
+  2^24 a name that long still reaches the test where a character is one
+  byte: nine million bytes that are no UTF-8 are nine million units, and the
+  unit test reads such a name. A name of that many characters of two bytes
+  or more is over the budget.
 - *F6, a size in a global header.* A `size`, `GNU.sparse.size` or
   `GNU.sparse.realsize` of a global header was converted anew for every
   member. An integer of 4,300 digits is 1.8 kB: 2^20 members under one record
@@ -771,18 +843,19 @@ left a choice open; the record names each choice as the implementer's
 | M1 | the eight mutants that are not killed, under their own classification | 5 redundant survivors, 2 compiler, 1 crash-only; none is a kill, 262 of 270 stays 262; the end-to-end witness for `archive.L140.4` is owed with cook or deploy |
 | O1 | four oracle behaviours reproduced as they are | items 2, 5 and 12 above and the silent end of a tar listing; each with the bound stated there and a backlog entry |
 | R6 | the stand-in as the port of `combine` | `merge_layers` only; four known mismatches of the helper; key order may differ |
-| D3 | a declared refusal of a long-name, long-link or pax block above a constant limit; closes F1 | 2^28 bytes of the header's size field; only where the oracle comes to read such a block; the constant was left open and is the one the reviewer suggested |
+| D3 | a declared refusal of a long-name, long-link or pax block above a constant limit; closes F1 | 2^28 bytes of the header's size field; only where the oracle comes to read such a block; the constant was left open and is the one the reviewer suggested. Kept in the closing step as a separate bound on one block, above the byte budget of D4, so `archive_manifest` never reads a block of that size |
 | B9 | the undocumented zlib call, tied to the pinned Node | Node 24.14.0 (the pin of `oracle/versions.yml`) and 22.23.3 (the development host); any other runtime is refused, which was the choice left open (refuse or flag) |
 | L1 | the later passes of the gzip reader | every later pass is held to a record of the checking pass; closing the gap, not narrowing the wording, was the choice left open. L2 stays a note on B9 |
-| D4 | admission budgets as a declared divergence; it builds F4 | four counts over one listing and a heap limit they are sized for. **The numbers are proposed, not approved**: 2^28 metadata bytes, 2^24 pax records, 2^20 sparse numbers, 2^17 members, 3,072 MiB |
+| D4 | admission budgets as a declared divergence; it builds F4 | four counts over one listing and a heap limit they are sized for. **The numbers are approved** for the success path on trusted input: 2^24 metadata bytes, 2^21 pax records, 2^16 sparse numbers, 2^17 members, 2,048 MiB. The record says where each comes from |
 | C1 | the input of the archive reader is trusted and digest-checked before it is parsed | a precondition on the caller, to be confirmed at catalog integration, not a proven property; what D4 leaves of F4 is residual risk of this version |
 
-The delta review of the second fix round (`a198042..621d78d`) is recorded as
+The delta review of the third fix round (`621d78d..06ee0cc`) is recorded as
 passed, with its commit and the sha256 of its report. The implementer
-recorded it on a quoted instruction of the manager of the dispatch; the
-technical owner has quoted none for it, and the record says so. The review of
-`a198042`, recorded on the technical owner's instruction, is kept under
-`earlier_delta_reviews`.
+recorded it on a quoted instruction of the manager of the dispatch, as it did
+the review of the second fix round (`a198042..621d78d`). That one and the
+review of `a198042`, recorded on the technical owner's instruction, are kept
+under `earlier_delta_reviews`. The closing step's own commit is later than
+the reviewed one and is covered by no recorded review.
 
 The mutant classification:
 
@@ -811,32 +884,33 @@ The mutant classification:
 | B8 | closed | finding F1, ruled as divergence D3 |
 | B9 | port | replace the undocumented zlib call when Node documents a synchronous inflate that can be resumed. Until then the reader runs on the Node versions of `STEPWISE_RUNTIMES` only, and two modes of a changed engine end as a crash, not as `UnsupportedRuntime` (L2) |
 | B10 | port, with the command line (plan phase 7) | check the runtime once at start and report an unverified one as a missing prerequisite with a public code, before any archive is read |
-| B11 | approval and review | finding F4, built as D4: the proposed numbers need the technical owner's approval, the round its delta review |
-| B12 | ruling | time is not bounded by D4: a name in a global pax header costs both engines a pass over it for every member |
-| B13 | port | decode a metadata block into one flat text, so that a block costs once its text and not twice (about 0.5 GiB off the peak of one listing) |
-| B14 | whoever starts kitchen | give it a V8 heap limit of at least 3,072 MiB, on the command line of Node, and the memory D4 states; the role was not changed |
+| B11 | review | finding F4, built as D4: the numbers are approved and the third fix round is reviewed; the finding is ruled with residual risk, not fixed. Owed: a review of the closing step's own commit, on which `check-port-ready` blocks |
+| B12 | ruling | open, nothing built: time is not bounded by D4. A name in a global pax header costs both engines a pass over it for every member; at the budgets about half an hour in the port and an hour in the oracle. Does not block use on trusted input |
+| B13 | port | open, low value now: decode a metadata block into one flat text, so that a block costs once its text and not twice (at most about 32 MiB under the byte budget of 2^24) |
+| B14 | whoever starts kitchen | open for units under 4 GiB only: there Node's default heap is below the 2,048 MiB the reader requires, and kitchen needs `--max-old-space-size=2048` on the command line of Node. At 4 GiB and more the default passes (measured). No launcher exists and the role was not changed; the obligation the review suggested (readiness red when a launcher lacks the flag) is not built |
 | B15 | ruling, at catalog integration | known and not closed for the trusted-input version: the archive is held whole, the caller's data comes out of the same heap limit, further amplification routes were not searched for |
+| B16 | readiness check | open, not fixed (LOW-1 of the delta review of the third fix round): `check-port-ready` reads a source file moved under `docs/` as a change of the notes, in a commit or in the working tree. The fix is `--no-renames` on both git calls, with a test case |
+| B17 | port | open, not fixed in the reader (LOW-2 of the same review): the sparse budget counts numbers, not their size, and a map in a global header is converted anew at every expansion. Bounded by the default instead: at 2^16 numbers about 115 MiB, inside the measured peak. Fix it (share the integers of a global map) before raising the sparse budget |
 
 ## Still open
 
-- **The approval of D4's numbers.** The four budgets and the heap requirement
-  are a proposal with its evidence ("The admission budgets" above).
-  `scripts/check-port-ready` is red until `test/port-rulings.golden` records
-  them as approved.
-- **The delta review of the third fix round** (D4, the manifest-name test,
-  the reader mutants, the readiness check). The review recorded as passed is
-  the one of `621d78d`. `scripts/check-port-ready` blocks while a commit after
-  the reviewed one changes anything but `docs/` and the record of rulings.
-- **Finding F4** stays open in the record until both of the above. What D4
-  leaves of it is recorded there as residual risk of the trusted-input
-  version, not as fixed.
+- **A review of the closing step.** The review recorded as passed is the one
+  of `06ee0cc`. The closing step (the approved defaults of D4, the vectors
+  and tests that follow from them, the split of the test commands) is one
+  commit later. `scripts/check-port-ready` blocks while a commit after the
+  reviewed one changes anything but `docs/` and the record of rulings, and
+  that rule was kept; it is the one line the check is red on.
+- **Finding F4** is ruled as D4, not fixed. What D4 leaves of it is recorded
+  as residual risk of the trusted-input version: the limits bound the
+  success path, not what an archive built to be costly can do.
 - **The precondition of ruling C1**: that the archives come from a trusted
   source and are digest-checked before they are parsed. It comes due with
   `src/catalog.ts`; `scripts/check-port-ready` turns red then until it is
   confirmed or dropped.
-- **Time** (backlog B12), **the fit of the memory requirement to a target**
-  (backlog B14) and **the routes not searched for** (backlog B15): none is
-  decided.
+- **Time** (backlog B12), **a unit of less than 4 GiB** (backlog B14),
+  **the routes not searched for** (backlog B15), **the rename the readiness
+  check misses** (backlog B16) and **the size of sparse numbers** (backlog
+  B17): open, and none blocks use on trusted input.
 - A function without a `require`, `need` or `raise` has no oracle mutant:
   `credential_shaped`, `repository`, the errors module, the archive
   predicates, the clauses inside one-`raise` functions. The TS mutants for

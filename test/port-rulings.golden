@@ -23,19 +23,36 @@
    "after": "the delta review of the second fix round (commits 15c857a, 2204553, 621d78d), verdict APPROVE with three LOW findings and three INFO notes",
    "review_report_sha256": "e2b7be176dfa3fc02ebf4eafdeb3ecf32cff966d967016d4f7846467288a8e20",
    "messages_during_the_round": "Four messages of the manager were waiting when the implementer first tried to finalize, after the first two commits of the round (cfb4421, b47d69c). They are quoted under rulings D4 and C1. The third commit of the round answers them."
+  },
+  {
+   "round": "closing step after the third fix round",
+   "date": "2026-11-15",
+   "from": "the technical owner (Soma), by a decision relayed in the dispatch brief of the closing step and by an approval the manager relayed in answer to a question of the implementer; the owner (Vasyl), by a direction relayed in that brief; and the manager of the dispatch, answering two questions of the implementer",
+   "after": "the delta review of the third fix round (commits cfb4421, b47d69c, 06ee0cc), verdict APPROVE with two LOW findings and three INFO notes",
+   "review_report_sha256": "7e4d68bc8a4d1ec4249495b037381073a6782ce7801fc74ab09e9ad4fb7f51cd",
+   "brief": [
+    "Owner direction (Vasyl): finish the success path quickly so kitchen can be used on our own setup. Hardening comes later, and anything that doesn't block use goes to backlog. This step is a defaults edit, not a new campaign.",
+    "1. metadataBytes -> 2^24 (Soma's decision). Keep D3 as a separate per-block bound at 2^28, now unreachable through archive_manifest in production. Update the order and expectations honestly: the port_large at-limit cases, port-large.golden, D3's RULED line in check-port-ready, the tarfile.ts header and the notes, as the review lists under \"For Soma\" point 1.",
+    "2. sparseNumbers -> 2^16. The review says this caps LOW-2's wide global map at about 115 MiB with no code change, and real archives use 0. If you judge sharing the global-map BigInts to be the smaller and safer change, do that instead and say why.",
+    "3. Lower H so a unit of 4 GiB or more passes with Node's default heap (H <= 2,048 MiB). Measure the combined peak at exactly H on both Node versions, with the review's gmap-wide-path shape included. If it doesn't fit, report that rather than forcing it.",
+    "4. Split the test commands. The default `test` runs fast unit and regression tests with reduced budgets. An explicit `qualify` command runs the heavy boundary vectors, broad fuzz and both Node versions. Measure the duration of each. Install, apply and bootstrap must not run qualify.",
+    "5. Record the D4 defaults as decided: Soma's metadata decision plus the owner's success-path direction. Record LOW-1 (a rename into docs/ escapes the check), LOW-2 if you didn't fix it, B12 and B14 as backlog with honest status."
+   ],
+   "transcription": "The brief writes an arrow in points 1 and 2 (here \"->\") and a \"less than or equal\" sign in point 3 (here \"<=\"). Nothing else is changed.",
+   "not_seen_by_the_implementer": "The messages the brief and the manager's answers cite (the technical owner's decision, \"Zulip Kitchen 2339 and 2341\", \"the owner's success-path direction of 13:04\") are quoted here as the brief and the manager relay them. The implementer has not seen the messages themselves."
   }
  ],
  "delta_review": {
   "status": "passed",
-  "of": "the second fix round after a198042: divergence D3, the runtime check (B9), the step record (L1), the fixes F2 and F3, and the record of open finding F4",
-  "commit": "621d78d1cfd137ab2ec9651065b4973244e159ff",
-  "covers": "a198042..621d78d",
-  "verdict": "APPROVE: no HIGH or MEDIUM reproduced; three LOW findings (LOW-1, LOW-2, LOW-3) and three INFO notes. The reviewer found the proposal for F4 not sound enough to build as written and named three changes (P0, P1, P2), which the third fix round builds.",
-  "review": "the delta review dispatched on TASK-XQ63S, run-01M7F680JJ1P6M0Q0DR3C4E8FK",
-  "review_report_sha256": "e2b7be176dfa3fc02ebf4eafdeb3ecf32cff966d967016d4f7846467288a8e20",
-  "set_by": "The implementer, in the third fix round, on this instruction of the manager of the dispatch, given in answer to the implementer's question whether to record that review: \"Yes. Record it as passed for exactly a198042..621d78d, sourced to the reviewer's APPROVE (run-01M7F680JJ1P6M0Q0DR3C4E8FK, report sha256 e2b7be176dfa3fc02ebf4eafdeb3ecf32cff966d967016d4f7846467288a8e20), with set_by \\\"manager instruction, round 3 dispatch\\\" quoted as such. Don't attribute it to Soma: she has not quoted an instruction for it. Your round-3 commits stay uncovered until their own delta review.\" This is a manager instruction, round 3 dispatch; the technical owner has quoted no instruction for it.",
-  "not_covered": "Everything committed after 621d78d, the third fix round first of all: divergence D4 (the admission budgets and the heap requirement), the manifest-name test of src/archive.ts, the reader mutants, and the changes to scripts/check-port-ready. By the brief of that round, finding F4 and the readiness check stay red until that round has a delta review of its own. scripts/check-port-ready blocks while a commit after the reviewed one changes anything but docs/ and this file.",
-  "rule": "A status of \"passed\" names the commit reviewed and the sha256 of the review report. It is set by a reviewer, or by the implementer on a quoted instruction, never on the implementer's own judgement. `set_by` quotes the instruction and says whose it is: the technical owner's for the review of a198042 (see earlier_delta_reviews), the manager's for this one."
+  "of": "the third fix round after 621d78d: divergence D4 (the admission budgets and the heap requirement as then proposed), the fixes F5 and F6, the reader mutant set, the changes to scripts/check-port-ready, and the record of ruling C1",
+  "commit": "06ee0cc9054e616cda0a05628fe3a7afd42d6c7b",
+  "covers": "621d78d..06ee0cc",
+  "verdict": "APPROVE: no issue found that breaks normal use on trusted, pinned inputs, which is the bar the owner set during that review. Two LOW findings and three INFO notes. LOW-1: the readiness check misses a source file moved under docs/ (backlog B16). LOW-2: a GNU.sparse.map with wide numbers in a global header gets past the memory bound of the sparse budget; the reviewer had it as MEDIUM under the brief's original criterion and reclassified it under the owner's bar (backlog B17). The reviewer also names what blocks use as committed at 06ee0cc and is no defect of that round: the heap requirement of 3,072 MiB, which the closing step lowers.",
+  "review": "the delta review dispatched on TASK-XQ63S, run-01M7FM93KX6MD3NAGNF1Q32XTE",
+  "review_report_sha256": "7e4d68bc8a4d1ec4249495b037381073a6782ce7801fc74ab09e9ad4fb7f51cd",
+  "set_by": "The implementer, in the closing step, on this instruction of the manager of the dispatch, given in answer to the implementer's question whether to record that review as passed for 621d78d..06ee0cc and whether to set finding F4 to ruled: \"Yes, both. For (2), the defaults were approved by Soma in Zulip Kitchen 2339 and 2341: metadata 2^24, paxRecords 2^21, sparseNumbers 2^16, members 2^17, and the heap from your short result. That sits under the owner's success-path direction of 13:04. Quote that as the source. Keep the rule that this step's commit blocks until reviewed. I'll settle with Soma how that line is cleared.\" This is a manager instruction, closing-step dispatch.",
+  "not_covered": "Everything committed after 06ee0cc, the closing step first of all: the defaults of D4 as approved (metadataBytes 2**24, paxRecords 2**21, sparseNumbers 2**16, a heap limit of 2,048 MiB), the vectors, tests and readiness lines that follow from them, and the split of the test commands into `test` and `qualify`. scripts/check-port-ready blocks while a commit after the reviewed one changes anything but docs/ and this file. By the manager's answer that rule is kept for the closing step's own commit, and how that line is cleared is for the manager and the technical owner to settle.",
+  "rule": "A status of \"passed\" names the commit reviewed and the sha256 of the review report. It is set by a reviewer, or by the implementer on a quoted instruction, never on the implementer's own judgement. `set_by` quotes the instruction and says whose it is: the technical owner's for the review of a198042, the manager's for the reviews of 621d78d and of 06ee0cc (see earlier_delta_reviews for the first two)."
  },
  "rulings": [
   {
@@ -73,19 +90,22 @@
    "as_received": "F1 -> D3. A declared, controlled refusal with a stable diagnostic. Use a constant bound checked before decoding (the reviewer suggests 2^28 bytes on a long-name or pax block), with the unit stated. Answer with the closed \"unreadable archive or manifest\" / E_ADAPTER_INPUT, and add named vectors on both sides of the bound in both engines. Record it in port-rulings.golden and port-notes.",
    "left_to_the_implementer": "The constant. It is the one the reviewer suggested: 2**28.",
    "bounds": [
-    "The limit is METADATA_LIMIT = 2**28 = 268,435,456. Unit: bytes, as the size field of a tar header of type L (GNU long name), K (GNU long link), x (pax extended), g (pax global) or X (Solaris extended) states them, before tarfile rounds the count up to whole 512-byte blocks. A header that states exactly the limit is read; one byte more is refused.",
+    "The limit is METADATA_LIMIT = 2**28 = 268,435,456. Unit: bytes, as the size field of a tar header of type L (GNU long name), K (GNU long link), x (pax extended), g (pax global) or X (Solaris extended) states them, before tarfile rounds the count up to whole 512-byte blocks. A header that states exactly the limit passes it; one byte more is refused by it.",
+    "Since the closing step D3 is a separate bound on one block that the production budgets never let a listing reach. The reader asks the limit first and charges the byte budget of D4 second, and that budget is 2**24. So through archive_manifest a block that states more than 2**28 bytes is refused under D3 as before, and a block that states more than the byte budget has left, one of exactly 2**28 included, is refused under D4; the oracle accepts both, and the port reads neither block. \"At the limit both engines accept\" no longer holds through archive_manifest. The limit's own two sides show only under a byte budget raised to the limit, which is an option of the reader for tests and nothing archive_manifest passes: there a block of exactly the limit is listed as the oracle lists it, and D3 alone refuses one byte more.",
     "D3 covers an archive in whose listing tarfile comes to read the blocks of such a header that states more than the limit, and nothing else. The port refuses at the point where the oracle makes that read, before reading the blocks, with an OSError whose message is the constant \"tar metadata block above 268435456 bytes\"; archive_manifest answers \"unreadable archive or manifest\", code E_ADAPTER_INPUT.",
     "What the oracle refuses about the header before that read comes first in the port as well (a negative size, the frame limit). What the oracle answers from the read on is replaced. That answer can be: acceptance (the blocks are there; or they are no pax records and the header is not the first member, which ends a listing silently, O1.tar-listing); the same closed refusal (the data is missing: ReadError); MemoryError or OverflowError, which no handler of the engine names (a size the machine cannot allocate). On the second kind the public outcome does not change.",
     "A header of any other type may state any size. Every string the reader builds from a block at or below the limit has at most 2**28 UTF-16 units, below the longest string of both verified runtimes (2**29 - 24); the reader refuses to run where that does not hold.",
-    "Memory is not part of D3 and is not ruled: open finding F4. At the limit either engine needs a few times the block (measured: oracle 0.8 to 1.0 GiB, port 0.9 to 1.0 GiB). A block built to be costly, or many blocks at the limit, need more than the heap of the runtime gives the port."
+    "Memory is not part of D3: that is divergence D4 (finding F4). A block of exactly the limit, read under a byte budget raised to it, costs either engine a few times the block (measured: oracle 0.8 to 1.0 GiB resident, the reader 0.6 to 0.9 GiB)."
    ],
    "evidence": [
-    "test/vectors/port-large.golden (cases metadata.*: at the limit and one byte above it, for a long name and for a pax header, both engines)",
+    "test/vectors/port-large.golden (cases metadata.*, for a long name and for a pax header: at the limit D4 through archive_manifest and listed under a byte budget of the limit; one byte above it D3 either way)",
     "test/differential/port_large.py",
     "test/vectors/port-divergences.golden (entries tar-metadata.*, one per header type)",
     "test/differential/port_primitives.py (kind tar, `metadata_limit`)",
     "test/unit/port-tar-limits.test.js"
-   ]
+   ],
+   "as_received_in_the_closing_step": "1. metadataBytes -> 2^24 (Soma's decision). Keep D3 as a separate per-block bound at 2^28, now unreachable through archive_manifest in production. Update the order and expectations honestly: the port_large at-limit cases, port-large.golden, D3's RULED line in check-port-ready, the tarfile.ts header and the notes, as the review lists under \"For Soma\" point 1.",
+   "transcription": "The brief writes an arrow after \"metadataBytes\" (here \"->\"). Nothing else is changed."
   },
   {
    "id": "M1",
@@ -248,41 +268,53 @@
    "earlier_lines_of_the_technical_owner": "Received through the manager while the second fix round was being closed, and quoted in that round's report (sha256 03d30d58bb86a1625cba4fd42a198a6decfeb8168a804ca9cc018ce09a3ff274): \"For the proposal, she wants the next round to have a deterministic contract, not \\\"free RAM\\\": a cumulative budget over held names/pax bytes and over record and field counts across the whole archive; a separate bound on structural expansion, e.g. the number count in GNU.sparse.map; the check runs before any large split, array or accumulation, with a stable typed error that doesn't echo the huge value; documented units and defaults, with the defaults justified by you. A budget refusal where the oracle accepts is a new declared divergence or an explicit D3 extension, not D1.\"",
    "left_to_the_implementer": "The numbers, as a proposal for the technical owner to approve (`defaults`). Three choices of unit and place that the brief left open or gave as alternatives, each stated under `choices`.",
    "defaults": {
-    "status": "proposed, not approved",
+    "status": "approved",
+    "approved_by": "The technical owner (Soma), as the manager of the dispatch relays it in answer to a question of the implementer during the closing step: \"Yes, both. For (2), the defaults were approved by Soma in Zulip Kitchen 2339 and 2341: metadata 2^24, paxRecords 2^21, sparseNumbers 2^16, members 2^17, and the heap from your short result. That sits under the owner's success-path direction of 13:04. Quote that as the source. Keep the rule that this step's commit blocks until reviewed. I'll settle with Soma how that line is cleared.\" The implementer has not seen the messages cited. The heap figure was approved as what the implementer's measurement would give; it gave 2,048 MiB (`measured_at_that_limit`).",
     "budgets": {
-     "metadataBytes": 268435456,
-     "paxRecords": 16777216,
-     "sparseNumbers": 1048576,
+     "metadataBytes": 16777216,
+     "paxRecords": 2097152,
+     "sparseNumbers": 65536,
      "members": 131072
     },
-    "heap_limit_required_mib": 3072,
-    "what_the_heap_number_is": "A bound on `v8.getHeapStatistics().heap_size_limit`, which is the old space `--max-old-space-size` sets plus the young generation. It is not the flag: on the development host a limit of exactly 3,072 MiB is `--max-old-space-size=3024` on Node 22.23.3 and `=2880` on 24.14.0, and inside a cgroup of 2 GiB the same flags give 3,048 and 2,976 MiB. The reader checks the limit itself, at run time. The measurements ran at a limit of exactly 3,072 MiB.",
-    "measured_at_that_limit": "The costliest archive found within the budgets, Node 22.23.3 / 24.14.0. One listing: 1,237 / 1,236 MiB of heap in use at the peak (1,234 to 1,239 across runs), 301 / 335 MiB of Buffers, 1,616 / 1,700 MiB resident. Three listings one after another in one process: 1,952 / 1,950 MiB in use, 2,350 / 2,487 MiB resident; completes under MemoryMax=2560M. The same with 524 MiB of caller data on the heap: 2,475 MiB in use, 2,537 / 2,610 MiB committed, inside the limit, 2,869 / 3,012 MiB resident; completes under MemoryMax=3072M and is killed under 2560M. With 1,050 MiB of caller data: 3,000 MiB in use, the limit reached (3,136 MiB committed on 24.14.0), completes. With 1,575 MiB: the process aborts.",
-    "margin": "1,120 MiB between the peak of consecutive listings (1,952 MiB) and the limit: 36% of the heap. The first number proposed, 2,048 MiB, left none: at that limit three consecutive listings had 1,950 MiB in use and 2,085 MiB committed on Node 24.14.0, and with 524 MiB of caller data the process aborted.",
-    "environment_requirement": "A V8 heap limit of at least 3,072 MiB, and memory for what the process comes to use: up to the heap limit, 301 to 377 MiB of Buffers, about 60 MiB for the runtime, and the archive file. Target memory is not known: kitchen has no deployed target and no unit that runs it. This is a requirement on the environment, not a statement that any host meets it. The role was not changed.",
-    "evidence": "docs/port-notes.md, \"The admission budgets\": cost of each budget on Node 22.23.3 and 24.14.0, the survey of 323 package archives, the two combined vectors at exactly this heap limit, consecutive listings with caller data, and what was measured inside cgroup scopes."
+    "heap_limit_required_mib": 2048,
+    "where_each_number_comes_from": [
+     "metadataBytes 2**24: the technical owner's decision, relayed in the brief of the closing step (point 1). 50 times the most a package archive was seen to hold (333,319 bytes among 323).",
+     "paxRecords 2**21: a consequence of the byte budget, not a decision of its own. The shortest pax record is five bytes, so 2**24 bytes hold at most 3,355,443 records, and the 2**24 proposed before could not be reached or shown from both sides. 2**21 is the largest power of two that can. It bounds time only. Lowered by the implementer on the manager's answer quoted under `as_received_in_the_closing_step`; in the approval relayed above.",
+     "sparseNumbers 2**16: the brief of the closing step (point 2), after the delta review's LOW-2. The brief left the implementer the choice of sharing the integers of a global map instead; the implementer lowered the budget (`choices`).",
+     "members 2**17: unchanged from the proposal of the third fix round; the delta review found it sound.",
+     "heap limit 2,048 MiB: the brief of the closing step (point 3) asks for a requirement of at most 2,048 MiB that Node's default heap meets in a unit of 4 GiB or more, measured at exactly that limit with the review's wide global map included. The implementer measured it (`measured_at_that_limit`)."
+    ],
+    "what_the_heap_number_is": "A bound on `v8.getHeapStatistics().heap_size_limit`, which is the old space `--max-old-space-size` sets plus the young generation. It is not the flag: on the development host a limit of exactly 2,048 MiB is `--max-old-space-size=2000` on Node 22.23.3 and `=1856` on 24.14.0. The reader checks the limit itself, at run time. The measurements ran at a limit of exactly 2,048 MiB.",
+    "measured_at_that_limit": "The costliest archive found within the budgets (test/differential/port_budget.py, combined.heap-worst: members, sparse numbers and metadata bytes one under their budgets; member names and one pax path that are no UTF-8; a sparse map of 15 numbers of 4,300 digits in a global header, expanded 4,369 times, which is the shape of the delta review's LOW-2). Node 22.23.3 / 24.14.0, heap in use, sampled inside the process. One listing: 321 / 341 MiB at the peak, 282 MiB kept, 46 / 78 MiB of Buffers. Three listings one after another with the listing before still referenced, which is more than archive_manifest holds between its calls: 801 / 631 MiB at the peak (606 to 801 across runs on 22.23.3). The same with 536 MiB of caller data on the heap: 1,337 / 1,168 MiB. With 1,076 MiB of caller data: 1,799 / 1,720 MiB in use, 1,847 / 1,804 MiB committed, inside the limit, completes on both. With 1,344 MiB: completes on 22.23.3 at 1,931 MiB, aborts on 24.14.0. Through archive_manifest itself, three calls in a row: 387 / 389 MiB in use afterwards with no caller data, 1,437 MiB with 1,056 MiB of caller data; one call with 1,332 / 1,324 MiB of caller data completes on both. Resident memory of the port on that archive in the gate: about 500 MiB.",
+    "margin": "1,247 MiB between the highest peak of consecutive listings (801 MiB) and the limit: 61% of the heap. The margin is measured on the costliest archive found, not proven for every archive within the budgets.",
+    "default_heap_of_a_unit": "With no heap flag, inside a systemd scope with the given MemoryMax and no swap, archive_manifest on that archive, three calls: under 4G, 6G and 8G the default limit is 2,096 MiB on Node 22.23.3 and 2,240 MiB on 24.14.0, and the archive is read. Under 2G the default is 1,048 / 1,120 MiB and every call ends in UnsupportedRuntime; such a unit needs `--max-old-space-size=2048` on the command line of Node (backlog B14). Not chosen: a requirement of 1,024 MiB, which a unit of 2 GiB would meet. Measured for information at exactly that limit, one listing completes with 536 MiB of caller data, and three with the listing before still referenced abort on Node 24.14.0 with 269 MiB of caller data.",
+    "environment_requirement": "A V8 heap limit of at least 2,048 MiB, which Node's default gives in a unit of 4 GiB of memory or more, and memory for what the process comes to use: for the costliest archive found about 0.5 GiB resident, plus what the caller holds. No unit that runs kitchen exists yet; this is a requirement on the environment, and the role was not changed.",
+    "evidence": "docs/port-notes.md, \"The admission budgets\"; test/vectors/port-budget.golden; the report of the closing step with its logs (calib-heap-worst-at-2048.log, manifest-heap-worst-at-2048.log, default-heap-in-units.log, calib-heap-worst-at-1024-informational.log)."
    },
    "choices": [
     "Byte accounting (point 1, P0): every metadata byte read is counted, kept or not. The unit is the size field of every L, K, x, g and X header whose blocks are read, plus 512 for every block read for a sparse map (the data blocks of form 1.0, old GNU extension blocks). The second part goes beyond P0: the numbers of form 1.0 are member data, up to about a thousand digits each, and no header's size field covers them.",
     "Sparse unit (point 3): numbers, in all four forms; a region is two. The count a 1.0 map states is a count of regions and is never compared with the budget: each number is counted as it is read, so 2 x count is not computed for the budget at all, and the loop bound is exact at any size. This is the second alternative the delta review gave for form 1.0.",
     "Sparse 0.0 (P1): the offset and numbytes records are no longer collected while the header is parsed; they are read from the block a second time when form 0.0 applies, and counted as they are converted. Nothing is collected before it is counted, which is what \"charge 0.0 ranges as they are collected\" asks for, by another route.",
     "The refusal stands where the oracle's own count passes the budget. A GNU.sparse.map is not split: it is read number by number, so an invalid number before that point is tarfile's ValueError as before, and one behind it is never looked at.",
-    "The heap limit required: 3,072 MiB, after 2,048 was measured to leave no margin for archives listed one after another (ruling D4, `defaults`)."
+    "The heap limit required, in the third fix round: 3,072 MiB, after 2,048 was measured to leave no margin under the budgets then proposed. Superseded by the closing step (`defaults`).",
+    "Closing step, LOW-2 (the brief's point 2): the sparse budget is lowered to 2**16 and the integers of a global map are not shared. Lowering is the smaller and safer change: it touches no line of the reader that the delta review read, where sharing would add a cache that has to place the charge and a ValueError exactly where the oracle's walk puts them and would need mutants and a review of its own. Its price is that the cost of a wide map stays uncounted, bounded only through the count: about 115 MiB at 2**16, which is inside the measured peak (`defaults`). Sharing stays open as backlog B17 and comes first if the sparse budget is ever raised.",
+    "Closing step, pax records: 2**21 instead of a bound nothing reaches (`defaults`, `where_each_number_comes_from`). The vectors keep their three sides for every budget."
    ],
    "bounds": [
-    "Four budgets, each a count over one listing (one tarfile.open and getmembers): metadataBytes 2**28 = 268,435,456; paxRecords 2**24 = 16,777,216; sparseNumbers 2**20 = 1,048,576; members 2**17 = 131,072. A listing that ends exactly at a budget is read; one unit more is refused. Nothing is credited back.",
+    "Four budgets, each a count over one listing (one tarfile.open and getmembers): metadataBytes 2**24 = 16,777,216; paxRecords 2**21 = 2,097,152; sparseNumbers 2**16 = 65,536; members 2**17 = 131,072. A listing that ends exactly at a budget is read; one unit more is refused. Nothing is credited back.",
     "The refusal is an OSError with the constant message \"tar metadata budget exceeded: \" followed by \"metadata bytes\", \"pax records\", \"sparse numbers\" or \"members\"; it holds no number and nothing from the archive. archive_manifest answers \"unreadable archive or manifest\", code E_ADAPTER_INPUT.",
     "D4 covers an archive in whose listing tarfile comes to pass one of the four counts, counted as test/differential/tar_budget.py counts them on the oracle's own tarfile, and nothing else. The port refuses at that point. What the oracle refuses before that point comes first in the port as well; what it answers from there on is replaced: acceptance, the same closed refusal (the public outcome does not change), or a class no handler of the engine names.",
-    "D3 is the case of one block and keeps its own refusal and vectors: a block above 2**28 bytes is refused as before, whatever the budget.",
-    "The budgets are sized for a V8 heap limit (`heap_size_limit`) of at least 3,072 MiB (HEAP_LIMIT_REQUIRED_MIB). Under a lower limit a listing ends in UnsupportedRuntime before anything is parsed: a plain Error, not an archive refusal, without a public code (backlog B10). Measured at exactly that limit on the costliest archive found within the budgets: 1,239 MiB of heap in use at the peak of one listing, 1,952 MiB at the peak of listings that follow one another in one process.",
-    "What the heap requirement does not promise, each measured: the limit reserves no memory (a process is killed by its cgroup below it); it does not count Buffers or the compressed file (301 to 377 MiB of Buffers at the peak, plus the archive); V8 passes it when the heap is nearly full (3,136 MiB committed under a limit of 3,072 on Node 24.14.0, with 1,050 MiB of caller data); and what the caller holds on the heap comes out of the same limit.",
-    "What is shared between members, and why that is no copy: the integer of a size in a global header and the text of a name in a global header. Both are immutable values of the runtime; a member holds a reference, and a name with trailing slashes stripped is a view of the one text. test/unit/port-tar-budgets.test.js measures both: 20,000 members under a size of 4,300 digits, 2,000 members under a path of 4 MiB. A sparse list is not shared: every expansion makes its own and is counted.",
-    "Not bounded by D4: time. An archive within all four budgets can take hours in both engines (a name of 2**28 bytes in a global header, applied to every member); backlog B12."
+    "D3 is a bound of its own on one block, asked before the byte budget is charged, and keeps its own refusal and vectors: a block above 2**28 bytes is refused under D3, whatever the budget. The byte budget is smaller, so a block between the two, one of exactly 2**28 included, is refused under D4 (metadata bytes), and archive_manifest never reads a block of the limit's size (ruling D3).",
+    "The budgets are sized for a V8 heap limit (`heap_size_limit`) of at least 2,048 MiB (HEAP_LIMIT_REQUIRED_MIB). Under a lower limit a listing ends in UnsupportedRuntime before anything is parsed: a plain Error, not an archive refusal, without a public code (backlog B10). Measured at exactly that limit on the costliest archive found within the budgets: 321 to 341 MiB of heap in use at the peak of one listing, 631 to 801 MiB with the listing before it still referenced.",
+    "What the heap requirement does not promise: the limit reserves no memory (a process is killed by its cgroup below it), and V8 passes it when the heap is nearly full; both were measured in the third fix round under the budgets then proposed and a limit of 3,072 MiB, and not again. It does not count Buffers or the compressed file (46 to 79 MiB of Buffers at the peak on the costliest archive, plus the archive). And what the caller holds on the heap comes out of the same limit: with 1,344 MiB of caller data Node 24.14.0 aborts on the costliest archive.",
+    "What is shared between members, and why that is no copy: the integer of a size in a global header and the text of a name in a global header. Both are immutable values of the runtime; a member holds a reference, and a name with trailing slashes stripped is a view of the one text. test/unit/port-tar-budgets.test.js measures both: 20,000 members under a size of 4,300 digits, 2,000 members under a path of 4 MiB. A sparse list is not shared: every expansion makes its own and is counted. The size of its numbers is not counted either: a number of 4,300 digits is about 1.8 kB, and a map in a global header is converted anew at every expansion while its digits are charged as bytes once. At 2**16 numbers that is about 115 MiB no budget counts (the delta review of the third fix round, LOW-2; backlog B17).",
+    "Not bounded by D4: time. An archive within all four budgets can take about an hour in the oracle and half an hour in the port (a name of 2**24 bytes in a global header, applied to every member); backlog B12."
    ],
    "evidence": [
     "src/pylike/tarfile.ts (Budgets, BUDGETS, HEAP_LIMIT_REQUIRED_MIB, MetadataBudget, charge)",
     "test/differential/tar_budget.py (the oracle counted at the same points)",
-    "test/differential/port_budget.py and test/vectors/port-budget.golden (each budget from three sides at its production value, the four sparse forms, two combined vectors; the port under exactly --max-old-space-size=2048)",
+    "test/differential/port_budget.py and test/vectors/port-budget.golden (each budget from three sides at its production value, the four sparse forms, two combined vectors of which one carries the wide global map of LOW-2; the port under a heap limit of exactly 2,048 MiB)",
+    "test/differential/port_large.py and test/vectors/port-large.golden (a block of exactly the limit of D3 is refused under the byte budget)",
     "test/differential/port_primitives.py (kind tarbudget: 12,000 archives under small budgets)",
     "test/unit/port-tar-budgets.test.js",
     "test/vectors/port-divergences.golden (entries tar-budget.*)",
@@ -304,7 +336,42 @@
      "from": "the manager",
      "text": "Scope narrowing; everyone agrees on this direction (owner poll pending on the details). Kitchen's inputs are our own archives, digest-pinned and checked before reading, so the threat model is trusted and hash-verified inputs. Finish this round as a conservative first-version contract:\n- choose limits with clear margin, generous for the real package corpus you surveyed;\n- refuse everything above them with the typed D4 refusal;\n- verify the supported corpus is unchanged.\n\nDon't search for further amplification routes, and don't maximise what can be accepted. List any route you know of and haven't closed as backlog in the report, unless it bypasses the declared limits, in which case close it. A crash inside the declared range must still not ship. Then commit, run the gates and finalize."
     }
-   ]
+   ],
+   "proposal_of_the_third_fix_round": {
+    "status": "superseded: proposed in the third fix round and not approved. The technical owner did not accept a heap requirement of 3,072 MiB as a default and decided 2**24 metadata bytes; the delta review of that round found the per-number cost and the margin below disproved by a wide global sparse map (LOW-2).",
+    "budgets": {
+     "metadataBytes": 268435456,
+     "paxRecords": 16777216,
+     "sparseNumbers": 1048576,
+     "members": 131072
+    },
+    "heap_limit_required_mib": 3072,
+    "what_the_heap_number_is": "A bound on `v8.getHeapStatistics().heap_size_limit`, which is the old space `--max-old-space-size` sets plus the young generation. It is not the flag: on the development host a limit of exactly 3,072 MiB is `--max-old-space-size=3024` on Node 22.23.3 and `=2880` on 24.14.0, and inside a cgroup of 2 GiB the same flags give 3,048 and 2,976 MiB. The reader checks the limit itself, at run time. The measurements ran at a limit of exactly 3,072 MiB.",
+    "measured_at_that_limit": "The costliest archive found within the budgets, Node 22.23.3 / 24.14.0. One listing: 1,237 / 1,236 MiB of heap in use at the peak (1,234 to 1,239 across runs), 301 / 335 MiB of Buffers, 1,616 / 1,700 MiB resident. Three listings one after another in one process: 1,952 / 1,950 MiB in use, 2,350 / 2,487 MiB resident; completes under MemoryMax=2560M. The same with 524 MiB of caller data on the heap: 2,475 MiB in use, 2,537 / 2,610 MiB committed, inside the limit, 2,869 / 3,012 MiB resident; completes under MemoryMax=3072M and is killed under 2560M. With 1,050 MiB of caller data: 3,000 MiB in use, the limit reached (3,136 MiB committed on 24.14.0), completes. With 1,575 MiB: the process aborts.",
+    "margin": "1,120 MiB between the peak of consecutive listings (1,952 MiB) and the limit: 36% of the heap. The first number proposed, 2,048 MiB, left none: at that limit three consecutive listings had 1,950 MiB in use and 2,085 MiB committed on Node 24.14.0, and with 524 MiB of caller data the process aborted.",
+    "environment_requirement": "A V8 heap limit of at least 3,072 MiB, and memory for what the process comes to use: up to the heap limit, 301 to 377 MiB of Buffers, about 60 MiB for the runtime, and the archive file. Target memory is not known: kitchen has no deployed target and no unit that runs it. This is a requirement on the environment, not a statement that any host meets it. The role was not changed."
+   },
+   "as_received_in_the_closing_step": {
+    "brief": [
+     "Owner direction (Vasyl): finish the success path quickly so kitchen can be used on our own setup. Hardening comes later, and anything that doesn't block use goes to backlog. This step is a defaults edit, not a new campaign.",
+     "1. metadataBytes -> 2^24 (Soma's decision). Keep D3 as a separate per-block bound at 2^28, now unreachable through archive_manifest in production. Update the order and expectations honestly: the port_large at-limit cases, port-large.golden, D3's RULED line in check-port-ready, the tarfile.ts header and the notes, as the review lists under \"For Soma\" point 1.",
+     "2. sparseNumbers -> 2^16. The review says this caps LOW-2's wide global map at about 115 MiB with no code change, and real archives use 0. If you judge sharing the global-map BigInts to be the smaller and safer change, do that instead and say why.",
+     "3. Lower H so a unit of 4 GiB or more passes with Node's default heap (H <= 2,048 MiB). Measure the combined peak at exactly H on both Node versions, with the review's gmap-wide-path shape included. If it doesn't fit, report that rather than forcing it.",
+     "4. Split the test commands. The default `test` runs fast unit and regression tests with reduced budgets. An explicit `qualify` command runs the heavy boundary vectors, broad fuzz and both Node versions. Measure the duration of each. Install, apply and bootstrap must not run qualify.",
+     "5. Record the D4 defaults as decided: Soma's metadata decision plus the owner's success-path direction. Record LOW-1 (a rename into docs/ escapes the check), LOW-2 if you didn't fix it, B12 and B14 as backlog with honest status."
+    ],
+    "transcription": "The brief writes an arrow in points 1 and 2 (here \"->\") and a \"less than or equal\" sign in point 3 (here \"<=\"). Nothing else is changed.",
+    "answers_of_the_manager": [
+     {
+      "question": "With metadataBytes 2**24, paxRecords 2**24 can no longer be reached (the shortest pax record is five bytes, so at most 3,355,443 records fit in 2**24 bytes): lower it to 2**21, the largest power of two that can be reached, or keep it as a bound nothing reaches, like D3?",
+      "answer": "ok 2^21. Record it as a consequence of metadata 2^24 that only lowers a time-only bound. I'm telling Soma."
+     },
+     {
+      "question": "Record the delta review of the third fix round as passed for 621d78d..06ee0cc, and set finding F4 from open to ruled by D4, with its residual risk kept and printed as accepted and not fixed?",
+      "answer": "Yes, both. For (2), the defaults were approved by Soma in Zulip Kitchen 2339 and 2341: metadata 2^24, paxRecords 2^21, sparseNumbers 2^16, members 2^17, and the heap from your short result. That sits under the owner's success-path direction of 13:04. Quote that as the source. Keep the rule that this step's commit blocks until reviewed. I'll settle with Soma how that line is cleared."
+     }
+    ]
+   }
   },
   {
    "id": "C1",
@@ -356,7 +423,7 @@
   {
    "id": "F4",
    "found": "by the implementer in the second fix round, while checking that the limit of D3 is enough on its own",
-   "status": "open: built as divergence D4 in the third fix round; what remains is residual risk of the trusted-input version (ruling C1), not fixed; the budgets and the heap requirement are proposed and not approved, and that round has no delta review yet",
+   "status": "ruled",
    "finding": "Valid archives at or below the metadata limit of D3 on which the oracle answers and the port does not: the port runs out of heap and the process aborts (\"JavaScript heap out of memory\", exit by SIGABRT, no receipt). The heap limit is the runtime's, about 4 GiB by default on Node 22.23.3 and 24.14.0, less on a small machine, more with --max-old-space-size; it can come before the memory of the machine does. The oracle has no such ceiling: it ends in an uncaught MemoryError only when the machine has no more. It fails closed. No limit on a single block removes it.",
    "measured": [
     "One pax header of 268,435,417 bytes (below the limit) that holds one GNU.sparse.map of 2**27 numbers: the oracle accepts in 9 s at 7.6 GiB peak; the port aborts after 29 s at 5.7 GiB resident.",
@@ -364,16 +431,20 @@
     "Read by both engines at the limit: 53.6 million pax records of five bytes (oracle 27 s, port 7 s); 2**24 + 4,096 distinct pax keywords (oracle 8 s at 2.1 GiB, port 3 s at 0.3 GiB, after the fix F3); 11.6 million records of the sparse form 0.0 (oracle 7 s, port 4 s).",
     "In the delta review of the second fix round (P1): a GNU.sparse.map of 2**20 numbers in a global header and 80 members behind one-record extended headers, 3.3 KB compressed: the oracle accepts at 2.9 GiB; the port aborts at 4.1 GiB on Node 22.23.3 and 4.0 GiB on 24.14.0. With D4 the same archive is refused at the second expansion of the map, in 0.2 s, at 173 MiB resident on Node 22.23.3 and 153 MiB on 24.14.0."
    ],
-   "asks": "Ruled in direction, twice. While the second fix round was being closed: keep it open and red, with the measurements and a written proposal, and build nothing then (the lines are quoted under ruling D4, `earlier_lines_of_the_technical_owner`). In the brief of the third fix round: \"build F4 as declared divergence D4\", with numbers \"calibrated from evidence, not asserted\", and \"F4 and port-ready stay red until a delta review of this round.\" By the owner's decision during that round (ruling C1) the round is finished as a conservative first version for trusted input, and what it leaves is recorded as residual risk. What is still asked: approval of the proposed defaults of ruling D4, and the one narrow delta review of the third fix round.",
+   "asks": "Ruled in direction, twice. While the second fix round was being closed: keep it open and red, with the measurements and a written proposal, and build nothing then (the lines are quoted under ruling D4, `earlier_lines_of_the_technical_owner`). In the brief of the third fix round: \"build F4 as declared divergence D4\", with numbers \"calibrated from evidence, not asserted\", and \"F4 and port-ready stay red until a delta review of this round.\" By the owner's decision during that round (ruling C1) the round is finished as a conservative first version for trusted input, and what it leaves is recorded as residual risk. What is still asked: approval of the proposed defaults of ruling D4, and the one narrow delta review of the third fix round. Both were given by the closing step: the defaults are approved (ruling D4, `defaults`) and that review is recorded (`delta_review`). Nothing further is asked for the success path; hardening is later work by the owner's direction.",
    "backlog": "B11",
    "ruling": "D4",
    "residual_risk": [
-    "The limits are proposed, not approved, and the memory they need is stated as a requirement on an environment that does not exist yet.",
-    "The costliest archive within the budgets is the costliest that was built, not a proven maximum. After the owner's decision no further amplification routes were searched for.",
-    "The V8 heap limit is not a hard bound. With more of the caller's data on the heap than was measured to fit (524 MiB inside the limit, 1,050 MiB at it), a listing within the budgets can still end the process: at 1,575 MiB it aborted.",
-    "Time is not bounded (backlog B12): an archive within every budget can take hours, in both engines.",
+    "The limits are approved for the success path on trusted input, not as a bound on what an archive built to be costly can do. The memory they need is a requirement on an environment that does not exist yet.",
+    "The costliest archive within the budgets is the costliest that was built, not a proven maximum. No further amplification routes were searched for after the owner's decision in the third fix round.",
+    "The sparse budget counts numbers and not their size (the delta review of the third fix round, LOW-2; backlog B17). It is not fixed in the reader. At 2**16 numbers the uncounted cost of a wide global map is about 115 MiB, and it is inside the measured peak. If the sparse budget is raised without the fix, the margin of the heap requirement no longer holds.",
+    "The V8 heap limit is not a hard bound. With more of the caller's data on the heap than was measured to fit (1,076 MiB inside the limit on both runtimes), a listing within the budgets can still end the process: with 1,344 MiB Node 24.14.0 aborted.",
+    "In a unit of less than 4 GiB of memory Node's default heap is below the requirement, and the reader refuses every archive with UnsupportedRuntime until Node is started with the flag (backlog B14). It fails closed and loudly.",
+    "Time is not bounded (backlog B12): an archive within every budget can take about an hour in the oracle and half an hour in the port.",
     "All of this is accepted for input that is trusted and digest-checked before it is parsed. That is a precondition on the caller (ruling C1, obligation archive.trusted-input), to be confirmed at catalog integration."
-   ]
+   ],
+   "ruled_not_fixed": "Ruled as divergence D4 with the residual risk below, which is accepted for trusted input (ruling C1). It is not fixed and not closed: scripts/check-port-ready prints it as residual risk, and the precondition of C1 comes due with the catalog (obligation archive.trusted-input). Set in the closing step on the manager's answer quoted under `delta_review.set_by`.",
+   "residual_risk_accepted_by": "C1"
   }
  ],
  "backlog": [
@@ -429,28 +500,38 @@
   },
   {
    "id": "B11",
-   "for": "approval and review",
-   "entry": "Open finding F4, built as divergence D4 in the third fix round. Owed: the technical owner's approval of the proposed budgets and heap requirement, and the delta review of that round."
+   "for": "review",
+   "entry": "Finding F4, built as divergence D4 in the third fix round. Its two debts of that round are paid: the defaults are approved (ruling D4) and the round's delta review is recorded as passed. The finding is ruled with residual risk, not fixed. Owed still: a review of the closing step's own commit, on which scripts/check-port-ready blocks; how that line is cleared is for the manager and the technical owner to settle."
   },
   {
    "id": "B12",
    "for": "ruling",
-   "entry": "Time is not bounded by D4. A name value in a global pax header is applied to every later member, and both engines look at the whole name for each member (the oracle in `rstrip` and `re.fullmatch`, the port in `rstripSlash` and the manifest-name test). Measured through archive_manifest with one path of 2**28 bytes in a global header, on a host that was doing other work: for a path that is a run of slashes about 0.5 s a member in the port and 0.8 s in the oracle; for one without a trailing slash about 0.1 s in either. At the member budget that is hours in both engines. One way to bound it: count a name inherited from a global header against the byte budget each time it is applied, as a global sparse map is counted each time it is expanded."
+   "entry": "Open; nothing built; needs a ruling. Time is not bounded by D4. A name value in a global pax header is applied to every later member, and both engines look at the whole name for each member (the oracle in `rstrip` and `re.fullmatch`, the port in `rstripSlash` and the manifest-name test). The byte budget of 2**24 bounds the name, so the cost fell sixteenfold with it. Measured in the closing step through archive_manifest with one path of 2**24 bytes in a global header, 100 and 500 members, on a shared host: for a path that is a run of slashes 0.013 to 0.016 s a member in the port and 0.031 s in the oracle; for one without a trailing slash 0.0002 s in the port and 0.0065 s in the oracle. At the member budget that is about half an hour in the port and a little over an hour in the oracle, on an archive built for it; a real package archive has no global name at all. One way to bound it: count a name inherited from a global header against the byte budget each time it is applied, as a global sparse map is counted each time it is expanded. Does not block use on trusted input."
   },
   {
    "id": "B13",
    "for": "port",
-   "entry": "`decodeUtf8` builds a long text in pieces and the first use flattens it, so a metadata block costs twice its text at the peak (up to 1,050 MiB of heap for a block of 2**28 bytes that are no UTF-8). Decoding into one flat string would take about 0.5 GiB off the peak of one listing; the heap requirement was sized with the cost as it is."
+   "entry": "Open, low value now. `decodeUtf8` builds a long text in pieces and the first use flattens it, so a metadata block costs twice its text at the peak. Under the byte budget of 2**24 that is at most about 32 MiB of a peak of some 330 MiB (it was 0.5 GiB under 2**28); the heap requirement was sized with the cost as it is."
   },
   {
    "id": "B14",
    "for": "role, with the command line (plan phase 7)",
-   "entry": "Whoever starts kitchen has to give it a V8 heap limit of at least 3,072 MiB (for example `--max-old-space-size=3072` on the command line of Node; the role refuses NODE_OPTIONS in a unit environment) and the memory ruling D4 states. The role was not changed in this round. The reader refuses to list under a lower limit, with `UnsupportedRuntime` and no public code (B10)."
+   "entry": "Open for units of less than 4 GiB; nothing is needed above that. The reader requires a V8 heap limit of at least 2,048 MiB. Node's default meets it where the unit has 4 GiB of memory or more: measured with no flag in scopes of MemoryMax 4G, 6G and 8G, where the default limit is 2,096 MiB on Node 22.23.3 and 2,240 MiB on 24.14.0 and the costliest archive is read. Under MemoryMax=2G the default is 1,048 or 1,120 MiB and the reader refuses every archive with `UnsupportedRuntime` and no public code (B10), until whoever starts kitchen passes `--max-old-space-size=2048` on the command line of Node (the role refuses NODE_OPTIONS in a unit environment). No launcher or unit for kitchen exists yet, and the role was not changed. Not built: the obligation the delta review suggested, which would turn the readiness check red when a launcher for kitchen exists without the flag; where kitchen is to run in less than 4 GiB, add it with the launcher."
   },
   {
    "id": "B15",
    "for": "ruling, at catalog integration",
    "entry": "Known and not closed, by the owner's decision for the trusted-input version (ruling C1): the compressed archive is held as a whole, in both engines, and its size is bounded by nothing here; what the caller holds on the heap comes out of the limit the reader requires; and no further amplification routes were searched for. If the precondition of C1 is dropped, these are the first to look at, with B12."
+  },
+  {
+   "id": "B16",
+   "for": "readiness check",
+   "entry": "Open; not fixed; reproduced by the reviewer (the delta review of the third fix round, LOW-1). scripts/check-port-ready misses a source file that is moved under docs/: `git log --name-only` shows a rename by its new name only, and the porcelain line of a rename is cut to the part after \" -> \", so a commit or an uncommitted change that moves a source file under docs/ counts as notes. A plain deletion does block. The fix the reviewer names: pass `--no-renames` to both `git log` and `git status`, with a case in the readiness unit test. Left for the backlog by the brief of the closing step. Until it is fixed, a reader of a PASS should look at the NOTE lines, which still name every later commit."
+  },
+  {
+   "id": "B17",
+   "for": "port",
+   "entry": "Open; not fixed in the reader; bounded by a default instead (the delta review of the third fix round, LOW-2). The sparse budget counts numbers and not their size. A GNU.sparse.map in a global header is converted into fresh integers at every expansion; a number of 4,300 digits is about 1.8 kB, and its digits are charged as metadata bytes once, with the global header. Under the budget of 2**20 then proposed, the reviewer's archive kept 1,907 MiB that no budget counted and aborted Node 24.14.0 at the heap limit then required with 524 MiB of caller data. The closing step lowers the sparse budget to 2**16, which bounds that cost at about 115 MiB; the shape is part of combined.heap-worst in test/differential/port_budget.py and of the measurements behind the heap requirement. The fix: convert a map that comes from a global header once and share the immutable integers between expansions, as `converted` does for a global size, recording where a conversion fails so that the charge and the ValueError fall where the oracle's walk puts them; or charge the map's bytes at every expansion, which adds refusals and vectors. Do this before raising the sparse budget."
   }
  ],
  "fixed_without_ruling": [
@@ -491,6 +572,18 @@
    "set_by": "The implementer, in the second fix round, on this instruction of the technical owner: \"Set `delta_review.status: passed` citing that review, so `check-port-ready` reflects reality.\" The reviewer approved and was not allowed to edit the tree.",
    "not_covered": "Everything committed after a198042, the second fix round first of all: divergence D3, the runtime check, the step record, and the two fixes below the metadata limit. By the same brief that round gets a delta review of its own before the port is called port-ready. A file cannot record the review of the commit that contains it; scripts/check-port-ready names the commits this review does not cover.",
    "rule": "A status of \"passed\" names the commit reviewed and the sha256 of the review report. It is set by a reviewer, or by the implementer on a quoted instruction of the technical owner, never on the implementer's own judgement."
+  },
+  {
+   "status": "passed",
+   "of": "the second fix round after a198042: divergence D3, the runtime check (B9), the step record (L1), the fixes F2 and F3, and the record of open finding F4",
+   "commit": "621d78d1cfd137ab2ec9651065b4973244e159ff",
+   "covers": "a198042..621d78d",
+   "verdict": "APPROVE: no HIGH or MEDIUM reproduced; three LOW findings (LOW-1, LOW-2, LOW-3) and three INFO notes. The reviewer found the proposal for F4 not sound enough to build as written and named three changes (P0, P1, P2), which the third fix round builds.",
+   "review": "the delta review dispatched on TASK-XQ63S, run-01M7F680JJ1P6M0Q0DR3C4E8FK",
+   "review_report_sha256": "e2b7be176dfa3fc02ebf4eafdeb3ecf32cff966d967016d4f7846467288a8e20",
+   "set_by": "The implementer, in the third fix round, on this instruction of the manager of the dispatch, given in answer to the implementer's question whether to record that review: \"Yes. Record it as passed for exactly a198042..621d78d, sourced to the reviewer's APPROVE (run-01M7F680JJ1P6M0Q0DR3C4E8FK, report sha256 e2b7be176dfa3fc02ebf4eafdeb3ecf32cff966d967016d4f7846467288a8e20), with set_by \\\"manager instruction, round 3 dispatch\\\" quoted as such. Don't attribute it to Soma: she has not quoted an instruction for it. Your round-3 commits stay uncovered until their own delta review.\" This is a manager instruction, round 3 dispatch; the technical owner has quoted no instruction for it.",
+   "not_covered": "Everything committed after 621d78d, the third fix round first of all: divergence D4 (the admission budgets and the heap requirement), the manifest-name test of src/archive.ts, the reader mutants, and the changes to scripts/check-port-ready. By the brief of that round, finding F4 and the readiness check stay red until that round has a delta review of its own. scripts/check-port-ready blocks while a commit after the reviewed one changes anything but docs/ and this file.",
+   "rule": "A status of \"passed\" names the commit reviewed and the sha256 of the review report. It is set by a reviewer, or by the implementer on a quoted instruction, never on the implementer's own judgement. `set_by` quotes the instruction and says whose it is: the technical owner's for the review of a198042 (see earlier_delta_reviews), the manager's for this one."
   }
  ]
 }

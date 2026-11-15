@@ -32,7 +32,7 @@ rather than hidden in a generator:
     in the model; on the oracle host the real bound lies between 2**36 and
     2**38 and follows the machine's memory, so no case asks for a size in
     that band.
-  * `tar` is not an equality in one place, divergence D3: where tarfile comes
+  * `tar` is not an equality in two places. Divergence D3: where tarfile comes
     to read a long-name, long-link or pax header that states more than 2**28
     bytes, the TS reader must refuse with its OSError, whatever tarfile
     answers. Those cases are counted by what the oracle does with them
@@ -41,7 +41,12 @@ rather than hidden in a generator:
     MemoryError or OverflowError escape, or, where the short block is no
     pax record and the header is not the first member, ends the listing
     silently and so lists the archive. test/differential/port_large.py has
-    archives that really hold such a block.
+    archives that really hold such a block. And divergence D4 at its
+    production values, under which this kind lists: a header that states
+    more than the byte budget of 2**24 and no more than 2**28 passes that
+    budget before a block is read, and the TS reader must refuse with the
+    OSError of the budget (`production_budget`). The oracle's own walk
+    (test/differential/tar_budget.py) says which of the two comes first.
   * `tarbudget` is `tar` read under admission budgets small enough for a few
     blocks to meet (divergence D4). The oracle has no budgets. Each archive
     is walked a second time with the oracle's own tarfile, which counts what
@@ -1140,7 +1145,9 @@ def tar_item(rng):
     if roll == 16:  # sizes in base 256, negative sizes, sizes beyond the data
         size = rng.choice([base256(len(data), 12), base256(-1, 12), base256(-512, 12), base256(2 ** 34, 12), base256(2 ** 62, 12), base256(2 ** 63, 12), base256(2 ** 70, 12), b'-0000000001\0',
                            octal(len(data) + 512, 12), octal(len(data) + 5000, 12), octal(2 ** 33 - 1, 12), b'       \0    ', b'0o17\0       ', b'1_0\0        ', b'+7\0         ', b' 7 \0        ',
-                           b'\x80' + b'\0' * 11, b'\xff' * 12, b'8\0          ', b'12\xe9\0        '])
+                           b'\x80' + b'\0' * 11, b'\xff' * 12, b'8\0          ', b'12\xe9\0        ',
+                           # on both sides of the production byte budget of D4 and of the limit of D3, which lies above it
+                           octal(2 ** 24, 12), octal(2 ** 24 + 1, 12), octal(2 ** 27, 12), octal(2 ** 28, 12), octal(2 ** 28 + 1, 12)])
         return tar_header(name, size, rng.choice([b'0', b'0', b'L', b'x', b'5', b'S'])) + padded(data)
     if roll == 17:  # other number fields: valid oddities and garbage
         field = rng.choice(['mode', 'uid', 'gid', 'mtime', 'devmajor', 'devminor'])
@@ -1345,46 +1352,35 @@ def py_tar(job):
 # Divergence D3: the TS reader refuses a long-name, long-link or pax header that states more than this many bytes.
 METADATA_LIMIT = 2 ** 28
 TAR_D3_BUCKETS = ('oracle refuses as unreadable, TS refuses', 'oracle lets an uncaught class escape, TS refuses', 'oracle lists the archive, TS refuses')
-
-
-def reaches_metadata_limit(data):
-    """Whether tarfile, listing this archive, comes to read the blocks of such a header.
-
-    A second walk with a TarInfo that looks at the size on entry to the two
-    methods that read those blocks. It is a walk of its own because the extra
-    frame would move the recursion bounds the first one is compared on.
-    """
-    import io, tarfile
-    seen = []
-
-    class Probe(tarfile.TarInfo):
-        def _proc_gnulong(self, archive):
-            seen.append(self.size > METADATA_LIMIT)
-            return super()._proc_gnulong(archive)
-
-        def _proc_pax(self, archive):
-            seen.append(self.size > METADATA_LIMIT)
-            return super()._proc_pax(archive)
-    try:
-        with tarfile.open(fileobj=io.BytesIO(data), mode='r:gz', tarinfo=Probe) as archive:
-            archive.getmembers()
-    except Exception:
-        pass
-    return any(seen)
+# Divergence D4 at its production values (BUDGETS in src/pylike/tarfile.ts; test/unit/test_ts_port.py holds the two equal).
+# The `tar` kind lists under them, as archive_manifest does. A generated archive is small, but a header may state any
+# size: one that states more than 2**24 bytes and no more than the limit of D3 passes the byte budget before a block is read.
+PRODUCTION_BUDGETS = {'metadataBytes': 2 ** 24, 'paxRecords': 2 ** 21, 'sparseNumbers': 2 ** 16, 'members': 2 ** 17}
 
 
 def judge_tar(job, want, got):
-    """(agrees, D3 bucket or None). Equal answers, except where D3 applies: there TS must refuse with its OSError."""
-    if not reaches_metadata_limit(base64.b64decode(job['b'])):
-        return want == got, None
+    """(agrees, D3 bucket or None, the production budget passed or None).
+
+    Equal answers, except where the oracle's own walk (test/differential/tar_budget.py) comes to a header above the
+    limit of D3 or passes a production budget of D4, whichever is first: there TS must refuse with the OSError of that
+    limit or of that very budget, whatever tarfile answers. The walk is one of its own, because its extra frames would
+    move the recursion bounds the first one is compared on.
+    """
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import tar_budget
+    crossed = tar_budget.crossing(base64.b64decode(job['b']), PRODUCTION_BUDGETS)['crossed']
+    if crossed is None:
+        return want == got, None, None
     if want == {'error': 'RecursionError'} and got == want:
-        return True, None  # the frame bound came first on both sides
+        return True, None, None  # the frame bound came first on both sides
+    if crossed != 'D3':
+        return got == {'error': 'OSError', 'budget': crossed}, None, crossed
     import builtins, tarfile
     kind = want.get('error')
     # archive.py:138 turns these classes into its closed refusal; any other class escapes it.
     caught = kind is not None and issubclass(getattr(tarfile, kind, None) or getattr(builtins, kind), (OSError, ValueError, tarfile.TarError))
     bucket = TAR_D3_BUCKETS[2 if kind is None else 0 if caught else 1]
-    return got == {'error': 'OSError', 'limit': 'metadata'}, bucket
+    return got == {'error': 'OSError', 'limit': 'metadata'}, bucket, None
 
 
 # Divergence D4: the same listing under admission budgets. Small ones, so that archives of a few blocks meet them.
@@ -1777,9 +1773,11 @@ def run(node='node', scale=1.0, only=None, full=True, processes=None, seed=20261
             entry.setdefault('buckets', {name: 0 for name in TARGZ_BUCKETS})[bucket] += 1
             examples.setdefault(bucket, job['_what'])
         elif job['k'] == 'tar':
-            agrees, bucket = judge_tar(job, want, got)
+            agrees, bucket, budget = judge_tar(job, want, got)
             if bucket is not None:
                 entry.setdefault('metadata_limit', {name: 0 for name in TAR_D3_BUCKETS})[bucket] += 1
+            if budget is not None:
+                entry.setdefault('production_budget', {})[budget] = entry.setdefault('production_budget', {}).get(budget, 0) + 1
         elif job['k'] == 'tarbudget':
             agrees, bucket = judge_tarbudget(job, want, got)
             entry.setdefault('budgets', {name: 0 for name in TAR_BUDGET_BUCKETS})[bucket] += 1

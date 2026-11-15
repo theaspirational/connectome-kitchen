@@ -29,11 +29,12 @@ CODE = ('On a damaged container the port answers before it looks at the tar stre
 NAN = ('D2: `required_names` sorts a set. With a NaN among two or more numbers Python does not refuse; every comparison with NaN is false and the order that '
        'comes out follows the address of the float object, so it is not pinned here (`unordered`). The port raises TypeError instead of modelling it. ')
 LIMIT = ('D3: the port refuses a long-name, long-link or pax header whose size field states more than 2**28 bytes (268,435,456), before it reads the blocks, as '
-         '"unreadable archive or manifest". CPython has no such limit: it reads what the header states and decodes it into a str of any length. The archives on '
-         'both sides of the limit, which hold a block of that size, are built by test/differential/port_large.py; the entries here are small. ')
+         '"unreadable archive or manifest". CPython has no such limit: it reads what the header states and decodes it into a str of any length. The limit is asked '
+         'before the byte budget of D4 (2**24) is charged, and lies above it. The archives on both sides of the limit, which hold a block of that size, are built by '
+         'test/differential/port_large.py; the entries here are small. ')
 HUGE = ('Here: a header of type %s states 2**62 bytes and nothing follows it. The oracle asks for a read of that size and ends in MemoryError, a runtime error '
         'no handler of the engine names; the port refuses with the closed archive refusal.')
-BUDGET = ('D4: the port reads a tar listing under four admission budgets, each a count over the whole archive: 2**28 bytes of metadata, 2**24 pax records, 2**20 sparse numbers and '
+BUDGET = ('D4: the port reads a tar listing under four admission budgets, each a count over the whole archive: 2**24 bytes of metadata, 2**21 pax records, 2**16 sparse numbers and '
           '2**17 members. An archive that would pass one of them is refused at that point as "unreadable archive or manifest". CPython has no budgets: it reads on while the machine '
           'has memory. Without them such an archive filled the V8 heap and the process aborted without an answer. The archives that meet every budget from three sides, in both '
           'engines, are built by test/differential/port_budget.py; the entries here are the ones small enough to commit, all on the budget of sparse numbers. ')
@@ -91,7 +92,7 @@ def metadata_cases():
 
 
 def budget_cases():
-    """A manifest, then a sparse map that is one number, or one expansion, over the budget of 2**20 sparse numbers."""
+    """A manifest, then a sparse map that is one number, or one expansion, over the budget of 2**16 sparse numbers."""
     def member(name, data=b'', kind=tarfile.REGTYPE):
         info = tarfile.TarInfo(name)
         info.size, info.type = len(data), kind
@@ -106,18 +107,18 @@ def budget_cases():
 
     def pax(records, kind=tarfile.XHDTYPE):
         return member('PaxHeader', b''.join(records), kind)
-    manifest, budget = member('package/package.json', MANIFEST.encode()), 2 ** 20
+    manifest, budget = member('package/package.json', MANIFEST.encode()), 2 ** 16
     numbers = lambda count: b','.join([b'7'] * count)
     lines = b'%d\n' % (budget // 2 + 1) + b'7\n' * (budget + 2)
     return [
         ('tar-budget.sparse-numbers.map-of-one-number-more', manifest + pax([record(b'GNU.sparse.map', numbers(budget + 1))]) + member('package/sparse.bin'),
-         'Here: one extended header holds a GNU.sparse.map of 2**20 + 1 numbers. The oracle accepts the archive; the port refuses it at the last number.'),
+         'Here: one extended header holds a GNU.sparse.map of 2**16 + 1 numbers. The oracle accepts the archive; the port refuses it at the last number.'),
         ('tar-budget.sparse-numbers.global-map-expanded-twice', manifest + pax([record(b'GNU.sparse.map', numbers(budget))], tarfile.XGLTYPE) + pax([record(b'comment', b'x')]) + member('package/sparse.bin'),
-         'Here: a global header holds a GNU.sparse.map of exactly 2**20 numbers, and one member follows behind an extended header of one record. tarfile expands the map once for that '
+         'Here: a global header holds a GNU.sparse.map of exactly 2**16 numbers, and one member follows behind an extended header of one record. tarfile expands the map once for that '
          'extended header and once more for the global one; each expansion is counted. The oracle accepts the archive; the port refuses it at the second expansion. With more members '
          'this is the archive of a few kB on which the port aborted before the budgets (finding F4, delta review of the second fix round).'),
         ('tar-budget.sparse-numbers.form-1.0-of-one-region-more', manifest + pax([record(b'GNU.sparse.major', b'1'), record(b'GNU.sparse.minor', b'0')]) + member('package/sparse.bin', lines),
-         'Here: a sparse map of form 1.0 states 2**19 + 1 regions in the data of its member and holds the numbers of all of them. A region is two numbers, so the map is two numbers over the budget. '
+         'Here: a sparse map of form 1.0 states 2**15 + 1 regions in the data of its member and holds the numbers of all of them. A region is two numbers, so the map is two numbers over the budget. '
          'The oracle accepts the archive; the port refuses it at the first of the two.'),
     ]
 
