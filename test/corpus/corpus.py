@@ -996,9 +996,14 @@ def taking_over(case, sandbox, node, elsewhere):
     build = str(Path(world.root) / 'builds' / name)
     unit = 'connectome-%s.service' % world.effective['name']
     restarts = lambda step: sum(call[:2] == ['restart', unit] for call in step['systemctl_calls'])
+    # A deployment that is installed and not started (`activation: install_only`) is built and never restarted: the new
+    # build costs it one cook run and no restart, and nothing of it may be started, restarted or enabled at all.
+    started = world.effective.get('activation', 'start') != 'install_only'
+    due = 1 if started else 0
+    untouched = lambda step: started or not [call for call in step['systemctl_calls'] if set(call) & {'start', 'restart', 'enable', 'reenable'}]
     quiet = lambda step: (step['status'], step['core'].get('changed'), step['cook_calls'], restarts(step), step.get('adapter_started', []), step['removed']) == (0, False, 0, 0, [], []) \
         and step['core']['prepare']['build_dir'] == build and not [path for path in step['tree'] if '/builds/' in path or path == str(Path(world.root) / 'current')]
-    built = lambda step, where: (step['status'], step['core'].get('changed'), step['core']['prepare']['changed'], step['cook_calls'], restarts(step), step['adapter_started']) == (0, True, True, 1, 1, [where['adapter']])
+    built = lambda step, where: (step['status'], step['core'].get('changed'), step['core']['prepare']['changed'], step['cook_calls'], restarts(step), step['adapter_started']) == (0, True, True, 1, due, [where['adapter']]) and untouched(step)
     planned, taken = steps.call('plan', None), steps.call('apply', None)
     current = os.readlink(Path(world.root) / 'current')
     again = steps.call('apply', None)
@@ -1015,7 +1020,7 @@ def taking_over(case, sandbox, node, elsewhere):
         'the role\'s apply builds and starts the agent under the role\'s name for the build': role['prepare']['changed'] is True and role['activate']['changed'] is True and (Path(world.root) / 'builds' / role['request_id'] / '.prepared').is_file(),
         'a kitchen gives the build another name than the role': name != role['request_id'],
         'plan says so: a build to make, under the kitchen\'s name, and nothing written': (planned['status'], planned['core']['prepare']['changed'], planned['core']['prepare']['build_dir'], planned['tree'], planned['cook_calls']) == (0, True, build, {}, 0),
-        'the first apply is one cook run with the adapter of this Node and this install, and one restart': built(taken, here) and taken['core']['prepare']['build_dir'] == build,
+        'the first apply is one cook run with the adapter of this Node and this install, and one restart (none where the deployment is installed and not started)': built(taken, here) and taken['core']['prepare']['build_dir'] == build,
         'it leaves the kitchen\'s build current and the role\'s build in place': current == build and (Path(world.root) / 'builds' / role['request_id'] / '.prepared').is_file(),
         'the second apply changes nothing: no cook run, no restart': quiet(again),
         'the other Node and the other install are other paths, with the same contract name': there['contract'] == here['contract'] and all(a != b for a, b in zip(here['adapter'], there['adapter'])) and there['adapter'] == [elsewhere[0], str(elsewhere[1].parents[1] / 'dist/cook-adapter.js')],
@@ -1023,7 +1028,8 @@ def taking_over(case, sandbox, node, elsewhere):
         'a later release from there is one cook run, started with the adapter of that Node and that install': built(released, there) and released['core']['prepare']['build_dir'] != build,
         'and from here again that release changes nothing': (released_again['status'], released_again['core'].get('changed'), released_again['cook_calls'], restarts(released_again), released_again['core']['prepare']['build_dir']) == (0, False, 0, 0, released['core']['prepare']['build_dir']),
     }
-    return [what for what, held in holds.items() if not held], 'one new build, cook run and restart, then none from another Node path and install location (%s)' % here['contract']
+    return [what for what, held in holds.items() if not held], 'one new build, cook run and %s, then none from another Node path and install location (%s)' % (
+        'restart' if started else 'no restart (installed, not started)', here['contract'])
 
 
 def command_compare(args):

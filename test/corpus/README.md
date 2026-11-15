@@ -124,6 +124,10 @@ own (`taking_over`):
 So taking an agent over costs one build and one restart, once, and a move or
 an upgrade of Node or of kitchen costs none after that.
 
+A deployment that is installed and not started (`activation: install_only`)
+has nothing to restart: there the new build is one cook run and no restart,
+and the check also requires that nothing of it is started or enabled.
+
 ### The adapter's output under the name of its contract
 
 ```
