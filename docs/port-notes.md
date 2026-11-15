@@ -997,15 +997,22 @@ depend on it, and a case can now hold cook's own bytes (`cooked` in
 | Temporary names of atomic writes | `tempfile` alphabet | eight random characters of another alphabet; never left behind |
 
 **Ported, and reached by no case.** These branches were written from the
-oracle and nothing has run them against it: of `activation: install_only`
-the discovery and the run of `systemd-analyze` and the `E_UNIT_ACTIVE`
-refusal (the install itself and its repeat are in every case, with no
-verifier); the rollback after a failed activation in both outcomes; a unit
+oracle and nothing has run them against it: the rollback after a failed
+activation where a previous release is put back, and where the recovery
+fails too; a unit
 that is retired or renamed between releases; a secret file that is dropped;
 a `health` command; a unit the engine renders itself (a lock without a unit
 export); connectors compiled from descriptors (the recipe the adapter writes
 with sources and build commands; the fifth case has none enabled); the
 refusals of the ownership manifest; `E_UNIT_EXCLUSIVE`.
+
+Reached since, in every case and through the contract: the discovery and
+the run of `systemd-analyze` under `install_only` (a stand-in found first on
+the search path), its refusal with the rollback of a first install
+(`E_UNIT_VERIFY`), the `E_UNIT_ACTIVE` refusal, and the switch between
+`install_only` and `start` on one build in both directions, also for a unit
+without an `[Install]` section, where the marker `state/activation` alone
+decides (`test/corpus/README.md`, `test/unit/deploy-activation.test.js`).
 
 **Obligation `archive.L140.4` (ruling M1).** It came due with these files:
 `scripts/check-port-ready` turns red on it as soon as `src/cook.ts` or
@@ -1097,7 +1104,7 @@ The mutant classification:
 | B18 | port | `catalog.ts`, and with it the catalog branches of `deploy.ts` and `cook.ts`. Until then an active catalog is refused. None of the five deployments activates it |
 | B19 | port, before any use on input that is not ours | `deploy.ts` and `cook.ts` have no mutants and no hostile vectors; the inventory rows they own (plan section 4.1) are not marked; exception classes on wrongly typed values are not modelled throughout. They are not listed as ported |
 | B20 | done (plan steps 4 and 5) | `verify_cook` has met a real cook checkout and cook has run under the TS engine, once, installed and not started, on a trial account (`scripts/rehearse.mjs`; "A rehearsal" above). The build is a case outside the repository, with the lock as cook wrote it, and both engines take it alike. Not done: a started agent, a later release on a real host, a release taken back there |
-| B21 | corpus | cases for the branches no case reaches: `systemd-analyze` under `install_only` and `E_UNIT_ACTIVE`, rollback, a retired unit, a dropped secret file, a health command, an engine-rendered unit, connectors from descriptors, the ownership refusals |
+| B21 | corpus | cases for the branches no case reaches: rollback onto a previous release, a retired unit, a dropped secret file, a health command, an engine-rendered unit, connectors from descriptors, the ownership refusals |
 | B22 | port, with the command line (plan phase 7) | there is no operational entry: `src/cli.ts` refuses. `src/engine.ts` is a library call; secrets on a descriptor, the receipt file and exit statuses are not built. `scripts/rehearse.mjs` is the runner of a rehearsal and nothing more: it lets the engine read the secrets file, and it installs without a start only |
 | B23 | ruling (plan Q6) | the lock tool is `/usr/bin/flock`, undigested |
 | B24 | ruling (plan Q1) | the build name of a real kitchen differs from the role's; the corpus makes them equal on purpose |

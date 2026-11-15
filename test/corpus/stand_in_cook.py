@@ -12,7 +12,9 @@ and a version 2 host lock. The lock has the shape of the oracle's own fixtures
 (oracle/tests/fixtures/locks/v2.json, oracle/tests/fixtures/cook.py and the
 `materialize` fake of oracle/tests/test_cook.py). It is not what the pinned
 cook writes for the same recipe: the unit text, the build id, the snapshot
-names and the cook version are made up here, and say so.
+names and the cook version are made up here, and say so. With the marker
+`unit-without-install-section` beside the root, the unit has no `[Install]`
+section.
 """
 import hashlib
 import json
@@ -53,7 +55,9 @@ def main(argv):
     unit = options['--user-unit'][0]
     (build / unit).write_text(
         '[Unit]\nDescription=Connectome agent (stand-in cook)\n[Service]\nType=simple\nWorkingDirectory=' + layout['state'] +
-        '\nExecStart=' + str(build / 'run.sh') + '\nRestart=on-failure\n[Install]\nWantedBy=default.target\n')
+        '\nExecStart=' + str(build / 'run.sh') + '\nRestart=on-failure\n' +
+        # corpus.py leaves this marker beside the root for the one scenario that needs a unit nothing links to.
+        ('' if (root.parent / 'unit-without-install-section').exists() else '[Install]\nWantedBy=default.target\n'))
     names = set(spec['config'].get('required_secrets', []))
     names.update(record['env'] for record in spec['config'].get('secret_files', []))
     for name, entry in (recipe.get('requirements') or {}).items():

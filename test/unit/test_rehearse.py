@@ -68,6 +68,10 @@ class Rehearsal(unittest.TestCase):
         log = [json.loads(line) for line in (self.keep / 'rehearsal.log').read_text().splitlines()] if (self.keep / 'rehearsal.log').is_file() else []
         return done, log
 
+    def receipts(self, kind):
+        """The receipts of one mode and command, oldest first: `<NNN>-<mode>-<command>.receipt.json`."""
+        return [json.loads(path.read_text()) for path in sorted(self.keep.glob('[0-9][0-9][0-9]-%s.receipt.json' % kind))]
+
     def test_check_then_apply_twice_then_verify(self):
         world = self.world('run')
         root, unit_dir = Path(world.root), Path(world.unit_dir)
@@ -76,7 +80,8 @@ class Rehearsal(unittest.TestCase):
         self.assertFalse(root.exists())  # the engine wrote nothing: the fake service manager's track file is beside the root, not in it
         self.assertEqual(Path(world.effective['secrets_file']).stat().st_mode & 0o777, 0o600)
         self.assertEqual([entry['step'] for entry in log if entry['step'].startswith('plan')], ['plan asked', 'plan answered'])
-        plan = json.loads((self.keep / 'check-plan.receipt.json').read_text())
+        self.assertEqual(sorted(path.name for path in self.keep.glob('*.receipt.json')), ['001-check-plan.receipt.json'])
+        plan = self.receipts('check-plan')[0]
         self.assertEqual(plan['core']['prepare']['plan']['activation'], 'install_only')
         request = Path(plan['core']['prepare']['build_dir']).name
 
@@ -84,7 +89,7 @@ class Rehearsal(unittest.TestCase):
         self.input.write_text(json.dumps(self.document))
         done, log = self.run_mode(world, 'apply')
         self.assertEqual(done.returncode, 0, done.stderr + json.dumps([entry for entry in log if entry['run'] == 'apply' and entry['step'] in ('apply answered', 'tool failed', 'tool refused', 'engine failure that is not a refusal', 'end')]))
-        receipt = json.loads((self.keep / 'apply-apply.receipt.json').read_text())['core']
+        receipt = self.receipts('apply-apply')[0]['core']
         self.assertEqual((receipt['changed'], receipt['activate']['activation'], receipt['activate']['unit_state']), (True, 'install_only', 'inactive'))
         self.assertEqual((root / 'state/activation').read_text(), 'install_only\n')
         self.assertTrue((unit_dir / 'connectome-example.service').is_symlink())
@@ -114,11 +119,17 @@ class Rehearsal(unittest.TestCase):
 
         done, log = self.run_mode(world, 'apply')
         self.assertEqual(done.returncode, 0, done.stderr)
-        self.assertFalse(json.loads((self.keep / 'apply-apply.receipt.json').read_text())['core']['changed'])
+        # Each call left a receipt of its own: the second apply's says nothing changed, and the first apply's is still there.
+        self.assertEqual([entry['core']['changed'] for entry in self.receipts('apply-apply')], [True, False])
+        self.assertEqual(self.receipts('apply-apply')[0]['core'], receipt)
+        self.assertEqual([path.name for path in sorted(self.keep.glob('*.receipt.json'))], [
+            '001-check-plan.receipt.json', '002-apply-plan.receipt.json', '003-apply-apply.receipt.json', '004-apply-plan.receipt.json', '005-apply-apply.receipt.json'])
+        self.assertEqual([entry['receipt'] for entry in log if entry['step'] == 'apply answered'], [str(self.keep / name) for name in ('003-apply-apply.receipt.json', '005-apply-apply.receipt.json')])
         self.assertEqual(len(list(self.keep.glob('cook-*.stdout'))), 1)  # cook did not run again
         done, log = self.run_mode(world, 'verify')
         self.assertEqual(done.returncode, 0, done.stderr)
-        self.assertFalse(json.loads((self.keep / 'verify-plan.receipt.json').read_text())['core']['changed'])
+        self.assertFalse(self.receipts('verify-plan')[0]['core']['changed'])
+        self.assertEqual(len(list(self.keep.glob('*.receipt.json'))), 6)
         self.assertEqual(log[-1]['step'], 'end')
 
     def test_refuses_a_deployment_that_would_start(self):

@@ -94,6 +94,10 @@ if (job.get('op') === 'dispatch') {
   }
 } else if (job.get('op') === 'identity') {
   // `World.identity` of corpus.py: the request of a build and its name, from a configuration as merged. No file is touched.
+  // This is the harness's formula, not the engine's answer: no `Deployment` is constructed. The engine's parts
+  // (`resolve_pins`, `canonical`) are put together here in the order of src/deploy.ts (the constructor, `build_config` and
+  // `request_id`), as `request_of` of corpus.py does for the oracle. That the engine itself names a build so is what the
+  // `role` op shows, with `Deployment.request_id`.
   const effective = job.get('effective');
   const config = new Map([...effective].filter(([key]) => key !== 'activation' && key !== 'exclusive_with'));
   const spec = dict({ config, pins: deploy.resolve_pins(effective, job.get('versions')) });

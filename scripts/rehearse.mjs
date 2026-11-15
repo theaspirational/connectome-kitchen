@@ -22,7 +22,9 @@
 // Exit status: 0 done; 1 the engine refused (the receipt says why); 2 unusable invocation or contract; 3 this
 // runner refused. Everything is logged under <home>/kitchen-rehearsal/<name>/: `rehearsal.log` (one JSON object per
 // line), the receipts, what cook printed, cook's lock as cook wrote it, and after `apply` a copy of the build's files
-// in the layout `test/corpus/corpus.py import-build` takes.
+// in the layout `test/corpus/corpus.py import-build` takes. A receipt is never written over: each call of the engine
+// leaves `<NNN>-<mode>-<command>.receipt.json`, numbered on from the receipts already there, so a second `apply` keeps
+// the first one's receipt beside its own.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -47,6 +49,7 @@ const INPUT_KEYS = ['schema', 'request', 'systemctl', 'secrets_template', 'files
 const REQUEST_KEYS = ['base', 'root', 'unit_dir', 'layers', 'versions', 'engines'];
 const PLACEHOLDER = 'placeholder';
 const TEXT_LIMIT = 1 << 20;
+const RECEIPT = /^(\d{3,})-[a-z]+-[a-z]+\.receipt\.json$/u;
 /** The files of a build `import-build` takes, beside the launcher and the unit the lock names. */
 const BUILD_FILES = ['connectome.lock', 'deployment.json', 'cook-recipe.json', 'cook-layout.json', '.cook-layout.json', '.prepared'];
 
@@ -132,7 +135,13 @@ export function rehearse(mode, inputFile, { host = realHost, start = deploy.run,
       fs.appendFileSync(logFile, line + '\n', { mode: 0o600 });
       echo(line);
     };
-    const save = (leaf, content) => { fs.writeFileSync(path.join(keep, leaf), content, { mode: 0o600 }); return path.join(keep, leaf); };
+    // One receipt per call of the engine, numbered on from the highest number in the directory, and never written over.
+    const saveReceipt = (command, content) => {
+      const last = Math.max(0, ...fs.readdirSync(keep).map(leaf => Number(RECEIPT.exec(leaf)?.[1] ?? 0)));
+      const file = path.join(keep, String(last + 1).padStart(3, '0') + '-' + mode + '-' + command + '.receipt.json');
+      fs.writeFileSync(file, content, { mode: 0o600, flag: 'wx' });
+      return file;
+    };
     log('start', {
       input: inputFile, input_sha256: sha256(text), runner: fileURLToPath(import.meta.url), adapter: [process.execPath, ADAPTER], node: process.version,
       uid, account: os.userInfo().username, home, keep, name, unit, cwd: process.cwd(),
@@ -227,7 +236,7 @@ export function rehearse(mode, inputFile, { host = realHost, start = deploy.run,
       for (const [key, value] of Object.entries(extra)) body.set(key, value);
       log(command + ' asked', { keys: [...body.keys()].sort() });
       const [receipt, status] = dispatch(dict({ contract: 'connectome.kitchen/v1', command, request: body }), null, { host, run, unexpected });
-      const file = save(mode + '-' + command + '.receipt.json', canonical(receipt) + '\n');
+      const file = saveReceipt(command, canonical(receipt) + '\n');
       log(command + ' answered', { status, receipt: file, core: plain(receipt.get('core')) });
       return [receipt.get('core'), status];
     };

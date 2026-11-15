@@ -16,7 +16,8 @@ python3 test/corpus/corpus.py compare --corpus synthetic     # and the ported st
 and holds its record against the oracle's: the role's view, plan, apply, the
 tree apply left, the calls to cook and to the service manager, the second
 apply, the later release, the release taken back, the install without a
-start and the refusals. `--steps-only` leaves the engine out; `--node NODE`
+start, the switch between an install without a start and a start in both
+directions, a unit verifier that refuses, and the refusals. `--steps-only` leaves the engine out; `--node NODE`
 names the Node both parts run on.
 
 `npm test` runs `compare` on the public cases (`test/unit/corpus.test.js`). `--corpus DIR`
@@ -44,7 +45,10 @@ One golden per case, in the order the engine works:
 | `reapply`, `plan_after_apply` | the same request again: nothing changes |
 | `rebuild` | a later release of the same deployment (another cook pin): a second build beside the first, the pointer and the unit links moved, the unit restarted. In its tree the ownership manifest is listed by entry, in an order that does not follow the root; its digest is kept |
 | `release_back` | the first request again, which is how a release is taken back: no cook run, the first build reused, the pointer moved back |
-| `install_only` | the same deployment installed and not started, twice, on a sandbox of its own: the staging marker, no enable links, no restart, then nothing to do. Through the engine's class with no verifier, because through the contract the engine would run the host's `systemd-analyze` |
+| `install_only` | the same deployment installed and not started, twice, on a sandbox of its own: the staging marker, no enable links, no restart, then nothing to do. Through the engine's class with no verifier (`analyze_command=[]`); the three sections below go through the contract, with a verifier |
+| `activation_switch` | the deployment through the contract with a unit verifier found, step by step on a sandbox of its own: installed and not started, the same again, `plan` and `apply` with `activation: start` (no cook run, the enable links, a restart, the marker gone), the same again, `install_only` asked while the unit runs (`plan` says a change, `apply` refuses with `E_UNIT_ACTIVE` and changes nothing), then with the unit stopped behind the engine's back (the links taken away, the marker back, no start or stop), and the same again. Each step holds status and `core`, what it changed and removed, and its calls to the service manager, to cook and to the verifier |
+| `activation_switch_unit_without_install_section` | the same steps with a unit that has no `[Install]` section, so that no link differs between the two activations and the engine's marker `state/activation` alone makes the switch a change. Cook is the stand-in here in every case, also in one that replays a build: a kept build's unit is not rewritten |
+| `unit_verifier_refuses` | a first install without a start where the verifier exits 7: `E_UNIT_VERIFY` in phase `activate`, the pointer, the unit and its drop-in taken back, the build kept |
 | `replayed_build` | only in a case that replays a build: whether the case gives that build's request and name, and which of its files the engine and the adapter left byte for byte |
 | `ported` | every call of this deployment that has a TS port, with the oracle's outcome |
 | `refusals` | the same deployment with one thing wrong, as met in practice: a recipe or an archive that is not the bytes its pin names, no secrets file, a server command that is not installed |
@@ -105,8 +109,12 @@ both engines.
 agreeing:
 
 - `identity`: the request id and the digest of `deployment.json`, worked out
-  by the engine from the case with nothing moved. `is_the_replayed_build` is
-  true when both are the real build's.
+  from the case with nothing moved. `is_the_replayed_build` is true when both
+  are the real build's. This is the harness's own formula on both sides
+  (`request_of` in `corpus.py`, op `identity` in `ts_driver.mjs`), made of
+  each engine's `resolve_pins` and `canonical`; no `Deployment` is asked. It
+  shows that the case is the input of the kept build. That each engine itself
+  names a build so is in `role`, which holds `Deployment.request_id`.
 - `files`: each file of the copy, carried the same way, against what `apply`
   left. The launcher and the unit are equal by construction. The request, the
   staged recipe, the layout, the marker and the lock after the adapter's
@@ -142,7 +150,9 @@ that is installed and never started (`activation: install_only`), as the
 account that owns it, with the real adapter, the real `verify_cook` and a real
 cook. Nothing stands in. It is not the operational CLI (phase 7).
 
-- It logs every step as one JSON line and keeps the receipts.
+- It logs every step as one JSON line and keeps the receipts, one file per
+  call of the engine (`<NNN>-<mode>-<command>.receipt.json`, numbered on
+  across runs), so a later run never writes over an earlier receipt.
 - It refuses to run as root, for another account or home, with any activation
   but `install_only`, or without the user manager's runtime directory.
 - `scripts/rehearse/systemctl-readonly` stands in front of the service manager
@@ -179,6 +189,13 @@ These are stand-ins, and a golden says so under `engine`:
   holds a checkout with the pinned commit id.
 - **The service manager is the oracle's fake** (`oracle/tests/fixtures/systemctl.py`).
   No unit of the host is asked, started or stopped.
+- **The unit verifier is a stand-in** (`stand_in_verifier.py`), in the three
+  sections that have one. `corpus.py` puts a script named `systemd-analyze`
+  in a directory of the sandbox and that directory first on the search path
+  of both engines, so each engine finds it by its own lookup. It writes down
+  its arguments and answers as the oracle's double does, or with a set exit
+  status. The host's `systemd-analyze` is never run, and what a real verifier
+  says of a unit is not shown; the rehearsal ran one.
 - **Ownership is modelled** (`host_model` in `corpus.py`, the seam of
   `oracle/tests/deploy_fixtures.py` one step further). The engine requires
   root-owned connector trees and safe ancestors; under a sandbox those are the

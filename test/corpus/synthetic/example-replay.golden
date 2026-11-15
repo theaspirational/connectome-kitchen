@@ -1,4 +1,2939 @@
 {
+ "activation_switch": [
+  {
+   "activation": "install_only",
+   "command": "apply",
+   "cook_calls": 1,
+   "core": {
+    "activate": {
+     "activation": "install_only",
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "build_id": "9c63b54b5bd2b476610d50f9db848b929f482df80a335b1c69de26c16ea1ad71",
+     "changed": true,
+     "exclusive_with": [
+      {
+       "scope": "user",
+       "state": "inactive",
+       "unit": "connectome.service"
+      }
+     ],
+     "external_data_args": [
+      {
+       "args": [
+        "{ROOT:opt}/example-connectors/example/relay.py",
+        "--node",
+        "{ROOT:opt}/example-runtime/r1/bin/node",
+        "--connector",
+        "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+        "--state",
+        "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "--config",
+        "{ROOT:opt}/example-connectors/example/relay-config.json"
+       ],
+       "command": "{ROOT:usr}/bin/python3",
+       "flag": "--state",
+       "kind": "dir",
+       "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+       "server": "relay"
+      }
+     ],
+     "unit_state": "inactive"
+    },
+    "changed": true,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": true,
+     "plan": {
+      "activation": "install_only",
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "installed",
+   "systemctl_calls": [
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "daemon-reload"
+    ],
+    [
+     "show",
+     "-p",
+     "EnvironmentFiles",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ]
+   ],
+   "tree": {
+    "{ROOT:home}/example/.config/systemd": {
+     "kind": "directory",
+     "mode": "0755"
+    },
+    "{ROOT:home}/example/.config/systemd/user": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.config/systemd/user/connectome-example.service": {
+     "link": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service"
+    },
+    "{ROOT:home}/example/.config/systemd/user/connectome-example.service.d": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.config/systemd/user/connectome-example.service.d/90-connectome-env.conf": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:2}",
+     "text": "[Service]\nEnvironment=DATA_DIR={ROOT:home}/example/.local/state/connectome/example\nEnvironmentFile={ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/secrets.env\n"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/.deploy-lock": {
+     "mode": "0644",
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/.cook-layout.json": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:3}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/.prepared": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:4}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/connectome-example.service": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:5}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/connectome.lock": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:6}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-layout.json": {
+     "mode": "0644",
+     "sha256": "{sha256:path-derived:7}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-recipe.json": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:1}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/deployment.json": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:8}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz": {
+     "mode": "0400",
+     "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz": {
+     "mode": "0400",
+     "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service": {
+     "mode": "0644",
+     "sha256": "{sha256:path-derived:5}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/run.sh": {
+     "mode": "0700",
+     "sha256": "{sha256:path-derived:9}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/secrets.env": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:10}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/current": {
+     "link": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/state": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/state/activation": {
+     "mode": "0600",
+     "sha256": "c8f643d3750b556cb192379f16c6fd178af3b7d1b58f66d6c7d1b5d1784aa2bd",
+     "text": "install_only\n"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/state/ownership.json": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:11}",
+     "text": "{\"entries\":[{\"kind\":\"link\",\"path\":\"{ROOT:home}/example/.config/systemd/user/connectome-example.service\",\"target\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service\"},{\"kind\":\"file\",\"path\":\"{ROOT:home}/example/.config/systemd/user/connectome-example.service.d/90-connectome-env.conf\",\"sha256\":\"{sha256:path-derived:2}\"},{\"kind\":\"directory\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\"},{\"kind\":\"file\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service\",\"sha256\":\"{sha256:path-derived:5}\"},{\"kind\":\"link\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/current\",\"target\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\"}],\"version\":1}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/state/secret-files": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH": {
+     "mode": "0600",
+     "sha256": "4aee6fa53a6a765cc0bad83722c78219de04aec7ed5e53bbd9310a88e38fe042",
+     "text": "corpus-placeholder-for-CHAT_RC"
+    }
+   },
+   "unit_verifier_calls": [
+    [
+     "--user",
+     "verify",
+     "{ROOT:home}/example/.config/systemd/user/connectome-example.service"
+    ]
+   ],
+   "verify_cook_calls": 1
+  },
+  {
+   "activation": "install_only",
+   "command": "apply",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "activation": "install_only",
+     "changed": false,
+     "exclusive_with": [
+      {
+       "scope": "user",
+       "state": "inactive",
+       "unit": "connectome.service"
+      }
+     ],
+     "external_data_args": [
+      {
+       "args": [
+        "{ROOT:opt}/example-connectors/example/relay.py",
+        "--node",
+        "{ROOT:opt}/example-runtime/r1/bin/node",
+        "--connector",
+        "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+        "--state",
+        "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "--config",
+        "{ROOT:opt}/example-connectors/example/relay-config.json"
+       ],
+       "command": "{ROOT:usr}/bin/python3",
+       "flag": "--state",
+       "kind": "dir",
+       "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+       "server": "relay"
+      }
+     ],
+     "unit_state": "inactive"
+    },
+    "changed": false,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "activation": "install_only",
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "installed_again",
+   "systemctl_calls": [
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "EnvironmentFiles",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [
+    [
+     "--user",
+     "verify",
+     "{ROOT:home}/example/.config/systemd/user/connectome-example.service"
+    ]
+   ],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "start",
+   "command": "plan",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "changed": true
+    },
+    "changed": true,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "start_planned",
+   "systemctl_calls": [],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "start",
+   "command": "apply",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "build_id": "9c63b54b5bd2b476610d50f9db848b929f482df80a335b1c69de26c16ea1ad71",
+     "changed": true,
+     "external_data_args": [
+      {
+       "args": [
+        "{ROOT:opt}/example-connectors/example/relay.py",
+        "--node",
+        "{ROOT:opt}/example-runtime/r1/bin/node",
+        "--connector",
+        "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+        "--state",
+        "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "--config",
+        "{ROOT:opt}/example-connectors/example/relay-config.json"
+       ],
+       "command": "{ROOT:usr}/bin/python3",
+       "flag": "--state",
+       "kind": "dir",
+       "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+       "server": "relay"
+      }
+     ]
+    },
+    "changed": true,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [
+    "{ROOT:home}/example/.local/share/connectome/example/state/activation"
+   ],
+   "status": 0,
+   "step": "started",
+   "systemctl_calls": [
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "daemon-reload"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "restart",
+     "connectome-example.service"
+    ],
+    [
+     "is-active",
+     "--quiet",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "EnvironmentFiles",
+     "--value",
+     "connectome-example.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {
+    "{ROOT:home}/example/.config/systemd/user/default.target.wants": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.config/systemd/user/default.target.wants/connectome-example.service": {
+     "link": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/state/ownership.json": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:12}",
+     "text": "{\"entries\":[{\"kind\":\"link\",\"path\":\"{ROOT:home}/example/.config/systemd/user/connectome-example.service\",\"target\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service\"},{\"kind\":\"file\",\"path\":\"{ROOT:home}/example/.config/systemd/user/connectome-example.service.d/90-connectome-env.conf\",\"sha256\":\"{sha256:path-derived:2}\"},{\"kind\":\"link\",\"path\":\"{ROOT:home}/example/.config/systemd/user/default.target.wants/connectome-example.service\",\"target\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service\"},{\"kind\":\"directory\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\"},{\"kind\":\"file\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service\",\"sha256\":\"{sha256:path-derived:5}\"},{\"kind\":\"link\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/current\",\"target\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\"}],\"version\":1}"
+    }
+   },
+   "unit_verifier_calls": [],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "start",
+   "command": "apply",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "changed": false,
+     "external_data_args": [
+      {
+       "args": [
+        "{ROOT:opt}/example-connectors/example/relay.py",
+        "--node",
+        "{ROOT:opt}/example-runtime/r1/bin/node",
+        "--connector",
+        "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+        "--state",
+        "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "--config",
+        "{ROOT:opt}/example-connectors/example/relay-config.json"
+       ],
+       "command": "{ROOT:usr}/bin/python3",
+       "flag": "--state",
+       "kind": "dir",
+       "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+       "server": "relay"
+      }
+     ]
+    },
+    "changed": false,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "started_again",
+   "systemctl_calls": [
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "is-active",
+     "--quiet",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "EnvironmentFiles",
+     "--value",
+     "connectome-example.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "install_only",
+   "command": "plan",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "changed": true
+    },
+    "changed": true,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "activation": "install_only",
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "install_only_planned_while_active",
+   "systemctl_calls": [],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "install_only",
+   "command": "apply",
+   "cook_calls": 0,
+   "core": {
+    "error_code": "E_UNIT_ACTIVE",
+    "msg": "E_UNIT_ACTIVE: Install-only deployment refuses an active or transitioning unit; no instance is stopped. (user: connectome-example.service)",
+    "phase": "prepare",
+    "scope": "user",
+    "unit": "connectome-example.service"
+   },
+   "removed": [],
+   "status": 1,
+   "step": "install_only_refused_while_active",
+   "systemctl_calls": [
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [],
+   "verify_cook_calls": 0
+  },
+  {
+   "step": "stopped",
+   "units": [
+    "user:connectome-example.service"
+   ]
+  },
+  {
+   "activation": "install_only",
+   "command": "plan",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "changed": true
+    },
+    "changed": true,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "activation": "install_only",
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "install_only_planned",
+   "systemctl_calls": [],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "install_only",
+   "command": "apply",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "activation": "install_only",
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "build_id": "9c63b54b5bd2b476610d50f9db848b929f482df80a335b1c69de26c16ea1ad71",
+     "changed": true,
+     "exclusive_with": [
+      {
+       "scope": "user",
+       "state": "inactive",
+       "unit": "connectome.service"
+      }
+     ],
+     "external_data_args": [
+      {
+       "args": [
+        "{ROOT:opt}/example-connectors/example/relay.py",
+        "--node",
+        "{ROOT:opt}/example-runtime/r1/bin/node",
+        "--connector",
+        "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+        "--state",
+        "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "--config",
+        "{ROOT:opt}/example-connectors/example/relay-config.json"
+       ],
+       "command": "{ROOT:usr}/bin/python3",
+       "flag": "--state",
+       "kind": "dir",
+       "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+       "server": "relay"
+      }
+     ],
+     "unit_state": "inactive"
+    },
+    "changed": true,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "activation": "install_only",
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [
+    "{ROOT:home}/example/.config/systemd/user/default.target.wants",
+    "{ROOT:home}/example/.config/systemd/user/default.target.wants/connectome-example.service"
+   ],
+   "status": 0,
+   "step": "installed_after_stop",
+   "systemctl_calls": [
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "daemon-reload"
+    ],
+    [
+     "show",
+     "-p",
+     "EnvironmentFiles",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {
+    "{ROOT:home}/example/.local/share/connectome/example/state/activation": {
+     "mode": "0600",
+     "sha256": "c8f643d3750b556cb192379f16c6fd178af3b7d1b58f66d6c7d1b5d1784aa2bd",
+     "text": "install_only\n"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/state/ownership.json": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:11}",
+     "text": "{\"entries\":[{\"kind\":\"link\",\"path\":\"{ROOT:home}/example/.config/systemd/user/connectome-example.service\",\"target\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service\"},{\"kind\":\"file\",\"path\":\"{ROOT:home}/example/.config/systemd/user/connectome-example.service.d/90-connectome-env.conf\",\"sha256\":\"{sha256:path-derived:2}\"},{\"kind\":\"directory\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\"},{\"kind\":\"file\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service\",\"sha256\":\"{sha256:path-derived:5}\"},{\"kind\":\"link\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/current\",\"target\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\"}],\"version\":1}"
+    }
+   },
+   "unit_verifier_calls": [
+    [
+     "--user",
+     "verify",
+     "{ROOT:home}/example/.config/systemd/user/connectome-example.service"
+    ]
+   ],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "install_only",
+   "command": "apply",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "activation": "install_only",
+     "changed": false,
+     "exclusive_with": [
+      {
+       "scope": "user",
+       "state": "inactive",
+       "unit": "connectome.service"
+      }
+     ],
+     "external_data_args": [
+      {
+       "args": [
+        "{ROOT:opt}/example-connectors/example/relay.py",
+        "--node",
+        "{ROOT:opt}/example-runtime/r1/bin/node",
+        "--connector",
+        "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+        "--state",
+        "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "--config",
+        "{ROOT:opt}/example-connectors/example/relay-config.json"
+       ],
+       "command": "{ROOT:usr}/bin/python3",
+       "flag": "--state",
+       "kind": "dir",
+       "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+       "server": "relay"
+      }
+     ],
+     "unit_state": "inactive"
+    },
+    "changed": false,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "activation": "install_only",
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "installed_after_stop_again",
+   "systemctl_calls": [
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "EnvironmentFiles",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [
+    [
+     "--user",
+     "verify",
+     "{ROOT:home}/example/.config/systemd/user/connectome-example.service"
+    ]
+   ],
+   "verify_cook_calls": 0
+  }
+ ],
+ "activation_switch_unit_without_install_section": [
+  {
+   "activation": "install_only",
+   "command": "apply",
+   "cook_calls": 1,
+   "core": {
+    "activate": {
+     "activation": "install_only",
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "build_id": "{sha256:path-derived:1}",
+     "changed": true,
+     "exclusive_with": [
+      {
+       "scope": "user",
+       "state": "inactive",
+       "unit": "connectome.service"
+      }
+     ],
+     "external_data_args": [
+      {
+       "args": [
+        "{ROOT:opt}/example-connectors/example/relay.py",
+        "--node",
+        "{ROOT:opt}/example-runtime/r1/bin/node",
+        "--connector",
+        "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+        "--state",
+        "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "--config",
+        "{ROOT:opt}/example-connectors/example/relay-config.json"
+       ],
+       "command": "{ROOT:usr}/bin/python3",
+       "flag": "--state",
+       "kind": "dir",
+       "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+       "server": "relay"
+      }
+     ],
+     "unit_state": "inactive"
+    },
+    "changed": true,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": true,
+     "plan": {
+      "activation": "install_only",
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "installed",
+   "systemctl_calls": [
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "daemon-reload"
+    ],
+    [
+     "show",
+     "-p",
+     "EnvironmentFiles",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ]
+   ],
+   "tree": {
+    "{ROOT:home}/example/.config/systemd": {
+     "kind": "directory",
+     "mode": "0755"
+    },
+    "{ROOT:home}/example/.config/systemd/user": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.config/systemd/user/connectome-example.service": {
+     "link": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service"
+    },
+    "{ROOT:home}/example/.config/systemd/user/connectome-example.service.d": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.config/systemd/user/connectome-example.service.d/90-connectome-env.conf": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:2}",
+     "text": "[Service]\nEnvironment=DATA_DIR={ROOT:home}/example/.local/state/connectome/example\nEnvironmentFile={ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/secrets.env\n"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/.deploy-lock": {
+     "mode": "0644",
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/.prepared": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:4}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/connectome-example.service": {
+     "mode": "0644",
+     "sha256": "{sha256:path-derived:13}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/connectome.lock": {
+     "mode": "0644",
+     "sha256": "{sha256:path-derived:14}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-layout.json": {
+     "mode": "0644",
+     "sha256": "{sha256:path-derived:7}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-recipe.json": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:1}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/deployment.json": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:8}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service": {
+     "mode": "0644",
+     "sha256": "{sha256:path-derived:13}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/run.sh": {
+     "mode": "0755",
+     "sha256": "6a93a3e64f5392d01387efc8480ac17a9aec71a3c095141a8673594dc099a8fa"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/secrets.env": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:10}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/current": {
+     "link": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/state": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/state/activation": {
+     "mode": "0600",
+     "sha256": "c8f643d3750b556cb192379f16c6fd178af3b7d1b58f66d6c7d1b5d1784aa2bd",
+     "text": "install_only\n"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/state/ownership.json": {
+     "mode": "0600",
+     "sha256": "{sha256:path-derived:15}",
+     "text": "{\"entries\":[{\"kind\":\"link\",\"path\":\"{ROOT:home}/example/.config/systemd/user/connectome-example.service\",\"target\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service\"},{\"kind\":\"file\",\"path\":\"{ROOT:home}/example/.config/systemd/user/connectome-example.service.d/90-connectome-env.conf\",\"sha256\":\"{sha256:path-derived:2}\"},{\"kind\":\"directory\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\"},{\"kind\":\"file\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service\",\"sha256\":\"{sha256:path-derived:13}\"},{\"kind\":\"link\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/current\",\"target\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\"}],\"version\":1}"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/state/secret-files": {
+     "kind": "directory",
+     "mode": "0700"
+    },
+    "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH": {
+     "mode": "0600",
+     "sha256": "4aee6fa53a6a765cc0bad83722c78219de04aec7ed5e53bbd9310a88e38fe042",
+     "text": "corpus-placeholder-for-CHAT_RC"
+    }
+   },
+   "unit_verifier_calls": [
+    [
+     "--user",
+     "verify",
+     "{ROOT:home}/example/.config/systemd/user/connectome-example.service"
+    ]
+   ],
+   "verify_cook_calls": 1
+  },
+  {
+   "activation": "install_only",
+   "command": "apply",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "activation": "install_only",
+     "changed": false,
+     "exclusive_with": [
+      {
+       "scope": "user",
+       "state": "inactive",
+       "unit": "connectome.service"
+      }
+     ],
+     "external_data_args": [
+      {
+       "args": [
+        "{ROOT:opt}/example-connectors/example/relay.py",
+        "--node",
+        "{ROOT:opt}/example-runtime/r1/bin/node",
+        "--connector",
+        "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+        "--state",
+        "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "--config",
+        "{ROOT:opt}/example-connectors/example/relay-config.json"
+       ],
+       "command": "{ROOT:usr}/bin/python3",
+       "flag": "--state",
+       "kind": "dir",
+       "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+       "server": "relay"
+      }
+     ],
+     "unit_state": "inactive"
+    },
+    "changed": false,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "activation": "install_only",
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "installed_again",
+   "systemctl_calls": [
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "EnvironmentFiles",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [
+    [
+     "--user",
+     "verify",
+     "{ROOT:home}/example/.config/systemd/user/connectome-example.service"
+    ]
+   ],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "start",
+   "command": "plan",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "changed": true
+    },
+    "changed": true,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "start_planned",
+   "systemctl_calls": [],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "start",
+   "command": "apply",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "build_id": "{sha256:path-derived:1}",
+     "changed": true,
+     "external_data_args": [
+      {
+       "args": [
+        "{ROOT:opt}/example-connectors/example/relay.py",
+        "--node",
+        "{ROOT:opt}/example-runtime/r1/bin/node",
+        "--connector",
+        "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+        "--state",
+        "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "--config",
+        "{ROOT:opt}/example-connectors/example/relay-config.json"
+       ],
+       "command": "{ROOT:usr}/bin/python3",
+       "flag": "--state",
+       "kind": "dir",
+       "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+       "server": "relay"
+      }
+     ]
+    },
+    "changed": true,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [
+    "{ROOT:home}/example/.local/share/connectome/example/state/activation"
+   ],
+   "status": 0,
+   "step": "started",
+   "systemctl_calls": [
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "daemon-reload"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "restart",
+     "connectome-example.service"
+    ],
+    [
+     "is-active",
+     "--quiet",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "EnvironmentFiles",
+     "--value",
+     "connectome-example.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "start",
+   "command": "apply",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "changed": false,
+     "external_data_args": [
+      {
+       "args": [
+        "{ROOT:opt}/example-connectors/example/relay.py",
+        "--node",
+        "{ROOT:opt}/example-runtime/r1/bin/node",
+        "--connector",
+        "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+        "--state",
+        "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "--config",
+        "{ROOT:opt}/example-connectors/example/relay-config.json"
+       ],
+       "command": "{ROOT:usr}/bin/python3",
+       "flag": "--state",
+       "kind": "dir",
+       "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+       "server": "relay"
+      }
+     ]
+    },
+    "changed": false,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "started_again",
+   "systemctl_calls": [
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ],
+    [
+     "is-active",
+     "--quiet",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "EnvironmentFiles",
+     "--value",
+     "connectome-example.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "install_only",
+   "command": "plan",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "changed": true
+    },
+    "changed": true,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "activation": "install_only",
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "install_only_planned_while_active",
+   "systemctl_calls": [],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "install_only",
+   "command": "apply",
+   "cook_calls": 0,
+   "core": {
+    "error_code": "E_UNIT_ACTIVE",
+    "msg": "E_UNIT_ACTIVE: Install-only deployment refuses an active or transitioning unit; no instance is stopped. (user: connectome-example.service)",
+    "phase": "prepare",
+    "scope": "user",
+    "unit": "connectome-example.service"
+   },
+   "removed": [],
+   "status": 1,
+   "step": "install_only_refused_while_active",
+   "systemctl_calls": [
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [],
+   "verify_cook_calls": 0
+  },
+  {
+   "step": "stopped",
+   "units": [
+    "user:connectome-example.service"
+   ]
+  },
+  {
+   "activation": "install_only",
+   "command": "plan",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "changed": true
+    },
+    "changed": true,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "activation": "install_only",
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "install_only_planned",
+   "systemctl_calls": [],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "install_only",
+   "command": "apply",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "activation": "install_only",
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "build_id": "{sha256:path-derived:1}",
+     "changed": true,
+     "exclusive_with": [
+      {
+       "scope": "user",
+       "state": "inactive",
+       "unit": "connectome.service"
+      }
+     ],
+     "external_data_args": [
+      {
+       "args": [
+        "{ROOT:opt}/example-connectors/example/relay.py",
+        "--node",
+        "{ROOT:opt}/example-runtime/r1/bin/node",
+        "--connector",
+        "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+        "--state",
+        "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "--config",
+        "{ROOT:opt}/example-connectors/example/relay-config.json"
+       ],
+       "command": "{ROOT:usr}/bin/python3",
+       "flag": "--state",
+       "kind": "dir",
+       "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+       "server": "relay"
+      }
+     ],
+     "unit_state": "inactive"
+    },
+    "changed": true,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "activation": "install_only",
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "installed_after_stop",
+   "systemctl_calls": [
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "daemon-reload"
+    ],
+    [
+     "show",
+     "-p",
+     "EnvironmentFiles",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {
+    "{ROOT:home}/example/.local/share/connectome/example/state/activation": {
+     "mode": "0600",
+     "sha256": "c8f643d3750b556cb192379f16c6fd178af3b7d1b58f66d6c7d1b5d1784aa2bd",
+     "text": "install_only\n"
+    }
+   },
+   "unit_verifier_calls": [
+    [
+     "--user",
+     "verify",
+     "{ROOT:home}/example/.config/systemd/user/connectome-example.service"
+    ]
+   ],
+   "verify_cook_calls": 0
+  },
+  {
+   "activation": "install_only",
+   "command": "apply",
+   "cook_calls": 0,
+   "core": {
+    "activate": {
+     "activation": "install_only",
+     "changed": false,
+     "exclusive_with": [
+      {
+       "scope": "user",
+       "state": "inactive",
+       "unit": "connectome.service"
+      }
+     ],
+     "external_data_args": [
+      {
+       "args": [
+        "{ROOT:opt}/example-connectors/example/relay.py",
+        "--node",
+        "{ROOT:opt}/example-runtime/r1/bin/node",
+        "--connector",
+        "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+        "--state",
+        "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "--config",
+        "{ROOT:opt}/example-connectors/example/relay-config.json"
+       ],
+       "command": "{ROOT:usr}/bin/python3",
+       "flag": "--state",
+       "kind": "dir",
+       "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+       "server": "relay"
+      }
+     ],
+     "unit_state": "inactive"
+    },
+    "changed": false,
+    "prepare": {
+     "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+     "changed": false,
+     "plan": {
+      "activation": "install_only",
+      "budgets": {},
+      "exclusive_with": [
+       {
+        "scope": "user",
+        "unit": "connectome.service"
+       }
+      ],
+      "external_data_args": [
+       {
+        "args": [
+         "{ROOT:opt}/example-connectors/example/relay.py",
+         "--node",
+         "{ROOT:opt}/example-runtime/r1/bin/node",
+         "--connector",
+         "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+         "--state",
+         "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+         "--config",
+         "{ROOT:opt}/example-connectors/example/relay-config.json"
+        ],
+        "command": "{ROOT:usr}/bin/python3",
+        "flag": "--state",
+        "kind": "dir",
+        "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "server": "relay"
+       }
+      ],
+      "host_dependencies": [
+       {
+        "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/context-manager",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+        "version": "1.2.3"
+       },
+       {
+        "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+        "commit_verifiable": false,
+        "kind": "artifact",
+        "name": "@animalabs/agent-framework",
+        "payload": "operator-supplied prebuilt payload, verified out of band",
+        "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+        "version": "4.5.6"
+       }
+      ],
+      "recipe_file": {
+       "path": "{ROOT:root}/example-deploy/recipe.json",
+       "sha256": "{sha256:path-derived:1}"
+      },
+      "secret_files": [
+       {
+        "env": "CHAT_RC_PATH",
+        "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+        "secret": "CHAT_RC"
+       }
+      ],
+      "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+      "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+     },
+     "secret_names": [
+      "CHAT_RC",
+      "EXAMPLE_API_KEY",
+      "EXAMPLE_BASE_URL"
+     ]
+    }
+   },
+   "removed": [],
+   "status": 0,
+   "step": "installed_after_stop_again",
+   "systemctl_calls": [
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "EnvironmentFiles",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "show",
+     "-p",
+     "ActiveState",
+     "--value",
+     "connectome-example.service"
+    ],
+    [
+     "--user",
+     "is-active",
+     "connectome.service"
+    ]
+   ],
+   "systemctl_calls_before_the_root_existed": [],
+   "tree": {},
+   "unit_verifier_calls": [
+    [
+     "--user",
+     "verify",
+     "{ROOT:home}/example/.config/systemd/user/connectome-example.service"
+    ]
+   ],
+   "verify_cook_calls": 0
+  }
+ ],
  "apply": {
   "cook_calls": [
    {
@@ -249,11 +3184,11 @@
    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/connectome.lock": {
     "mode": "0600",
     "sha256": "{sha256:path-derived:6}",
-    "text": "{\n  \"backend\": \"host\",\n  \"build\": {\n    \"dir\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\",\n    \"id\": \"9c63b54b5bd2b476610d50f9db848b929f482df80a335b1c69de26c16ea1ad71\"\n  },\n  \"components\": [],\n  \"connectomeHost\": {\n    \"commit\": \"cef933981dc0699fc00e5189b129d854ff8d43f6\",\n    \"path\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/app\",\n    \"ref\": \"cef933981dc0699fc00e5189b129d854ff8d43f6\",\n    \"url\": \"{ROOT:srv}/example-inputs/host-00000001.bundle\"\n  },\n  \"cook\": {\n    \"version\": \"0.0.1\"\n  },\n  \"createdAt\": \"2026-01-02T03:04:05.678Z\",\n  \"credentials\": [\n    \"CHAT_RC_PATH\",\n    \"EXAMPLE_API_KEY\",\n    \"EXAMPLE_AUTH_NAME\",\n    \"EXAMPLE_BASE_URL\"\n  ],\n  \"engines\": {\n    \"bun\": {\n      \"path\": \"{ROOT:srv}/example-inputs/bun-1.0.0/bun\",\n      \"realPath\": \"{ROOT:srv}/example-inputs/bun-1.0.0/bun\",\n      \"version\": \"1.0.0\"\n    },\n    \"node\": {\n      \"path\": \"{ROOT:opt}/example-node/1.0.0/bin/node\",\n      \"realPath\": \"{ROOT:opt}/example-node/1.0.0/bin/node\",\n      \"version\": \"1.0.0\"\n    }\n  },\n  \"external\": [\n    {\n      \"command\": \"{ROOT:opt}/example-runtime/r1/bin/node\",\n      \"name\": \"chat\"\n    },\n    {\n      \"command\": \"{ROOT:usr}/bin/python3\",\n      \"name\": \"relay\"\n    },\n    {\n      \"command\": \"{ROOT:opt}/example-runtime/r1/bin/node\",\n      \"name\": \"shell\"\n    }\n  ],\n  \"hostDependencies\": [\n    {\n      \"name\": \"@animalabs/context-manager\",\n      \"originalRange\": \"^1.2.0\",\n      \"packageJsonDelta\": {\n        \"direct\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz\",\n          \"before\": \"^1.2.0\",\n          \"name\": \"@animalabs/context-manager\",\n          \"section\": \"dependencies\"\n        },\n        \"override\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz\",\n          \"before\": null,\n          \"name\": \"@animalabs/context-manager\",\n          \"section\": \"overrides\"\n        }\n      },\n      \"provenance\": {\n        \"archive\": \"{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz\",\n        \"commit_verifiable\": false,\n        \"kind\": \"artifact\",\n        \"name\": \"@animalabs/context-manager\",\n        \"payload\": \"operator-supplied prebuilt payload, verified out of band\",\n        \"sha256\": \"d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52\",\n        \"version\": \"1.2.3\"\n      },\n      \"sha256\": \"d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52\",\n      \"size\": 2071,\n      \"snapshot\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz\",\n      \"version\": \"1.2.3\"\n    },\n    {\n      \"name\": \"@animalabs/agent-framework\",\n      \"originalRange\": \"^4.5.0\",\n      \"packageJsonDelta\": {\n        \"direct\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz\",\n          \"before\": \"^4.5.0\",\n          \"name\": \"@animalabs/agent-framework\",\n          \"section\": \"dependencies\"\n        },\n        \"override\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz\",\n          \"before\": null,\n          \"name\": \"@animalabs/agent-framework\",\n          \"section\": \"overrides\"\n        }\n      },\n      \"provenance\": {\n        \"archive\": \"{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz\",\n        \"commit_verifiable\": false,\n        \"kind\": \"artifact\",\n        \"name\": \"@animalabs/agent-framework\",\n        \"payload\": \"operator-supplied prebuilt payload, verified out of band\",\n        \"sha256\": \"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\n        \"version\": \"4.5.6\"\n      },\n      \"sha256\": \"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\n      \"size\": 2071,\n      \"snapshot\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz\",\n      \"version\": \"4.5.6\"\n    }\n  ],\n  \"launch\": {\n    \"kind\": \"script\",\n    \"script\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/run.sh\",\n    \"userUnit\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/connectome-example.service\"\n  },\n  \"layout\": {\n    \"config\": \"{ROOT:home}/example/.local/share/connectome/example/cook-config/{REQUEST}\",\n    \"connectorState\": {},\n    \"credentials\": \"{ROOT:home}/example/.local/share/connectome/example/cook-credentials/{REQUEST}\",\n    \"runtime\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\",\n    \"schema\": \"connectome.host-layout/v1\",\n    \"state\": \"{ROOT:home}/example/.local/state/connectome/example\",\n    \"workspace\": \"{ROOT:home}/example/.local/share/connectome/example/workspace\"\n  },\n  \"localExtensions\": [],\n  \"outputs\": [\n    {\n      \"mode\": 384,\n      \"path\": \"../../cook-config/{REQUEST}/recipes/cook-recipe.json\",\n      \"sha256\": \"45ee9e6ae5796c5bec92338ac96f869a841c1c80c4e0484cfe10c326451784fc\"\n    },\n    {\n      \"mode\": 384,\n      \"path\": \"connectome-example.service\",\n      \"sha256\": \"{sha256:path-derived:5}\"\n    },\n    {\n      \"mode\": 448,\n      \"path\": \"run.sh\",\n      \"sha256\": \"{sha256:path-derived:7}\"\n    }\n  ],\n  \"recipe\": {\n    \"path\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-recipe.json\",\n    \"sha256\": \"{sha256:path-derived:1}\"\n  },\n  \"recipePath\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-recipe.json\",\n  \"requirements\": [\n    {\n      \"envName\": \"EXAMPLE_API_KEY\",\n      \"name\": \"EXAMPLE_API_KEY\",\n      \"origin\": \"unresolved\"\n    },\n    {\n      \"envName\": \"EXAMPLE_BASE_URL\",\n      \"name\": \"EXAMPLE_BASE_URL\",\n      \"origin\": \"unresolved\"\n    }\n  ],\n  \"state\": {\n    \"path\": \"{ROOT:home}/example/.local/state/connectome/example\"\n  },\n  \"version\": 2\n}\n"
+    "text": "{\n  \"backend\": \"host\",\n  \"build\": {\n    \"dir\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\",\n    \"id\": \"9c63b54b5bd2b476610d50f9db848b929f482df80a335b1c69de26c16ea1ad71\"\n  },\n  \"components\": [],\n  \"connectomeHost\": {\n    \"commit\": \"cef933981dc0699fc00e5189b129d854ff8d43f6\",\n    \"path\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/app\",\n    \"ref\": \"cef933981dc0699fc00e5189b129d854ff8d43f6\",\n    \"url\": \"{ROOT:srv}/example-inputs/host-00000001.bundle\"\n  },\n  \"cook\": {\n    \"version\": \"0.0.1\"\n  },\n  \"createdAt\": \"2026-01-02T03:04:05.678Z\",\n  \"credentials\": [\n    \"CHAT_RC_PATH\",\n    \"EXAMPLE_API_KEY\",\n    \"EXAMPLE_AUTH_NAME\",\n    \"EXAMPLE_BASE_URL\"\n  ],\n  \"engines\": {\n    \"bun\": {\n      \"path\": \"{ROOT:srv}/example-inputs/bun-1.0.0/bun\",\n      \"realPath\": \"{ROOT:srv}/example-inputs/bun-1.0.0/bun\",\n      \"version\": \"1.0.0\"\n    },\n    \"node\": {\n      \"path\": \"{ROOT:opt}/example-node/1.0.0/bin/node\",\n      \"realPath\": \"{ROOT:opt}/example-node/1.0.0/bin/node\",\n      \"version\": \"1.0.0\"\n    }\n  },\n  \"external\": [\n    {\n      \"command\": \"{ROOT:opt}/example-runtime/r1/bin/node\",\n      \"name\": \"chat\"\n    },\n    {\n      \"command\": \"{ROOT:usr}/bin/python3\",\n      \"name\": \"relay\"\n    },\n    {\n      \"command\": \"{ROOT:opt}/example-runtime/r1/bin/node\",\n      \"name\": \"shell\"\n    }\n  ],\n  \"hostDependencies\": [\n    {\n      \"name\": \"@animalabs/context-manager\",\n      \"originalRange\": \"^1.2.0\",\n      \"packageJsonDelta\": {\n        \"direct\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz\",\n          \"before\": \"^1.2.0\",\n          \"name\": \"@animalabs/context-manager\",\n          \"section\": \"dependencies\"\n        },\n        \"override\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz\",\n          \"before\": null,\n          \"name\": \"@animalabs/context-manager\",\n          \"section\": \"overrides\"\n        }\n      },\n      \"provenance\": {\n        \"archive\": \"{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz\",\n        \"commit_verifiable\": false,\n        \"kind\": \"artifact\",\n        \"name\": \"@animalabs/context-manager\",\n        \"payload\": \"operator-supplied prebuilt payload, verified out of band\",\n        \"sha256\": \"d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52\",\n        \"version\": \"1.2.3\"\n      },\n      \"sha256\": \"d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52\",\n      \"size\": 2071,\n      \"snapshot\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz\",\n      \"version\": \"1.2.3\"\n    },\n    {\n      \"name\": \"@animalabs/agent-framework\",\n      \"originalRange\": \"^4.5.0\",\n      \"packageJsonDelta\": {\n        \"direct\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz\",\n          \"before\": \"^4.5.0\",\n          \"name\": \"@animalabs/agent-framework\",\n          \"section\": \"dependencies\"\n        },\n        \"override\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz\",\n          \"before\": null,\n          \"name\": \"@animalabs/agent-framework\",\n          \"section\": \"overrides\"\n        }\n      },\n      \"provenance\": {\n        \"archive\": \"{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz\",\n        \"commit_verifiable\": false,\n        \"kind\": \"artifact\",\n        \"name\": \"@animalabs/agent-framework\",\n        \"payload\": \"operator-supplied prebuilt payload, verified out of band\",\n        \"sha256\": \"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\n        \"version\": \"4.5.6\"\n      },\n      \"sha256\": \"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\n      \"size\": 2071,\n      \"snapshot\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz\",\n      \"version\": \"4.5.6\"\n    }\n  ],\n  \"launch\": {\n    \"kind\": \"script\",\n    \"script\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/run.sh\",\n    \"userUnit\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/connectome-example.service\"\n  },\n  \"layout\": {\n    \"config\": \"{ROOT:home}/example/.local/share/connectome/example/cook-config/{REQUEST}\",\n    \"connectorState\": {},\n    \"credentials\": \"{ROOT:home}/example/.local/share/connectome/example/cook-credentials/{REQUEST}\",\n    \"runtime\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\",\n    \"schema\": \"connectome.host-layout/v1\",\n    \"state\": \"{ROOT:home}/example/.local/state/connectome/example\",\n    \"workspace\": \"{ROOT:home}/example/.local/share/connectome/example/workspace\"\n  },\n  \"localExtensions\": [],\n  \"outputs\": [\n    {\n      \"mode\": 384,\n      \"path\": \"../../cook-config/{REQUEST}/recipes/cook-recipe.json\",\n      \"sha256\": \"45ee9e6ae5796c5bec92338ac96f869a841c1c80c4e0484cfe10c326451784fc\"\n    },\n    {\n      \"mode\": 384,\n      \"path\": \"connectome-example.service\",\n      \"sha256\": \"{sha256:path-derived:5}\"\n    },\n    {\n      \"mode\": 448,\n      \"path\": \"run.sh\",\n      \"sha256\": \"{sha256:path-derived:9}\"\n    }\n  ],\n  \"recipe\": {\n    \"path\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-recipe.json\",\n    \"sha256\": \"{sha256:path-derived:1}\"\n  },\n  \"recipePath\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-recipe.json\",\n  \"requirements\": [\n    {\n      \"envName\": \"EXAMPLE_API_KEY\",\n      \"name\": \"EXAMPLE_API_KEY\",\n      \"origin\": \"unresolved\"\n    },\n    {\n      \"envName\": \"EXAMPLE_BASE_URL\",\n      \"name\": \"EXAMPLE_BASE_URL\",\n      \"origin\": \"unresolved\"\n    }\n  ],\n  \"state\": {\n    \"path\": \"{ROOT:home}/example/.local/state/connectome/example\"\n  },\n  \"version\": 2\n}\n"
    },
    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-layout.json": {
     "mode": "0644",
-    "sha256": "{sha256:path-derived:8}",
+    "sha256": "{sha256:path-derived:7}",
     "text": "{\n  \"config\": \"{ROOT:home}/example/.local/share/connectome/example/cook-config/{REQUEST}\",\n  \"connectorState\": {},\n  \"credentials\": \"{ROOT:home}/example/.local/share/connectome/example/cook-credentials/{REQUEST}\",\n  \"runtime\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\",\n  \"schema\": \"connectome.host-layout/v1\",\n  \"state\": \"{ROOT:home}/example/.local/state/connectome/example\",\n  \"workspace\": \"{ROOT:home}/example/.local/share/connectome/example/workspace\"\n}\n"
    },
    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-recipe.json": {
@@ -263,7 +3198,7 @@
    },
    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/deployment.json": {
     "mode": "0600",
-    "sha256": "{sha256:path-derived:9}",
+    "sha256": "{sha256:path-derived:8}",
     "text": "{\"config\":{\"connectors\":{},\"cook\":{\"connector_state\":{},\"host_dependencies\":[{\"archive\":\"{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz\",\"kind\":\"artifact\",\"name\":\"@animalabs/context-manager\",\"sha256\":\"d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52\",\"version\":\"1.2.3\"},{\"archive\":\"{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz\",\"kind\":\"artifact\",\"name\":\"@animalabs/agent-framework\",\"sha256\":\"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\"version\":\"4.5.6\"}],\"host_repo\":\"{ROOT:srv}/example-inputs/host-00000001.bundle\"},\"external_data_args\":[{\"args\":[\"{ROOT:opt}/example-connectors/example/relay.py\",\"--node\",\"{ROOT:opt}/example-runtime/r1/bin/node\",\"--connector\",\"{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js\",\"--state\",\"{ROOT:home}/example/.local/state/connectome/example/relay-channel\",\"--config\",\"{ROOT:opt}/example-connectors/example/relay-config.json\"],\"command\":\"{ROOT:usr}/bin/python3\",\"flag\":\"--state\",\"kind\":\"dir\",\"path\":\"{ROOT:home}/example/.local/state/connectome/example/relay-channel\",\"server\":\"relay\"}],\"modules\":{},\"name\":\"example\",\"recipe_file\":{\"path\":\"{ROOT:root}/example-deploy/recipe.json\",\"sha256\":\"{sha256:path-derived:1}\"},\"required_secrets\":[\"EXAMPLE_API_KEY\",\"EXAMPLE_BASE_URL\"],\"secret_files\":[{\"env\":\"CHAT_RC_PATH\",\"secret\":\"CHAT_RC\"}],\"secrets_file\":\"{ROOT:home}/example/.config/connectome-secrets/example.json\",\"state_dir\":\"{ROOT:home}/example/.local/state/connectome/example\"},\"pins\":{\"connectors\":{},\"runtime\":{\"agent-framework\":\"aa134e75fc19bc8cb3b73cb1ec53465dd9cf5c91\",\"connectome-host\":\"cef933981dc0699fc00e5189b129d854ff8d43f6\",\"cook\":\"1b874d9dd55b529486b8029dd9814a6c0e2147e0\"}}}"
    },
    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs": {
@@ -289,7 +3224,7 @@
    },
    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/run.sh": {
     "mode": "0700",
-    "sha256": "{sha256:path-derived:7}",
+    "sha256": "{sha256:path-derived:9}",
     "text": "#!/bin/sh\n# synthetic launcher: the corpus starts nothing\ncd '{ROOT:home}/example/.local/state/connectome/example'\nexit 0\n"
    },
    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/secrets.env": {
@@ -299,7 +3234,7 @@
    },
    "{ROOT:home}/example/.local/share/connectome/example/cook-calls.jsonl": {
     "mode": "0644",
-    "sha256": "{sha256:path-derived:11}",
+    "sha256": "{sha256:path-derived:16}",
     "text": "{\"argv\": [\"{KITCHEN}/test/corpus/replay_cook.py\", \"{ROOT:srv}/example-inputs/connectome-cook/bin/cook\", \"install\", \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-recipe.json\", \"--out\", \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\", \"--no-prompts\", \"--yes\", \"--strict\", \"--ch-repo\", \"{ROOT:srv}/example-inputs/host-00000001.bundle\", \"--ch-ref\", \"cef933981dc0699fc00e5189b129d854ff8d43f6\", \"--bun-path\", \"{ROOT:srv}/example-inputs/bun-1.0.0/bun\", \"--node-path\", \"{ROOT:opt}/example-node/1.0.0/bin/node\", \"--layout\", \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-layout.json\", \"--host-dependency\", \"@animalabs/context-manager={ROOT:srv}/example-inputs/context-manager-1.2.3.tgz#sha256=d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52\", \"--host-dependency\", \"@animalabs/agent-framework={ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz#sha256=0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\", \"--user-unit\", \"connectome-example.service\"], \"cwd\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\", \"environment_names\": [\"HOME\", \"LANG\", \"PATH\"]}\n"
    },
    "{ROOT:home}/example/.local/share/connectome/example/current": {
@@ -330,7 +3265,7 @@
    },
    "{ROOT:home}/example/.local/share/connectome/example/verify-cook-calls.jsonl": {
     "mode": "0644",
-    "sha256": "{sha256:path-derived:13}",
+    "sha256": "{sha256:path-derived:17}",
     "text": "{\"entrypoint\": \"{ROOT:srv}/example-inputs/connectome-cook/bin/cook\", \"environment_names\": [\"HOME\", \"LANG\", \"PATH\"], \"pin\": \"1b874d9dd55b529486b8029dd9814a6c0e2147e0\"}\n"
    },
    "{ROOT:home}/example/.local/share/connectome/preflight-systemctl-calls": {
@@ -733,6 +3668,7 @@
   "oracle": "a49b5dc",
   "ownership": "modelled (host_model in test/corpus/corpus.py)",
   "systemctl": "fake of the oracle (oracle/tests/fixtures/systemctl.py)",
+  "unit_verifier": "stand-in found first on the search path, in `activation_switch` and `unit_verifier_refuses` only (test/corpus/stand_in_verifier.py)",
   "verify_cook": "recorded, not performed (test/corpus/adapter_seam.py)"
  },
  "inputs": {
@@ -1126,7 +4062,7 @@
    },
    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-layout.json": {
     "mode": "0644",
-    "sha256": "{sha256:path-derived:8}"
+    "sha256": "{sha256:path-derived:7}"
    },
    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-recipe.json": {
     "mode": "0600",
@@ -1134,7 +4070,7 @@
    },
    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/deployment.json": {
     "mode": "0600",
-    "sha256": "{sha256:path-derived:9}"
+    "sha256": "{sha256:path-derived:8}"
    },
    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs": {
     "kind": "directory",
@@ -1158,7 +4094,7 @@
    },
    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/run.sh": {
     "mode": "0700",
-    "sha256": "{sha256:path-derived:7}"
+    "sha256": "{sha256:path-derived:9}"
    },
    "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/secrets.env": {
     "mode": "0600",
@@ -1166,7 +4102,7 @@
    },
    "{ROOT:home}/example/.local/share/connectome/example/cook-calls.jsonl": {
     "mode": "0644",
-    "sha256": "{sha256:path-derived:11}"
+    "sha256": "{sha256:path-derived:16}"
    },
    "{ROOT:home}/example/.local/share/connectome/example/current": {
     "link": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}"
@@ -1182,7 +4118,7 @@
    },
    "{ROOT:home}/example/.local/share/connectome/example/state/ownership.json": {
     "mode": "0600",
-    "sha256": "{sha256:path-derived:14}",
+    "sha256": "{sha256:path-derived:11}",
     "text": "{\"entries\":[{\"kind\":\"link\",\"path\":\"{ROOT:home}/example/.config/systemd/user/connectome-example.service\",\"target\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service\"},{\"kind\":\"file\",\"path\":\"{ROOT:home}/example/.config/systemd/user/connectome-example.service.d/90-connectome-env.conf\",\"sha256\":\"{sha256:path-derived:2}\"},{\"kind\":\"directory\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\"},{\"kind\":\"file\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service\",\"sha256\":\"{sha256:path-derived:5}\"},{\"kind\":\"link\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/current\",\"target\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\"}],\"version\":1}"
    },
    "{ROOT:home}/example/.local/share/connectome/example/state/secret-files": {
@@ -1200,7 +4136,7 @@
    },
    "{ROOT:home}/example/.local/share/connectome/example/verify-cook-calls.jsonl": {
     "mode": "0644",
-    "sha256": "{sha256:path-derived:13}"
+    "sha256": "{sha256:path-derived:17}"
    },
    "{ROOT:home}/example/.local/share/connectome/preflight-systemctl-calls": {
     "mode": "0644",
@@ -2275,7 +5211,7 @@
      [
       "cook-recipe.json",
       {
-       "$sha256-of-text": "{sha256:path-derived:15}"
+       "$sha256-of-text": "{sha256:path-derived:18}"
       }
      ]
     ]
@@ -2802,7 +5738,7 @@
          ],
          [
           "sha256",
-          "{sha256:path-derived:7}"
+          "{sha256:path-derived:9}"
          ]
         ]
        }
@@ -3402,7 +6338,7 @@
          ],
          [
           "sha256",
-          "{sha256:path-derived:7}"
+          "{sha256:path-derived:9}"
          ]
         ]
        }
@@ -3628,9 +6564,9 @@
      "{KITCHEN}/test/corpus/replay_cook.py",
      "{ROOT:srv}/example-inputs/connectome-cook/bin/cook",
      "install",
-     "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/cook-recipe.json",
+     "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/cook-recipe.json",
      "--out",
-     "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}",
+     "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}",
      "--no-prompts",
      "--yes",
      "--strict",
@@ -3643,7 +6579,7 @@
      "--node-path",
      "{ROOT:opt}/example-node/1.0.0/bin/node",
      "--layout",
-     "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/cook-layout.json",
+     "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/cook-layout.json",
      "--host-dependency",
      "@animalabs/context-manager={ROOT:srv}/example-inputs/context-manager-1.2.3.tgz#sha256=d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
      "--host-dependency",
@@ -3651,7 +6587,7 @@
      "--user-unit",
      "connectome-example.service"
     ],
-    "cwd": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}",
+    "cwd": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}",
     "environment_names": [
      "HOME",
      "LANG",
@@ -3661,7 +6597,7 @@
   ],
   "core": {
    "activate": {
-    "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}",
+    "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}",
     "build_id": "9c63b54b5bd2b476610d50f9db848b929f482df80a335b1c69de26c16ea1ad71",
     "changed": true,
     "external_data_args": [
@@ -3687,7 +6623,7 @@
    },
    "changed": true,
    "prepare": {
-    "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}",
+    "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}",
     "changed": true,
     "plan": {
      "budgets": {},
@@ -3808,105 +6744,105 @@
   ],
   "tree": {
    "{ROOT:home}/example/.config/systemd/user/connectome-example.service": {
-    "link": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/managed-units/connectome-example.service"
+    "link": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/managed-units/connectome-example.service"
    },
    "{ROOT:home}/example/.config/systemd/user/connectome-example.service.d/90-connectome-env.conf": {
     "mode": "0600",
-    "sha256": "{sha256:path-derived:17}",
-    "text": "[Service]\nEnvironment=DATA_DIR={ROOT:home}/example/.local/state/connectome/example\nEnvironmentFile={ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/secrets.env\n"
+    "sha256": "{sha256:path-derived:20}",
+    "text": "[Service]\nEnvironment=DATA_DIR={ROOT:home}/example/.local/state/connectome/example\nEnvironmentFile={ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/secrets.env\n"
    },
    "{ROOT:home}/example/.config/systemd/user/default.target.wants/connectome-example.service": {
-    "link": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/managed-units/connectome-example.service"
+    "link": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/managed-units/connectome-example.service"
    },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}": {
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}": {
     "kind": "directory",
     "mode": "0700"
    },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/.cook-layout.json": {
-    "mode": "0600",
-    "sha256": "{sha256:path-derived:18}",
-    "text": "{\n  \"phase\": \"installed\",\n  \"layout\": {\n    \"schema\": \"connectome.host-layout/v1\",\n    \"runtime\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}\",\n    \"config\": \"{ROOT:home}/example/.local/share/connectome/example/cook-config/{sha256:path-derived:16}\",\n    \"credentials\": \"{ROOT:home}/example/.local/share/connectome/example/cook-credentials/{sha256:path-derived:16}\",\n    \"state\": \"{ROOT:home}/example/.local/state/connectome/example\",\n    \"workspace\": \"{ROOT:home}/example/.local/share/connectome/example/workspace\",\n    \"connectorState\": {}\n  }\n}\n"
-   },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/.prepared": {
-    "mode": "0600",
-    "sha256": "{sha256:path-derived:19}",
-    "text": "{sha256:path-derived:16}"
-   },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/connectome-example.service": {
-    "mode": "0600",
-    "sha256": "{sha256:path-derived:20}",
-    "text": "[Unit]\nDescription=Synthetic host (connectome-example.service)\n\n[Service]\nType=simple\nWorkingDirectory={ROOT:home}/example/.local/state/connectome/example\nExecStart=/bin/sh \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/run.sh\" --headless\nRestart=on-failure\nUMask=0077\n\n[Install]\nWantedBy=default.target\n"
-   },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/connectome.lock": {
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/.cook-layout.json": {
     "mode": "0600",
     "sha256": "{sha256:path-derived:21}",
-    "text": "{\n  \"backend\": \"host\",\n  \"build\": {\n    \"dir\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}\",\n    \"id\": \"9c63b54b5bd2b476610d50f9db848b929f482df80a335b1c69de26c16ea1ad71\"\n  },\n  \"components\": [],\n  \"connectomeHost\": {\n    \"commit\": \"cef933981dc0699fc00e5189b129d854ff8d43f6\",\n    \"path\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/app\",\n    \"ref\": \"cef933981dc0699fc00e5189b129d854ff8d43f6\",\n    \"url\": \"{ROOT:srv}/example-inputs/host-00000001.bundle\"\n  },\n  \"cook\": {\n    \"version\": \"0.0.1\"\n  },\n  \"createdAt\": \"2026-01-02T03:04:05.678Z\",\n  \"credentials\": [\n    \"CHAT_RC_PATH\",\n    \"EXAMPLE_API_KEY\",\n    \"EXAMPLE_AUTH_NAME\",\n    \"EXAMPLE_BASE_URL\"\n  ],\n  \"engines\": {\n    \"bun\": {\n      \"path\": \"{ROOT:srv}/example-inputs/bun-1.0.0/bun\",\n      \"realPath\": \"{ROOT:srv}/example-inputs/bun-1.0.0/bun\",\n      \"version\": \"1.0.0\"\n    },\n    \"node\": {\n      \"path\": \"{ROOT:opt}/example-node/1.0.0/bin/node\",\n      \"realPath\": \"{ROOT:opt}/example-node/1.0.0/bin/node\",\n      \"version\": \"1.0.0\"\n    }\n  },\n  \"external\": [\n    {\n      \"command\": \"{ROOT:opt}/example-runtime/r1/bin/node\",\n      \"name\": \"chat\"\n    },\n    {\n      \"command\": \"{ROOT:usr}/bin/python3\",\n      \"name\": \"relay\"\n    },\n    {\n      \"command\": \"{ROOT:opt}/example-runtime/r1/bin/node\",\n      \"name\": \"shell\"\n    }\n  ],\n  \"hostDependencies\": [\n    {\n      \"name\": \"@animalabs/context-manager\",\n      \"originalRange\": \"^1.2.0\",\n      \"packageJsonDelta\": {\n        \"direct\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz\",\n          \"before\": \"^1.2.0\",\n          \"name\": \"@animalabs/context-manager\",\n          \"section\": \"dependencies\"\n        },\n        \"override\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz\",\n          \"before\": null,\n          \"name\": \"@animalabs/context-manager\",\n          \"section\": \"overrides\"\n        }\n      },\n      \"provenance\": {\n        \"archive\": \"{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz\",\n        \"commit_verifiable\": false,\n        \"kind\": \"artifact\",\n        \"name\": \"@animalabs/context-manager\",\n        \"payload\": \"operator-supplied prebuilt payload, verified out of band\",\n        \"sha256\": \"d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52\",\n        \"version\": \"1.2.3\"\n      },\n      \"sha256\": \"d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52\",\n      \"size\": 2071,\n      \"snapshot\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz\",\n      \"version\": \"1.2.3\"\n    },\n    {\n      \"name\": \"@animalabs/agent-framework\",\n      \"originalRange\": \"^4.5.0\",\n      \"packageJsonDelta\": {\n        \"direct\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz\",\n          \"before\": \"^4.5.0\",\n          \"name\": \"@animalabs/agent-framework\",\n          \"section\": \"dependencies\"\n        },\n        \"override\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz\",\n          \"before\": null,\n          \"name\": \"@animalabs/agent-framework\",\n          \"section\": \"overrides\"\n        }\n      },\n      \"provenance\": {\n        \"archive\": \"{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz\",\n        \"commit_verifiable\": false,\n        \"kind\": \"artifact\",\n        \"name\": \"@animalabs/agent-framework\",\n        \"payload\": \"operator-supplied prebuilt payload, verified out of band\",\n        \"sha256\": \"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\n        \"version\": \"4.5.6\"\n      },\n      \"sha256\": \"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\n      \"size\": 2071,\n      \"snapshot\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz\",\n      \"version\": \"4.5.6\"\n    }\n  ],\n  \"launch\": {\n    \"kind\": \"script\",\n    \"script\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/run.sh\",\n    \"userUnit\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/connectome-example.service\"\n  },\n  \"layout\": {\n    \"config\": \"{ROOT:home}/example/.local/share/connectome/example/cook-config/{sha256:path-derived:16}\",\n    \"connectorState\": {},\n    \"credentials\": \"{ROOT:home}/example/.local/share/connectome/example/cook-credentials/{sha256:path-derived:16}\",\n    \"runtime\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}\",\n    \"schema\": \"connectome.host-layout/v1\",\n    \"state\": \"{ROOT:home}/example/.local/state/connectome/example\",\n    \"workspace\": \"{ROOT:home}/example/.local/share/connectome/example/workspace\"\n  },\n  \"localExtensions\": [],\n  \"outputs\": [\n    {\n      \"mode\": 384,\n      \"path\": \"../../cook-config/{sha256:path-derived:16}/recipes/cook-recipe.json\",\n      \"sha256\": \"45ee9e6ae5796c5bec92338ac96f869a841c1c80c4e0484cfe10c326451784fc\"\n    },\n    {\n      \"mode\": 384,\n      \"path\": \"connectome-example.service\",\n      \"sha256\": \"{sha256:path-derived:20}\"\n    },\n    {\n      \"mode\": 448,\n      \"path\": \"run.sh\",\n      \"sha256\": \"{sha256:path-derived:7}\"\n    }\n  ],\n  \"recipe\": {\n    \"path\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/cook-recipe.json\",\n    \"sha256\": \"{sha256:path-derived:1}\"\n  },\n  \"recipePath\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/cook-recipe.json\",\n  \"requirements\": [\n    {\n      \"envName\": \"EXAMPLE_API_KEY\",\n      \"name\": \"EXAMPLE_API_KEY\",\n      \"origin\": \"unresolved\"\n    },\n    {\n      \"envName\": \"EXAMPLE_BASE_URL\",\n      \"name\": \"EXAMPLE_BASE_URL\",\n      \"origin\": \"unresolved\"\n    }\n  ],\n  \"state\": {\n    \"path\": \"{ROOT:home}/example/.local/state/connectome/example\"\n  },\n  \"version\": 2\n}\n"
+    "text": "{\n  \"phase\": \"installed\",\n  \"layout\": {\n    \"schema\": \"connectome.host-layout/v1\",\n    \"runtime\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}\",\n    \"config\": \"{ROOT:home}/example/.local/share/connectome/example/cook-config/{sha256:path-derived:19}\",\n    \"credentials\": \"{ROOT:home}/example/.local/share/connectome/example/cook-credentials/{sha256:path-derived:19}\",\n    \"state\": \"{ROOT:home}/example/.local/state/connectome/example\",\n    \"workspace\": \"{ROOT:home}/example/.local/share/connectome/example/workspace\",\n    \"connectorState\": {}\n  }\n}\n"
    },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/cook-layout.json": {
-    "mode": "0644",
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/.prepared": {
+    "mode": "0600",
     "sha256": "{sha256:path-derived:22}",
-    "text": "{\n  \"config\": \"{ROOT:home}/example/.local/share/connectome/example/cook-config/{sha256:path-derived:16}\",\n  \"connectorState\": {},\n  \"credentials\": \"{ROOT:home}/example/.local/share/connectome/example/cook-credentials/{sha256:path-derived:16}\",\n  \"runtime\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}\",\n  \"schema\": \"connectome.host-layout/v1\",\n  \"state\": \"{ROOT:home}/example/.local/state/connectome/example\",\n  \"workspace\": \"{ROOT:home}/example/.local/share/connectome/example/workspace\"\n}\n"
+    "text": "{sha256:path-derived:19}"
    },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/cook-recipe.json": {
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/connectome-example.service": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:23}",
+    "text": "[Unit]\nDescription=Synthetic host (connectome-example.service)\n\n[Service]\nType=simple\nWorkingDirectory={ROOT:home}/example/.local/state/connectome/example\nExecStart=/bin/sh \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/run.sh\" --headless\nRestart=on-failure\nUMask=0077\n\n[Install]\nWantedBy=default.target\n"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/connectome.lock": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:24}",
+    "text": "{\n  \"backend\": \"host\",\n  \"build\": {\n    \"dir\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}\",\n    \"id\": \"9c63b54b5bd2b476610d50f9db848b929f482df80a335b1c69de26c16ea1ad71\"\n  },\n  \"components\": [],\n  \"connectomeHost\": {\n    \"commit\": \"cef933981dc0699fc00e5189b129d854ff8d43f6\",\n    \"path\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/app\",\n    \"ref\": \"cef933981dc0699fc00e5189b129d854ff8d43f6\",\n    \"url\": \"{ROOT:srv}/example-inputs/host-00000001.bundle\"\n  },\n  \"cook\": {\n    \"version\": \"0.0.1\"\n  },\n  \"createdAt\": \"2026-01-02T03:04:05.678Z\",\n  \"credentials\": [\n    \"CHAT_RC_PATH\",\n    \"EXAMPLE_API_KEY\",\n    \"EXAMPLE_AUTH_NAME\",\n    \"EXAMPLE_BASE_URL\"\n  ],\n  \"engines\": {\n    \"bun\": {\n      \"path\": \"{ROOT:srv}/example-inputs/bun-1.0.0/bun\",\n      \"realPath\": \"{ROOT:srv}/example-inputs/bun-1.0.0/bun\",\n      \"version\": \"1.0.0\"\n    },\n    \"node\": {\n      \"path\": \"{ROOT:opt}/example-node/1.0.0/bin/node\",\n      \"realPath\": \"{ROOT:opt}/example-node/1.0.0/bin/node\",\n      \"version\": \"1.0.0\"\n    }\n  },\n  \"external\": [\n    {\n      \"command\": \"{ROOT:opt}/example-runtime/r1/bin/node\",\n      \"name\": \"chat\"\n    },\n    {\n      \"command\": \"{ROOT:usr}/bin/python3\",\n      \"name\": \"relay\"\n    },\n    {\n      \"command\": \"{ROOT:opt}/example-runtime/r1/bin/node\",\n      \"name\": \"shell\"\n    }\n  ],\n  \"hostDependencies\": [\n    {\n      \"name\": \"@animalabs/context-manager\",\n      \"originalRange\": \"^1.2.0\",\n      \"packageJsonDelta\": {\n        \"direct\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz\",\n          \"before\": \"^1.2.0\",\n          \"name\": \"@animalabs/context-manager\",\n          \"section\": \"dependencies\"\n        },\n        \"override\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz\",\n          \"before\": null,\n          \"name\": \"@animalabs/context-manager\",\n          \"section\": \"overrides\"\n        }\n      },\n      \"provenance\": {\n        \"archive\": \"{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz\",\n        \"commit_verifiable\": false,\n        \"kind\": \"artifact\",\n        \"name\": \"@animalabs/context-manager\",\n        \"payload\": \"operator-supplied prebuilt payload, verified out of band\",\n        \"sha256\": \"d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52\",\n        \"version\": \"1.2.3\"\n      },\n      \"sha256\": \"d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52\",\n      \"size\": 2071,\n      \"snapshot\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz\",\n      \"version\": \"1.2.3\"\n    },\n    {\n      \"name\": \"@animalabs/agent-framework\",\n      \"originalRange\": \"^4.5.0\",\n      \"packageJsonDelta\": {\n        \"direct\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz\",\n          \"before\": \"^4.5.0\",\n          \"name\": \"@animalabs/agent-framework\",\n          \"section\": \"dependencies\"\n        },\n        \"override\": {\n          \"after\": \"file:{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz\",\n          \"before\": null,\n          \"name\": \"@animalabs/agent-framework\",\n          \"section\": \"overrides\"\n        }\n      },\n      \"provenance\": {\n        \"archive\": \"{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz\",\n        \"commit_verifiable\": false,\n        \"kind\": \"artifact\",\n        \"name\": \"@animalabs/agent-framework\",\n        \"payload\": \"operator-supplied prebuilt payload, verified out of band\",\n        \"sha256\": \"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\n        \"version\": \"4.5.6\"\n      },\n      \"sha256\": \"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\n      \"size\": 2071,\n      \"snapshot\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz\",\n      \"version\": \"4.5.6\"\n    }\n  ],\n  \"launch\": {\n    \"kind\": \"script\",\n    \"script\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/run.sh\",\n    \"userUnit\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/connectome-example.service\"\n  },\n  \"layout\": {\n    \"config\": \"{ROOT:home}/example/.local/share/connectome/example/cook-config/{sha256:path-derived:19}\",\n    \"connectorState\": {},\n    \"credentials\": \"{ROOT:home}/example/.local/share/connectome/example/cook-credentials/{sha256:path-derived:19}\",\n    \"runtime\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}\",\n    \"schema\": \"connectome.host-layout/v1\",\n    \"state\": \"{ROOT:home}/example/.local/state/connectome/example\",\n    \"workspace\": \"{ROOT:home}/example/.local/share/connectome/example/workspace\"\n  },\n  \"localExtensions\": [],\n  \"outputs\": [\n    {\n      \"mode\": 384,\n      \"path\": \"../../cook-config/{sha256:path-derived:19}/recipes/cook-recipe.json\",\n      \"sha256\": \"45ee9e6ae5796c5bec92338ac96f869a841c1c80c4e0484cfe10c326451784fc\"\n    },\n    {\n      \"mode\": 384,\n      \"path\": \"connectome-example.service\",\n      \"sha256\": \"{sha256:path-derived:23}\"\n    },\n    {\n      \"mode\": 448,\n      \"path\": \"run.sh\",\n      \"sha256\": \"{sha256:path-derived:9}\"\n    }\n  ],\n  \"recipe\": {\n    \"path\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/cook-recipe.json\",\n    \"sha256\": \"{sha256:path-derived:1}\"\n  },\n  \"recipePath\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/cook-recipe.json\",\n  \"requirements\": [\n    {\n      \"envName\": \"EXAMPLE_API_KEY\",\n      \"name\": \"EXAMPLE_API_KEY\",\n      \"origin\": \"unresolved\"\n    },\n    {\n      \"envName\": \"EXAMPLE_BASE_URL\",\n      \"name\": \"EXAMPLE_BASE_URL\",\n      \"origin\": \"unresolved\"\n    }\n  ],\n  \"state\": {\n    \"path\": \"{ROOT:home}/example/.local/state/connectome/example\"\n  },\n  \"version\": 2\n}\n"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/cook-layout.json": {
+    "mode": "0644",
+    "sha256": "{sha256:path-derived:25}",
+    "text": "{\n  \"config\": \"{ROOT:home}/example/.local/share/connectome/example/cook-config/{sha256:path-derived:19}\",\n  \"connectorState\": {},\n  \"credentials\": \"{ROOT:home}/example/.local/share/connectome/example/cook-credentials/{sha256:path-derived:19}\",\n  \"runtime\": \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}\",\n  \"schema\": \"connectome.host-layout/v1\",\n  \"state\": \"{ROOT:home}/example/.local/state/connectome/example\",\n  \"workspace\": \"{ROOT:home}/example/.local/share/connectome/example/workspace\"\n}\n"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/cook-recipe.json": {
     "mode": "0600",
     "sha256": "{sha256:path-derived:1}",
     "text": "{\n  \"name\": \"Example\",\n  \"description\": \"Synthetic agent of the deploy corpus.\",\n  \"agent\": {\n    \"name\": \"Example\",\n    \"provider\": \"mock\",\n    \"model\": \"mock-example\",\n    \"systemPrompt\": \"Synthetic prompt. Do nothing.\",\n    \"maxTokens\": 1024\n  },\n  \"modules\": {\n    \"history\": true,\n    \"workspace\": {\n      \"path\": \"{ROOT:home}/example/.local/state/connectome/example/workspace\"\n    }\n  },\n  \"requirements\": {\n    \"EXAMPLE_API_KEY\": {\n      \"exposeAs\": \"EXAMPLE_API_KEY\",\n      \"required\": false\n    },\n    \"EXAMPLE_BASE_URL\": {\n      \"exposeAs\": \"EXAMPLE_BASE_URL\",\n      \"required\": false\n    }\n  },\n  \"mcpServers\": {\n    \"chat\": {\n      \"command\": \"{ROOT:opt}/example-runtime/r1/bin/node\",\n      \"args\": [\n        \"{ROOT:opt}/example-connectors/chat-0a1b2c3d/build/index.js\",\n        \"--stdio\"\n      ],\n      \"env\": {\n        \"CHAT_RC_PATH\": \"${CHAT_RC_PATH}\",\n        \"CHAT_STATE_DIR\": \"{ROOT:home}/example/.local/state/connectome/example/chat\",\n        \"CHAT_REALM\": \"https://chat.example.invalid\"\n      },\n      \"source\": {\n        \"external\": true\n      },\n      \"toolPrefix\": \"chat\"\n    },\n    \"relay\": {\n      \"command\": \"{ROOT:usr}/bin/python3\",\n      \"args\": [\n        \"{ROOT:opt}/example-connectors/example/relay.py\",\n        \"--node\",\n        \"{ROOT:opt}/example-runtime/r1/bin/node\",\n        \"--connector\",\n        \"{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js\",\n        \"--state\",\n        \"{ROOT:home}/example/.local/state/connectome/example/relay-channel\",\n        \"--config\",\n        \"{ROOT:opt}/example-connectors/example/relay-config.json\"\n      ],\n      \"env\": {\n        \"RELAY_TOKENS_FILE\": \"{ROOT:home}/example/.local/state/connectome/example/credentials/relay\"\n      },\n      \"source\": {\n        \"external\": true\n      },\n      \"reconnect\": false\n    },\n    \"shell\": {\n      \"command\": \"{ROOT:opt}/example-runtime/r1/bin/node\",\n      \"args\": [\n        \"{ROOT:opt}/example-connectors/terminal-9c8d7e6f/dist/src/mcp/mcp-stdio-server.js\"\n      ],\n      \"env\": {\n        \"HOME\": \"{ROOT:home}/example\",\n        \"PATH\": \"{ROOT:usr}/bin:/bin\"\n      },\n      \"source\": {\n        \"external\": true\n      }\n    },\n    \"inline\": {\n      \"url\": \"https://tools.example.invalid/mcp\",\n      \"transport\": \"http\"\n    }\n  }\n}\n"
    },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/deployment.json": {
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/deployment.json": {
     "mode": "0600",
-    "sha256": "{sha256:path-derived:23}",
+    "sha256": "{sha256:path-derived:26}",
     "text": "{\"config\":{\"connectors\":{},\"cook\":{\"connector_state\":{},\"host_dependencies\":[{\"archive\":\"{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz\",\"kind\":\"artifact\",\"name\":\"@animalabs/context-manager\",\"sha256\":\"d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52\",\"version\":\"1.2.3\"},{\"archive\":\"{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz\",\"kind\":\"artifact\",\"name\":\"@animalabs/agent-framework\",\"sha256\":\"0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee\",\"version\":\"4.5.6\"}],\"host_repo\":\"{ROOT:srv}/example-inputs/host-00000001.bundle\"},\"external_data_args\":[{\"args\":[\"{ROOT:opt}/example-connectors/example/relay.py\",\"--node\",\"{ROOT:opt}/example-runtime/r1/bin/node\",\"--connector\",\"{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js\",\"--state\",\"{ROOT:home}/example/.local/state/connectome/example/relay-channel\",\"--config\",\"{ROOT:opt}/example-connectors/example/relay-config.json\"],\"command\":\"{ROOT:usr}/bin/python3\",\"flag\":\"--state\",\"kind\":\"dir\",\"path\":\"{ROOT:home}/example/.local/state/connectome/example/relay-channel\",\"server\":\"relay\"}],\"modules\":{},\"name\":\"example\",\"recipe_file\":{\"path\":\"{ROOT:root}/example-deploy/recipe.json\",\"sha256\":\"{sha256:path-derived:1}\"},\"required_secrets\":[\"EXAMPLE_API_KEY\",\"EXAMPLE_BASE_URL\"],\"secret_files\":[{\"env\":\"CHAT_RC_PATH\",\"secret\":\"CHAT_RC\"}],\"secrets_file\":\"{ROOT:home}/example/.config/connectome-secrets/example.json\",\"state_dir\":\"{ROOT:home}/example/.local/state/connectome/example\"},\"pins\":{\"connectors\":{},\"runtime\":{\"agent-framework\":\"aa134e75fc19bc8cb3b73cb1ec53465dd9cf5c91\",\"connectome-host\":\"cef933981dc0699fc00e5189b129d854ff8d43f6\",\"cook\":\"1b874d9dd55b529486b8029dd9814a6c0e2147e1\"}}}"
    },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/host-inputs": {
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/host-inputs": {
     "kind": "directory",
     "mode": "0700"
    },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz": {
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz": {
     "mode": "0400",
     "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee"
    },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz": {
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz": {
     "mode": "0400",
     "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52"
    },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/managed-units": {
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/managed-units": {
     "kind": "directory",
     "mode": "0700"
    },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/managed-units/connectome-example.service": {
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/managed-units/connectome-example.service": {
     "mode": "0644",
-    "sha256": "{sha256:path-derived:20}",
-    "text": "[Unit]\nDescription=Synthetic host (connectome-example.service)\n\n[Service]\nType=simple\nWorkingDirectory={ROOT:home}/example/.local/state/connectome/example\nExecStart=/bin/sh \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/run.sh\" --headless\nRestart=on-failure\nUMask=0077\n\n[Install]\nWantedBy=default.target\n"
+    "sha256": "{sha256:path-derived:23}",
+    "text": "[Unit]\nDescription=Synthetic host (connectome-example.service)\n\n[Service]\nType=simple\nWorkingDirectory={ROOT:home}/example/.local/state/connectome/example\nExecStart=/bin/sh \"{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/run.sh\" --headless\nRestart=on-failure\nUMask=0077\n\n[Install]\nWantedBy=default.target\n"
    },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/run.sh": {
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/run.sh": {
     "mode": "0700",
-    "sha256": "{sha256:path-derived:7}",
+    "sha256": "{sha256:path-derived:9}",
     "text": "#!/bin/sh\n# synthetic launcher: the corpus starts nothing\ncd '{ROOT:home}/example/.local/state/connectome/example'\nexit 0\n"
    },
-   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/secrets.env": {
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/secrets.env": {
     "mode": "0600",
     "sha256": "{sha256:path-derived:10}",
     "text": "CHAT_RC_PATH=\"{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH\"\nEXAMPLE_API_KEY=\"corpus-placeholder-for-EXAMPLE_API_KEY\"\nEXAMPLE_BASE_URL=\"corpus-placeholder-for-EXAMPLE_BASE_URL\"\n"
    },
    "{ROOT:home}/example/.local/share/connectome/example/current": {
-    "link": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}"
+    "link": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}"
    },
    "{ROOT:home}/example/.local/share/connectome/example/state/ownership.json": {
     "entries_by_shape": [
      {
       "kind": "link",
       "path": "{ROOT:home}/example/.config/systemd/user/connectome-example.service",
-      "target": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/managed-units/connectome-example.service"
+      "target": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/managed-units/connectome-example.service"
      },
      {
       "kind": "file",
       "path": "{ROOT:home}/example/.config/systemd/user/connectome-example.service.d/90-connectome-env.conf",
-      "sha256": "{sha256:path-derived:17}"
+      "sha256": "{sha256:path-derived:20}"
      },
      {
       "kind": "link",
       "path": "{ROOT:home}/example/.config/systemd/user/default.target.wants/connectome-example.service",
-      "target": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/managed-units/connectome-example.service"
+      "target": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/managed-units/connectome-example.service"
      },
      {
       "kind": "directory",
@@ -3914,7 +6850,7 @@
      },
      {
       "kind": "directory",
-      "path": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}"
+      "path": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}"
      },
      {
       "kind": "file",
@@ -3923,17 +6859,17 @@
      },
      {
       "kind": "file",
-      "path": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/managed-units/connectome-example.service",
-      "sha256": "{sha256:path-derived:20}"
+      "path": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/managed-units/connectome-example.service",
+      "sha256": "{sha256:path-derived:23}"
      },
      {
       "kind": "link",
       "path": "{ROOT:home}/example/.local/share/connectome/example/current",
-      "target": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}"
+      "target": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}"
      }
     ],
     "mode": "0600",
-    "sha256": "{sha256:path-derived:24}"
+    "sha256": "{sha256:path-derived:27}"
    }
   },
   "verify_cook_calls": [
@@ -4175,7 +7111,7 @@
      },
      {
       "kind": "directory",
-      "path": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}"
+      "path": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}"
      },
      {
       "kind": "file",
@@ -4184,8 +7120,8 @@
      },
      {
       "kind": "file",
-      "path": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:16}/managed-units/connectome-example.service",
-      "sha256": "{sha256:path-derived:20}"
+      "path": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:19}/managed-units/connectome-example.service",
+      "sha256": "{sha256:path-derived:23}"
      },
      {
       "kind": "link",
@@ -4194,7 +7130,7 @@
      }
     ],
     "mode": "0600",
-    "sha256": "{sha256:path-derived:25}"
+    "sha256": "{sha256:path-derived:28}"
    }
   },
   "verify_cook_calls": []
@@ -4225,7 +7161,7 @@
   "activate": {
    "changed": true
   },
-  "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:26}",
+  "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:29}",
   "cook_command": [
    "{ROOT:usr}/bin/python3",
    "{ROOT:srv}/example-inputs/connectome-agents/scripts/cook-adapter.py",
@@ -4253,7 +7189,7 @@
    }
   },
   "prepare": {
-   "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:26}",
+   "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{sha256:path-derived:29}",
    "changed": true,
    "plan": {
     "budgets": {},
@@ -4323,11 +7259,253 @@
     "EXAMPLE_BASE_URL"
    ]
   },
-  "request_id": "{sha256:path-derived:26}",
-  "spec_sha256": "{sha256:path-derived:9}"
+  "request_id": "{sha256:path-derived:29}",
+  "spec_sha256": "{sha256:path-derived:8}"
  },
  "substitutions": [
   "Synthetic case: nothing in it is a value of a deployed host.",
   "Cook is not run: test/corpus/replay_cook.py replays a made-up build in the shape of a real one, and writes its lock in the key order cook writes."
- ]
+ ],
+ "unit_verifier_refuses": {
+  "activation": "install_only",
+  "command": "apply",
+  "cook_calls": 1,
+  "core": {
+   "error_code": "E_UNIT_VERIFY",
+   "msg": "E_UNIT_VERIFY: Static user unit verification failed; systemd-analyze requires a usable user manager runtime. (activation failed at health: systemd-analyze exited 7; previous deployment restored)",
+   "phase": "activate",
+   "prepare": {
+    "build_dir": "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}",
+    "changed": true,
+    "plan": {
+     "activation": "install_only",
+     "budgets": {},
+     "exclusive_with": [
+      {
+       "scope": "user",
+       "unit": "connectome.service"
+      }
+     ],
+     "external_data_args": [
+      {
+       "args": [
+        "{ROOT:opt}/example-connectors/example/relay.py",
+        "--node",
+        "{ROOT:opt}/example-runtime/r1/bin/node",
+        "--connector",
+        "{ROOT:opt}/example-connectors/relay-4e5f6a7b/dist/src/index.js",
+        "--state",
+        "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+        "--config",
+        "{ROOT:opt}/example-connectors/example/relay-config.json"
+       ],
+       "command": "{ROOT:usr}/bin/python3",
+       "flag": "--state",
+       "kind": "dir",
+       "path": "{ROOT:home}/example/.local/state/connectome/example/relay-channel",
+       "server": "relay"
+      }
+     ],
+     "host_dependencies": [
+      {
+       "archive": "{ROOT:srv}/example-inputs/context-manager-1.2.3.tgz",
+       "commit_verifiable": false,
+       "kind": "artifact",
+       "name": "@animalabs/context-manager",
+       "payload": "operator-supplied prebuilt payload, verified out of band",
+       "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52",
+       "version": "1.2.3"
+      },
+      {
+       "archive": "{ROOT:srv}/example-inputs/agent-framework-4.5.6.tgz",
+       "commit_verifiable": false,
+       "kind": "artifact",
+       "name": "@animalabs/agent-framework",
+       "payload": "operator-supplied prebuilt payload, verified out of band",
+       "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee",
+       "version": "4.5.6"
+      }
+     ],
+     "recipe_file": {
+      "path": "{ROOT:root}/example-deploy/recipe.json",
+      "sha256": "{sha256:path-derived:1}"
+     },
+     "secret_files": [
+      {
+       "env": "CHAT_RC_PATH",
+       "path": "{ROOT:home}/example/.local/share/connectome/example/state/secret-files/CHAT_RC_PATH",
+       "secret": "CHAT_RC"
+      }
+     ],
+     "secrets_file": "{ROOT:home}/example/.config/connectome-secrets/example.json",
+     "state_dir": "{ROOT:home}/example/.local/state/connectome/example"
+    },
+    "secret_names": [
+     "CHAT_RC",
+     "EXAMPLE_API_KEY",
+     "EXAMPLE_BASE_URL"
+    ]
+   }
+  },
+  "removed": [],
+  "status": 1,
+  "systemctl_calls": [
+   [
+    "show",
+    "-p",
+    "ActiveState",
+    "--value",
+    "connectome-example.service"
+   ],
+   [
+    "show",
+    "-p",
+    "ActiveState",
+    "--value",
+    "connectome-example.service"
+   ],
+   [
+    "show",
+    "-p",
+    "ActiveState",
+    "--value",
+    "connectome-example.service"
+   ],
+   [
+    "show",
+    "-p",
+    "ActiveState",
+    "--value",
+    "connectome-example.service"
+   ],
+   [
+    "daemon-reload"
+   ],
+   [
+    "show",
+    "-p",
+    "EnvironmentFiles",
+    "--value",
+    "connectome-example.service"
+   ],
+   [
+    "show",
+    "-p",
+    "ActiveState",
+    "--value",
+    "connectome-example.service"
+   ],
+   [
+    "daemon-reload"
+   ]
+  ],
+  "systemctl_calls_before_the_root_existed": [
+   [
+    "show",
+    "-p",
+    "ActiveState",
+    "--value",
+    "connectome-example.service"
+   ]
+  ],
+  "tree": {
+   "{ROOT:home}/example/.config/systemd": {
+    "kind": "directory",
+    "mode": "0755"
+   },
+   "{ROOT:home}/example/.config/systemd/user": {
+    "kind": "directory",
+    "mode": "0700"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example": {
+    "kind": "directory",
+    "mode": "0700"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/.deploy-lock": {
+    "mode": "0644",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds": {
+    "kind": "directory",
+    "mode": "0700"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}": {
+    "kind": "directory",
+    "mode": "0700"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/.cook-layout.json": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:3}"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/.prepared": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:4}"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/connectome-example.service": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:5}"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/connectome.lock": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:6}"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-layout.json": {
+    "mode": "0644",
+    "sha256": "{sha256:path-derived:7}"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/cook-recipe.json": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:1}"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/deployment.json": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:8}"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs": {
+    "kind": "directory",
+    "mode": "0700"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee.tgz": {
+    "mode": "0400",
+    "sha256": "0ea3ba812fdff4e74062f50ef98513cd4f4c863d5cb299b798dcaf4b47a2e1ee"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/host-inputs/d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52.tgz": {
+    "mode": "0400",
+    "sha256": "d1511ddbb25b358a2dfac83352485098a34b30fd85eb68303bf61bfe27e06f52"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units": {
+    "kind": "directory",
+    "mode": "0700"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service": {
+    "mode": "0644",
+    "sha256": "{sha256:path-derived:5}"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/run.sh": {
+    "mode": "0700",
+    "sha256": "{sha256:path-derived:9}"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/secrets.env": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:10}"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/state": {
+    "kind": "directory",
+    "mode": "0700"
+   },
+   "{ROOT:home}/example/.local/share/connectome/example/state/ownership.json": {
+    "mode": "0600",
+    "sha256": "{sha256:path-derived:30}",
+    "text": "{\"entries\":[{\"kind\":\"directory\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}\"},{\"kind\":\"file\",\"path\":\"{ROOT:home}/example/.local/share/connectome/example/builds/{REQUEST}/managed-units/connectome-example.service\",\"sha256\":\"{sha256:path-derived:5}\"}],\"version\":1}"
+   }
+  },
+  "unit_verifier_calls": [
+   [
+    "--user",
+    "verify",
+    "{ROOT:home}/example/.config/systemd/user/connectome-example.service"
+   ]
+  ],
+  "verify_cook_calls": 1
+ }
 }

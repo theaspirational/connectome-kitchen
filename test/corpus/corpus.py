@@ -7,7 +7,8 @@ case through the oracle's deploy path and writes what came out; `check` runs
 it again and compares; `compare` puts the steps kitchen has already ported
 (config, inputs, archive, lock) beside the oracle on the same files, and then
 runs the TS engine (deploy, cook) on the whole case at the same root and holds
-its record against the oracle's.
+its record against the oracle's. That record includes the deployment installed without a start and then started, and
+the way back, through the contract with a stand-in for the unit verifier (stand_in_verifier.py).
 
     corpus.py record  --corpus DIR [--case NAME]
     corpus.py check   --corpus DIR [--case NAME]
@@ -212,10 +213,13 @@ class World:
     def moved(self, value):
         return move(value, str(self.sandbox))
 
-    def build(self, mutation=None):
-        """Lays the files out and returns nothing; `self.request` is what the engine is then asked."""
+    def build(self, mutation=None, unit_without_install=False):
+        """Lays the files out and returns nothing; `self.request` is what the engine is then asked.
+
+        With `unit_without_install`, cook is the stand-in in every case, and the unit it writes has no `[Install]` section."""
         import connectome_config, connectome_deploy
         data, self.mutation = self.case.data, mutation
+        self.verifier = None
         ts_port.remove(self.sandbox)
         make_directory(self.sandbox)
         make_directory(self.sandbox / 'home')
@@ -267,7 +271,7 @@ class World:
         stand_in = '#!%s -I\nimport runpy, sys\nsys.dont_write_bytecode = True\nrunpy.run_path(%r, run_name="__main__")\n' % (sys.executable, str(HERE / 'stand_in_cook.py'))
         # A case with the files of a real build: the runtime replays that build's lock instead (replay_cook.py).
         self.replay = None
-        if 'cook_build' in data:
+        if 'cook_build' in data and not unit_without_install:
             self.replay = {'directory': str((self.case.directory / data['cook_build']['directory']).resolve()), 'request_id': data['cook_build']['request_id'],
                            'sandbox': str(self.sandbox), 'absolute': ABSOLUTE.pattern,
                            'cooked': str((self.case.directory / data['cook_build']['cooked']).resolve()) if data['cook_build'].get('cooked') else None}
@@ -306,6 +310,8 @@ class World:
         # The oracle's own fake service manager; with this marker it answers `inactive` until it is told to start a unit.
         make_directory(Path(self.root).parent, private_under=self.home)
         (Path(self.root).parent / 'track-unit-state').write_text('')
+        if unit_without_install:
+            (Path(self.root).parent / 'unit-without-install-section').write_text('')  # read by stand_in_cook.py
         self.systemctl = [sys.executable, str(ORACLE / 'tests/fixtures/systemctl.py'), self.root]
         self.request = {'base': self.base, 'root': self.root, 'unit_dir': self.unit_dir, 'layers': copy.deepcopy(self.layers),
                         'versions': self.versions, 'engines': {'cook': tools}, 'systemctl': self.systemctl}
@@ -328,15 +334,46 @@ class World:
             job_file.unlink(missing_ok=True)
             out_file.unlink(missing_ok=True)
 
-    def dispatch(self, command, **extra):
+    def stand_in_verifier(self, verdict=None):
+        """Puts a `systemd-analyze` where both engines find it first: stand_in_verifier.py, which writes its calls beside the
+        other logs of the root. With `verdict` it gives that exit status whatever the units are. Until the next `build`."""
+        self.verifier = self.sandbox / 'verifier'
+        calls, verdict_file = Path(self.root) / VERIFIER_LOG, self.verifier / 'verdict'
+        write(self.verifier / 'systemd-analyze', '#!%s -I\nimport runpy, sys\nsys.dont_write_bytecode = True\nrunpy.run_path(%r, init_globals={"CALLS": %r, "VERDICT": %r}, run_name="__main__")\n' % (
+            sys.executable, str(HERE / 'stand_in_verifier.py'), str(calls), str(verdict_file)), 0o755)
+        if verdict is not None:
+            write(verdict_file, '%d\n' % verdict)
+
+    @contextlib.contextmanager
+    def search_path(self):
+        """The search path of an engine call: with a stand-in verifier, its directory first. Both engines look the verifier up
+        by name on the path of their own process (`shutil.which`; `which` of src/deploy.ts), and the TS driver inherits this one."""
+        if self.verifier is None:
+            yield
+            return
+        with patch.dict(os.environ, {'PATH': str(self.verifier) + os.pathsep + os.environ.get('PATH', os.defpath)}):
+            yield
+
+    def dispatch(self, command, activation=None, **extra):
+        """Contract v1 `plan` or `apply`. With `activation`, the agent's layer asks for that activation; the rest is the same request."""
         import connectome_deploy, kitchen_v1
         request = dict(copy.deepcopy(self.request), **extra)
-        if self.node:
-            return self.port({'op': 'dispatch', 'command': command, 'request': request, 'secrets': self.secrets if command == 'apply' else None})
-        with host_model(self.sandbox, self.account), patch.object(connectome_deploy, 'run', adapter_through_seam(connectome_deploy.run)):
-            envelope, status = kitchen_v1.dispatch({'contract': kitchen_v1.CONTRACT, 'command': command, 'request': request},
-                                                   self.secrets if command == 'apply' else None)
+        if activation is not None:
+            request['layers'][-1]['activation'] = activation
+        with self.search_path():
+            if self.node:
+                return self.port({'op': 'dispatch', 'command': command, 'request': request, 'secrets': self.secrets if command == 'apply' else None})
+            with host_model(self.sandbox, self.account), patch.object(connectome_deploy, 'run', adapter_through_seam(connectome_deploy.run)):
+                envelope, status = kitchen_v1.dispatch({'contract': kitchen_v1.CONTRACT, 'command': command, 'request': request},
+                                                       self.secrets if command == 'apply' else None)
         return {'status': status, 'core': envelope['core']}
+
+    def units_stopped(self):
+        """The units the fake service manager has as active, stopped behind the engine's back, as an operator stops an agent."""
+        states = Path(self.root).parent / 'unit-states.json'
+        known = json.loads(states.read_text()) if states.is_file() else {}  # no file: nothing was ever started, which the record then shows
+        states.write_text(json.dumps({key: 'inactive' for key in known}))
+        return sorted(key for key, value in known.items() if value == 'active')
 
     def role_view(self):
         """The role's own call: its cook command, check mode. Nothing is run and nothing is written."""
@@ -392,7 +429,14 @@ class World:
 
     def identity(self):
         """The name and the request of the replayed build, from the case as the layer has it: nothing moved, the committed recipe pin,
-        the role's cook command. No file is read and none is written; these are the engine's own steps for both (deploy.py:478-482)."""
+        the role's cook command. No file is read and none is written.
+
+        This is not the engine's answer. On both sides the harness puts the request together itself, with the engine's
+        parts (`resolve_pins`, `canonical`) in the engine's order (deploy.py:478-482): `request_of` here, op `identity` in
+        ts_driver.mjs. Neither constructs a `Deployment`. So `is_the_replayed_build` shows that the case is the input of the
+        kept build, and that the two `canonical` and `resolve_pins` agree on it; that an engine itself gives the build this
+        name is shown elsewhere: `role` holds `Deployment.request_id` of each engine on the moved case, and `import-build`
+        refuses a case whose request the oracle names otherwise."""
         import connectome_deploy
         data = self.case.data
         effective, spec, request = request_of(data)
@@ -518,6 +562,81 @@ def brief(value):
     return value
 
 
+VERIFIER_LOG = 'unit-verifier-calls.jsonl'
+VOLATILE = ('systemctl-calls', 'unit-states.json')
+LOGS = ('cook-calls.jsonl', 'verify-cook-calls.jsonl', VERIFIER_LOG)
+# The deployment through the contract with a unit verifier found: installed and not started, then started, and the way back.
+# (step, command, activation). Before `stopped`, the units are stopped behind the engine's back.
+# It is run twice. With the unit cook writes, a start adds the links of its `[Install]` section and an install without a start
+# takes them away, so the installed files alone already say that something changes. With a unit that has no such section the
+# files are the same under both activations, and the engine's own marker (`state/activation`) is all that tells them apart.
+SWITCH = (
+    ('installed', 'apply', 'install_only'),
+    ('installed_again', 'apply', 'install_only'),
+    ('start_planned', 'plan', 'start'),
+    ('started', 'apply', 'start'),
+    ('started_again', 'apply', 'start'),
+    ('install_only_planned_while_active', 'plan', 'install_only'),
+    ('install_only_refused_while_active', 'apply', 'install_only'),
+    ('stopped', None, None),
+    ('install_only_planned', 'plan', 'install_only'),
+    ('installed_after_stop', 'apply', 'install_only'),
+    ('installed_after_stop_again', 'apply', 'install_only'),
+)
+
+
+class Steps:
+    """Engine calls on one world, one after another, each with what it changed and whom it called."""
+
+    def __init__(self, world, files):
+        self.world, self.files = world, files
+        self.state = snapshot(world.sandbox)
+        self.kept = (world.unit_dir, str(Path(world.root) / 'state'))  # the text of what the engine itself writes
+        self.seen = self.counts()
+
+    def logs(self):
+        root = Path(self.world.root)
+        return {'systemctl_calls_before_the_root_existed': root.parent / 'preflight-systemctl-calls', 'systemctl_calls': root / 'systemctl-calls',
+                'cook_calls': root / 'cook-calls.jsonl', 'verify_cook_calls': root / 'verify-cook-calls.jsonl', 'unit_verifier_calls': root / VERIFIER_LOG}
+
+    def counts(self):
+        return {name: len(lines(path)) for name, path in self.logs().items()}
+
+    def call(self, command, activation):
+        outcome = self.world.dispatch(command, activation=activation, **({'operator_files': self.files} if command == 'apply' else {}))
+        now = snapshot(self.world.sandbox)
+        outcome['command'], outcome['activation'] = command, activation
+        outcome['tree'] = {path: (row if path.startswith(self.kept) else {key: value for key, value in row.items() if key != 'text'})
+                           for path, row in now.items() if self.state.get(path) != row and Path(path).name not in VOLATILE + LOGS + ('preflight-systemctl-calls',)}
+        outcome['removed'] = sorted(path for path in self.state if path not in now)
+        for name, path in self.logs().items():
+            calls = lines(path)[self.seen[name]:]
+            outcome[name] = len(calls) if name in ('cook_calls', 'verify_cook_calls') else calls
+        self.state, self.seen = now, self.counts()
+        return outcome
+
+
+def activation_switch(world, unit_without_install=False):
+    """SWITCH on a sandbox of its own. Returns the steps in order."""
+    world.build(unit_without_install=unit_without_install)
+    world.stand_in_verifier()
+    steps, done = Steps(world, world.operator_files()), []
+    for name, command, activation in SWITCH:
+        if command is None:
+            done.append({'step': name, 'units': world.units_stopped()})
+            steps.state = snapshot(world.sandbox)
+        else:
+            done.append(dict(steps.call(command, activation), step=name))
+    return done
+
+
+def verifier_refuses(world):
+    """The first install without a start, with a unit verifier that refuses the unit: what the engine answers and what it leaves."""
+    world.build()
+    world.stand_in_verifier(verdict=7)
+    return Steps(world, world.operator_files()).call('apply', 'install_only')
+
+
 MUTATIONS = (('recipe-pin', 'plan'), ('archive-pin', 'plan'), ('secrets-file-missing', 'plan'), ('external-command-missing', 'apply'))
 
 
@@ -551,6 +670,9 @@ def run_case(case, sandbox, node=None):
     installed['systemctl_calls'] = lines(Path(world.root) / 'systemctl-calls')
     installed['systemctl_calls_before_the_root_existed'] = lines(Path(world.root).parent / 'preflight-systemctl-calls')
     installed['cook_calls'] = len(lines(Path(world.root) / 'cook-calls.jsonl'))
+    switched = activation_switch(world)
+    switched_without_install = activation_switch(world, unit_without_install=True)
+    refused_by_verifier = verifier_refuses(world)
     world.build()
     before = snapshot(world.sandbox)
     files = world.operator_files()
@@ -559,7 +681,8 @@ def run_case(case, sandbox, node=None):
         'engine': {'oracle': 'a49b5dc', 'combine': 'ansible-core' if connectome_config.combine is not connectome_config._python_combine else 'stand-in of the oracle (no ansible-core here)',
                    'cook': 'stand-in (test/corpus/stand_in_cook.py)' if not world.replay else 'not run: the lock and outputs of a build kept with the case, replayed (test/corpus/replay_cook.py)' + (
                        '; the lock is the bytes cook wrote, in cook\'s key order' if world.replay.get('cooked') else ''), 'systemctl': 'fake of the oracle (oracle/tests/fixtures/systemctl.py)',
-                   'verify_cook': 'recorded, not performed (test/corpus/adapter_seam.py)', 'ownership': 'modelled (host_model in test/corpus/corpus.py)'},
+                   'verify_cook': 'recorded, not performed (test/corpus/adapter_seam.py)',
+                   'unit_verifier': 'stand-in found first on the search path, in `activation_switch` and `unit_verifier_refuses` only (test/corpus/stand_in_verifier.py)', 'ownership': 'modelled (host_model in test/corpus/corpus.py)'},
         'substitutions': case.data.get('substitutions', []),
         'config': {'layers': world.layers, 'effective': world.effective, 'secret_names': world.names},
         'inputs': {'operator_files': {name: {'sha256': sha256(base64.b64decode(value))} for name, value in files.items()}},
@@ -580,7 +703,7 @@ def run_case(case, sandbox, node=None):
         record['replayed_build'] = world.replayed_build()
     record['reapply'] = world.dispatch('apply', operator_files=files)
     again = snapshot(world.sandbox)
-    volatile = ('systemctl-calls', 'unit-states.json')
+    volatile = VOLATILE
     record['reapply']['tree_changes'] = sorted(path for path in set(after) | set(again) if after.get(path) != again.get(path) and Path(path).name not in volatile)
     record['plan_after_apply'] = world.dispatch('plan')
     # A later release of the same deployment: another cook pin, so another build beside the one that is current. Then the
@@ -588,7 +711,7 @@ def run_case(case, sandbox, node=None):
     later = copy.deepcopy(world.versions)
     pin = later['runtime']['cook']
     later['runtime']['cook'] = pin[:-1] + ('0' if pin[-1] != '0' else '1')
-    logs = ('cook-calls.jsonl', 'verify-cook-calls.jsonl')
+    logs = LOGS[:2]
     state = again
     for name, extra in (('rebuild', {'versions': later}), ('release_back', {})):
         calls = {log: len(lines(Path(world.root) / log)) for log in ('systemctl-calls',) + logs}
@@ -611,6 +734,9 @@ def run_case(case, sandbox, node=None):
     record['ported'] = brief(oracle_outcomes(world, jobs))
     record['refusals'] = refusals
     record['install_only'] = installed
+    record['activation_switch'] = switched
+    record['activation_switch_unit_without_install_section'] = switched_without_install
+    record['unit_verifier_refuses'] = refused_by_verifier
     # Tools and fixtures of this checkout appear in argv; they are not part of what the engine decided.
     text = json.dumps(record, indent=1, sort_keys=True, ensure_ascii=False)
     for value, token in ((str(world.sandbox), '{ROOT}'), (str(ROOT), '{KITCHEN}'), (world.request_id(), '{REQUEST}')):
@@ -701,9 +827,11 @@ def command_record(args, check=False):
             path.write_text(text)
             os.chmod(path, 0o644 if args.corpus == SYNTHETIC else 0o600)
             record = json.loads(text)
-            print('%s: plan %d, apply %d, reapply %d, rebuild %d, release back %d, install only %s, %d ported calls, %d refusals' % (
+            print('%s: plan %d, apply %d, reapply %d, rebuild %d, release back %d, install only %s, activation switch %s, unit verifier refusal %d, %d ported calls, %d refusals' % (
                 case.name, record['plan']['status'], record['apply']['status'], record['reapply']['status'], record['rebuild']['status'],
                 record['release_back']['status'], 'refused' if 'refused' in record['install_only'] else '%d applies' % len(record['install_only']['applies']),
+                ' '.join(''.join(str(step.get('status', '-')) for step in record[name]) for name in ('activation_switch', 'activation_switch_unit_without_install_section')),
+                record['unit_verifier_refuses']['status'],
                 len(record['ported']), len(record['refusals'])))
     return int(failed)
 
@@ -740,7 +868,8 @@ def engine_differences(case, world, raw, node):
 def command_compare(args):
     """The ported steps, live: oracle and TS port on the same files, outcome against outcome as canonical bytes.
 
-    Then the engine: plan, apply, what apply left, the second apply and the refusals of the TS engine against the oracle's.
+    Then the engine: plan, apply, what apply left, the second apply, the releases, the installs without a start, the switch
+    of activation and the refusals of the TS engine against the oracle's.
     """
     scratch = scratch_of(args.corpus, args.scratch)
     failed = False
@@ -767,7 +896,7 @@ def command_compare(args):
             print('%s %s: %d ported calls, %d equal, %d mismatch; golden %s; engine %s' % (
                 'PASS' if counts.get('mismatch', 0) == 0 and recorded and not parted else 'FAIL', case.name, len(jobs), counts.get('equal', 0), counts.get('mismatch', 0),
                 'reproduced' if recorded else 'NOT reproduced',
-                'not run' if args.steps_only else 'equal: role view, plan, apply, tree, re-apply, rebuild, release back, install only, refusals' if not parted else 'DIFFERS in %d places' % len(parted)))
+                'not run' if args.steps_only else 'equal: role view, plan, apply, tree, re-apply, rebuild, release back, install only, activation switch, unit verifier, refusals' if not parted else 'DIFFERS in %d places' % len(parted)))
             failed = failed or not recorded or bool(parted)
         finally:
             ts_port.remove(world.sandbox)
