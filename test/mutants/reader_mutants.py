@@ -20,8 +20,7 @@ repository's own checks of the reader:
 
 Status:
     killed     a unit file fails, or the differential reports a mismatch or
-               cannot run. Both are recorded, so that a mutant only one of
-               them catches is visible.
+               cannot run
     survived   neither notices it
     invalid    the mutant does not compile; it counts as nothing and fails
                the run
@@ -29,6 +28,12 @@ Status:
 `run` writes test/mutants/reader-results.golden; `run --check` compares with
 it. scripts/check-port-ready reads that file: a mutant that is not killed
 blocks, and so do results taken from other sources than the ones in the tree.
+
+The file holds the status of each mutant and nothing that depends on the
+runtime. Which of the two checks killed a mutant does: without the pinned
+Node in the list of verified runtimes the differential cannot run on Node
+24.14.0 and runs as before on 22.23.3. That detail is printed by each run
+(`killed_by`) and written to .cache/reader-mutants/details.json.
 
     python3 test/mutants/reader_mutants.py run [--check] [--workers 8] [--node node] [--only prefix]
 """
@@ -204,9 +209,14 @@ def run(args):
         counts[result['status']] = counts.get(result['status'], 0) + 1
     only_one = {'unit only': sorted(r['id'] for r in results if r['status'] == 'killed' and r['unit_files_failing'] and r['differential'] == 'agrees'),
                 'differential only': sorted(r['id'] for r in results if r['status'] == 'killed' and not r['unit_files_failing'])}
-    report = {'sources': sources(), 'unit': UNIT, 'differential': ' '.join(DIFFERENTIAL), 'mutants': len(results), 'counts': dict(sorted(counts.items())), 'results': results}
+    recorded = [{key: result[key] for key in ('id', 'file', 'mutation', 'status')} for result in results]
+    report = {'sources': sources(), 'unit': UNIT, 'differential': ' '.join(DIFFERENTIAL), 'mutants': len(results), 'counts': dict(sorted(counts.items())), 'results': recorded}
     text = json.dumps(report, indent=1) + '\n'
-    summary = {'mutants': len(results), 'counts': report['counts'], 'not_killed': [r['id'] for r in results if r['status'] != 'killed'], 'killed_by_one_check_only': {key: len(value) for key, value in only_one.items()}}
+    killed = [r for r in results if r['status'] == 'killed']
+    summary = {'mutants': len(results), 'counts': report['counts'], 'not_killed': [r['id'] for r in results if r['status'] != 'killed'],
+               'killed_by': {'both checks': len(killed) - sum(len(value) for value in only_one.values()), 'the unit files only': len(only_one['unit only']), 'the differential only': len(only_one['differential only'])},
+               'killed_by_one_check_only': only_one}
+    (out / 'details.json').write_text(json.dumps({'node': subprocess.run([args.node, '--version'], capture_output=True, text=True).stdout.strip(), 'results': results}, indent=1) + '\n')
     if args.only:
         print(json.dumps(dict(summary, results=[r for r in results]), indent=1))
         return 0
