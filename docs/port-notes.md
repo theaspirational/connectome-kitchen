@@ -292,8 +292,10 @@ refusal; it closes finding F1 of the first fix round.
   port, and asks the oracle separately, with a `TarInfo` that looks on,
   whether its listing reads a block above the limit. At the limit both accept
   and give the same manifest; above it the oracle accepts and the port
-  refuses. The port's peak memory on the two refused archives is 92 and 94
-  MiB against 886 and 907 at the limit, which shows the block is not read.
+  refuses. On the two refused archives the port's peak memory is about a
+  tenth of what it needs at the limit (on Node 22.23.3 under 100 MiB against
+  about 900), which shows the block is not read; `port_large.py` fails if a
+  refusal costs more than 256 MiB.
   `test/unit/port-tar-limits.test.js` holds the comparison itself for each of
   the five header types on a bare tar stream, without the data.
 - *Direction.* Fail closed only: the port refuses archives the oracle accepts
@@ -322,7 +324,8 @@ against 18 to 22 MB in the oracle, which streams.
   a header block, the manifest (at most 1 MiB, by archive.py:134), and a
   long-name or pax block of at most 2^28 bytes (D3). The oracle holds the
   same blocks, without the limit. Measured at the limit: a long name, oracle
-  0.8 GiB, port 0.9 GiB; a pax `path` record, oracle 1.0 GiB, port 0.9 GiB.
+  0.8 GiB, port 0.9 to 1.0 GiB; a pax `path` record, oracle 1.0 GiB, port 0.9
+  to 1.0 GiB (the higher figure on Node 24.14.0).
 - *How.* Node documents no synchronous inflate that can be resumed, so
   `pylike/tarfile.ts` makes the call `inflateRawSync` itself makes on its
   engine (`_processChunk`), one slice at a time, and undoes what that call
@@ -398,10 +401,11 @@ dropped, repeated or changed in a later pass alone was accepted.
   archive".
 - *Evidence.* `test/unit/port-runtime.test.js` patches the engine's step and
   drops, repeats, zeroes, changes or cuts one piece of output, or stops the
-  input early, at calls spread over every pass of four containers: of the
-  faults in a later pass, 3,116 end in `UnsupportedRuntime` and none is
-  accepted with other content. The reviewer's own probe gives the same
-  answer (dispatch report).
+  input early, or lets the step fail as zlib fails on invalid data, at calls
+  spread over every pass of four containers. Every fault in a later pass that
+  changes a byte ends in `UnsupportedRuntime`, and none is accepted with other
+  content; the test prints the counts. The reviewer's own probe, run again on
+  this reader, gives the same answer (dispatch report).
 - *What it costs.* One more CRC-32 over the bytes a later pass produces,
   which includes the bytes it skips.
 - *What the record does not cover.* A fault that changes a piece and leaves
