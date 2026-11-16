@@ -253,6 +253,16 @@ export function local_sources(recipe: PyValue): string[] {
   return [...found].sort();
 }
 
+/**
+ * Whether a recipe refers to further recipes (`modules.fleet.children`), which cook reads and the adapter does not: the
+ * repositories those name are not known here. Not in the oracle.
+ */
+export function refers_to_recipes(recipe: PyValue): boolean {
+  const modules = isDict(recipe) ? recipe.get('modules') : null, fleet = isDict(modules) ? modules.get('fleet') : null;
+  const children = isDict(fleet) ? fleet.get('children') : undefined;
+  return children !== undefined && !(isList(children) && children.length === 0);
+}
+
 /** Compatibility helper; provenance is recorded separately from cook's lock. cook.py:214-218 */
 export function framework_input(config: PyValue, pin: PyValue): string {
   framework_provenance(config, pin);
@@ -358,17 +368,26 @@ export function adapt(spec_file: PyValue, build_dir: PyValue, state_dir: PyValue
   }
   // Validate all input before even the verification Git subprocesses spawn.
   validate_arguments(argv, flag_indices);
+  // Not in the oracle. Git is told to take the local repositories the recipe names over its transport (below). Such a
+  // word applies to every URL that begins with the path, so it is given only where the adapter knows every repository
+  // cook's Git will be asked for: not where the recipe refers to further recipes (those repositories are then cloned as
+  // before). And a repository it knows and has no word for, the host's or one with a line break in its path, must not be
+  // one that a word for another would send elsewhere: that is refused here, before cook.
+  const sources = refers_to_recipes(recipe) ? [] : local_sources(recipe);
+  const host_repo = item(settings, 'host_repo');
+  need(isolation.git_misdirected(sources, [...local_sources(recipe), ...(isStr(host_repo) ? [host_repo] : [])]).length === 0,
+    'a local source repository path is the beginning of another repository path with a % after it; Git would be sent to another repository');
   const env = clean_environment();
   (seams.verify_cook ?? verify_cook)(entrypoint as string, subscript(pins, 'cook'), env);
   // Not in the oracle. Bun links package files from its cache into the build, and sets modes on the linked inodes. With
   // the account's cache those are files of every earlier build, also of the one that runs. So this build gets a cache of
   // its own for this one run (cook hands Bun the name only where COOK_PASS_ENV selects it), and nothing of it stays: not
   // this one, and not one a killed run left under this root. Git likewise links the objects of a repository named by a
-  // local path; for those the recipe names it is told to take them over its transport.
+  // local path; for those the recipe names it is told to take them over its transport (`sources`, above).
   const cache = isolation.cache_dir(root, request);
   isolation.sweep(root, request);
   try {
-    command(argv as string[], { cwd: build, env: { ...env, [isolation.CACHE_ENV]: cache, [isolation.PASS_ENV]: isolation.CACHE_ENV, ...isolation.git_environment(local_sources(recipe)) }, flag_indices });
+    command(argv as string[], { cwd: build, env: { ...env, [isolation.CACHE_ENV]: cache, [isolation.PASS_ENV]: isolation.CACHE_ENV, ...isolation.git_environment(sources) }, flag_indices });
   } finally {
     isolation.remove(cache);
   }

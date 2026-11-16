@@ -303,9 +303,12 @@ run them:
   requested one too, also when it is the one that runs.
   `untouched_by_this_run` is true only if all of that is as it was, with the
   pointer, the links and the process; false if something changed; and null
-  if nothing was seen to change and an entry could not be read, since two
-  equal "unreadable" marks are not an unchanged build. `prepare` and `verify`
-  end with status 3 on false and on null, and the log names the entries.
+  if nothing was seen to change and something of it could not be read: an
+  entry of a build, the unit file or a drop-in file, or a property the
+  service manager did not answer for. Two equal "unreadable" marks, or two
+  empty answers, are not an unchanged deployment. `prepare` and `verify`
+  end with status 3 on false and on null, and the log names what was not
+  read (`could_not_be_read`, and `first_not_read` of each build).
 - The log line says what it covers: `builds_measured`,
   `requested_build_measured`, `measurement_complete`, `measured` and
   `not_measured`. Not measured, and said so there: file contents, access

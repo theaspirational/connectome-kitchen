@@ -40,8 +40,10 @@
 // the requested one too, also when it is the one that runs. True means all of that is as it was at the two moments it
 // was taken: no file of those builds was written, given another mode or owner, renamed, added, removed, or given or
 // taken a name anywhere (a hard link). False means something of it changed; it does not say who changed it. Null means
-// no change was seen and something could not be read, so nothing is certified; `prepare` and `verify` end with status 3
-// on false and on null. File contents are not read: a write moves the two times, and the status change time is not the
+// no change was seen and something could not be read, so nothing is certified: an entry of a build, the unit file or a
+// drop-in file (its content is what is held, so one that cannot be opened is not known), or a property the service
+// manager did not answer for (`could_not_be_read`). Two equal marks of that are not an equal thing. `prepare` and
+// `verify` end with status 3 on false and on null. File contents are not read: a write moves the two times, and the status change time is not the
 // account's to set. The log line names the builds measured (`builds_measured`) and all it leaves out (`not_measured`).
 // `prepare` also counts the files of the new build that have a name outside it, and ends with status 3 where one is a
 // file of another build.
@@ -105,6 +107,16 @@ function describe(file, digest = true) {
 }
 function list(directory, digest = true) {
   try { return fs.readdirSync(directory).sort().map(name => describe(path.join(directory, name), digest)); } catch (error) { return { path: directory, absent: error.code ?? true }; }
+}
+/**
+ * What a description (`describe`, `list`) does not say of `name`, so that two equal ones are not two equal things: a path
+ * that could not be looked at for another reason than that it is not there, and a file whose content was not read (it
+ * could not be opened, or is larger than is read). Nothing for a link, a directory, or a path that is not there.
+ */
+function unknown(name, row) {
+  if (Array.isArray(row)) return row.flatMap(entry => unknown(name + '/' + path.basename(entry.path), entry));
+  if (row.absent !== undefined) return row.absent === 'ENOENT' || row.absent === 'ENOTDIR' ? [] : [name];
+  return row.unreadable !== undefined || (row.size !== undefined && row.sha256 === undefined) ? [name] : [];
 }
 
 /**
@@ -293,13 +305,17 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
       need(status === 97, 'the service-manager guard did not refuse: ' + level + ' ' + args.join(' '));
     }
     const dropin = path.join(unitDir, unit + '.d');
-    const shown = () => Object.fromEntries(SHOWN.map(property => [property, ask(['--user', 'show', '-p', property, '--value', unit]).stdout]));
+    // An answer of the service manager, and the properties it did not answer for: an empty word of those is not a value.
+    const shown = () => {
+      const answers = SHOWN.map(property => [property, ask(['--user', 'show', '-p', property, '--value', unit])]);
+      return { unit_state: Object.fromEntries(answers.map(([property, answer]) => [property, answer.stdout])), unit_state_not_answered: answers.filter(([, answer]) => answer.status !== 0).map(([property]) => property) };
+    };
     const target = () => ({
       current: describe(current), unit: describe(path.join(unitDir, unit)), dropin: list(dropin), wants: describe(path.join(unitDir, 'default.target.wants', unit)),
       state_dir: describe(stateDir), secrets_file: describe(secretsFile, false), bookkeeping: list(path.join(root, 'state')), secret_files: list(path.join(root, 'state', 'secret-files'), false),
       builds: list(builds), new_build_prepared: fs.existsSync(path.join(build, '.prepared')),
     });
-    const before = { target: target(), unit_state: shown(), exclusive: exclusive.map(([scope, other]) => ask(['--' + scope, 'is-active', other])) };
+    const before = { target: target(), ...shown(), exclusive: exclusive.map(([scope, other]) => ask(['--' + scope, 'is-active', other])) };
     log('before', before);
     // The builds a step must leave as they are, entry by entry. `prepare` and `start` write the requested build, so it is not
     // one of them there. `verify` (and `check`, which takes them once) writes no build: there the requested one is measured
@@ -312,8 +328,13 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
     log('builds measured', { requested_build: writesRequested ? 'left out: this step writes it' : inventories.has(wanted) ? 'measured' : 'not there',
       builds: Object.fromEntries([...inventories].map(([leaf, taken]) => [leaf, { entries: taken.entries, sha256: taken.sha256, could_not_be_read: taken.unread.length }])) });
     need(before.unit_state.ActiveState !== '', 'the user service manager did not answer; is XDG_RUNTIME_DIR set for this account?');
-    const running = { current: before.target.current, unit: before.target.unit, dropin: before.target.dropin, wants: before.target.wants,
-      main_pid: before.unit_state.MainPID, restarts: before.unit_state.NRestarts, started: before.unit_state.ExecMainStartTimestamp, active: before.unit_state.ActiveState };
+    // What the witness holds of the running deployment at one moment, and what of it could not be read at that moment.
+    const PROCESS = { main_pid: 'MainPID', restarts: 'NRestarts', started: 'ExecMainStartTimestamp', active: 'ActiveState' };
+    const witnessed = moment => ({ current: moment.target.current, unit: moment.target.unit, dropin: moment.target.dropin, wants: moment.target.wants,
+      ...Object.fromEntries(Object.entries(PROCESS).map(([key, property]) => [key, moment.unit_state[property]])) });
+    const unread = moment => [...['current', 'unit', 'dropin', 'wants'].flatMap(key => unknown(key, moment.target[key])),
+      ...Object.values(PROCESS).filter(property => moment.unit_state_not_answered.includes(property)).map(property => 'unit property ' + property)];
+    const running = witnessed(before), runningUnread = unread(before);
 
     const names = deploy.secret_names(effective);
     if (mode === 'verify' || mode === 'start') {
@@ -371,7 +392,7 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
       status = applyStatus === 0 ? 0 : 1;
     }
     if (mode !== 'check') {
-      const after = { target: target(), unit_state: shown(), exclusive: exclusive.map(([scope, other]) => ask(['--' + scope, 'is-active', other])) };
+      const after = { target: target(), ...shown(), exclusive: exclusive.map(([scope, other]) => ask(['--' + scope, 'is-active', other])) };
       log('after', after);
       // The new build's files that have a name outside it, and those of them that are a file of another build.
       let sharing = null;
@@ -386,17 +407,20 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
           unchanged: changes.count !== 0 ? false : complete ? true : null, changed: changes.count, first_changed: changes.first }];
       }));
       const added = measuredBuilds().filter(leaf => !inventories.has(leaf));
-      const complete = listed && Object.values(others).every(row => row.complete);
+      const buildsComplete = listed && Object.values(others).every(row => row.complete);
       const buildsChanged = Object.values(others).some(row => row.changed !== 0) || added.length !== 0;
-      const buildsAsBefore = buildsChanged ? false : complete ? true : null;
-      const now = { current: after.target.current, unit: after.target.unit, dropin: after.target.dropin, wants: after.target.wants,
-        main_pid: after.unit_state.MainPID, restarts: after.unit_state.NRestarts, started: after.unit_state.ExecMainStartTimestamp, active: after.unit_state.ActiveState };
-      const pointersAsBefore = JSON.stringify(now) === JSON.stringify(running);
+      const buildsAsBefore = buildsChanged ? false : buildsComplete ? true : null;
+      // The pointer, the unit, the drop-in, the enable link and the process likewise: what could not be read, before or
+      // now, is not known to be as it was, though the two descriptions of it are equal.
+      const now = witnessed(after), notRead = [...new Set([...runningUnread, ...unread(after)])].sort();
+      const pointersChanged = JSON.stringify(now) !== JSON.stringify(running);
+      const pointersAsBefore = pointersChanged ? false : notRead.length === 0 ? true : null;
+      const complete = buildsComplete && notRead.length === 0;
       // True, false, or null: nothing seen to change, and not everything could be read.
-      const untouched = !pointersAsBefore || buildsChanged ? false : complete ? true : null;
+      const untouched = pointersChanged || buildsChanged ? false : complete ? true : null;
       log('running deployment', {
         untouched_by_this_run: untouched, pointer_unit_and_process_as_before: pointersAsBefore, builds_that_were_there_as_before: buildsAsBefore,
-        measurement_complete: complete, builds_measured: Object.keys(others), requested_build_measured: Object.hasOwn(others, wanted),
+        measurement_complete: complete, could_not_be_read: notRead, builds_measured: Object.keys(others), requested_build_measured: Object.hasOwn(others, wanted),
         measured: [
           'the pointer `current`, the unit link, the drop-in, the enable link, and the unit\'s process as the service manager shows it',
           'of each build in `builds_measured`: the build directory itself and every entry under it, with type, mode, owner, group, size, link count, inode, modification time and status change time, and a link\'s target',
@@ -408,7 +432,7 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
           'access times',
           'what a symbolic link under a build names (links are not followed)',
           ...(writesRequested ? ['the requested build ' + wanted + ': this step writes it'] : Object.hasOwn(others, wanted) ? [] : ['the requested build ' + wanted + ': it is not there']),
-          ...(complete ? [] : ['what could not be read: ' + (listed ? '' : 'the directory `builds`; ') + 'see `could_not_be_read` and `first_not_read` of each build']),
+          ...(complete ? [] : ['what could not be read: ' + (listed ? '' : 'the directory `builds`; ') + 'see `could_not_be_read`, and `could_not_be_read` and `first_not_read` of each build']),
           'the directory `builds` itself, and the rest of the deployment root beside the pointer (`state`, cook\'s configuration and credentials, the workspace): logged before and after, not compared',
           'the agent state directory',
           'the account\'s own Bun cache',
@@ -418,9 +442,10 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
       });
       if (mode !== 'start' && untouched !== true) {
         // Not this runner's doing by any path it knows: the pointer, the unit, the process or a file of a measured build changed while it ran. Or it could not look.
-        const why = !pointersAsBefore ? 'the running deployment changed during a step that does not touch it'
+        const why = pointersChanged ? 'the running deployment changed during a step that does not touch it'
           : buildsChanged ? 'a build that was there changed during a step that does not touch it (see `running deployment` in the log: `builds`)'
-            : 'the builds could not be measured completely: no change was seen, and nothing is certified (see `running deployment` in the log: `first_not_read`)';
+            : notRead.length ? 'the running deployment could not be measured completely: no change was seen, and nothing is certified (see `running deployment` in the log: `could_not_be_read`)'
+              : 'the builds could not be measured completely: no change was seen, and nothing is certified (see `running deployment` in the log: `first_not_read`)';
         log('end', { status: 3, why });
         echo('takeover: ' + why);
         return 3;

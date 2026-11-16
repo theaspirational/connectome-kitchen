@@ -404,6 +404,99 @@ os.chmod(_dst, 0o755)
         self.assertIs(next(entry for entry in log if entry['step'] == 'running deployment')['untouched_by_this_run'], False)
         self.assertEqual([name for name in corpus.lines(Path(world.root) / 'cook-calls.jsonl')[-1]['environment_names'] if name.startswith('GIT_')], [])
 
+    @unittest.skipUnless(shutil.which('git'), 'no git')
+    def test_a_named_repository_whose_path_begins_with_another_is_cloned_from_itself(self):
+        # Git holds `insteadOf` against the beginning of a URL: a rewrite for `repo` alone sends `repo%20other` to the
+        # repository `repo other` (finding of the review of d454870). Each named path has an entry of its own, a `%` as `%25`.
+        def recipe(document, world):
+            for name, url in (('prefix', '/' + 'srv/repo'), ('literal', '/' + 'srv/repo%20other')):
+                document['mcpServers'][name] = {'command': 'node', 'args': ['index.js'], 'source': {'url': url, 'ref': 'main'}}
+        world = self.world('local-git-prefix', recipe=recipe)
+        env = {'HOME': str(world.home), 'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8', 'GIT_CONFIG_NOSYSTEM': '1'}
+        git = lambda *args: subprocess.run(['git', *args], env=env, check=True, capture_output=True, text=True).stdout.strip()
+        for name, word in (('repo', 'prefix'), ('repo%20other', 'literal'), ('repo other', 'decoded')):
+            source = world.sandbox / 'srv' / name
+            git('init', '-q', '-b', 'main', str(source))
+            (source / 'fixture.txt').write_text(word + '\n')
+            git('-C', str(source), 'add', '.')
+            git('-C', str(source), '-c', 'user.name=Public Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', word)
+        literal = world.sandbox / 'srv/repo%20other'
+        self.assertEqual(json.loads((self.live / 'cook-recipe.json').read_text())['mcpServers']['literal']['source']['url'], str(literal))
+        self.before_cook(world, self.CLONE % str(literal))
+        done, log, verbs = self.run_mode(world, 'prepare')
+        self.assertEqual(done.returncode, 0, done.stderr)
+        new = Path(world.root) / 'builds' / self.name / 'connector'
+        shared = next(entry for entry in log if entry['step'] == 'new build')['files_with_a_name_outside_the_build']
+        self.assertEqual(((new / 'fixture.txt').read_text(), git('-C', str(new), 'config', 'remote.origin.url'), git('-C', str(new), 'rev-parse', 'HEAD'), shared['outside']),
+                         ('literal\n', str(literal), git('-C', str(literal), 'rev-parse', 'HEAD'), 0))
+        names = corpus.lines(Path(world.root) / 'cook-calls.jsonl')[-1]['environment_names']
+        self.assertEqual([name for name in names if name.startswith('GIT_')], ['GIT_CONFIG_COUNT', 'GIT_CONFIG_KEY_0', 'GIT_CONFIG_KEY_1', 'GIT_CONFIG_VALUE_0', 'GIT_CONFIG_VALUE_1'])
+
+    def test_a_recipe_that_refers_to_further_recipes_gets_no_rewrite(self):
+        # The adapter does not know the repositories a child recipe names, and a rewrite applies to every path that begins
+        # with its own: so Git gets none, and a local repository is cloned as before.
+        def recipe(document, world):
+            document['mcpServers']['fixture'] = {'command': 'node', 'args': ['index.js'], 'source': {'url': '/' + 'srv/local-connector', 'ref': 'main'}}
+            document.setdefault('modules', {})['fleet'] = {'children': [{'name': 'child', 'recipe': 'child.json'}]}
+        world = self.world('local-git-fleet', recipe=recipe)
+        done, log, verbs = self.run_mode(world, 'prepare')
+        self.assertEqual(done.returncode, 0, done.stderr)
+        self.assertEqual([name for name in corpus.lines(Path(world.root) / 'cook-calls.jsonl')[-1]['environment_names'] if name.startswith('GIT_')], [])
+
+    def test_a_repository_a_rewrite_would_send_elsewhere_is_refused_before_cook(self):
+        # A named path with a line break has no entry of its own. Where it begins with a path that has one and a `%` follows,
+        # Git would decode it and look elsewhere: the adapter refuses, and cook is not started. Without the `%` it is the same path.
+        calls = lambda world: len(corpus.lines(Path(world.root) / 'cook-calls.jsonl'))
+        for label, tail, expected in (('refused', '\n%41', (1, 'E_ADAPTER_INPUT', 0)), ('same', '\nA', (0, None, 1))):
+            def recipe(document, world):
+                for name, url in (('prefix', '/' + 'srv/repo'), ('broken', '/' + 'srv/repo' + tail)):
+                    document['mcpServers'][name] = {'command': 'node', 'args': ['index.js'], 'source': {'url': url, 'ref': 'main'}}
+            world = self.world('local-git-misdirected-' + label, recipe=recipe)
+            before = calls(world)
+            done, log, verbs = self.run_mode(world, 'prepare')
+            answered = next(entry for entry in log if entry['step'] == 'apply answered')['core']
+            self.assertEqual((done.returncode, answered.get('error_code'), calls(world) - before), expected, done.stderr)
+
+    @unittest.skipIf(os.geteuid() == 0, 'root reads every file')
+    def test_a_dropin_that_cannot_be_read_is_not_certified(self):
+        # A drop-in beside the engine's own, closed to the account: its two descriptions are equal marks, also where it was
+        # written in between (finding W1-R). Nothing is seen to change, and nothing of it is known: null, and status 3.
+        for label, mode, rewrite in (('prepare', 'prepare', False), ('written', 'prepare', True), ('verify', 'verify', False)):
+            world = self.world('closed-dropin-' + label)
+            closed = Path(world.unit_dir) / (self.unit + '.d') / '10-public-fixture.conf'
+            try:
+                if mode == 'verify':
+                    done, log, verbs = self.run_mode(world, 'prepare')
+                    self.assertEqual((done.returncode, next(entry for entry in log if entry['step'] == 'running deployment')['untouched_by_this_run']), (0, True), done.stderr)
+                closed.write_text('[Service]\nNice=1\n')
+                closed.chmod(0)
+                if rewrite:
+                    self.before_cook(world, '\nfrom pathlib import Path\np = Path(%r); p.chmod(0o600); p.write_text("[Service]\\nNice=2\\n"); p.chmod(0)\n' % str(closed))
+                done, log, verbs = self.run_mode(world, mode)
+                witness = next(entry for entry in log if entry['step'] == 'running deployment')
+                self.assertEqual((done.returncode, witness['untouched_by_this_run'], witness['pointer_unit_and_process_as_before'], witness['measurement_complete'], witness['could_not_be_read']),
+                                 (3, None, None, False, ['dropin/10-public-fixture.conf']), done.stderr)
+                self.assertEqual(witness['builds_that_were_there_as_before'], True)
+                self.assertIn('could not be measured completely', log[-1]['why'])
+                self.assertTrue([line for line in witness['not_measured'] if line.startswith('what could not be read')])
+            finally:
+                if closed.exists():
+                    closed.chmod(0o600)
+
+    def test_a_process_the_service_manager_does_not_answer_for_is_not_certified(self):
+        # `show` fails for the properties of the process: two empty answers are equal, and are not a process that stayed.
+        for label, asked in (('all', ('MainPID', 'NRestarts', 'ExecMainStartTimestamp')), ('one', ('NRestarts',))):
+            world = self.world('show-fails-' + label)
+            fake = Path(self.document['systemctl'][0])
+            text = fake.read_text()
+            self.assertIn('\nexec ', text)
+            fake.write_text(text.replace('\nexec ', '\ncase "$*" in %s) exit 1;; esac\nexec ' % '|'.join('*%s*' % name for name in asked)))
+            done, log, verbs = self.run_mode(world, 'prepare')
+            witness = next(entry for entry in log if entry['step'] == 'running deployment')
+            self.assertEqual((done.returncode, witness['untouched_by_this_run'], witness['pointer_unit_and_process_as_before'], witness['measurement_complete'], witness['could_not_be_read']),
+                             (3, None, None, False, sorted('unit property ' + name for name in asked)), done.stderr)
+            self.assertIn('could not be measured completely', log[-1]['why'])
+
     def test_the_guard(self):
         SCRATCH.mkdir(parents=True, exist_ok=True)
         log, called = SCRATCH / 'guard.log', SCRATCH / 'guard.called'

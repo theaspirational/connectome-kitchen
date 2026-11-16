@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {CACHE_ENV,PASS_ENV,cache_dir,git_environment,remove,shared,sweep} from '../../dist/isolation.js';
-import {local_sources} from '../../dist/cook.js';
+import {CACHE_ENV,PASS_ENV,cache_dir,git_environment,git_misdirected,remove,shared,sweep} from '../../dist/isolation.js';
+import {local_sources,refers_to_recipes} from '../../dist/cook.js';
 import {loads} from '../../dist/pylike/pyjson.js';
 // src/isolation.ts: the Bun cache of a build's own, and the count of a build's files that have a name outside it.
 const scratch=path.join(path.resolve('.'),'.cache','unit-isolation-'+process.pid);
@@ -65,9 +65,26 @@ test('the source repositories a recipe names by a local path, and no other',()=>
 
 test('Git is told to take a local repository over its transport: counted entries, none for no path',()=>{
  assert.deepEqual(git_environment([]),{});
- assert.deepEqual(git_environment(['https://example.invalid/x.git','relative','/with%25percent','/with\nbreak']),{});
- assert.deepEqual(git_environment(['/repos/b','/repos/a','/repos/b','/with%percent']),{GIT_CONFIG_COUNT:'2',
+ assert.deepEqual(git_environment(['https://example.invalid/x.git','relative','/with\nbreak','/with\rreturn','/with\0nul']),{});
+ assert.deepEqual(git_environment(['/repos/b','/repos/a','/repos/b','/with\nbreak']),{GIT_CONFIG_COUNT:'2',
   GIT_CONFIG_KEY_0:'url.file:///repos/a.insteadOf',GIT_CONFIG_VALUE_0:'/repos/a',GIT_CONFIG_KEY_1:'url.file:///repos/b.insteadOf',GIT_CONFIG_VALUE_1:'/repos/b'});
+});
+
+test('a % of a path is written %25 in the URL, which Git decodes, and the path that Git is to match stays as it is',()=>{
+ assert.deepEqual(git_environment(['/repos/a%20b%']),{GIT_CONFIG_COUNT:'1',GIT_CONFIG_KEY_0:'url.file:///repos/a%2520b%25.insteadOf',GIT_CONFIG_VALUE_0:'/repos/a%20b%'});
+});
+
+test('a repository without an entry that a rewrite would send elsewhere is named: a rewritten beginning and a % after it',()=>{
+ assert.deepEqual(git_misdirected([],['/repos/a%20b']),[]);
+ assert.deepEqual(git_misdirected(['/repos/a','/repos/a%20b'],['/repos/a','/repos/a%20b']),[]);  // each has an entry of its own
+ assert.deepEqual(git_misdirected(['/repos/a'],['/repos/a%20b','/repos/a-b','/repos/a/b','/repos/b%20','/other%20','https://example.invalid/repos/a%20','relative%20','/repos/a%20b']),['/repos/a%20b']);
+ assert.deepEqual(git_misdirected(['/repos/a','/repos/a%20b'],['/repos/a%20bc','/repos/a%20b%41','/repos/a%20b\n%41']),['/repos/a%20b\n%41','/repos/a%20b%41']);  // the longest beginning is the one Git takes
+ assert.deepEqual(git_misdirected(['/repos/a\nb'],['/repos/a\nb%20']),[]);  // a path with a line break has no rewrite
+});
+
+test('a recipe that refers to further recipes is known as one',()=>{
+ for(const text of ['{}','{"modules":{}}','{"modules":{"fleet":{}}}','{"modules":{"fleet":{"children":[]}}}','{"modules":{"fleet":true}}','{"fleet":{"children":[{"recipe":"x"}]}}','null'])assert.equal(refers_to_recipes(loads(text)),false,text);
+ for(const text of ['{"modules":{"fleet":{"children":[{"name":"a","recipe":"child.json"}]}}}','{"modules":{"fleet":{"children":{}}}}','{"modules":{"fleet":{"children":null}}}'])assert.equal(refers_to_recipes(loads(text)),true,text);
 });
 
 test('with that environment a clone of a local repository shares no object file with it, and names the path as its origin',{skip:spawnSync('git',['--version']).status!==0},()=>{
@@ -88,4 +105,26 @@ test('with that environment a clone of a local repository shares no object file 
  assert.equal(git(['-C',own,'config','remote.origin.url']),source);
  assert.equal(fs.readFileSync(path.join(own,'fixture.txt'),'utf8'),'public fixture\n');
  assert.equal(git(['-C',own,'rev-parse','HEAD']),git(['-C',source,'rev-parse','HEAD']));
+});
+
+test('a repository whose path begins with another one is cloned from itself, also with a % that Git would decode',{skip:spawnSync('git',['--version']).status!==0},()=>{
+ // Git holds `insteadOf` against the beginning of a URL: the rewrite of `repo` alone sends `repo%20other` to `repo other`.
+ const home=path.join(scratch,'prefix-home'),base={HOME:home,PATH:process.env.PATH,LANG:'C.UTF-8',GIT_CONFIG_NOSYSTEM:'1'};
+ fs.mkdirSync(home,{recursive:true});
+ const git=(args,env=base)=>{const done=spawnSync('git',args,{env,encoding:'utf8'});assert.equal(done.status,0,done.stderr);return done.stdout.trim();};
+ const make=(name,word)=>{const source=path.join(scratch,'prefix',name);git(['init','-q','-b','main',source]);file(path.join(source,'fixture.txt'),word+'\n');
+  git(['-C',source,'add','.']);git(['-C',source,'-c','user.name=Public Fixture','-c','user.email=fixture@example.invalid','commit','-q','-m',word]);return source;};
+ const prefix=make('repo','prefix'),literal=make('repo%20other','literal'),decoded=make('repo other','decoded');
+ const linked=directory=>fs.readdirSync(path.join(directory,'.git','objects'),{recursive:true,withFileTypes:true}).filter(entry=>entry.isFile()&&fs.statSync(path.join(entry.parentPath,entry.name)).nlink>1).length;
+ const clone=(source,name,env)=>{const target=path.join(scratch,'prefix-clones',name);git(['clone','-q',source,target],{...base,...env});
+  return [fs.readFileSync(path.join(target,'fixture.txt'),'utf8').trim(),git(['-C',target,'config','remote.origin.url']),linked(target)];};
+ assert.deepEqual(clone(literal,'premise',git_environment([prefix])),['decoded',literal,0]);  // the premise: what an entry for `repo` alone does
+ const sources=local_sources(loads(JSON.stringify({mcpServers:{one:{source:{url:prefix}},two:{source:{url:literal}}}})));
+ assert.deepEqual(git_misdirected(sources,sources),[]);
+ const env=git_environment(sources);
+ assert.deepEqual(clone(literal,'literal',env),['literal',literal,0]);
+ assert.deepEqual(clone(prefix,'prefix',env),['prefix',prefix,0]);
+ assert.deepEqual(clone(decoded,'decoded',env),['decoded',decoded,0]);  // not named; begins with `repo`, has no %: itself, over the transport
+ assert.deepEqual(clone(literal,'alone',git_environment([literal])),['literal',literal,0]);
+ assert.deepEqual(git_misdirected([prefix],[literal]),[literal]);  // and where it has no entry, the adapter is told
 });

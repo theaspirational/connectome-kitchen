@@ -10,8 +10,10 @@
  * Git does the same with a repository named by a local path: `git clone /a/repository` hard-links the object files. Two
  * builds with a connector from one local repository then share them. Cook's connector clone has no `--no-hardlinks`, so
  * the adapter hands Git, through cook, one `url.file://<path>.insteadOf = <path>` for each such repository: Git then
- * takes it over its transport and writes objects of the clone's own (`git_environment`). The check afterwards is the
- * same and is what holds; the rewrite only keeps a legitimate build from running into it.
+ * takes it over its transport and writes objects of the clone's own (`git_environment`). Git holds `insteadOf` against
+ * the beginning of every URL it is given, so the adapter also sees that no rewrite reaches a repository it was not
+ * written for (`git_misdirected`), and refuses before cook where one would. The check afterwards is the same and is
+ * what holds for sharing; the rewrite only keeps a legitimate build from running into it.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -49,6 +51,9 @@ export function sweep(root: string, request: string): string[] {
   return removed;
 }
 
+/** The local repositories Git gets a rewrite for: absolute paths, apart from one with a line break or a NUL (no configuration key holds it). */
+const rewritten = (paths: readonly string[]): string[] => [...new Set(paths)].filter(name => name.startsWith('/') && !/[\n\r\0]/u.test(name)).sort();
+
 /**
  * The environment that keeps Git from hard-linking the objects of the local repositories `paths` into a clone: counted
  * `GIT_CONFIG_KEY_<n>`/`GIT_CONFIG_VALUE_<n>` entries, which cook hands its Git subprocesses as they are (cook
@@ -56,18 +61,36 @@ export function sweep(root: string, request: string): string[] {
  * and the clone records the path as its origin, as before; only the transport is Git's own and not a link of each file.
  * Empty for no path, so a deployment without a local source repository has no Git name in cook's environment.
  *
- * A path with `%` is left out (Git would decode it in a `file://` URL and look elsewhere), as is one with a line break.
- * Such a repository is cloned as before, and a build that then shares a file with another is refused as before.
+ * Git decodes `%XX` in a `file://` URL, so a `%` of the path is written `%25` there and the URL names the path itself.
+ * Every path has an entry of its own, and of several that match Git takes the longest: a path that begins with another
+ * one of `paths` goes to itself and not to where the other's rewrite would send it. A path with a line break is left
+ * out; it is cloned as before, and a build that then shares a file with another is refused as before.
  */
 export function git_environment(paths: readonly string[]): Record<string, string> {
-  const local = [...new Set(paths)].filter(name => name.startsWith('/') && !/[%\n\r\0]/u.test(name)).sort();
+  const local = rewritten(paths);
   if (!local.length) return {};
   const env: Record<string, string> = { GIT_CONFIG_COUNT: String(local.length) };
   local.forEach((name, index) => {
-    env['GIT_CONFIG_KEY_' + index] = 'url.file://' + name + '.insteadOf';
+    env['GIT_CONFIG_KEY_' + index] = 'url.file://' + name.replaceAll('%', '%25') + '.insteadOf';
     env['GIT_CONFIG_VALUE_' + index] = name;
   });
   return env;
+}
+
+/**
+ * Those of `others` that `git_environment(paths)` would send to another repository than the one they name: `insteadOf`
+ * matches the beginning of a URL, so a rewrite written for `/a/repo` also applies to `/a/repo%20other`, and Git would
+ * decode what follows in the `file://` URL and look at `/a/repo other`. One of `others` is named here where it has no
+ * entry of its own, begins with a path that has one, and has a `%` after the longest such beginning. Without a `%`
+ * there the rewritten URL names the same path; only its transport changes.
+ */
+export function git_misdirected(paths: readonly string[], others: readonly string[]): string[] {
+  const local = rewritten(paths), own = new Set(local);
+  return [...new Set(others)].filter(other => {
+    if (own.has(other)) return false;
+    const longest = local.filter(name => other.startsWith(name)).reduce((a, b) => (b.length > a.length ? b : a), '');
+    return longest !== '' && other.slice(longest.length).includes('%');
+  }).sort();
 }
 
 export interface Shared { files: number; outside: number; with_other_builds: number; examples: string[]; }
