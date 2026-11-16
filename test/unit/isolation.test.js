@@ -11,7 +11,7 @@ const file=(name,text='x')=>{fs.mkdirSync(path.dirname(name),{recursive:true});f
 
 test('the names are Bun\'s and cook\'s, and the cache lies beside the builds under the name of the build',()=>{
  assert.deepEqual([CACHE_ENV,PASS_ENV],['BUN_INSTALL_CACHE_DIR','COOK_PASS_ENV']);
- assert.equal(cache_dir('/home/a/root','0123'),'/home/a/root/.bun-cache-0123');
+ assert.equal(cache_dir('/deployment/root','0123'),'/deployment/root/.bun-cache-0123');
 });
 
 test('removing a cache removes a tree, a link without what it names, and is quiet where there is nothing',()=>{

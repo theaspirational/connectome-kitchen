@@ -88,8 +88,10 @@ class Port(unittest.TestCase):
     def test_ported_modules_and_lazy_imports(self):
         ported = sorted(path.name for path in (ROOT / 'src').glob('*.ts'))
         # deploy, cook, their adapter entry and the contract dispatch are a success-path port (docs/port-notes.md): present, and not in the porting map.
-        self.assertEqual(ported, ['archive.ts', 'cli.ts', 'config.ts', 'contract.ts', 'cook-adapter.ts', 'cook.ts', 'deploy.ts', 'engine.ts', 'errors.ts', 'index.ts', 'inputs.ts', 'lock.ts'])
-        porting = (ROOT / 'PORTING.md').read_text()
+        # isolation is no port: the oracle has no counterpart (a build's own Bun cache; "Where the port knowingly differs" in the notes).
+        self.assertEqual(ported, ['archive.ts', 'cli.ts', 'config.ts', 'contract.ts', 'cook-adapter.ts', 'cook.ts', 'deploy.ts', 'engine.ts', 'errors.ts', 'index.ts', 'inputs.ts', 'isolation.ts', 'lock.ts'])
+        self.assertNotIn('isolation', porting_text := (ROOT / 'PORTING.md').read_text())
+        porting = porting_text
         for module in ('connectome_deploy', 'connectome_cook'):
             self.assertNotIn('| ported | `%s.' % module, porting)
             self.assertIn('| oracle-only | `%s.' % module, porting)
