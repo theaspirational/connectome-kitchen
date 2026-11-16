@@ -1134,8 +1134,36 @@ what it is: her bounded technical acceptance, quoted as the brief relays it
 (Zulip Kitchen 2359), not an independent review. `delta_review` carries it
 with `kind` saying so. There is no review report; the digest the readiness
 check requires is the sha256 of the quotation, and the entry says that too.
-The implementer recorded it on the manager's quoted instruction. Commits
-after `05298e9` are covered by neither a review nor that acceptance.
+The implementer recorded it on the manager's quoted instruction. It is kept
+under `earlier_delta_reviews` since the record below replaced it.
+
+The line after `05298e9` up to `e62b4cf` was read by five independent reviews
+in a row, and a part of it by a sixth before them. `delta_review` now holds
+the last one, an APPROVE with no findings that "approves the reviewed code
+line `22caa8d..e62b4cf`, not a live-host deployment window", and lists all
+six under `chain` with their verdicts, findings and report digests:
+
+| Range | Verdict | Findings | Closed by |
+| --- | --- | --- | --- |
+| `1b4f3e9..04d7735` | APPROVE | two MEDIUM (test gaps), four LOW | `15ee4a1` and ruling D5, by the implementer's report; LOW 4 open |
+| `05298e9..40378ef` | REJECT | H1; L1, L2 | the review of `40378ef..22caa8d` |
+| `40378ef..22caa8d` | REJECT as submitted | M1; W1 | ruling D6; the reviews after it |
+| `22caa8d..d454870` | REJECT | W1-R; the Git rewrite | the two reviews after it |
+| `d454870..4ab9d38` | REJECT | the rest of W1-R | the review after it |
+| `4ab9d38..e62b4cf` | APPROVE | none | |
+
+So `scripts/check-port-ready` passes at the commit that records this, and
+its one status stands for more than one review: no APPROVE names
+`05298e9..22caa8d` by itself. Those commits were read, their reviews ended in
+REJECT, and each finding is stated closed by a later review of the list. The
+record says so in `kind` and `covers`, and the line the check prints carries
+it. The implementer entered it on the manager's quoted instruction ("Extend
+it honestly from these reviews; don't invent reviews. Record unreviewed parts
+as unreviewed."). What no review covers is listed under `not_covered`: a live
+host; the closing step `b4a9271`, `05298e9` (the technical owner's
+acceptance, B11); the witness of `archive.L140.4` (B25); the parts of
+`src/deploy.ts` the corpus does not run; `qualify`, mutants and the socket
+check on `e62b4cf`; and every later commit.
 
 The mutant classification:
 
@@ -1188,12 +1216,16 @@ The mutant classification:
 
 ## Still open
 
-- **A review of the closing step.** The review recorded as passed is the one
-  of `06ee0cc`. The closing step (the approved defaults of D4, the vectors
-  and tests that follow from them, the split of the test commands) is one
-  commit later. `scripts/check-port-ready` blocks while a commit after the
-  reviewed one changes anything but `docs/` and the record of rulings, and
-  that rule was kept; it is the one line the check is red on.
+- **A review of the closing step.** The closing step (the approved defaults
+  of D4, the vectors and tests that follow from them, the split of the test
+  commands; `b4a9271`, `05298e9`) has the technical owner's bounded
+  acceptance and no independent review. The reviews recorded since start
+  after it. `scripts/check-port-ready` is green on the record of the line up
+  to `e62b4cf` (see "The line after `05298e9`" above for what that status
+  stands for) and blocks again on any later commit that changes anything but
+  `docs/` and the record of rulings.
+- **What no review of the line covers**: `not_covered` of `delta_review` in
+  `test/port-rulings.golden`.
 - **Finding F4** is ruled as D4, not fixed. What D4 leaves of it is recorded
   as residual risk of the trusted-input version: the limits bound the
   success path, not what an archive built to be costly can do.

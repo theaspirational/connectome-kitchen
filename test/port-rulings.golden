@@ -78,24 +78,132 @@
    ],
    "not_seen_by_the_implementer": "The poll the brief cites (2535) and the owner's own words. The decision is recorded here as the brief relays it. The review report and its probes were read.",
    "transcription": "The brief names the review report by its absolute path on the host; here the directory above `KITCHEN-DELTA-REVIEW-22caa8d` is written `<review drop>`. Its lists are run together into sentences. Nothing else is changed."
+  },
+  {
+   "round": "the acceptance record extended to e62b4cf, in the step that puts a thin Ansible layer over kitchen",
+   "date": "2026-11-16",
+   "from": "the manager of the dispatch, in the dispatch brief",
+   "after": "the narrow re-review of 4ab9d38..e62b4cf, verdict APPROVE with no remaining findings",
+   "review_report_sha256": "fd6d7986c6d42c63543a82e2d9d8e29783c86e4ae0e377b610ee105d0bce5dfa",
+   "brief": [
+    "Kitchen line `22caa8d..e62b4cf` (nested `.cache/kitchen/repo`, local `main`) has an independent Sol APPROVE with no findings. Package: `<review drop>/KITCHEN-D5V2-e62b4cf/` (`review3-approve.md` and earlier rounds).",
+    "The existing acceptance record stops at `05298e9`, so `check-port-ready` is red. Extend it honestly from these reviews; don't invent reviews. Record unreviewed parts as unreviewed."
+   ],
+   "transcription": "The brief names the package by its absolute path on the host; here the directory above `KITCHEN-D5V2-e62b4cf` is written `<review drop>`. Nothing else is changed.",
+   "not_seen_by_the_implementer": "Nothing of this round: the six review reports were read as files, and the owner's decisions the brief cites (2510, 2512, 2515, 2327, poll 2705) concern the Ansible layer and the window, not this record."
   }
  ],
  "delta_review": {
   "status": "passed",
-  "kind": "bounded technical acceptance by the technical owner (Soma). It is not an independent review: no reviewer was dispatched on this delta and there is no review report.",
-  "of": "the closing step after the third fix round: the defaults of D4 as approved (metadataBytes 2**24, paxRecords 2**21, sparseNumbers 2**16, a heap limit of 2,048 MiB), the vectors, tests and readiness lines that follow from them, the split of the test commands into `test` and `qualify` (b4a9271), and the record of the technical owner's message on the sparse budget (05298e9)",
-  "commit": "05298e9455e315a26552c55e8b79968e6ca2e4bc",
-  "covers": "06ee0cc..05298e9",
-  "verdict": "ACCEPTED by the technical owner for the agreed success path, option (a), as a bounded technical acceptance. No findings are recorded with it, and none can be inferred: it is her word on the delta and not the result of a second reading by an independent reviewer.",
-  "as_received": "Технічно приймаю дельту 06ee0cc..05298e9 для нашого погодженого success path — варіант(a). ... Це моє bounded technical acceptance, не нове незалежне Opus-review",
-  "source": "Zulip Kitchen 2359, as quoted in the dispatch brief of the step that closes TASK-XQ63S. The quotation is in Ukrainian; in English: \"I technically accept the delta 06ee0cc..05298e9 for our agreed success path, option (a). ... This is my bounded technical acceptance, not a new independent Opus review\". The translation is the implementer's. The ellipsis is the brief's: what the message says between the two sentences was not relayed.",
-  "review": "none. The acceptance stands where a delta review would; scripts/check-port-ready prints it as \"the delta review of 05298e9 passed\", and that line is to be read with this entry.",
-  "review_report_sha256": "9f260549cef37e48aa43e5690aa0636c7f69da1ef3bc5e24986aad924996b07d",
-  "review_report_sha256_is": "the sha256 of the UTF-8 bytes of `as_received`, the quotation as the brief relays it with its ellipsis. There is no review report to take a digest of, and scripts/check-port-ready requires 64 hex digits for a status of \"passed\"; the script was not changed, because a change to it would be source that no review has read. The digest identifies the words recorded here and proves nothing about the message in Zulip.",
-  "set_by": "The implementer, in the step that closes TASK-XQ63S, on this instruction of the manager of the dispatch, given in the dispatch brief: \"1. Close XQ63S. Soma accepted the delta 06ee0cc..05298e9455e315a26552c55e8b79968e6ca2e4bc. Record it in test/port-rulings.golden as her bounded technical acceptance (not an independent review), quoting her: \"Технічно приймаю дельту 06ee0cc..05298e9 для нашого погодженого success path — варіант(a). ... Це моє bounded technical acceptance, не нове незалежне Opus-review\" (Zulip Kitchen 2359). Run check-port-ready once and commit; expect it green apart from the two lines that were red before the task. No other gates.\" This is a manager instruction relaying the technical owner's acceptance; it falls under the owner's direction quoted in the same brief: \"Owner direction (Vasyl): get kitchen to a working success path on our own setup quickly; hardening comes later, and anything that doesn't block use goes to backlog.\"",
-  "not_seen_by_the_implementer": "The message Zulip Kitchen 2359 itself. It is quoted as the brief relays it.",
-  "not_covered": "Everything committed after 05298e9. The commit that records this acceptance changes only this file and docs/, which the readiness check prints as a NOTE and does not block on. The corpus harness of task B, committed after it, is new source outside docs/ that neither a review nor this acceptance has read, and scripts/check-port-ready blocks on it until it has a review or an acceptance of its own.",
-  "rule": "A status of \"passed\" names the commit reviewed and the sha256 of the review report. It is set by a reviewer, or by the implementer on a quoted instruction, never on the implementer's own judgement. `set_by` quotes the instruction and says whose it is: the technical owner's for the review of a198042, the manager's for the reviews of 621d78d and of 06ee0cc (see earlier_delta_reviews for all three). This entry is the one exception to the first sentence, and says so in `kind`, `review` and `review_report_sha256_is`: it records an acceptance by the technical owner in place of a review, on the manager's quoted instruction."
+  "kind": "an independent review, the last of five that read the line after 05298e9 one after another, with a sixth, earlier one of a part of it. It approves the code line 22caa8d..e62b4cf. The commits before 22caa8d were read by reviews that ended in REJECT, and no review approves 05298e9..22caa8d as a range of its own: what stands for it is that every finding of those reviews is stated closed by a later review of this list (`chain`). That is a reading of the reports by the implementer, entered on the manager's instruction, and it is marked as one here.",
+  "of": "the kitchen line after 05298e9: the deploy corpus, the port of deploy and cook for deployments without a catalog, the contract v1 engine (`plan`, `apply`), the rehearsal and the takeover runners, the name of a build by its adapter contract (rulings D5, D6: `kitchen-cook-adapter/2`), a Bun cache of the build's own, the Git rewrites for local sources, and the takeover witness",
+  "commit": "e62b4cf1f4666f07797bc4a7518efdda32e347f7",
+  "covers": "05298e9..e62b4cf by five reviews in a row, the last an APPROVE with no findings: 05298e9..40378ef REJECT (H1), 40378ef..22caa8d REJECT (M1; H1 closed), 22caa8d..d454870 REJECT (M1 closed), d454870..4ab9d38 REJECT, 4ab9d38..e62b4cf APPROVE of the code line 22caa8d..e62b4cf; no APPROVE names 05298e9..22caa8d by itself; see `chain` and `not_covered` in test/port-rulings.golden",
+  "verdict": "APPROVE. No remaining findings at any severity. \"This approves the reviewed code line `22caa8d..e62b4cf`, not a live-host deployment window.\"",
+  "review": "the narrow re-review of 4ab9d38..e62b4cf dispatched on TASK-XQ63S; its report is `<review drop>/KITCHEN-D5V2-e62b4cf/review3-approve.md`, beside the two rounds before it and a bundle of the commit",
+  "review_report_sha256": "fd6d7986c6d42c63543a82e2d9d8e29783c86e4ae0e377b610ee105d0bce5dfa",
+  "review_report_sha256_is": "the sha256 of review3-approve.md, the report of the last review. The digests of the five other reports are in `chain`. All six were checked against the SHA256SUMS files beside them when this entry was written.",
+  "chain": [
+   {
+    "range": "1b4f3e9..04d7735",
+    "commit": "04d7735051f3d72b5622f87f8c44f99b48ec923b",
+    "report": "<review drop>/KITCHEN-SLICE-REVIEW-04d7735/report.md",
+    "review_report_sha256": "167f3b64b5fe00bef01dfbf2cc949470866f1a4b6ae5dc4c81bcc415b69a136c",
+    "verdict": "APPROVE. No HIGH findings. Two MEDIUM findings are gaps in the tests, not defects in the code. Four LOW.",
+    "findings": {
+     "MEDIUM 1": "the corpus does not catch a lost activation-mode switch on the same build",
+     "MEDIUM 2": "the unit verifier under install_only and the contract-level install_only path are not compared with the oracle",
+     "LOW 1": "the identity check is the harness's own formula on both sides",
+     "LOW 2": "every adapter or Node path change rebuilds and restarts the agent (plan question Q1)",
+     "LOW 3": "the rehearsal runner overwrites its own receipts",
+     "LOW 4": "a pre-existing private-denylist hit stays in test/port-rulings.golden"
+    },
+    "after_it": "Commit 15ee4a1 answers MEDIUM 1, MEDIUM 2, LOW 1 and LOW 3 by the implementer's report; LOW 2 was decided by the owner as ruling D5 (5bca5ea). The review of 05298e9..40378ef read those commits and raised no finding on them; it does not name the four items, so their closure is the implementer's report and not a reviewer's statement. LOW 4 is open: it has to be cleaned before kitchen is published."
+   },
+   {
+    "range": "05298e9..40378ef (18 commits)",
+    "commit": "40378efd54ce37263081c4ce014f64b079c21dcf",
+    "report": "<review drop>/KITCHEN-LINE-REVIEW-40378ef/report.md",
+    "review_report_sha256": "d263bd54001a74b2018753f1da9070cd8abacbcc654c389ae55b156fe70664db",
+    "verdict": "REJECT. The noncatalog success path has strong oracle parity and passes the clean-environment unit suites, but takeover prepare does not hold the claimed no-live-build-write guarantee (H1). Two LOW test-tooling issues are nonblocking backlog items; no MEDIUM finding.",
+    "findings": {
+     "HIGH H1": "prepare can mutate live shared files and still certify \"untouched\"",
+     "LOW L1": "the documented default corpus comparison cannot locate Node",
+     "LOW L2": "goldens inherit the caller's allowed environment-name set"
+    },
+    "after_it": "The next review in this list states the closure of all three."
+   },
+   {
+    "range": "40378ef..22caa8d",
+    "commit": "22caa8dacb84b99a1cba4d7cef165267095dfb7e",
+    "report": "<review drop>/KITCHEN-DELTA-REVIEW-22caa8d/report.md",
+    "review_report_sha256": "4a51b0cc496a1e0c8c8327b3508e102e5f1254d1789b6494e316ffcbcf238928",
+    "verdict": "REJECT as submitted. Recommendation: use `kitchen-cook-adapter/2`.",
+    "closes": {
+     "H1": "\"original Bun-cache defect fixed; not a general write sandbox\"",
+     "L1": "closed",
+     "L2": "closed"
+    },
+    "findings": {
+     "MEDIUM M1": "the D5 exception can change which package bytes enter a build",
+     "LOW W1": "the emitted witness does not fairly enumerate all its exclusions"
+    },
+    "after_it": "The owner had the number raised (ruling D6). The next review states the closure of M1."
+   },
+   {
+    "range": "22caa8d..d454870",
+    "commit": "d454870fca0f34c1d2ac994b7aabe8c407fb77df",
+    "report": "<review drop>/KITCHEN-D5V2-e62b4cf/review1-reject.md",
+    "review_report_sha256": "3ca867f664cb635334ee26d65205da2a1bbcea3e1206a14cfbb4397a8ac75cc8",
+    "verdict": "REJECT — two MEDIUM findings.",
+    "closes": {
+     "M1": "\"`/2` is named and the `/1` output-equivalence exception is withdrawn\""
+    },
+    "findings": {
+     "MEDIUM W1-R": "completeness considers build inventories only, although the certificate also claims the drop-ins and service process",
+     "MEDIUM (Git)": "the Git rewrite is not exact-path scoped: a prefix collision selects a different repository"
+    }
+   },
+   {
+    "range": "d454870..4ab9d38",
+    "commit": "4ab9d389b439b1f096a06a1265c6f09de94df2d4",
+    "report": "<review drop>/KITCHEN-D5V2-e62b4cf/review2-reject.md",
+    "review_report_sha256": "4c71619e8b61bc45ea7854e5715f11038914af97f56a29fd341723dd5dc105ed",
+    "verdict": "REJECT — one MEDIUM completeness residual.",
+    "closes": {
+     "Git": "\"Git's prefix finding is closed within the documented acquisition scope\"",
+     "W1-R, in part": "the unreadable regular drop-in and the nonzero-show cases"
+    },
+    "findings": {
+     "MEDIUM W1-R": "a successful show without a required value is still certified"
+    }
+   },
+   {
+    "range": "4ab9d38..e62b4cf",
+    "commit": "e62b4cf1f4666f07797bc4a7518efdda32e347f7",
+    "report": "<review drop>/KITCHEN-D5V2-e62b4cf/review3-approve.md",
+    "review_report_sha256": "fd6d7986c6d42c63543a82e2d9d8e29783c86e4ae0e377b610ee105d0bce5dfa",
+    "verdict": "APPROVE. No remaining findings at any severity.",
+    "closes": {
+     "W1-R": "\"The previous MEDIUM W1-R residual is closed. Earlier Git-prefix, unreadable regular drop-in and failed-show closures stand.\""
+    },
+    "findings": {}
+   }
+  ],
+  "not_covered": [
+   "A live host. The approving report says so itself, and no review of this list queried, rebuilt or restarted an agent. The takeovers of 2026-11-15 were made with kitchen 40378ef, the commit the second review of this list rejected for H1.",
+   "05298e9..22caa8d as an approved range. Each commit in it was read by a review (1b4f3e9..04d7735 was read twice), and the reviews of its two ends are REJECT. It is recorded as read and its findings as closed by later reviews, not as approved.",
+   "The closing step b4a9271, 05298e9 itself: no independent review has read it. It stands on the technical owner's bounded acceptance (the entry before this one in `earlier_delta_reviews`; backlog B11).",
+   "Obligation `archive.L140.4` (backlog B25): the implementer recorded it as discharged with a witness in test/unit/engine.test.js. No report of this list names the witness. It is still not confirmed by a review.",
+   "The parts of src/deploy.ts the corpus does not run. The review of 1b4f3e9..04d7735 says they \"rest on the implementer's port only: rollback after a failed activation, retired units, secret-file removal, health commands, and unit-exclusivity refusals (backlog B18–B25)\", and that its own line-by-line read against the oracle \"had not returned\". No later report says that read was made. The switch of activation and the taking back of a release were put into the corpus afterwards (15ee4a1, 8b46efe).",
+   "The four closures of the first entry of `chain` that only the implementer reports (MEDIUM 1, MEDIUM 2, LOW 1, LOW 3 of the review of 04d7735).",
+   "`qualify`, the TS mutants, the reader mutants and the socket check on e62b4cf: no review of this list ran them (\"No new full qualification, separate mutants, socket test, real-client mock-bus rerun or live-host gate was assigned or performed\"). The mutant results in the tree are those of the modules of plan phase 3; src/deploy.ts, src/cook.ts, src/engine.ts and src/isolation.ts have no mutant set.",
+   "What the approving report lists as unchanged: \"Existing exclusions (including link targets and changes restored between snapshots), older shared builds and unpinned dependency risks\".",
+   "Everything committed after e62b4cf. The commit that records this entry changes this file and docs/ only."
+  ],
+  "set_by": "The implementer, in the step that puts a thin Ansible layer over kitchen, on this instruction of the manager of the dispatch, given in the dispatch brief: \"The existing acceptance record stops at `05298e9`, so `check-port-ready` is red. Extend it honestly from these reviews; don't invent reviews. Record unreviewed parts as unreviewed.\" The brief names the review so: \"Kitchen line `22caa8d..e62b4cf` (nested `.cache/kitchen/repo`, local `main`) has an independent Sol APPROVE with no findings. Package: `<review drop>/KITCHEN-D5V2-e62b4cf/` (`review3-approve.md` and earlier rounds).\" The four other reports were found in the review drop under the names in `chain`; ruling D6 already cites one of them by its digest. The implementer read all six.",
+  "transcription": "The brief names the package by its absolute path on the host; here the directory above `KITCHEN-D5V2-e62b4cf` is written `<review drop>`. Nothing else is changed.",
+  "rule": "A status of \"passed\" names the commit reviewed and the sha256 of the review report. It is set by a reviewer, or by the implementer on a quoted instruction, never on the implementer's own judgement. This entry differs from the earlier ones in one thing and says so in `kind` and `covers`: scripts/check-port-ready asks whether a recorded review has read what was changed, and the one status it has stands here for a chain of reviews of which only the last approves. The script was not changed: a change to it would be source that no review has read."
  },
  "rulings": [
   {
@@ -739,6 +847,23 @@
    "set_by": "The implementer, in the closing step, on this instruction of the manager of the dispatch, given in answer to the implementer's question whether to record that review as passed for 621d78d..06ee0cc and whether to set finding F4 to ruled: \"Yes, both. For (2), the defaults were approved by Soma in Zulip Kitchen 2339 and 2341: metadata 2^24, paxRecords 2^21, sparseNumbers 2^16, members 2^17, and the heap from your short result. That sits under the owner's success-path direction of 13:04. Quote that as the source. Keep the rule that this step's commit blocks until reviewed. I'll settle with Soma how that line is cleared.\" This is a manager instruction, closing-step dispatch.",
    "not_covered": "Everything committed after 06ee0cc, the closing step first of all: the defaults of D4 as approved (metadataBytes 2**24, paxRecords 2**21, sparseNumbers 2**16, a heap limit of 2,048 MiB), the vectors, tests and readiness lines that follow from them, and the split of the test commands into `test` and `qualify`. scripts/check-port-ready blocks while a commit after the reviewed one changes anything but docs/ and this file. By the manager's answer that rule is kept for the closing step's own commit, and how that line is cleared is for the manager and the technical owner to settle.",
    "rule": "A status of \"passed\" names the commit reviewed and the sha256 of the review report. It is set by a reviewer, or by the implementer on a quoted instruction, never on the implementer's own judgement. `set_by` quotes the instruction and says whose it is: the technical owner's for the review of a198042, the manager's for the reviews of 621d78d and of 06ee0cc (see earlier_delta_reviews for the first two)."
+  },
+  {
+   "status": "passed",
+   "kind": "bounded technical acceptance by the technical owner (Soma). It is not an independent review: no reviewer was dispatched on this delta and there is no review report.",
+   "of": "the closing step after the third fix round: the defaults of D4 as approved (metadataBytes 2**24, paxRecords 2**21, sparseNumbers 2**16, a heap limit of 2,048 MiB), the vectors, tests and readiness lines that follow from them, the split of the test commands into `test` and `qualify` (b4a9271), and the record of the technical owner's message on the sparse budget (05298e9)",
+   "commit": "05298e9455e315a26552c55e8b79968e6ca2e4bc",
+   "covers": "06ee0cc..05298e9",
+   "verdict": "ACCEPTED by the technical owner for the agreed success path, option (a), as a bounded technical acceptance. No findings are recorded with it, and none can be inferred: it is her word on the delta and not the result of a second reading by an independent reviewer.",
+   "as_received": "Технічно приймаю дельту 06ee0cc..05298e9 для нашого погодженого success path — варіант(a). ... Це моє bounded technical acceptance, не нове незалежне Opus-review",
+   "source": "Zulip Kitchen 2359, as quoted in the dispatch brief of the step that closes TASK-XQ63S. The quotation is in Ukrainian; in English: \"I technically accept the delta 06ee0cc..05298e9 for our agreed success path, option (a). ... This is my bounded technical acceptance, not a new independent Opus review\". The translation is the implementer's. The ellipsis is the brief's: what the message says between the two sentences was not relayed.",
+   "review": "none. The acceptance stands where a delta review would; scripts/check-port-ready prints it as \"the delta review of 05298e9 passed\", and that line is to be read with this entry.",
+   "review_report_sha256": "9f260549cef37e48aa43e5690aa0636c7f69da1ef3bc5e24986aad924996b07d",
+   "review_report_sha256_is": "the sha256 of the UTF-8 bytes of `as_received`, the quotation as the brief relays it with its ellipsis. There is no review report to take a digest of, and scripts/check-port-ready requires 64 hex digits for a status of \"passed\"; the script was not changed, because a change to it would be source that no review has read. The digest identifies the words recorded here and proves nothing about the message in Zulip.",
+   "set_by": "The implementer, in the step that closes TASK-XQ63S, on this instruction of the manager of the dispatch, given in the dispatch brief: \"1. Close XQ63S. Soma accepted the delta 06ee0cc..05298e9455e315a26552c55e8b79968e6ca2e4bc. Record it in test/port-rulings.golden as her bounded technical acceptance (not an independent review), quoting her: \"Технічно приймаю дельту 06ee0cc..05298e9 для нашого погодженого success path — варіант(a). ... Це моє bounded technical acceptance, не нове незалежне Opus-review\" (Zulip Kitchen 2359). Run check-port-ready once and commit; expect it green apart from the two lines that were red before the task. No other gates.\" This is a manager instruction relaying the technical owner's acceptance; it falls under the owner's direction quoted in the same brief: \"Owner direction (Vasyl): get kitchen to a working success path on our own setup quickly; hardening comes later, and anything that doesn't block use goes to backlog.\"",
+   "not_seen_by_the_implementer": "The message Zulip Kitchen 2359 itself. It is quoted as the brief relays it.",
+   "not_covered": "Everything committed after 05298e9. The commit that records this acceptance changes only this file and docs/, which the readiness check prints as a NOTE and does not block on. The corpus harness of task B, committed after it, is new source outside docs/ that neither a review nor this acceptance has read, and scripts/check-port-ready blocks on it until it has a review or an acceptance of its own.",
+   "rule": "A status of \"passed\" names the commit reviewed and the sha256 of the review report. It is set by a reviewer, or by the implementer on a quoted instruction, never on the implementer's own judgement. `set_by` quotes the instruction and says whose it is: the technical owner's for the review of a198042, the manager's for the reviews of 621d78d and of 06ee0cc (see earlier_delta_reviews for all three). This entry is the one exception to the first sentence, and says so in `kind`, `review` and `review_report_sha256_is`: it records an acceptance by the technical owner in place of a review, on the manager's quoted instruction."
   }
  ]
 }
