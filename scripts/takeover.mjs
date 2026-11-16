@@ -42,7 +42,8 @@
 // taken a name anywhere (a hard link). False means something of it changed; it does not say who changed it. Null means
 // no change was seen and something could not be read, so nothing is certified: an entry of a build, the unit file or a
 // drop-in file (its content is what is held, so one that cannot be opened is not known), or a property the service
-// manager did not answer for (`could_not_be_read`). Two equal marks of that are not an equal thing. `prepare` and
+// manager did not answer for (`could_not_be_read`): its `show` failed, or gave no number for the main process id or the
+// restart count, which are always numbers (0 is one). Two equal marks of that are not an equal thing. `prepare` and
 // `verify` end with status 3 on false and on null. File contents are not read: a write moves the two times, and the status change time is not the
 // account's to set. The log line names the builds measured (`builds_measured`) and all it leaves out (`not_measured`).
 // `prepare` also counts the files of the new build that have a name outside it, and ends with status 3 where one is a
@@ -78,6 +79,10 @@ const TEXT_LIMIT = 1 << 20;
 const RECEIPT = /^(\d{3,})-[a-z]+-[a-z]+\.receipt\.json$/u;
 const HEX = /^[a-f0-9]{64}$/u;
 const SHOWN = ['ActiveState', 'SubState', 'MainPID', 'NRestarts', 'ExecMainStartTimestamp', 'LoadState', 'UnitFileState', 'FragmentPath', 'DropInPaths', 'EnvironmentFiles'];
+// The properties whose answer is always a number, 0 included (no main process, never restarted). `show` ends with status 0
+// and no word at all for a property the service manager does not have, so for these anything but a number is no answer.
+// The others may be empty and answered: a time stamp that is not set, no drop-in, no environment file.
+const NUMBER = new Set(['MainPID', 'NRestarts']), DECIMAL = /^(0|[1-9][0-9]*)$/;
 
 /** This runner's own refusal: exit status 3. */
 export class Refusal extends Error {}
@@ -305,10 +310,12 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
       need(status === 97, 'the service-manager guard did not refuse: ' + level + ' ' + args.join(' '));
     }
     const dropin = path.join(unitDir, unit + '.d');
-    // An answer of the service manager, and the properties it did not answer for: an empty word of those is not a value.
+    // An answer of the service manager, and the properties it did not answer for: a `show` that failed, or one that
+    // ended well without the number a numeric property always has (`NUMBER`). What it printed is logged as it came.
     const shown = () => {
       const answers = SHOWN.map(property => [property, ask(['--user', 'show', '-p', property, '--value', unit])]);
-      return { unit_state: Object.fromEntries(answers.map(([property, answer]) => [property, answer.stdout])), unit_state_not_answered: answers.filter(([, answer]) => answer.status !== 0).map(([property]) => property) };
+      const answered = (property, answer) => answer.status === 0 && (!NUMBER.has(property) || DECIMAL.test(answer.stdout));
+      return { unit_state: Object.fromEntries(answers.map(([property, answer]) => [property, answer.stdout])), unit_state_not_answered: answers.filter(([property, answer]) => !answered(property, answer)).map(([property]) => property) };
     };
     const target = () => ({
       current: describe(current), unit: describe(path.join(unitDir, unit)), dropin: list(dropin), wants: describe(path.join(unitDir, 'default.target.wants', unit)),
@@ -430,7 +437,7 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
         not_measured: [
           'file contents (not read; a write moves the modification and the status change time)',
           'access times',
-          'what a symbolic link under a build names (links are not followed)',
+          'what a symbolic link names, under a build or outside one: the unit link, a drop-in or the enable link that is a link (links are not followed)',
           ...(writesRequested ? ['the requested build ' + wanted + ': this step writes it'] : Object.hasOwn(others, wanted) ? [] : ['the requested build ' + wanted + ': it is not there']),
           ...(complete ? [] : ['what could not be read: ' + (listed ? '' : 'the directory `builds`; ') + 'see `could_not_be_read`, and `could_not_be_read` and `first_not_read` of each build']),
           'the directory `builds` itself, and the rest of the deployment root beside the pointer (`state`, cook\'s configuration and credentials, the workspace): logged before and after, not compared',

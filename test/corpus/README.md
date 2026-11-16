@@ -305,8 +305,11 @@ run them:
   pointer, the links and the process; false if something changed; and null
   if nothing was seen to change and something of it could not be read: an
   entry of a build, the unit file or a drop-in file, or a property the
-  service manager did not answer for. Two equal "unreadable" marks, or two
-  empty answers, are not an unchanged deployment. `prepare` and `verify`
+  service manager did not answer for: its `show` failed, or ended well
+  without the number that the main process id and the restart count always
+  are (0 is a number; a time stamp that is not set is empty and answered).
+  Two equal "unreadable" marks, or two empty answers, are not an unchanged
+  deployment. `prepare` and `verify`
   end with status 3 on false and on null, and the log names what was not
   read (`could_not_be_read`, and `first_not_read` of each build).
 - The log line says what it covers: `builds_measured`,

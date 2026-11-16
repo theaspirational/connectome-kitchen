@@ -51,8 +51,14 @@ class Takeover(unittest.TestCase):
         self.role = world.role_apply(world.operator_files())
         sandbox, root = world.sandbox, Path(world.root)
         self.unit = 'connectome-%s.service' % world.effective['name']
+        # The oracle's fake has no process: it answers `show` of every property but ActiveState with one line that is not
+        # a number. The two properties that are numbers get one here, behind the fake (which still logs the call): a main
+        # process, and no restart: 0 is a value. A test puts its own answers in front of `exec` in `fake-systemctl`.
+        process = sandbox / 'fake-systemctl-process'
+        corpus.write(process, '#!/bin/sh\ncase "$*" in *MainPID*|*NRestarts*) %s %s %s "$@" >/dev/null || exit\n'
+                     '  case "$*" in *MainPID*) echo 4242;; *) echo 0;; esac; exit 0;; esac\nexec %s %s %s "$@"\n' % (tuple(world.systemctl) * 2), 0o755)
         fake = sandbox / 'fake-systemctl'
-        corpus.write(fake, '#!/bin/sh\nexec %s %s %s "$@"\n' % tuple(world.systemctl), 0o755)
+        corpus.write(fake, '#!/bin/sh\nexec %s "$@"\n' % process, 0o755)
         request = dict(copy.deepcopy(world.request))
         del request['systemctl']
         recipe = world.raw_layers['agent']['recipe_file']['path']
@@ -496,6 +502,44 @@ os.chmod(_dst, 0o755)
             self.assertEqual((done.returncode, witness['untouched_by_this_run'], witness['pointer_unit_and_process_as_before'], witness['measurement_complete'], witness['could_not_be_read']),
                              (3, None, None, False, sorted('unit property ' + name for name in asked)), done.stderr)
             self.assertIn('could not be measured completely', log[-1]['why'])
+
+    def test_a_show_that_ends_well_without_the_number_is_not_certified(self):
+        # `show` ends with status 0 and no word for a property the service manager does not have (a real systemctl does,
+        # finding W1-R), or with a word that is no number. The main process id and the restart count are always numbers:
+        # without one nothing is known of the process, and two equal answers of that are not a process that stayed.
+        for name in ('MainPID', 'NRestarts'):
+            for mode in ('prepare', 'verify'):
+                for label, answer in (('empty', ''), ('word', 'echo n/a; ')):
+                    world = self.world('show-%s-%s-%s' % (label, name, mode))
+                    if mode == 'verify':
+                        done, log, verbs = self.run_mode(world, 'prepare')
+                        self.assertEqual((done.returncode, next(entry for entry in log if entry['step'] == 'running deployment')['untouched_by_this_run']), (0, True), done.stderr)
+                    fake = Path(self.document['systemctl'][0])
+                    text = fake.read_text()
+                    self.assertIn('\nexec ', text)
+                    fake.write_text(text.replace('\nexec ', '\ncase "$*" in *%s*) %sexit 0;; esac\nexec ' % (name, answer)))
+                    done, log, verbs = self.run_mode(world, mode)
+                    witness = next(entry for entry in log if entry['step'] == 'running deployment')
+                    moments = [next(entry for entry in log if entry['step'] == step) for step in ('before', 'after')]
+                    self.assertEqual([(moment['unit_state'][name], moment['unit_state_not_answered']) for moment in moments], [(answer and 'n/a', [name])] * 2)
+                    self.assertEqual((done.returncode, witness['untouched_by_this_run'], witness['pointer_unit_and_process_as_before'], witness['measurement_complete'], witness['could_not_be_read']),
+                                     (3, None, None, False, ['unit property ' + name]), done.stderr)
+                    self.assertEqual(witness['builds_that_were_there_as_before'], True)
+                    self.assertIn('could not be measured completely', log[-1]['why'])
+
+    def test_a_number_is_an_answer_and_an_empty_time_stamp_is_one(self):
+        # 0 is a value of both numbers (no main process, never restarted), and a time stamp that is not set is empty and
+        # answered: the witness is complete with them, in `prepare` and in `verify`.
+        world = self.world('show-zero')
+        fake = Path(self.document['systemctl'][0])
+        fake.write_text(fake.read_text().replace('\nexec ', '\ncase "$*" in *MainPID*|*NRestarts*) echo 0; exit 0;; *ExecMainStartTimestamp*) exit 0;; esac\nexec '))
+        for mode in ('prepare', 'verify'):
+            done, log, verbs = self.run_mode(world, mode)
+            witness = next(entry for entry in log if entry['step'] == 'running deployment')
+            before = next(entry for entry in log if entry['step'] == 'before')
+            self.assertEqual(([before['unit_state'][name] for name in ('MainPID', 'NRestarts', 'ExecMainStartTimestamp')], before['unit_state_not_answered']), (['0', '0', ''], []))
+            self.assertEqual((done.returncode, witness['untouched_by_this_run'], witness['pointer_unit_and_process_as_before'], witness['measurement_complete'], witness['could_not_be_read']),
+                             (0, True, True, True, []), done.stderr)
 
     def test_the_guard(self):
         SCRATCH.mkdir(parents=True, exist_ok=True)
