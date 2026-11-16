@@ -33,12 +33,16 @@
 //   - write, copy or log a secret value. The engine reads the secrets file in place in `start`.
 //
 // What `untouched_by_this_run` says, and what it does not. Before and after a step the runner takes: the pointer, the
-// unit link, the drop-in, the enable link, the unit's process as the service manager shows it, and of every build that
-// was under `builds` before the step, the new one apart, every entry with its type, mode, owner, size, link count, inode,
-// modification time and status change time (`inventory`). True means all of that is as it was: no file of those builds
-// was written, given another mode or owner, renamed, added, removed, or given or taken a name anywhere (a hard link). File
-// contents are not read: a write moves the two times, and the status change time is not the account's to set. It is not
-// a statement about the agent's state directory (the running agent writes there) nor about the account's own Bun cache.
+// unit link, the drop-in, the enable link, the unit's process as the service manager shows it, and of each build it
+// measures, the build directory itself and every entry under it with type, mode, owner, group, size, link count, inode,
+// modification time and status change time (`inventory`). Which builds: every entry of `builds` that was there before
+// the step, but for the requested build in `prepare` and `start`, which write it. `verify` writes no build and measures
+// the requested one too, also when it is the one that runs. True means all of that is as it was at the two moments it
+// was taken: no file of those builds was written, given another mode or owner, renamed, added, removed, or given or
+// taken a name anywhere (a hard link). False means something of it changed; it does not say who changed it. Null means
+// no change was seen and something could not be read, so nothing is certified; `prepare` and `verify` end with status 3
+// on false and on null. File contents are not read: a write moves the two times, and the status change time is not the
+// account's to set. The log line names the builds measured (`builds_measured`) and all it leaves out (`not_measured`).
 // `prepare` also counts the files of the new build that have a name outside it, and ends with status 3 where one is a
 // file of another build.
 //
@@ -104,30 +108,39 @@ function list(directory, digest = true) {
 }
 
 /**
- * Every entry under a build, as the file system has it, without reading a file: one line each, sorted, and their digest.
- * A line holds the path in the build, type and mode, owner, group, size, link count, inode, modification time and status
- * change time (nanoseconds), and a link's target. Symbolic links are not followed.
+ * A build as the file system has it, without reading a file: the build directory itself (`.`) and every entry under it,
+ * one line each, sorted, and their digest. A line holds the path in the build, type and mode, owner, group, size, link
+ * count, inode, modification time and status change time (nanoseconds), and a link's target. Symbolic links are not
+ * followed. `unread` names what could not be asked (a directory that cannot be listed, an entry that cannot be looked
+ * at): its line is a marker, and an inventory with one is not a complete measurement, whatever a second one says.
  */
 function inventory(directory) {
-  const rows = new Map();
-  const pending = [''];
+  const rows = new Map(), unread = [];
+  const marker = (name, word, error) => { rows.set(name, word + ' ' + (error.code ?? '')); unread.push(name); };
+  const take = (relative, full) => {
+    let info;
+    try {
+      info = fs.lstatSync(full, { bigint: true });
+      rows.set(relative, [info.mode.toString(8), info.uid, info.gid, info.size, info.nlink, info.dev + ':' + info.ino, info.mtimeNs, info.ctimeNs,
+        ...(info.isSymbolicLink() ? [JSON.stringify(fs.readlinkSync(full))] : [])].join(' '));
+    } catch (error) { marker(relative, 'gone', error); return false; }
+    return info.isDirectory();
+  };
+  const pending = take('.', directory) ? [''] : [];
   while (pending.length) {
     const inside = pending.pop();
     let entries;
-    try { entries = fs.readdirSync(path.join(directory, inside)); } catch (error) { rows.set(inside + '/', 'unreadable ' + (error.code ?? '')); continue; }
+    try { entries = fs.readdirSync(path.join(directory, inside)); } catch (error) { marker((inside === '' ? '.' : inside) + '/', 'unreadable', error); continue; }
     for (const leaf of entries) {
-      const relative = inside === '' ? leaf : inside + '/' + leaf, full = path.join(directory, relative);
-      let info;
-      try { info = fs.lstatSync(full, { bigint: true }); } catch (error) { rows.set(relative, 'gone ' + (error.code ?? '')); continue; }
-      rows.set(relative, [info.mode.toString(8), info.uid, info.gid, info.size, info.nlink, info.dev + ':' + info.ino, info.mtimeNs, info.ctimeNs,
-        ...(info.isSymbolicLink() ? [JSON.stringify(fs.readlinkSync(full))] : [])].join(' '));
-      if (info.isDirectory()) pending.push(relative);
+      const relative = inside === '' ? leaf : inside + '/' + leaf;
+      if (take(relative, path.join(directory, relative))) pending.push(relative);
     }
   }
   const sorted = [...rows].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
-  return { rows, entries: rows.size, sha256: sha256(sorted.map(([name, row]) => JSON.stringify(name) + ' ' + row + '\n').join('')) };
+  return { rows, entries: rows.size, unread: unread.sort(), sha256: sha256(sorted.map(([name, row]) => JSON.stringify(name) + ' ' + row + '\n').join('')) };
 }
 const FIELDS = ['mode', 'uid', 'gid', 'size', 'links', 'inode', 'mtime_ns', 'ctime_ns', 'link_target'];
+const MARKER = /^(?:gone|unreadable) /u;
 /** Where two inventories of one build part: the entries, and which of the fields. At most `limit` are named. */
 function inventoryChanges(before, after, limit = 20) {
   const changed = [];
@@ -135,7 +148,7 @@ function inventoryChanges(before, after, limit = 20) {
     const was = before.rows.get(name), is = after.rows.get(name);
     if (was === is) continue;
     const a = was?.split(' ') ?? [], b = is?.split(' ') ?? [];
-    changed.push({ path: name, what: was === undefined ? ['added'] : is === undefined ? ['removed'] : FIELDS.filter((_, index) => a[index] !== b[index]) });
+    changed.push({ path: name, what: was === undefined ? ['added'] : is === undefined ? ['removed'] : MARKER.test(was) || MARKER.test(is) ? ['could not be read'] : FIELDS.filter((_, index) => a[index] !== b[index]) });
   }
   return { count: changed.length, first: changed.slice(0, limit) };
 }
@@ -288,10 +301,16 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
     });
     const before = { target: target(), unit_state: shown(), exclusive: exclusive.map(([scope, other]) => ask(['--' + scope, 'is-active', other])) };
     log('before', before);
-    // Every build that is there, the new one apart, entry by entry: what a step that does not touch them must leave as it is.
-    const beside = () => { try { return fs.readdirSync(builds).filter(leaf => leaf !== wanted).sort(); } catch { return []; } };
-    const inventories = new Map(beside().map(leaf => [leaf, inventory(path.join(builds, leaf))]));
-    log('builds beside the new one', { builds: Object.fromEntries([...inventories].map(([leaf, taken]) => [leaf, { entries: taken.entries, sha256: taken.sha256 }])) });
+    // The builds a step must leave as they are, entry by entry. `prepare` and `start` write the requested build, so it is not
+    // one of them there. `verify` (and `check`, which takes them once) writes no build: there the requested one is measured
+    // too, also when it is the one that runs.
+    const writesRequested = mode === 'prepare' || mode === 'start';
+    let listed = true;
+    const there = () => { try { return fs.readdirSync(builds).sort(); } catch { listed = false; return []; } };
+    const measuredBuilds = () => there().filter(leaf => !(writesRequested && leaf === wanted));
+    const inventories = new Map(measuredBuilds().map(leaf => [leaf, inventory(path.join(builds, leaf))]));
+    log('builds measured', { requested_build: writesRequested ? 'left out: this step writes it' : inventories.has(wanted) ? 'measured' : 'not there',
+      builds: Object.fromEntries([...inventories].map(([leaf, taken]) => [leaf, { entries: taken.entries, sha256: taken.sha256, could_not_be_read: taken.unread.length }])) });
     need(before.unit_state.ActiveState !== '', 'the user service manager did not answer; is XDG_RUNTIME_DIR set for this account?');
     const running = { current: before.target.current, unit: before.target.unit, dropin: before.target.dropin, wants: before.target.wants,
       main_pid: before.unit_state.MainPID, restarts: before.unit_state.NRestarts, started: before.unit_state.ExecMainStartTimestamp, active: before.unit_state.ActiveState };
@@ -358,27 +377,50 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
       let sharing = null;
       try { if (fs.existsSync(build)) sharing = shared(builds, wanted); } catch (error) { sharing = { unreadable: error.code ?? true }; }
       log('new build', { entries: list(build, false), files_with_a_name_outside_the_build: sharing });
-      // The builds that were there: taken again, and held against what they were before this step.
+      // The builds measured before: taken again, and held against what they were. An entry that could not be read, before
+      // or now, makes the measurement of its build incomplete: two equal markers are not an unchanged build.
       const others = Object.fromEntries([...inventories].map(([leaf, taken]) => {
         const again = inventory(path.join(builds, leaf)), changes = again.sha256 === taken.sha256 ? { count: 0, first: [] } : inventoryChanges(taken, again);
-        return [leaf, { entries: again.entries, sha256: again.sha256, unchanged: changes.count === 0, changed: changes.count, first_changed: changes.first }];
+        const unread = [...new Set([...taken.unread, ...again.unread])].sort(), complete = unread.length === 0;
+        return [leaf, { entries: again.entries, sha256: again.sha256, complete, could_not_be_read: unread.length, first_not_read: unread.slice(0, 20),
+          unchanged: changes.count !== 0 ? false : complete ? true : null, changed: changes.count, first_changed: changes.first }];
       }));
-      const added = beside().filter(leaf => !inventories.has(leaf));
-      const buildsAsBefore = Object.values(others).every(row => row.unchanged) && !added.length;
+      const added = measuredBuilds().filter(leaf => !inventories.has(leaf));
+      const complete = listed && Object.values(others).every(row => row.complete);
+      const buildsChanged = Object.values(others).some(row => row.changed !== 0) || added.length !== 0;
+      const buildsAsBefore = buildsChanged ? false : complete ? true : null;
       const now = { current: after.target.current, unit: after.target.unit, dropin: after.target.dropin, wants: after.target.wants,
         main_pid: after.unit_state.MainPID, restarts: after.unit_state.NRestarts, started: after.unit_state.ExecMainStartTimestamp, active: after.unit_state.ActiveState };
       const pointersAsBefore = JSON.stringify(now) === JSON.stringify(running);
-      const untouched = pointersAsBefore && buildsAsBefore;
+      // True, false, or null: nothing seen to change, and not everything could be read.
+      const untouched = !pointersAsBefore || buildsChanged ? false : complete ? true : null;
       log('running deployment', {
         untouched_by_this_run: untouched, pointer_unit_and_process_as_before: pointersAsBefore, builds_that_were_there_as_before: buildsAsBefore,
-        measured: 'the pointer, unit link, drop-in, enable link and process; of each build that was there: every entry\'s type, mode, owner, size, link count, inode, modification and status change time',
-        not_measured: ['file contents (a write moves the two times)', 'the agent state directory', 'the account\'s own Bun cache'],
-        builds: others, builds_added_beside_the_new_one: added, before: running, after: now,
+        measurement_complete: complete, builds_measured: Object.keys(others), requested_build_measured: Object.hasOwn(others, wanted),
+        measured: [
+          'the pointer `current`, the unit link, the drop-in, the enable link, and the unit\'s process as the service manager shows it',
+          'of each build in `builds_measured`: the build directory itself and every entry under it, with type, mode, owner, group, size, link count, inode, modification time and status change time, and a link\'s target',
+          'whether an entry was added under `builds`' + (writesRequested ? ', the requested build apart' : ''),
+          'at two moments: before the step and after it',
+        ],
+        not_measured: [
+          'file contents (not read; a write moves the modification and the status change time)',
+          'access times',
+          'what a symbolic link under a build names (links are not followed)',
+          ...(writesRequested ? ['the requested build ' + wanted + ': this step writes it'] : Object.hasOwn(others, wanted) ? [] : ['the requested build ' + wanted + ': it is not there']),
+          ...(complete ? [] : ['what could not be read: ' + (listed ? '' : 'the directory `builds`; ') + 'see `could_not_be_read` and `first_not_read` of each build']),
+          'the directory `builds` itself, and the rest of the deployment root beside the pointer (`state`, cook\'s configuration and credentials, the workspace): logged before and after, not compared',
+          'the agent state directory',
+          'the account\'s own Bun cache',
+          'a change between the two moments that was put back, and who made a change that is seen',
+        ],
+        builds: others, builds_added: added, before: running, after: now,
       });
-      if (mode !== 'start' && !untouched) {
-        // Not this runner's doing by any path it knows: the pointer, the unit, the process or a file of a build that was there changed while it ran.
-        const why = pointersAsBefore ? 'a build that was there changed during a step that does not touch it (see `running deployment` in the log: `builds`)'
-          : 'the running deployment changed during a step that does not touch it';
+      if (mode !== 'start' && untouched !== true) {
+        // Not this runner's doing by any path it knows: the pointer, the unit, the process or a file of a measured build changed while it ran. Or it could not look.
+        const why = !pointersAsBefore ? 'the running deployment changed during a step that does not touch it'
+          : buildsChanged ? 'a build that was there changed during a step that does not touch it (see `running deployment` in the log: `builds`)'
+            : 'the builds could not be measured completely: no change was seen, and nothing is certified (see `running deployment` in the log: `first_not_read`)';
         log('end', { status: 3, why });
         echo('takeover: ' + why);
         return 3;

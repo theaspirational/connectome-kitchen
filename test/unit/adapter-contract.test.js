@@ -37,6 +37,9 @@ test('the name of the adapter contract is one word with a number, and the record
  const left=name=>Object.entries(kept.cases[name].left).map(([file,row])=>[path.basename(file),row]);
  for(const name of Object.keys(kept.cases)){
   assert.deepEqual([kept.cases[name].status,kept.cases[name].stderr,kept.cases[name].cook_calls.length,kept.cases[name].verify_cook_calls.length],[0,'',1,1],name);
+  // Since /2 (ruling D6) the names the adapter adds to cook's environment are under the number: the record holds them, in every call.
+  const names=kept.cases[name].cook_calls[0].environment_names;
+  assert.deepEqual([names.includes('BUN_INSTALL_CACHE_DIR'),names.includes('COOK_PASS_ENV'),names.some(word=>word.startsWith('GIT_'))],[true,true,false],name);
   assert.ok(left(name).some(([leaf,row])=>leaf==='connectome.lock'&&typeof row.text==='string'&&row.mode),name);
   assert.ok(left(name).some(([leaf,row])=>leaf==='cook-layout.json'&&row.mode==='0644'),name);
  }

@@ -22,12 +22,14 @@ the lock after the adapter's post-processing, and what cook's stand-in left
 beside them. It is taken at two roots of different length, as a golden of the
 corpus is, so it does not depend on where it was made.
 
-Two environment names are held apart from the record, by name: the Bun cache
-of the build's own (`corpus.OWN_CACHE`, src/isolation.ts). Every cook call
-must have both, or there is no record and no check (`corpus.cook_calls`); the
-record then holds the call without them. They were added under `/1` with the
-number kept (src/cook.ts says why), so the cases of that record are the bytes
-they were before.
+The environment names of a cook call are recorded as the adapter hands them,
+with the ones the oracle's adapter does not have: the Bun cache of the
+build's own (`corpus.OWN_CACHE`, src/isolation.ts), which every call must
+name or there is no record and no check (`corpus.cook_calls`), and Git's
+configuration names where a case has a source repository at a local path.
+Under `/1` the first two were held apart and left out of the record; since
+`/2` they are under the number (src/cook.ts, ruling D6). The record of `/1`
+stays as it was made and is not checked any more.
 
 The record is `adapter-contract/<name with - for />.golden`. `check` fails when
 there is none under the present name, or when the output is not the one
@@ -103,7 +105,7 @@ def observe(case, sandbox, node, seam):
     record = {
         'given': {'argv': argv, 'build': {path: row for path, row in before.items() if Path(path).parent == build}},
         'status': done.returncode, 'stdout': done.stdout, 'stderr': done.stderr,
-        'cook_calls': corpus.cook_calls(root / 'cook-calls.jsonl', True), 'verify_cook_calls': corpus.lines(root / 'verify-cook-calls.jsonl'),
+        'cook_calls': corpus.cook_calls(root / 'cook-calls.jsonl', True, whole=True), 'verify_cook_calls': corpus.lines(root / 'verify-cook-calls.jsonl'),
         'left': {path: row for path, row in after.items() if before.get(path) != row and Path(path).name not in corpus.LOGS},
         'removed': sorted(path for path in before if path not in after),
     }

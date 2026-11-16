@@ -42,15 +42,20 @@ export const COOK_COMMIT = '1b874d9dd55b529486b8029dd9814a6c0e2147e0';
  * `test/corpus/adapter_contract.py` holds that output against the record kept under this name
  * (`test/corpus/adapter-contract/`), and fails on any difference until the number here is raised and a new record made.
  *
- * One exception to the environment names, made under `/1` and held by that check by name: `BUN_INSTALL_CACHE_DIR` and
- * `COOK_PASS_ENV`, the Bun cache of the build's own (src/isolation.ts). They were added after builds were named under
- * `/1` and the number was kept, so that no running agent is built anew for it. The ground: they say where Bun keeps what
- * it downloads during the install, and nothing of that directory stays; which packages, which bytes and which modes
- * come into the build is not theirs to change. What does differ between a `/1` build made before and one made after is
- * outside the name: the earlier one's package files are also names of the account's Bun cache. Any other name in
- * cook's environment, or a third use of these two, moves the number as before.
+ * `/2` (ruling D6) is `/1` and how the adapter has cook acquire what goes into a build (src/isolation.ts):
+ *   - `BUN_INSTALL_CACHE_DIR` with `COOK_PASS_ENV`: Bun installs from an empty cache of the build's own, never from the
+ *     account's. That is part of the contract and it can change the bytes of a build: with nothing cached, Bun asks the
+ *     registry for every package and resolves a range that no lockfile pins to the newest version that fits, where a
+ *     warm account cache could have answered with an earlier one. Cook's install is not pinned beyond the two archives
+ *     (backlog B26), and `/2` does not pin it; it says which acquisition a build of this name had.
+ *   - `GIT_CONFIG_COUNT` and its `GIT_CONFIG_KEY_<n>`/`GIT_CONFIG_VALUE_<n>`, only where the recipe names a source
+ *     repository by a local path: Git takes that repository over its transport and does not hard-link its objects, so
+ *     the clone's object files are its own (a pack, where a linked clone has the repository's loose files).
+ * These names were first added under `/1` with the number kept, on the ground that they could not change what comes into
+ * a build. A review showed the ground false for the first of them, the owner had the number raised, and the exception
+ * is gone: every name in cook's environment is under the number, and the record of `/2` holds them all.
  */
-export const ADAPTER_CONTRACT = 'kitchen-cook-adapter/1';
+export const ADAPTER_CONTRACT = 'kitchen-cook-adapter/2';
 export const BASE_ENV: ReadonlySet<string> = new Set(['PATH', 'HOME', 'LANG', 'LC_ALL', 'TMPDIR']);
 
 export const AdapterError = ArchiveError;
@@ -146,9 +151,9 @@ const SPEC = new Set(['config', 'pins']);
 const CONNECTOR_SETTINGS = new Set(['command', 'args', 'env', 'url', 'transport', 'token', 'toolPrefix', 'enabledFeatureSets', 'disabledFeatureSets',
   'enabledTools', 'disabledTools', 'reconnect', 'reconnectIntervalMs', 'channelSubscription']);
 const REFERENCE = /^\$\{[A-Z_][A-Z0-9_]*\}$/u;
-// The two names of the build's own Bun cache are the adapter's too (src/isolation.ts); the oracle has neither.
+// The two names of the build's own Bun cache are the adapter's too, and Git's configuration names (src/isolation.ts); the oracle has neither.
 const overlapsOwned = (names: readonly string[]): boolean => names.some(name => BASE_ENV.has(name) || name === 'DATA_DIR' || name === 'WORKSPACE_DIR'
-  || name === isolation.CACHE_ENV || name === isolation.PASS_ENV);
+  || name === isolation.CACHE_ENV || name === isolation.PASS_ENV || name.startsWith('GIT_CONFIG_'));
 
 /**
  * Only the effective entries are translated. No discovery/catalog reads. cook.py:111-202
@@ -225,6 +230,27 @@ export function external_servers(recipe: PyValue): PyDict {
   need(isDict(servers), 'recipe mcpServers must be a mapping');
   return new Map([...servers].filter(([, server]) => isDict(server) && isDict(dictGet(server, 'source')) && strIn('external', dictGet(server, 'source')))
     .map(([name, server]) => [name, dictGet(server, 'command')]));
+}
+
+/**
+ * The source repositories a recipe names by a local path: `url` of every `source` mapping in it that is not `external`.
+ * Not in the oracle. Only the recipe handed to cook is read: a repository named in a file the recipe refers to is not found.
+ */
+export function local_sources(recipe: PyValue): string[] {
+  const found = new Set<string>();
+  const walk = (value: PyValue): void => {
+    if (isList(value)) for (const entry of value) walk(entry);
+    if (!isDict(value)) return;
+    for (const [key, entry] of value) {
+      if (key === 'source' && isDict(entry) && !entry.has('external')) {
+        const url = entry.get('url');
+        if (isStr(url) && url.startsWith('/')) found.add(url);
+      }
+      walk(entry);
+    }
+  };
+  walk(recipe);
+  return [...found].sort();
 }
 
 /** Compatibility helper; provenance is recorded separately from cook's lock. cook.py:214-218 */
@@ -336,11 +362,13 @@ export function adapt(spec_file: PyValue, build_dir: PyValue, state_dir: PyValue
   (seams.verify_cook ?? verify_cook)(entrypoint as string, subscript(pins, 'cook'), env);
   // Not in the oracle. Bun links package files from its cache into the build, and sets modes on the linked inodes. With
   // the account's cache those are files of every earlier build, also of the one that runs. So this build gets a cache of
-  // its own for this one run (cook hands Bun the name only where COOK_PASS_ENV selects it), and nothing of it stays.
+  // its own for this one run (cook hands Bun the name only where COOK_PASS_ENV selects it), and nothing of it stays: not
+  // this one, and not one a killed run left under this root. Git likewise links the objects of a repository named by a
+  // local path; for those the recipe names it is told to take them over its transport.
   const cache = isolation.cache_dir(root, request);
-  isolation.remove(cache);
+  isolation.sweep(root, request);
   try {
-    command(argv as string[], { cwd: build, env: { ...env, [isolation.CACHE_ENV]: cache, [isolation.PASS_ENV]: isolation.CACHE_ENV }, flag_indices });
+    command(argv as string[], { cwd: build, env: { ...env, [isolation.CACHE_ENV]: cache, [isolation.PASS_ENV]: isolation.CACHE_ENV, ...isolation.git_environment(local_sources(recipe)) }, flag_indices });
   } finally {
     isolation.remove(cache);
   }

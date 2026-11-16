@@ -33,12 +33,20 @@ class Takeover(unittest.TestCase):
     def tearDownClass(cls):
         ts_port.remove(SCRATCH)
 
-    def world(self, label, activation='start'):
-        """A sandbox where the role has deployed and started the agent, and the takeover input for it."""
+    def world(self, label, activation='start', recipe=None):
+        """A sandbox where the role has deployed and started the agent, and the takeover input for it. `recipe` changes the
+        case's recipe before anything is laid out: it is handed the recipe and the world."""
         case = copy.copy(self.case)
         case.data = copy.deepcopy(self.case.data)
         case.data['layers']['agent']['activation'] = activation
         world = corpus.World(case, SCRATCH / label)
+        if recipe is not None:
+            case.directory = SCRATCH / (label + '-case')
+            shutil.copytree(self.case.directory, case.directory)
+            file = case.directory / case.data['recipe']['file']
+            document = json.loads(file.read_text())
+            recipe(document, world)
+            file.write_text(json.dumps(document, indent=2) + '\n')
         world.build()
         self.role = world.role_apply(world.operator_files())
         sandbox, root = world.sandbox, Path(world.root)
@@ -113,7 +121,11 @@ class Takeover(unittest.TestCase):
         self.assertEqual(set(verbs), {'is-active', 'show'})
         self.assertEqual((cook_calls(), (build / '.prepared').read_text(), (build / 'secrets.env').exists()), (2, self.name, False))
         self.assertEqual([entry['kind'] for entry in log if entry['step'] == 'tool started'], ['adapter'])
-        self.assertTrue(next(entry for entry in log if entry['step'] == 'running deployment')['untouched_by_this_run'])
+        witness = next(entry for entry in log if entry['step'] == 'running deployment')
+        self.assertIs(witness['untouched_by_this_run'], True)
+        # What the line says it covers: the build that runs, and not the requested one, which this step wrote.
+        self.assertEqual((witness['builds_measured'], witness['requested_build_measured'], witness['measurement_complete']), ([self.role['request_id']], False, True))
+        self.assertIn('the requested build %s: this step writes it' % self.name, witness['not_measured'])
         receipt = next(entry for entry in log if entry['step'] == 'apply answered')['core']
         self.assertEqual((receipt['changed'], sorted(receipt)), (True, ['changed', 'prepare']))
 
@@ -128,6 +140,10 @@ class Takeover(unittest.TestCase):
         self.assertEqual((view['missing'], view['environment_file_of_current_build_is_what_start_would_write'], view['secret_files_are_what_start_would_write']),
                          ([], True, {'CHAT_RC_PATH': True}))
         self.assertEqual(set(verbs), {'is-active', 'show'})
+        # `verify` writes no build, so it measures the requested one too.
+        witness = next(entry for entry in log if entry['step'] == 'running deployment')
+        self.assertEqual((witness['untouched_by_this_run'], witness['builds_measured'], witness['requested_build_measured']), (True, sorted([self.role['request_id'], self.name]), True))
+        self.assertFalse([line for line in witness['not_measured'] if 'requested build' in line])
 
         done, log, verbs = self.run_mode(world, 'start')
         self.assertEqual(done.returncode, 0, done.stderr)
@@ -139,10 +155,12 @@ class Takeover(unittest.TestCase):
         self.assertEqual(taken[2], before[2].replace(self.role['request_id'], self.name))
         self.assertEqual(((build / 'secrets.env').read_text(), cook_calls()), ((self.live / 'secrets.env').read_text(), 2))
         self.assertTrue((self.live / '.prepared').is_file())  # the role's build stays, for the way back
-        self.assertFalse(next(entry for entry in log if entry['step'] == 'running deployment')['untouched_by_this_run'])
+        self.assertIs(next(entry for entry in log if entry['step'] == 'running deployment')['untouched_by_this_run'], False)
 
         done, log, verbs = self.run_mode(world, 'verify')
         self.assertEqual((done.returncode, self.pointers(world)), (0, taken), done.stderr)
+        witness = next(entry for entry in log if entry['step'] == 'running deployment')  # the requested build is now the one that runs, and is measured
+        self.assertEqual((witness['untouched_by_this_run'], witness['requested_build_measured'], self.name in witness['builds']), (True, True, True))
         self.assertFalse(next(entry for entry in log if entry['step'] == 'plan answered')['core']['changed'])
         done, log, verbs = self.run_mode(world, 'start')  # again: nothing to do, no restart
         self.assertEqual((done.returncode, self.pointers(world), verbs.count('restart'), verbs.count('daemon-reload')), (0, taken, 0, 0), done.stderr)
@@ -247,6 +265,9 @@ os.chmod(_dst, 0o755)
         live = self.live / 'app/node_modules/pkg/bin.js'
         live.parent.mkdir(parents=True)
         os.link(cached, live)
+        orphan = root / ('.bun-cache-' + 'f' * 64) / 'pkg@1/bin.js'  # what a run that was killed leaves: the cache of another request
+        orphan.parent.mkdir(parents=True)
+        orphan.write_text('#!/usr/bin/env node\n')
         self.before_cook(world, self.BUN)
         seen = lambda path: (path.stat().st_mode & 0o7777, path.stat().st_nlink, path.stat().st_ino, path.stat().st_ctime_ns)
         before = seen(live)
@@ -255,7 +276,7 @@ os.chmod(_dst, 0o755)
         new = root / 'builds' / self.name / 'app/node_modules/pkg/bin.js'
         self.assertEqual((seen(live), before[:2]), (before, (0o775, 2)))  # not its mode, not its link count, not its change time
         self.assertEqual((new.stat().st_mode & 0o7777, new.stat().st_nlink, new.stat().st_ino == live.stat().st_ino), (0o755, 1, False))
-        self.assertEqual([path.name for path in root.iterdir() if 'cache' in path.name and path.is_dir()], [])  # the cache of its own is gone
+        self.assertEqual([path.name for path in root.iterdir() if 'cache' in path.name and path.is_dir()], [])  # the cache of its own is gone, and the one a killed run left
         call = corpus.lines(root / 'cook-calls.jsonl')[-1]
         self.assertLessEqual(set(corpus.OWN_CACHE), set(call['environment_names']))
         witness = next(entry for entry in log if entry['step'] == 'running deployment')
@@ -284,6 +305,104 @@ os.chmod(_dst, 0o755)
         self.assertEqual(set(verbs), {'is-active', 'show'})
         done, log, verbs = self.run_mode(world, 'start')  # and it is not started
         self.assertEqual((done.returncode, self.pointers(world)[:4]), (3, before[:4]), done.stderr)
+
+    def test_a_change_of_the_build_directory_itself_is_seen(self):
+        world = self.world('build-directory')
+        mode = self.live.stat().st_mode & 0o7777
+        self.before_cook(world, '\nimport os\nos.chmod(%r, %d)\n' % (str(self.live), mode ^ 0o050))
+        done, log, verbs = self.run_mode(world, 'prepare')
+        witness = next(entry for entry in log if entry['step'] == 'running deployment')
+        self.assertEqual((done.returncode, witness['untouched_by_this_run'], witness['builds_that_were_there_as_before']), (3, False, False), done.stderr)
+        self.assertEqual(witness['builds'][self.role['request_id']]['first_changed'], [{'path': '.', 'what': ['mode', 'ctime_ns']}])
+        self.assertIn('a build that was there changed', log[-1]['why'])
+
+    def test_verify_sees_a_write_to_the_requested_build_when_it_runs(self):
+        world = self.world('verify-running')
+        for mode in ('prepare', 'start'):
+            self.assertEqual(self.run_mode(world, mode)[0].returncode, 0)
+        file = Path(world.root) / 'builds' / self.name / 'fixture.txt'
+        file.write_text('before\n')
+        # Somebody writes to the build that runs while `verify` looks: the service manager's stand-in does it, the second time it
+        # is asked when the unit started. The first time is before the runner takes the builds, the second after `plan`.
+        fake, flag = Path(self.document['systemctl'][0]), world.sandbox / 'asked-once'
+        passing = fake.read_text().splitlines()[1]
+        corpus.write(fake, '#!/bin/sh\ncase "$*" in *ExecMainStartTimestamp*) if [ -e %s ]; then echo after >%s; else : >%s; fi;; esac\n%s\n' % (flag, file, flag, passing), 0o755)
+        done, log, verbs = self.run_mode(world, 'verify')
+        witness = next(entry for entry in log if entry['step'] == 'running deployment')
+        self.assertEqual((done.returncode, file.read_text(), witness['untouched_by_this_run'], witness['requested_build_measured']), (3, 'after\n', False, True), done.stderr)
+        changed = witness['builds'][self.name]['first_changed']
+        self.assertEqual(([row['path'] for row in changed], {'mtime_ns', 'ctime_ns'} <= set(changed[0]['what'])), (['fixture.txt'], True))
+        self.assertTrue(witness['builds'][self.role['request_id']]['unchanged'])
+        self.assertEqual(set(verbs), {'is-active', 'show'})
+
+    def test_what_could_not_be_read_is_not_certified(self):
+        world = self.world('unread')
+        closed = self.live / 'closed'
+        closed.mkdir()
+        (closed / 'file').write_text('public synthetic fixture\n')
+        closed.chmod(0)
+        try:
+            done, log, verbs = self.run_mode(world, 'prepare')
+        finally:
+            closed.chmod(0o700)
+        witness = next(entry for entry in log if entry['step'] == 'running deployment')
+        row = witness['builds'][self.role['request_id']]
+        # Nothing changed and the two inventories are equal, marker for marker: that is not an unchanged build.
+        self.assertEqual((row['changed'], row['unchanged'], row['complete'], row['first_not_read']), (0, None, False, ['closed/']))
+        self.assertEqual((done.returncode, witness['untouched_by_this_run'], witness['builds_that_were_there_as_before'], witness['measurement_complete']), (3, None, None, False), done.stderr)
+        self.assertTrue([line for line in witness['not_measured'] if line.startswith('what could not be read')])
+        self.assertIn('could not be measured completely', log[-1]['why'])
+
+    def connector(self, world):
+        """A connector's repository at a local path, and an earlier clone of it in the build that runs, as Git makes one."""
+        source = world.sandbox / 'srv/local-connector'
+        env = {'HOME': str(world.home), 'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8', 'GIT_CONFIG_NOSYSTEM': '1'}
+        git = lambda *args: subprocess.run(['git', *args], env=env, check=True, capture_output=True)
+        git('init', str(source))
+        (source / 'fixture.txt').write_text('public fixture\n')
+        git('-C', str(source), 'add', '.')
+        git('-C', str(source), '-c', 'user.name=Public Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-m', 'fixture')
+        git('clone', str(source), str(self.live / 'connector'))
+        linked = [path for path in (self.live / 'connector/.git/objects').rglob('*') if path.is_file() and path.stat().st_nlink > 1]
+        self.assertTrue(linked)  # Git linked the objects: the premise
+        return source
+
+    CLONE = '\nimport subprocess, sys\nfrom pathlib import Path\nsubprocess.run(["git", "clone", %r, str(Path(sys.argv[sys.argv.index("--out") + 1]) / "connector")], check=True, capture_output=True)\n'
+
+    @unittest.skipUnless(shutil.which('git'), 'no git')
+    def test_a_connector_from_a_local_repository_the_recipe_names_is_built(self):
+        # Cook clones a connector with a plain `git clone`, which hard-links the objects of a repository at a local path: two
+        # builds then share them. The adapter tells Git, through cook's environment, to take a repository the recipe names over
+        # its transport. The stand-in clones with the environment it was handed, as cook's Git does.
+        # The recipe of a case names a path as the layer has it; the corpus moves it under the sandbox, as every other path.
+        world = self.world('local-git', recipe=lambda document, world: document['mcpServers'].update(
+            fixture={'command': 'node', 'args': ['index.js'], 'source': {'url': '/' + 'srv/local-connector', 'ref': 'main'}}))
+        source = self.connector(world)
+        self.assertEqual(json.loads((self.live / 'cook-recipe.json').read_text())['mcpServers']['fixture']['source']['url'], str(source))
+        self.before_cook(world, self.CLONE % str(source))
+        done, log, verbs = self.run_mode(world, 'prepare')
+        self.assertEqual(done.returncode, 0, done.stderr)
+        witness = next(entry for entry in log if entry['step'] == 'running deployment')
+        shared = next(entry for entry in log if entry['step'] == 'new build')['files_with_a_name_outside_the_build']
+        self.assertEqual((witness['untouched_by_this_run'], shared['outside'], shared['with_other_builds']), (True, 0, 0))
+        new = Path(world.root) / 'builds' / self.name / 'connector'
+        self.assertEqual((new / 'fixture.txt').read_text(), 'public fixture\n')
+        origin = subprocess.run(['git', '-C', str(new), 'config', 'remote.origin.url'], capture_output=True, text=True, env={'HOME': str(world.home), 'PATH': '/usr/bin:/bin', 'GIT_CONFIG_NOSYSTEM': '1'})
+        self.assertEqual(origin.stdout.strip(), str(source))  # the origin is the path, as before
+        names = corpus.lines(Path(world.root) / 'cook-calls.jsonl')[-1]['environment_names']
+        self.assertEqual([name for name in names if name.startswith('GIT_')], ['GIT_CONFIG_COUNT', 'GIT_CONFIG_KEY_0', 'GIT_CONFIG_VALUE_0'])
+
+    @unittest.skipUnless(shutil.which('git'), 'no git')
+    def test_a_local_repository_the_recipe_does_not_name_is_still_refused(self):
+        # The known limit: a clone of a local repository that the recipe handed to cook does not name gets no such word, Git
+        # links its objects, and the build is refused, since a file of it is a file of the build that runs.
+        world = self.world('local-git-unnamed')
+        source = self.connector(world)
+        self.before_cook(world, self.CLONE % str(source))
+        done, log, verbs = self.run_mode(world, 'prepare')
+        self.assertEqual((done.returncode, next(entry for entry in log if entry['step'] == 'apply answered')['core']['error_code']), (3, 'E_COOK_FAILED'), done.stderr)
+        self.assertIs(next(entry for entry in log if entry['step'] == 'running deployment')['untouched_by_this_run'], False)
+        self.assertEqual([name for name in corpus.lines(Path(world.root) / 'cook-calls.jsonl')[-1]['environment_names'] if name.startswith('GIT_')], [])
 
     def test_the_guard(self):
         SCRATCH.mkdir(parents=True, exist_ok=True)

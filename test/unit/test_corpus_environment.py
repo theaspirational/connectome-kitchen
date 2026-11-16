@@ -51,6 +51,11 @@ class CorpusEnvironment(unittest.TestCase):
         oracle.parent.mkdir()
         oracle.write_text(json.dumps(dict(call, environment_names=['HOME', 'LANG', 'PATH']), sort_keys=True) + '\n')
         self.assertEqual(corpus.snapshot(log.parent, port=True)[str(log)], corpus.snapshot(oracle.parent)[str(oracle)])
+        # Git's configuration names, where a recipe names a local source repository: held apart likewise, and whole for the record of the contract.
+        git = dict(call, environment_names=['BUN_INSTALL_CACHE_DIR', 'COOK_PASS_ENV', 'GIT_CONFIG_COUNT', 'GIT_CONFIG_KEY_0', 'GIT_CONFIG_VALUE_0', 'GIT_DIR', 'HOME'])
+        log.write_text(json.dumps(git, sort_keys=True) + '\n')
+        self.assertEqual(corpus.cook_calls(log, True), [dict(call, environment_names=['GIT_DIR', 'HOME'])])  # no other name of Git's is the port's to add
+        self.assertEqual(corpus.cook_calls(log, True, whole=True), [git])
         for names in (['COOK_PASS_ENV', 'HOME'], ['BUN_INSTALL_CACHE_DIR', 'HOME'], ['HOME', 'LANG', 'PATH']):
             log.write_text(json.dumps(dict(call, environment_names=names)) + '\n')
             with self.assertRaises(corpus.CorpusError):

@@ -157,6 +157,16 @@ the framework record, the lock after post-processing). `npm test` runs it
 (`test/unit/adapter-contract.test.js`), with three changed adapters that it
 must fail on.
 
+The present name is `kitchen-cook-adapter/2` (ruling D6). Its record holds
+the environment names of each cook call as the adapter hands them, with
+`BUN_INSTALL_CACHE_DIR` and `COOK_PASS_ENV`: an empty Bun cache of the
+build's own is part of the contract, because it can change which package
+versions an install resolves. The record of `/1` left those two names out,
+on a ground a review showed false; it stays as it was made and nothing checks
+it. No public case has a source repository at a local path, so no record
+shows Git's configuration names; `test/unit/test_takeover.py` and
+`test/unit/isolation.test.js` hold those, with a real Git.
+
 When it fails because the adapter changed: raise the number in `src/cook.ts`,
 build, and `record`; the new name gets a record of its own, the old record
 stays, and every agent is built anew once. `record` refuses to rewrite a
@@ -282,13 +292,29 @@ run them:
   files from its cache and sets modes on the linked inodes, so the adapter
   gives it a cache of the new build's own for the one cook run
   (`src/isolation.ts`) and refuses a build that shares a file with another
-  build. The runner measures it: before and after a step it takes every entry
-  of every build that was there (type, mode, owner, size, link count, inode,
-  modification and status change time, no contents), and
-  `untouched_by_this_run` is true only if those are as they were, with the
-  pointer, the links and the process. `prepare` and `verify` end with status
-  3 otherwise, and the log names the entries. It says nothing of the agent's
-  state directory or of the account's own Bun cache, and the log says so.
+  build. Git links the objects of a repository at a local path; for one the
+  recipe names, the adapter has Git take it over its transport.
+- The runner measures it. Before and after a step it takes, of each build it
+  measures, the build directory itself and every entry under it (type, mode,
+  owner, group, size, link count, inode, modification and status change
+  time, a link's target; no contents). The builds measured are all that were
+  under `builds` before the step, but for the requested build in `prepare`
+  and `start`, which write it; `verify` writes no build and measures the
+  requested one too, also when it is the one that runs.
+  `untouched_by_this_run` is true only if all of that is as it was, with the
+  pointer, the links and the process; false if something changed; and null
+  if nothing was seen to change and an entry could not be read, since two
+  equal "unreadable" marks are not an unchanged build. `prepare` and `verify`
+  end with status 3 on false and on null, and the log names the entries.
+- The log line says what it covers: `builds_measured`,
+  `requested_build_measured`, `measurement_complete`, `measured` and
+  `not_measured`. Not measured, and said so there: file contents, access
+  times, what a symbolic link names, the requested build where the step
+  writes it, what could not be read, the directory `builds` itself and the
+  rest of the root beside the pointer, the agent's state directory, the
+  account's own Bun cache, a change that was put back between the two
+  moments, and who made a change. It is two looks at the file system, not a
+  watch and not a sandbox: a change is seen after it was made.
 - `start` is `apply` with both phases on a prepared build: the environment
   file, the pointer, the links, one `daemon-reload`, one `restart`, health.
   It refuses a build that is not prepared, so it never runs cook.

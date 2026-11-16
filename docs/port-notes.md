@@ -868,7 +868,8 @@ the same with its own two words (`process.execPath`, `dist/cook-adapter.js`),
 so every upgrade or move of Node and every move of kitchen would have given
 every build a new name: a cook run and a restart for every agent. Since D5 a
 kitchen hashes one word in their place, the name of its adapter contract
-(`ADAPTER_CONTRACT` in `src/cook.ts`, now `kitchen-cook-adapter/1`), and then
+(`ADAPTER_CONTRACT` in `src/cook.ts`, first `kitchen-cook-adapter/1` and since
+ruling D6 `kitchen-cook-adapter/2`), and then
 the same words as the oracle's shim: the three fields and the paths of cook's
 runtime, its entrypoint, Bun and Node. The command that is started is still
 this Node and the adapter of this install; `Deployment` takes what is hashed
@@ -888,6 +889,37 @@ adapter's output on the public cases against a record kept under the name and
 fails on a difference until the number is raised
 (`test/unit/adapter-contract.test.js`). It sees what those three cases
 exercise; a change that shows on other input only is left to review.
+
+**The number was raised once, to `/2` (ruling D6).** The adapter first got a
+Bun cache of the build's own under `/1`, with the number kept, on the ground
+that the two names it adds to cook's environment say where Bun keeps its
+downloads and cannot change what comes into a build. The delta review of
+`40378ef..22caa8d` showed the ground false (finding M1): with an empty cache
+Bun asks the registry for every package, and a range that no lockfile pins
+resolves to the newest version that fits; a warm account cache can answer the
+same request with an earlier version and no request to the registry at all.
+So the same recipe and the same pins can give other package bytes, and the
+owner had the number raised (poll 2535). What `/2` says, and what it does
+not:
+
+- A build named under `/2` was installed from an empty Bun cache of its own.
+  That acquisition is part of the contract. So is how Git takes a source
+  repository the recipe names by a local path: over its transport, with
+  object files of the clone's own (below, "Where the port knowingly
+  differs").
+- It does not make a build reproducible from its request. Cook's install
+  resolves the host's other packages at install time (backlog B26), and two
+  `/2` builds of one request made on two days can still differ. `/2` tells
+  the two acquisitions apart; it pins nothing.
+- No exception to the number is left. Every name in cook's environment is
+  under it, and the record of `/2` holds the names as they are handed over
+  (`test/corpus/adapter-contract/kitchen-cook-adapter-2.golden`). The record
+  of `/1` stays as it was made, without those names, and is not checked any
+  more.
+- Every build a kitchen made under `/1` gets another name: one cook run and
+  one restart for each agent, once. That is accepted (D6) and is not done by
+  this change: no account was touched. The decision counts four running
+  agents.
 
 What it means for taking over an agent the role deployed: the role's build
 has the role's name, so the first `apply` of a kitchen is a new build beside
@@ -1026,8 +1058,9 @@ depend on it, and a case can now hold cook's own bytes (`cooked` in
 | A wrongly typed value where the oracle ends in its generic failure | a specific Python exception class | the same public code; the class is not modelled everywhere |
 | The adapter's stderr | spooled to a temporary file, first 65537 bytes read | held in memory, first 65537 bytes read |
 | Temporary names of atomic writes | `tempfile` alphabet | eight random characters of another alphabet; never left behind |
-| Bun's cache during cook's install | the account's (`$HOME/.bun/install/cache`): every build of the account shares inodes with it, and an install sets modes on them | a cache of the build's own, `ROOT/.bun-cache-REQUEST`, named to cook by `BUN_INSTALL_CACHE_DIR` with `COOK_PASS_ENV` and removed when cook returns; then `E_COOK_FAILED` where a file of the new build is a file of another build under `builds` (`src/isolation.ts`). The corpus holds the two names apart in every cook call (`corpus.cook_calls`). The build name is not moved (`ADAPTER_CONTRACT` in `src/cook.ts` says why) |
-| A secret named `BUN_INSTALL_CACHE_DIR` or `COOK_PASS_ENV` | accepted | refused as a name the adapter owns (`E_ADAPTER_INPUT`) |
+| Bun's cache during cook's install | the account's (`$HOME/.bun/install/cache`): every build of the account shares inodes with it, and an install sets modes on them | a cache of the build's own, `ROOT/.bun-cache-REQUEST`, empty, named to cook by `BUN_INSTALL_CACHE_DIR` with `COOK_PASS_ENV` and removed when cook returns; then `E_COOK_FAILED` where a file of the new build is a file of another build under `builds` (`src/isolation.ts`). An empty cache also means Bun resolves every unpinned range against the registry anew, so it can change which package versions a build gets: the acquisition is part of the adapter contract, `/2` (ruling D6). Before cook starts, every `ROOT/.bun-cache-*` is removed, also one a killed run left under another request. The corpus holds the names apart from the oracle's in every cook call (`corpus.cook_calls`) and records them under the contract |
+| Git's clone of a source repository the recipe names by a local path | `git clone PATH`: the object files are hard links of the repository's, so two builds from one repository share them | one `url.file://PATH.insteadOf = PATH` for each such repository, handed to cook as `GIT_CONFIG_COUNT`, `GIT_CONFIG_KEY_<n>`, `GIT_CONFIG_VALUE_<n>`, which cook passes to its Git as they are: the clone goes over Git's transport, has object files of its own (a pack) and still names the path as its origin. Only for a `source.url` in the recipe handed to cook that begins with `/` and has no `%` and no line break; `host_repo` is not rewritten (cook already clones it with `--no-hardlinks`), and a deployment with no such source has no Git name in cook's environment. Part of `/2`. The refusal of a build that shares a file is unchanged and is what holds (backlog B30) |
+| A secret named `BUN_INSTALL_CACHE_DIR` or `COOK_PASS_ENV`, or one that begins with `GIT_CONFIG_` | accepted | refused as a name the adapter owns (`E_ADAPTER_INPUT`) |
 
 **Ported, and reached by no case.** These branches were written from the
 oracle and nothing has run them against it: the rollback after a failed
@@ -1068,7 +1101,10 @@ findings and three INFO). `test/port-rulings.golden`
 quotes each one as received and is what `scripts/check-port-ready` reads. The
 implementer records rulings and makes none. Three rulings of the second round
 left a choice open; the record names each choice as the implementer's
-(`left_to_the_implementer`).
+(`left_to_the_implementer`). D5 and D6 came later, from the owner through
+the briefs of the steps that built them: D5 on 2026-11-15, and D6 on
+2026-11-16 after the delta review of `40378ef..22caa8d` (REJECT as
+submitted, one MEDIUM and one LOW finding).
 
 | Ruling | What it accepts | Bound |
 | --- | --- | --- |
@@ -1137,6 +1173,7 @@ The mutant classification:
 | B17 | port | open, not fixed in the reader (LOW-2 of the same review): the sparse budget counts numbers, not their size, and a map in a global header is converted anew at every expansion. Bounded by the default instead: at 2^16 numbers about 115 MiB, inside the measured peak. Fix it (share the integers of a global map) before raising the sparse budget |
 | B18 | port | `catalog.ts`, and with it the catalog branches of `deploy.ts` and `cook.ts`. Until then an active catalog is refused. None of the five deployments activates it |
 | B19 | port, before any use on input that is not ours | `deploy.ts` and `cook.ts` have no mutants and no hostile vectors; the inventory rows they own (plan section 4.1) are not marked; exception classes on wrongly typed values are not modelled throughout. They are not listed as ported |
+| D6 | the adapter contract raised to `kitchen-cook-adapter/2`: the empty Bun cache of the build's own, and Git's transport for a local source repository, are part of the contract (the owner, poll 2535, after finding M1 of the delta review of `40378ef..22caa8d`) | the exception made under `/1` for the two cache names is withdrawn, since an empty cache can change which package versions enter a build. `/2` distinguishes the acquisition and pins nothing (B26 stays open). Every agent built under `/1` is built anew once, in a later window; no account was touched for this ruling. Received on 2026-11-16 through the dispatch brief |
 | B20 | done (plan steps 4 and 5) | `verify_cook` has met a real cook checkout and cook has run under the TS engine, once, installed and not started, on a trial account (`scripts/rehearse.mjs`; "A rehearsal" above). The build is a case outside the repository, with the lock as cook wrote it, and both engines take it alike. Not done: a started agent, a later release on a real host, a release taken back there |
 | B21 | corpus | cases for the branches no case reaches: rollback onto a previous release, a retired unit, a dropped secret file, a health command, an engine-rendered unit, connectors from descriptors, the ownership refusals |
 | B22 | port, with the command line (plan phase 7) | there is no operational entry: `src/cli.ts` refuses. `src/engine.ts` is a library call; secrets on a descriptor, the receipt file and exit statuses are not built. `scripts/rehearse.mjs` is the runner of a rehearsal and nothing more: it lets the engine read the secrets file, and it installs without a start only |
@@ -1144,7 +1181,8 @@ The mutant classification:
 | B24 | closed | plan Q1, ruled as divergence D5: a kitchen names a build by its adapter contract. It still differs from the role's name, so taking an agent over is one build and one restart; the corpus shows both names and no longer makes them equal without saying so |
 | B25 | review | obligation `archive.L140.4` is recorded as discharged by the implementer, with the witness in `test/unit/engine.test.js`. A review has to confirm it |
 | B26 | ruling, with cook | cook's install is neither offline nor pinned beyond the two archives: Bun resolves the host's other packages at install time and saves a new lockfile (rehearsal finding). Decide whether a build must be reproducible from its request, and if so how the host's lockfile is kept or the packages are supplied |
-| B27 | closed for new builds | builds of one account shared inodes through Bun's cache (rehearsal finding; H1 of the review of `05298e9..40378ef`). Ruled: a new build shares no file with a build that is there. The adapter gives Bun a cache of the build's own and refuses a build that shares a file with another (`src/isolation.ts`); the takeover runner measures every build that was there before and after a step. Not changed: builds made before this still share inodes with the account's cache and with each other, so another Bun install of that account, outside kitchen, can still set modes on them. A new build costs a download of every package (no cache is kept) and no disk beyond the build |
+| B27 | closed for new builds | builds of one account shared inodes through Bun's cache (rehearsal finding; H1 of the review of `05298e9..40378ef`). Ruled: a new build shares no file with a build that is there. The adapter gives Bun a cache of the build's own and refuses a build that shares a file with another (`src/isolation.ts`); the takeover runner measures every build that was there before and after a step. Not changed: builds made before this still share inodes with the account's cache and with each other, so another Bun install of that account, outside kitchen, can still set modes on them. A new build costs a download of every package (no cache is kept) and no disk beyond the build. The takeover runner's witness covers each measured build's own directory and, in `verify`, the requested build too; an entry it could not read makes it null, not true (finding W1 of the delta review). A cache a killed run left is removed by the next cook run of that root, whatever its request; until then it stays, and nothing removes one where no build follows |
+| B30 | with cook | cook's connector clone is `git clone URL TARGET` with no `--no-hardlinks` (cook `src/backends/host.ts`, the branch beside the host's own, which has it). The adapter works around it for a repository the recipe handed to cook names by a local path, through Git's configuration in cook's environment. Known limits, where a legitimate build is still refused with `E_COOK_FAILED` because its clone shares object files with another build's: a repository named only in a file the recipe refers to (the adapter reads the one recipe); a path with `%` or a line break; a Git that does not apply `insteadOf` to a path given to `clone` (seen to work with Git 2.43.0; no other version was tried, and no live host's Git was asked). The rewrite also changes how that repository is reached: Git's `file://` transport runs `upload-pack` in it, and a repository only a plain local clone could read would now fail, closed. The clean way is `--no-hardlinks` in cook's connector clone; then the rewrite can go, under a new contract number. No present agent is known to take this route: every source repository of the cases at hand is HTTPS, and only `host_repo` is local |
 | B28 | port | the engine's preflight does not ask whether the unit verifier can run; under `install_only` it fails after cook when the user manager's runtime directory is not named |
 | B29 | port | the adapter writes `cook-layout.json` with no mode of its own, as the oracle does, so its mode follows the caller's umask |
 

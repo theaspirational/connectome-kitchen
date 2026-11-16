@@ -203,15 +203,19 @@ def lines(path):
     return [json.loads(line) for line in Path(path).read_text().splitlines()] if Path(path).is_file() else []
 
 
-# The two names the TS adapter adds to cook's environment, and the oracle's adapter does not: the Bun cache of the build's
-# own (src/isolation.ts), so that a new build shares no file with a build that is there. A known difference of the port.
+# The names the TS adapter adds to cook's environment, and the oracle's adapter does not (src/isolation.ts): the Bun cache
+# of the build's own, in every call, so that a new build shares no file with a build that is there; and Git's counted
+# configuration names, where the recipe names a source repository by a local path. A known difference of the port, and
+# under the number of the adapter's contract since `/2` (ruling D6): adapter_contract.py records these names as they are.
 OWN_CACHE = ('BUN_INSTALL_CACHE_DIR', 'COOK_PASS_ENV')
+GIT_NAMES = re.compile(r'GIT_CONFIG_(?:COUNT|KEY_[0-9]+|VALUE_[0-9]+)')
 
 
-def cook_calls(path, port):
+def cook_calls(path, port, whole=False):
     """The cook calls a log holds. Of the TS adapter (`port`): each must name the build's own Bun cache in cook's
-    environment, and is then given as the oracle's adapter would have made it, without those two names. So the difference
-    is held, in every call, and everything else of a call stays comparable with the oracle's as text."""
+    environment, and is then given as the oracle's adapter would have made it, without the names the port adds. So the
+    difference is held, in every call, and everything else of a call stays comparable with the oracle's as text.
+    `whole`: the port's calls with every name, as the record of the adapter's contract keeps them."""
     calls = lines(path)
     if not port:
         return calls
@@ -219,7 +223,8 @@ def cook_calls(path, port):
         names = call.get('environment_names', [])
         if not set(OWN_CACHE) <= set(names):
             raise CorpusError('the TS adapter called cook without a Bun cache of the build\'s own: %s lacks %s' % (path, ', '.join(sorted(set(OWN_CACHE) - set(names)))))
-        call['environment_names'] = [name for name in names if name not in OWN_CACHE]
+        if not whole:
+            call['environment_names'] = [name for name in names if name not in OWN_CACHE and not GIT_NAMES.fullmatch(name)]
     return calls
 
 

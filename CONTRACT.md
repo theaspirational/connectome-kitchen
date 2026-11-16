@@ -186,7 +186,9 @@ suffix classes above extend `msg`.
   digest nor a path of Node or of kitchen enters the release identity. What
   stands for the cook adapter in it is the name of a versioned contract,
   `kitchen-cook-adapter/<n>`, and `n` is raised whenever what the adapter puts
-  into a build changes.
+  into a build changes, or how it has cook acquire it. It is `2` since ruling
+  D6: an empty Bun cache of the build's own for each cook run, which can
+  change the package versions an install resolves, is part of the contract.
 
 
 ## Waiver W1

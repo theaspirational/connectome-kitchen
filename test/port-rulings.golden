@@ -62,6 +62,22 @@
     "Say what it means for taking over each of us: the first kitchen apply is a new build plus a restart, once, and none after for Node or kitchen moves. Show that in the corpus (same inputs, different Node path or install location: same id). `npm test` and the corpus on both Nodes. No cook, no accounts. Commit, write report.md as you go, and finalize."
    ],
    "not_seen_by_the_implementer": "The message the brief cites (Zulip #Tarn > kitchen, 2393), the options beside C, and the review whose finding L2 it names. All are recorded here as the brief relays them. The lines the brief gives for L2 are those of the reviewed commit; at 15ee4a1 the words are put together in src/engine.ts:65-68 and hashed in src/deploy.ts:585."
+  },
+  {
+   "round": "the adapter contract raised to /2, after the delta review of 40378ef..22caa8d",
+   "date": "2026-11-16",
+   "from": "the owner (Vasyl), by a decision relayed in the dispatch brief of the step that builds it",
+   "after": "the delta review of commits d23cb2d and 22caa8d, verdict REJECT as submitted, with one MEDIUM finding (M1: the exception made under `/1` rests on a premise that does not hold) and one LOW (W1: the takeover witness does not name all it leaves out)",
+   "review_report_sha256": "4a51b0cc496a1e0c8c8327b3508e102e5f1254d1789b6494e316ffcbcf238928",
+   "brief": [
+    "Goal: close the delta review of kitchen `40378ef..22caa8d` so the line can be accepted. Work in the nested clone `.cache/kitchen/repo` (local main, HEAD `22caa8d`). Read the review first: `<review drop>/KITCHEN-DELTA-REVIEW-22caa8d/report.md`. Its probes are in the same directory.",
+    "Vasyl's decision (poll 2535): bump the contract to `kitchen-cook-adapter/2`. The reviewer showed that a fresh per-request Bun cache can resolve unpinned ranges to newer versions. So \"the new names don't change what enters the build\" is false, and the `/1` exception goes. Record the `/2` contract and update the port notes and D5 text honestly: the fresh-cache acquisition is part of the contract. All four live agents will get a new build name and will rebuild once, in the later thin-Ansible window. That is accepted. Don't try to avoid it.",
+    "W1. The takeover witness: must include each build's own root directory metadata; in read-only `verify`, must also inventory the requested/current build; must treat unreadable-error markers as incomplete measurement, not unchanged. The emitted `measured`/`not_measured` must state exactly what is covered.",
+    "Local git. A connector cloned from a local repository hard-links git objects across builds, and kitchen then refuses a legitimate build. If cook can be made to clone with `--no-hardlinks` through what the adapter controls, do that. If not without changing cook, keep the refusal and document it clearly as a known limitation, with the cook change as backlog. Don't weaken the shared-inode check.",
+    "Also, if cheap: clean up orphaned `ROOT/.bun-cache-*` from killed runs, for example at the start of any prepare for that root. Otherwise backlog it."
+   ],
+   "not_seen_by_the_implementer": "The poll the brief cites (2535) and the owner's own words. The decision is recorded here as the brief relays it. The review report and its probes were read.",
+   "transcription": "The brief names the review report by its absolute path on the host; here the directory above `KITCHEN-DELTA-REVIEW-22caa8d` is written `<review drop>`. Its lists are run together into sentences. Nothing else is changed."
   }
  ],
  "delta_review": {
@@ -443,7 +459,31 @@
     "test/unit/corpus.test.js",
     "test/corpus/adapter_contract.py, test/corpus/adapter-contract/kitchen-cook-adapter-1.golden, test/unit/adapter-contract.test.js"
    ],
-   "not_shown": "No real cook ran and no account was touched for this ruling. Cook is the stand-in or the replay of a kept build, as everywhere in the corpus."
+   "not_shown": "No real cook ran and no account was touched for this ruling. Cook is the stand-in or the replay of a kept build, as everywhere in the corpus.",
+   "later": "Ruling D6 raised the number to 2 and withdrew the exception that had been made under `/1` for two environment names. This entry is kept as it was received."
+  },
+  {
+   "id": "D6",
+   "subject": "divergence",
+   "closes": "finding M1 of the delta review of 40378ef..22caa8d",
+   "as_received": "Vasyl's decision (poll 2535): bump the contract to `kitchen-cook-adapter/2`. The reviewer showed that a fresh per-request Bun cache can resolve unpinned ranges to newer versions. So \"the new names don't change what enters the build\" is false, and the `/1` exception goes. Record the `/2` contract and update the port notes and D5 text honestly: the fresh-cache acquisition is part of the contract. All four live agents will get a new build name and will rebuild once, in the later thin-Ansible window. That is accepted. Don't try to avoid it.",
+   "left_to_the_implementer": "The name `kitchen-cook-adapter/2` is the brief's. Chosen by the implementer: that the record of `/2` holds the environment names of a cook call as they are handed over, with nothing held apart, and that the record of `/1` stays unchanged and unchecked. Also chosen, for the brief's point on local Git and so under the same number: that the adapter hands cook Git's counted configuration names (`GIT_CONFIG_COUNT`, `GIT_CONFIG_KEY_<n>`, `GIT_CONFIG_VALUE_<n>`) with one `url.file://PATH.insteadOf = PATH` for each source repository the recipe names by a local path, and none where there is no such repository; that `host_repo` is not rewritten; and that every `ROOT/.bun-cache-*` is removed before cook starts.",
+   "bounds": [
+    "A build named under `/2` was installed by cook with `BUN_INSTALL_CACHE_DIR` naming an empty directory of the build's own, selected by `COOK_PASS_ENV`, removed afterwards (src/cook.ts, src/isolation.ts). That acquisition is part of the contract. It can change the bytes of a build against one made with the account's cache: with nothing cached Bun asks the registry for every package and resolves a range no lockfile pins to the newest version that fits, where a warm cache can answer with an earlier one and no request (the review's probe_cache_resolution.py, real Bun 1.4.4 and a local registry).",
+    "`/2` distinguishes the acquisition. It pins nothing: cook's install is not pinned beyond the two archives (backlog B26 in docs/port-notes.md), and two builds of one request under `/2` can differ.",
+    "The exception made under `/1` is withdrawn. Every name in cook's environment is under the number. test/corpus/adapter_contract.py records them in full under `/2`; the comparison with the oracle still sets the names the port adds apart, by name, since the oracle's adapter has none of them (corpus.cook_calls).",
+    "Git's configuration names are in cook's environment only where the recipe handed to cook names a source repository by a local path. A deployment whose sources are all remote has the environment names of `/1` and the two cache names, and no other.",
+    "Every agent built under `/1` gets a new build name: one cook run and one restart each, once, in a later window. The brief accepts that and says not to avoid it. Nothing of it was done with this ruling.",
+    "The refusal of a build that shares a file with another build is not weakened: it is the same check on the same files (src/isolation.ts `shared`)."
+   ],
+   "evidence": [
+    "src/cook.ts (ADAPTER_CONTRACT and the comment above it), src/isolation.ts",
+    "test/corpus/adapter_contract.py, test/corpus/adapter-contract/kitchen-cook-adapter-2.golden, test/unit/adapter-contract.test.js",
+    "test/unit/isolation.test.js: the sweep, the sources a recipe names, the configuration entries, and a real Git clone with them that shares no object file with its repository",
+    "test/unit/test_takeover.py: a connector from a local repository the recipe names is built beside a build that has a linked clone of it; one the recipe does not name is still refused; a cache a killed run left is gone after the next prepare",
+    "test/corpus/corpus.py compare on the public and on the private cases, Node 22 and 24: each line names the build by `kitchen-cook-adapter/2`"
+   ],
+   "not_shown": "No real cook ran for this ruling and no account was touched: cook is the stand-in or the replay of a kept build. That the pinned cook hands `GIT_CONFIG_*` on to its Git was read in its source (`src/process-env.ts`, `gitEnvironment`) and its function was called with a real Git; cook's install was not run with a local connector. That Git applies `insteadOf` to a path given to `clone` was seen with Git 2.43.0 only. The Git of no live host was asked. Which package versions a rebuild of a live agent under `/2` resolves was not looked at."
   }
  ],
  "obligations": [
