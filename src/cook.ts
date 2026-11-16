@@ -27,6 +27,7 @@ import { loads } from './pylike/pyjson.js';
 import { join as shlex_join } from './pylike/shlex.js';
 import * as subprocess from './pylike/subprocess.js';
 import { strip } from './pylike/text.js';
+import * as isolation from './isolation.js';
 
 export const COOK_COMMIT = '1b874d9dd55b529486b8029dd9814a6c0e2147e0';
 /**
@@ -40,6 +41,14 @@ export const COOK_COMMIT = '1b874d9dd55b529486b8029dd9814a6c0e2147e0';
  * refactoring, a new refusal, another Node, another install location) keeps the number, and no agent is rebuilt for it.
  * `test/corpus/adapter_contract.py` holds that output against the record kept under this name
  * (`test/corpus/adapter-contract/`), and fails on any difference until the number here is raised and a new record made.
+ *
+ * One exception to the environment names, made under `/1` and held by that check by name: `BUN_INSTALL_CACHE_DIR` and
+ * `COOK_PASS_ENV`, the Bun cache of the build's own (src/isolation.ts). They were added after builds were named under
+ * `/1` and the number was kept, so that no running agent is built anew for it. The ground: they say where Bun keeps what
+ * it downloads during the install, and nothing of that directory stays; which packages, which bytes and which modes
+ * come into the build is not theirs to change. What does differ between a `/1` build made before and one made after is
+ * outside the name: the earlier one's package files are also names of the account's Bun cache. Any other name in
+ * cook's environment, or a third use of these two, moves the number as before.
  */
 export const ADAPTER_CONTRACT = 'kitchen-cook-adapter/1';
 export const BASE_ENV: ReadonlySet<string> = new Set(['PATH', 'HOME', 'LANG', 'LC_ALL', 'TMPDIR']);
@@ -137,7 +146,9 @@ const SPEC = new Set(['config', 'pins']);
 const CONNECTOR_SETTINGS = new Set(['command', 'args', 'env', 'url', 'transport', 'token', 'toolPrefix', 'enabledFeatureSets', 'disabledFeatureSets',
   'enabledTools', 'disabledTools', 'reconnect', 'reconnectIntervalMs', 'channelSubscription']);
 const REFERENCE = /^\$\{[A-Z_][A-Z0-9_]*\}$/u;
-const overlapsOwned = (names: readonly string[]): boolean => names.some(name => BASE_ENV.has(name) || name === 'DATA_DIR' || name === 'WORKSPACE_DIR');
+// The two names of the build's own Bun cache are the adapter's too (src/isolation.ts); the oracle has neither.
+const overlapsOwned = (names: readonly string[]): boolean => names.some(name => BASE_ENV.has(name) || name === 'DATA_DIR' || name === 'WORKSPACE_DIR'
+  || name === isolation.CACHE_ENV || name === isolation.PASS_ENV);
 
 /**
  * Only the effective entries are translated. No discovery/catalog reads. cook.py:111-202
@@ -323,7 +334,18 @@ export function adapt(spec_file: PyValue, build_dir: PyValue, state_dir: PyValue
   validate_arguments(argv, flag_indices);
   const env = clean_environment();
   (seams.verify_cook ?? verify_cook)(entrypoint as string, subscript(pins, 'cook'), env);
-  command(argv as string[], { cwd: build, env, flag_indices });
+  // Not in the oracle. Bun links package files from its cache into the build, and sets modes on the linked inodes. With
+  // the account's cache those are files of every earlier build, also of the one that runs. So this build gets a cache of
+  // its own for this one run (cook hands Bun the name only where COOK_PASS_ENV selects it), and nothing of it stays.
+  const cache = isolation.cache_dir(root, request);
+  isolation.remove(cache);
+  try {
+    command(argv as string[], { cwd: build, env: { ...env, [isolation.CACHE_ENV]: cache, [isolation.PASS_ENV]: isolation.CACHE_ENV }, flag_indices });
+  } finally {
+    isolation.remove(cache);
+  }
+  // What the cache of its own is for, held on the build itself: no file of it is a file of another build.
+  need(isolation.shared(pathlib.parent(build), request).with_other_builds === 0, 'cook left files in the build that another build shares', 'E_COOK_FAILED');
   const lock_path = pathlib.joinPath(build, 'connectome.lock');
   let lock = read_lock(lock_path, { host_pin: subscript(pins, 'connectome-host'), required_names: names });
   need(eq(dictGet(lock, 'layout'), layout) && eq(dictGet(lock, 'state'), dict({ path: state })),

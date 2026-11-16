@@ -210,6 +210,81 @@ class Takeover(unittest.TestCase):
         states = json.loads((root.parent / 'unit-states.json').read_text())
         self.assertEqual(states['user:' + self.unit], 'active')
 
+    # What Bun does with its cache, in the place of the stand-in's first line: it takes the cache cook would hand it (the
+    # name reaches Bun only where COOK_PASS_ENV selects it, cook src/process-env.ts), else the account's; "downloads" the
+    # package file where the cache lacks it; hard-links it into the build; and sets the mode of the `bin` file from the
+    # umask of this install, on that inode.
+    BUN = '''
+import os, sys
+from pathlib import Path
+_out = Path(sys.argv[sys.argv.index("--out") + 1])
+_passed = os.environ.get("COOK_PASS_ENV", "").replace(",", " ").split()
+_cache = Path(os.environ["BUN_INSTALL_CACHE_DIR"]) if "BUN_INSTALL_CACHE_DIR" in _passed and "BUN_INSTALL_CACHE_DIR" in os.environ else Path(os.environ["HOME"]) / ".bun/install/cache"
+_src = _cache / "pkg@1/bin.js"
+if not _src.exists():
+    _src.parent.mkdir(parents=True)
+    _src.write_text("#!/usr/bin/env node\\n")
+_dst = _out / "app/node_modules/pkg/bin.js"
+_dst.parent.mkdir(parents=True)
+os.link(_src, _dst)
+os.chmod(_dst, 0o755)
+'''
+
+    def before_cook(self, world, lines):
+        """The stand-in for cook does this first."""
+        runtime = Path(world.tools_moved['runtime'])
+        first, rest = runtime.read_text().split('\n', 1)
+        runtime.write_text(first + '\n' + lines + rest)
+
+    def test_prepare_shares_no_file_with_the_running_build(self):
+        world = self.world('own-cache')
+        root = Path(world.root)
+        # The running build as an earlier install left it: a `bin` file that is also a name of the account's Bun cache, mode 0775.
+        cached = world.home / '.bun/install/cache/pkg@1/bin.js'
+        cached.parent.mkdir(parents=True)
+        cached.write_text('#!/usr/bin/env node\n')
+        cached.chmod(0o775)
+        live = self.live / 'app/node_modules/pkg/bin.js'
+        live.parent.mkdir(parents=True)
+        os.link(cached, live)
+        self.before_cook(world, self.BUN)
+        seen = lambda path: (path.stat().st_mode & 0o7777, path.stat().st_nlink, path.stat().st_ino, path.stat().st_ctime_ns)
+        before = seen(live)
+        done, log, verbs = self.run_mode(world, 'prepare')
+        self.assertEqual(done.returncode, 0, done.stderr)
+        new = root / 'builds' / self.name / 'app/node_modules/pkg/bin.js'
+        self.assertEqual((seen(live), before[:2]), (before, (0o775, 2)))  # not its mode, not its link count, not its change time
+        self.assertEqual((new.stat().st_mode & 0o7777, new.stat().st_nlink, new.stat().st_ino == live.stat().st_ino), (0o755, 1, False))
+        self.assertEqual([path.name for path in root.iterdir() if 'cache' in path.name and path.is_dir()], [])  # the cache of its own is gone
+        call = corpus.lines(root / 'cook-calls.jsonl')[-1]
+        self.assertLessEqual(set(corpus.OWN_CACHE), set(call['environment_names']))
+        witness = next(entry for entry in log if entry['step'] == 'running deployment')
+        self.assertEqual((witness['untouched_by_this_run'], witness['builds_that_were_there_as_before'], sorted(witness['builds'])), (True, True, [self.role['request_id']]))
+        self.assertEqual((witness['builds'][self.role['request_id']]['unchanged'], witness['builds'][self.role['request_id']]['entries'] > 5), (True, True))
+        shared = next(entry for entry in log if entry['step'] == 'new build')['files_with_a_name_outside_the_build']
+        self.assertEqual((shared['outside'], shared['with_other_builds']), (0, 0))
+
+    def test_a_write_to_the_running_build_is_seen_and_the_build_refused(self):
+        # A runtime that links a file of the running build into the new one and sets its mode: what an install through a shared
+        # cache does. No cache of its own keeps a runtime from that; the adapter refuses the build and the runner says what changed.
+        world = self.world('shared')
+        live = self.live / 'shared-fixture.txt'
+        live.write_text('public synthetic fixture\n')
+        live.chmod(0o444)
+        self.before_cook(world, '\nimport os, sys\nfrom pathlib import Path\n_shared = Path(sys.argv[sys.argv.index("--out") + 1]) / "shared-fixture.txt"\nos.link(%r, _shared)\nos.chmod(_shared, 0o644)\n' % str(live))
+        before = self.pointers(world)
+        done, log, verbs = self.run_mode(world, 'prepare')
+        self.assertEqual((done.returncode, self.pointers(world)[:4]), (3, before[:4]), done.stderr)
+        self.assertEqual(next(entry for entry in log if entry['step'] == 'apply answered')['core']['error_code'], 'E_COOK_FAILED')
+        self.assertFalse((Path(world.root) / 'builds' / self.name / '.prepared').exists())
+        witness = next(entry for entry in log if entry['step'] == 'running deployment')
+        self.assertEqual((witness['untouched_by_this_run'], witness['pointer_unit_and_process_as_before'], witness['builds_that_were_there_as_before']), (False, True, False))
+        self.assertEqual(witness['builds'][self.role['request_id']]['first_changed'], [{'path': 'shared-fixture.txt', 'what': ['mode', 'links', 'ctime_ns']}])
+        self.assertIn('a build that was there changed', log[-1]['why'])
+        self.assertEqual(set(verbs), {'is-active', 'show'})
+        done, log, verbs = self.run_mode(world, 'start')  # and it is not started
+        self.assertEqual((done.returncode, self.pointers(world)[:4]), (3, before[:4]), done.stderr)
+
     def test_the_guard(self):
         SCRATCH.mkdir(parents=True, exist_ok=True)
         log, called = SCRATCH / 'guard.log', SCRATCH / 'guard.called'

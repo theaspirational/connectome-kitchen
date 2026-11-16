@@ -172,7 +172,9 @@ def adapter_through_seam(original):
     return run
 
 
-def snapshot(root):
+def snapshot(root, port=False):
+    """Every entry under `root`. With `port`, the log of cook's calls is read as `cook_calls` gives it: the TS adapter's two
+    names of the build's own Bun cache are held to be there and left out, so the row is comparable with the oracle's."""
     rows = {}
     for directory, names, files in os.walk(root):
         for name in sorted(names + files):
@@ -185,6 +187,8 @@ def snapshot(root):
                 row['kind'] = 'directory'
             else:
                 data = path.read_bytes()
+                if port and name == 'cook-calls.jsonl':  # in the words of the stand-ins that write it (stand_in_cook.py, replay_cook.py)
+                    data = ''.join(json.dumps(call, sort_keys=True) + '\n' for call in cook_calls(path, True)).encode()
                 row['sha256'] = sha256(data)
                 try:
                     if len(data) <= TEXT_LIMIT:
@@ -197,6 +201,48 @@ def snapshot(root):
 
 def lines(path):
     return [json.loads(line) for line in Path(path).read_text().splitlines()] if Path(path).is_file() else []
+
+
+# The two names the TS adapter adds to cook's environment, and the oracle's adapter does not: the Bun cache of the build's
+# own (src/isolation.ts), so that a new build shares no file with a build that is there. A known difference of the port.
+OWN_CACHE = ('BUN_INSTALL_CACHE_DIR', 'COOK_PASS_ENV')
+
+
+def cook_calls(path, port):
+    """The cook calls a log holds. Of the TS adapter (`port`): each must name the build's own Bun cache in cook's
+    environment, and is then given as the oracle's adapter would have made it, without those two names. So the difference
+    is held, in every call, and everything else of a call stays comparable with the oracle's as text."""
+    calls = lines(path)
+    if not port:
+        return calls
+    for call in calls:
+        names = call.get('environment_names', [])
+        if not set(OWN_CACHE) <= set(names):
+            raise CorpusError('the TS adapter called cook without a Bun cache of the build\'s own: %s lacks %s' % (path, ', '.join(sorted(set(OWN_CACHE) - set(names)))))
+        call['environment_names'] = [name for name in names if name not in OWN_CACHE]
+    return calls
+
+
+def fixture_environment():
+    """The environment of every engine and adapter the corpus starts, whoever calls it. The adapter hands cook the caller's
+    PATH, HOME, LANG, LC_ALL and TMPDIR where they are set (cook.py:60-63), and a record names them. So they are set here
+    and not taken from the caller: PATH and HOME as they are (a default where one is missing), LANG fixed, LC_ALL and
+    TMPDIR not set. A golden then says HOME, LANG and PATH on every machine."""
+    os.environ.pop('LC_ALL', None)
+    os.environ.pop('TMPDIR', None)
+    os.environ['LANG'] = 'C.UTF-8'
+    os.environ.setdefault('PATH', os.defpath)
+    os.environ.setdefault('HOME', pwd.getpwuid(os.geteuid()).pw_dir)
+
+
+def found_node(node):
+    """A Node named by a bare word is the one on the search path, as a shell would find it; a path stays a path."""
+    if os.sep in node:
+        return node
+    found = shutil.which(node)
+    if found is None:
+        raise CorpusError('no %s on the search path: --node <path of a Node>' % node)
+    return found
 
 
 class World:
@@ -697,6 +743,7 @@ def run_case(case, sandbox, node=None, own_name=False):
     instead. The files are laid out by the same code, and the record is put together the same way. With `own_name` the TS
     engine names the build as a kitchen does, and `{REQUEST}` in the record stands for that name.
     """
+    fixture_environment()
     ts_port.initialize()
     for name in ('connectome_deploy', 'connectome_cook', 'kitchen_v1'):
         importlib.import_module(name)
@@ -712,9 +759,9 @@ def run_case(case, sandbox, node=None, own_name=False):
             refusals[mutation]['left_behind'] = sorted(str(path) for path in Path(world.root).rglob('*') if path.name in ('.prepared', 'current'))
     # Installed and not started, on a sandbox of its own: with the units of a started deployment active the engine refuses this.
     world.build()
-    before = snapshot(world.sandbox)
+    before = snapshot(world.sandbox, node is not None)
     installed = world.install_only(world.operator_files())
-    after = snapshot(world.sandbox)
+    after = snapshot(world.sandbox, node is not None)
     kept = (world.unit_dir, str(Path(world.root) / 'state'))  # the text of what the engine itself writes; the build is the one `apply` shows
     installed['tree'] = {path: ({key: value for key, value in row.items() if key != 'text'} if not path.startswith(kept) else row)
                          for path, row in after.items() if before.get(path) != row}
@@ -725,7 +772,7 @@ def run_case(case, sandbox, node=None, own_name=False):
     switched_without_install = activation_switch(world, unit_without_install=True)
     refused_by_verifier = verifier_refuses(world)
     world.build()
-    before = snapshot(world.sandbox)
+    before = snapshot(world.sandbox, node is not None)
     files = world.operator_files()
     record = {
         'case': case.name,
@@ -743,20 +790,20 @@ def run_case(case, sandbox, node=None, own_name=False):
         'build_name': {'adapter_words': world.adapter_words(), 'command_words': world.shim_command()[2:], 'request_id': world.request_id()},
     }
     record['plan'] = world.dispatch('plan')
-    untouched = snapshot(world.sandbox)
+    untouched = snapshot(world.sandbox, node is not None)
     record['plan']['wrote'] = sorted(path for path in untouched if path not in before or untouched[path] != before[path])
     record['apply'] = world.dispatch('apply', operator_files=files)
-    after = snapshot(world.sandbox)
+    after = snapshot(world.sandbox, node is not None)
     record['apply']['tree'] = {path: row for path, row in after.items() if before.get(path) != row}
     record['apply']['removed'] = sorted(path for path in before if path not in after)
     record['apply']['systemctl_calls'] = lines(Path(world.root) / 'systemctl-calls')
     record['apply']['systemctl_calls_before_the_root_existed'] = lines(Path(world.root).parent / 'preflight-systemctl-calls')
-    record['apply']['cook_calls'] = lines(Path(world.root) / 'cook-calls.jsonl')
+    record['apply']['cook_calls'] = cook_calls(Path(world.root) / 'cook-calls.jsonl', node is not None)
     record['apply']['verify_cook_calls'] = lines(Path(world.root) / 'verify-cook-calls.jsonl')
     if world.replay:
         record['replayed_build'] = world.replayed_build()
     record['reapply'] = world.dispatch('apply', operator_files=files)
-    again = snapshot(world.sandbox)
+    again = snapshot(world.sandbox, node is not None)
     volatile = VOLATILE
     record['reapply']['tree_changes'] = sorted(path for path in set(after) | set(again) if after.get(path) != again.get(path) and Path(path).name not in volatile)
     record['plan_after_apply'] = world.dispatch('plan')
@@ -770,7 +817,7 @@ def run_case(case, sandbox, node=None, own_name=False):
     for name, extra in (('rebuild', {'versions': later}), ('release_back', {})):
         calls = {log: len(lines(Path(world.root) / log)) for log in ('systemctl-calls',) + logs}
         record[name] = world.dispatch('apply', operator_files=files, **extra)
-        now = snapshot(world.sandbox)
+        now = snapshot(world.sandbox, node is not None)
         record[name]['tree'] = {path: row for path, row in now.items() if state.get(path) != row and Path(path).name not in volatile + logs}
         for path, row in record[name]['tree'].items():
             if Path(path).name == 'ownership.json':
@@ -781,7 +828,7 @@ def run_case(case, sandbox, node=None, own_name=False):
                 row['entries_by_shape'] = sorted(entries, key=lambda entry: (HEX64.sub('#', entry['path']), first not in entry['path'], HEX64.sub('#', json.dumps(entry, sort_keys=True))))
         record[name]['removed'] = sorted(path for path in state if path not in now)
         record[name]['systemctl_calls'] = lines(Path(world.root) / 'systemctl-calls')[calls['systemctl-calls']:]
-        record[name]['cook_calls'] = lines(Path(world.root) / 'cook-calls.jsonl')[calls['cook-calls.jsonl']:]
+        record[name]['cook_calls'] = cook_calls(Path(world.root) / 'cook-calls.jsonl', node is not None)[calls['cook-calls.jsonl']:]
         record[name]['verify_cook_calls'] = lines(Path(world.root) / 'verify-cook-calls.jsonl')[calls['verify-cook-calls.jsonl']:]
         state = now
     jobs = world.ported()
@@ -1312,7 +1359,10 @@ def main(argv=None):
     sub.add_argument('--cooked', help='the lock of that build as cook wrote it, before the adapter rewrote it (scripts/rehearse/cook-keep keeps it)')
     args = parser.parse_args(argv)
     os.umask(0o022)  # the modes of what the adapter and the stand-in write are recorded; they must not depend on the caller's umask
+    fixture_environment()  # nor the names of cook's environment on the caller's
     try:
+        if args.command == 'compare':
+            args.node = found_node(args.node)
         if args.command == 'import-layer':
             return command_import(args)
         if args.command == 'import-build':

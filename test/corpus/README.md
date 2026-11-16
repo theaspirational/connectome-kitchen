@@ -18,7 +18,19 @@ tree apply left, the calls to cook and to the service manager, the second
 apply, the later release, the release taken back, the install without a
 start, the switch between an install without a start and a start in both
 directions, a unit verifier that refuses, and the refusals. `--steps-only` leaves the engine out; `--node NODE`
-names the Node both parts run on.
+names the Node both parts run on (default: the `node` on the search path).
+
+The calls to cook are held with one known difference: the TS adapter adds two
+names to cook's environment, `BUN_INSTALL_CACHE_DIR` and `COOK_PASS_ENV`, the
+Bun cache of the build's own (`src/isolation.ts`). Every call of the TS
+adapter must have both (`cook_calls` in `corpus.py` fails the run otherwise),
+and is then compared without them.
+
+The environment of every engine and adapter the corpus starts is set by the
+corpus (`fixture_environment`): `PATH` and `HOME` as they are, `LANG` fixed,
+`LC_ALL` and `TMPDIR` not set. The adapter hands cook those five names where
+they are set and a record names them, so a golden must not follow the
+caller's.
 
 `npm test` runs `compare` on the public cases (`test/unit/corpus.test.js`). `--corpus DIR`
 takes any other corpus; `import-layer` builds one from a private deployment
@@ -266,6 +278,17 @@ run them:
   `state/ownership.json`. The pointer, the unit, its drop-in, the enable link
   and the secrets are not touched, and the runner fails if any of them, or the
   unit's process, is not what it was before the step.
+- No file of a build that was there is touched either. Bun links package
+  files from its cache and sets modes on the linked inodes, so the adapter
+  gives it a cache of the new build's own for the one cook run
+  (`src/isolation.ts`) and refuses a build that shares a file with another
+  build. The runner measures it: before and after a step it takes every entry
+  of every build that was there (type, mode, owner, size, link count, inode,
+  modification and status change time, no contents), and
+  `untouched_by_this_run` is true only if those are as they were, with the
+  pointer, the links and the process. `prepare` and `verify` end with status
+  3 otherwise, and the log names the entries. It says nothing of the agent's
+  state directory or of the account's own Bun cache, and the log says so.
 - `start` is `apply` with both phases on a prepared build: the environment
   file, the pointer, the links, one `daemon-reload`, one `restart`, health.
   It refuses a build that is not prepared, so it never runs cook.

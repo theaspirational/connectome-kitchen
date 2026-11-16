@@ -22,6 +22,13 @@ the lock after the adapter's post-processing, and what cook's stand-in left
 beside them. It is taken at two roots of different length, as a golden of the
 corpus is, so it does not depend on where it was made.
 
+Two environment names are held apart from the record, by name: the Bun cache
+of the build's own (`corpus.OWN_CACHE`, src/isolation.ts). Every cook call
+must have both, or there is no record and no check (`corpus.cook_calls`); the
+record then holds the call without them. They were added under `/1` with the
+number kept (src/cook.ts says why), so the cases of that record are the bytes
+they were before.
+
 The record is `adapter-contract/<name with - for />.golden`. `check` fails when
 there is none under the present name, or when the output is not the one
 recorded, and says where. A record under a name is not rewritten for a change
@@ -96,7 +103,7 @@ def observe(case, sandbox, node, seam):
     record = {
         'given': {'argv': argv, 'build': {path: row for path, row in before.items() if Path(path).parent == build}},
         'status': done.returncode, 'stdout': done.stdout, 'stderr': done.stderr,
-        'cook_calls': corpus.lines(root / 'cook-calls.jsonl'), 'verify_cook_calls': corpus.lines(root / 'verify-cook-calls.jsonl'),
+        'cook_calls': corpus.cook_calls(root / 'cook-calls.jsonl', True), 'verify_cook_calls': corpus.lines(root / 'verify-cook-calls.jsonl'),
         'left': {path: row for path, row in after.items() if before.get(path) != row and Path(path).name not in corpus.LOGS},
         'removed': sorted(path for path in before if path not in after),
     }
@@ -125,6 +132,8 @@ def main():
     parser.add_argument('--replace', action='store_true', help='record: rewrite the record under the present name, after a change of the cases or stand-ins')
     args = parser.parse_args()
     os.umask(0o022)  # the modes of what the adapter and the stand-in write are recorded; they must not depend on the caller's umask
+    corpus.fixture_environment()
+    args.node = corpus.found_node(args.node)
     name = contract(args.node)
     path, files = record_of(name), fixtures()
     kept = json.loads(path.read_text()) if path.is_file() else None

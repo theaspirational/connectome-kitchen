@@ -1026,6 +1026,8 @@ depend on it, and a case can now hold cook's own bytes (`cooked` in
 | A wrongly typed value where the oracle ends in its generic failure | a specific Python exception class | the same public code; the class is not modelled everywhere |
 | The adapter's stderr | spooled to a temporary file, first 65537 bytes read | held in memory, first 65537 bytes read |
 | Temporary names of atomic writes | `tempfile` alphabet | eight random characters of another alphabet; never left behind |
+| Bun's cache during cook's install | the account's (`$HOME/.bun/install/cache`): every build of the account shares inodes with it, and an install sets modes on them | a cache of the build's own, `ROOT/.bun-cache-REQUEST`, named to cook by `BUN_INSTALL_CACHE_DIR` with `COOK_PASS_ENV` and removed when cook returns; then `E_COOK_FAILED` where a file of the new build is a file of another build under `builds` (`src/isolation.ts`). The corpus holds the two names apart in every cook call (`corpus.cook_calls`). The build name is not moved (`ADAPTER_CONTRACT` in `src/cook.ts` says why) |
+| A secret named `BUN_INSTALL_CACHE_DIR` or `COOK_PASS_ENV` | accepted | refused as a name the adapter owns (`E_ADAPTER_INPUT`) |
 
 **Ported, and reached by no case.** These branches were written from the
 oracle and nothing has run them against it: the rollback after a failed
@@ -1142,7 +1144,7 @@ The mutant classification:
 | B24 | closed | plan Q1, ruled as divergence D5: a kitchen names a build by its adapter contract. It still differs from the role's name, so taking an agent over is one build and one restart; the corpus shows both names and no longer makes them equal without saying so |
 | B25 | review | obligation `archive.L140.4` is recorded as discharged by the implementer, with the witness in `test/unit/engine.test.js`. A review has to confirm it |
 | B26 | ruling, with cook | cook's install is neither offline nor pinned beyond the two archives: Bun resolves the host's other packages at install time and saves a new lockfile (rehearsal finding). Decide whether a build must be reproducible from its request, and if so how the host's lockfile is kept or the packages are supplied |
-| B27 | ruling, with cook | builds of one account share inodes through Bun's cache (rehearsal finding). Decide whether retained builds must be immutable; Bun has a copying backend |
+| B27 | closed for new builds | builds of one account shared inodes through Bun's cache (rehearsal finding; H1 of the review of `05298e9..40378ef`). Ruled: a new build shares no file with a build that is there. The adapter gives Bun a cache of the build's own and refuses a build that shares a file with another (`src/isolation.ts`); the takeover runner measures every build that was there before and after a step. Not changed: builds made before this still share inodes with the account's cache and with each other, so another Bun install of that account, outside kitchen, can still set modes on them. A new build costs a download of every package (no cache is kept) and no disk beyond the build |
 | B28 | port | the engine's preflight does not ask whether the unit verifier can run; under `install_only` it fails after cook when the user manager's runtime directory is not named |
 | B29 | port | the adapter writes `cook-layout.json` with no mode of its own, as the oracle does, so its mode follows the caller's umask |
 
