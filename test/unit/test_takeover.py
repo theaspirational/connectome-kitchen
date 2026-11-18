@@ -203,10 +203,10 @@ class Takeover(unittest.TestCase):
             self.assertNotIn(value, kept)
 
     def test_first_start_checks_effective_units_before_apply(self):
-        for form in ('export', 'explicit'):
+        for form in ('export', 'explicit', 'script-only'):
             for shape in ('single', 'no-install', 'extra-target', 'alias', 'wrong-unit', 'extra-unit'):
-                if shape == 'extra-unit' and form == 'export':
-                    continue  # the export names at most one unit
+                if (shape == 'extra-unit' and form == 'export') or (form == 'script-only' and shape != 'single'):
+                    continue
                 with self.subTest(form=form, shape=shape):
                     world = self.first_world(form + '-' + shape)
                     root, unit_dir = Path(world.root), Path(world.unit_dir)
@@ -237,16 +237,21 @@ class Takeover(unittest.TestCase):
                             extra = build / 'other.service'
                             shutil.copyfile(unit_file, extra)
                             lock['units'].append(record(extra))
+                    if form == 'script-only':
+                        del lock['launch']['userUnit']
+                        unit_file.unlink()
                     lock_path.write_text(json.dumps(lock))
 
                     manifest = root / 'state/ownership.json'
                     before = manifest.read_bytes()
                     done, log, verbs = self.run_mode(world, 'start')
-                    if shape == 'single':
+                    if shape == 'single' and form != 'script-only':
                         self.assertEqual((done.returncode, verbs.count('restart'), self.installed(world)), (0, 1, [True] * 4), done.stderr)
                     else:
                         self.assertEqual((done.returncode, self.installed(world)), (3, [False] * 4), done.stderr)
                         self.assertIn('first start requires', log[-1]['why'])
+                        if form == 'script-only':
+                            self.assertIn('managed-units', log[-1]['why'])
                         self.assertTrue(set(verbs) <= {'is-active', 'show'}, verbs)
                         self.assertFalse(any(row['step'] == 'apply asked' for row in log))
                         self.assertFalse((build / 'secrets.env').exists())

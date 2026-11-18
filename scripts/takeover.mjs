@@ -413,8 +413,8 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
         activationRefusal = 'a first install requires its pinned build and no current pointer';
       } else if (!ready) {
         activationRefusal = 'the build is not prepared: run prepare first';
-      } else if (units.size !== 1 || ![path.join(build, unit), path.join(build, 'managed-units', unit)].includes(source)) {
-        activationRefusal = 'first start requires exactly its named unit';
+      } else if (units.size !== 1 || source !== path.join(build, 'managed-units', unit)) {
+        activationRefusal = 'first start requires exactly its named unit in managed-units';
       } else if (artifacts.size !== expected.length || !expected.every(file => artifacts.has(file))) {
         activationRefusal = 'first start requires only WantedBy=default.target for boot activation';
       } else if (/[\u000b\u000c\u001c-\u001e\u0085\u2028\u2029]|\r(?!\n)/u.test(artifacts.get(source)[1])) {
