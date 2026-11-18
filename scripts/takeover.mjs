@@ -15,7 +15,8 @@
 //            and the runner measures it (below).
 //   verify   the read-only questions, `plan`, what is there, and whether the secrets file gives the new build the
 //            environment the running build has (names and yes or no; never a value). Writes only its log.
-//   start    `apply` with both phases on a build that `prepare` made: the environment file, the pointer, the unit
+//   start    `apply` on a build that `prepare` made (both phases for takeover, activate only for first start):
+//            the environment file, the pointer, the unit
 //            links and the drop-in, one `daemon-reload`, one `restart` of the unit, health. The engine takes all of
 //            it back and restarts the previous build if a step fails (src/deploy.ts, `activate`).
 //
@@ -399,12 +400,36 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
     const unexpected = error => log('engine failure that is not a refusal', { error: String(error?.stack ?? error) });
     // The engine's own fixed words for a refusal. A receipt holds the closed code only; this log is the account's, mode 0600.
     const refused = error => log('engine refused', { code: error.code ?? null, reason: String(error?.message ?? '') });
+    // First-install cleanup can prove only these four artifacts (plus current, which the engine handles separately).
+    // The engine normalizes both lock forms and constructs these artifacts using its own Install parser.
+    let activationRefusal;
+    const checkActivation = ({ build: plannedBuild, previous, units, artifacts }) => {
+      const prepared = path.join(build, '.prepared');
+      const ready = fs.existsSync(prepared) && fs.readFileSync(prepared, 'utf8') === wanted;
+      const source = units.get(unit);
+      const expected = [source, path.join(unitDir, unit), path.join(unitDir, 'default.target.wants', unit),
+        path.join(unitDir, unit + '.d', '90-connectome-env.conf')];
+      if (plannedBuild !== build || previous !== null || !absent(current)) {
+        activationRefusal = 'a first install requires its pinned build and no current pointer';
+      } else if (!ready) {
+        activationRefusal = 'the build is not prepared: run prepare first';
+      } else if (units.size !== 1 || ![path.join(build, unit), path.join(build, 'managed-units', unit)].includes(source)) {
+        activationRefusal = 'first start requires exactly its named unit';
+      } else if (artifacts.size !== expected.length || !expected.every(file => artifacts.has(file))) {
+        activationRefusal = 'first start requires only WantedBy=default.target for boot activation';
+      } else if (/[\u000b\u000c\u001c-\u001e\u0085\u2028\u2029]|\r(?!\n)/u.test(artifacts.get(source)[1])) {
+        activationRefusal = 'first start requires ordinary unit line endings';
+      }
+      if (activationRefusal) throw new deploy.DeployError(activationRefusal);
+    };
     const call = (command, extra = {}) => {
       const body = read().get('request');
       body.set('systemctl', guard);
       for (const [key, value] of Object.entries(extra)) body.set(key, value);
       log(command + ' asked', { keys: [...body.keys()].sort(), phase: extra.phase ?? null });
-      const [receipt, status] = dispatch(dict({ contract: 'connectome.kitchen/v1', command, request: body }), null, { host, run, unexpected, refused });
+      const [receipt, status] = dispatch(dict({ contract: 'connectome.kitchen/v1', command, request: body }), null, {
+        host, run, unexpected, refused, ...(first && mode === 'start' ? { check_activation: checkActivation } : {}),
+      });
       const file = saveReceipt(command, canonical(receipt) + '\n');
       log(command + ' answered', { status, receipt: file, core: plain(receipt.get('core')) });
       return [receipt.get('core'), status];
@@ -412,6 +437,7 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
 
     // `plan` is handed the recipe as `apply` is: the configured path may be one this account cannot read.
     const [planned, planStatus] = call('plan', { operator_files: operatorFiles });
+    need(!activationRefusal, activationRefusal);
     if (planStatus !== 0) { log('end', { status: 1, why: 'plan was refused' }); return 1; }
     const named = planned.get('prepare').get('build_dir');
     log('build named', { build_dir: named, request_id: path.basename(named), expected: wanted });
@@ -424,28 +450,9 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
     }
     if (mode === 'start') {
       need(planned.get('prepare').get('changed') === false, 'the build is not prepared: run prepare first. Nothing was changed');
-      if (first) {
-        // The first-install remover owns a single unit and its default.target enable link. Do not let cook
-        // expand this activation into a multi-unit install or create aliases/links the remover cannot prove.
-        const lock = JSON.parse(fs.readFileSync(path.join(build, 'connectome.lock'), 'utf8'));
-        const units = lock.units;
-        if (units !== undefined && units !== null) {
-          need(Array.isArray(units) && units.length === 1 && path.basename(units[0].path) === unit,
-            'first start requires exactly its named unit');
-          const unitText = fs.readFileSync(path.resolve(build, units[0].path), 'utf8');
-          need(!/[\u000b\u000c\u001c-\u001e\u0085\u2028\u2029]|\r(?!\n)/u.test(unitText), 'first start requires ordinary unit line endings');
-          let install = false;
-          const directives = [];
-          for (const line of unitText.split(/\r?\n/u).map(line => line.trim())) {
-            if (line.startsWith('[') && line.endsWith(']')) install = line === '[Install]';
-            else if (install && line && !/^[#;]/u.test(line)) directives.push(line);
-          }
-          need(directives.length === 1 && /^WantedBy\s*=\s*default\.target$/u.test(directives[0]),
-            'first start requires only WantedBy=default.target in the unit Install section');
-        }
-        need(absent(current), 'a first install is of a root whose current is not there');
-      }
-      const [, applyStatus] = call('apply', { operator_files: operatorFiles, phase: 'both' });
+      if (first) need(absent(current), 'a first install is of a root whose current is not there');
+      const [, applyStatus] = call('apply', { operator_files: operatorFiles, phase: first ? 'activate' : 'both' });
+      need(!activationRefusal, activationRefusal);
       status = applyStatus === 0 ? 0 : 1;
     }
     if (mode !== 'check') {

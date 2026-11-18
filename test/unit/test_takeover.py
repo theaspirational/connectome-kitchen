@@ -202,6 +202,57 @@ class Takeover(unittest.TestCase):
         for value in world.secrets.values():
             self.assertNotIn(value, kept)
 
+    def test_first_start_checks_effective_units_before_apply(self):
+        for form in ('export', 'explicit'):
+            for shape in ('single', 'no-install', 'extra-target', 'alias', 'wrong-unit', 'extra-unit'):
+                if shape == 'extra-unit' and form == 'export':
+                    continue  # the export names at most one unit
+                with self.subTest(form=form, shape=shape):
+                    world = self.first_world(form + '-' + shape)
+                    root, unit_dir = Path(world.root), Path(world.unit_dir)
+                    if shape == 'no-install':
+                        (root.parent / 'unit-without-install-section').touch()
+                    done, _, _ = self.run_mode(world, 'prepare')
+                    self.assertEqual(done.returncode, 0, done.stderr)
+                    build = root / 'builds' / self.name
+                    lock_path = build / 'connectome.lock'
+                    lock = json.loads(lock_path.read_bytes())
+                    self.assertNotIn('units', lock)
+                    self.assertEqual(lock['launch']['userUnit'], self.unit)
+                    unit_file = build / self.unit
+                    if shape in ('extra-target', 'alias'):
+                        with unit_file.open('a') as stream:
+                            stream.write('WantedBy=other.target\n' if shape == 'extra-target' else 'Alias=other.service\n')
+                    if shape == 'wrong-unit':
+                        unit_file = unit_file.rename(build / 'wrong.service')
+                        lock['launch']['userUnit'] = unit_file.name
+
+                    def record(file):
+                        return {'path': file.name, 'sha256': hashlib.sha256(file.read_bytes()).hexdigest()}
+
+                    if form == 'explicit':
+                        del lock['launch']['userUnit']
+                        lock['units'] = [record(unit_file)]
+                        if shape == 'extra-unit':
+                            extra = build / 'other.service'
+                            shutil.copyfile(unit_file, extra)
+                            lock['units'].append(record(extra))
+                    lock_path.write_text(json.dumps(lock))
+
+                    manifest = root / 'state/ownership.json'
+                    before = manifest.read_bytes()
+                    done, log, verbs = self.run_mode(world, 'start')
+                    if shape == 'single':
+                        self.assertEqual((done.returncode, verbs.count('restart'), self.installed(world)), (0, 1, [True] * 4), done.stderr)
+                    else:
+                        self.assertEqual((done.returncode, self.installed(world)), (3, [False] * 4), done.stderr)
+                        self.assertIn('first start requires', log[-1]['why'])
+                        self.assertTrue(set(verbs) <= {'is-active', 'show'}, verbs)
+                        self.assertFalse(any(row['step'] == 'apply asked' for row in log))
+                        self.assertFalse((build / 'secrets.env').exists())
+                        self.assertFalse(unit_dir.exists())
+                        self.assertEqual(manifest.read_bytes(), before)
+
     def test_a_first_start_that_fails_leaves_nothing_installed(self):
         world = self.first_world('first-back')
         root = Path(world.root)

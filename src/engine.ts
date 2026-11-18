@@ -11,7 +11,7 @@ import { CONTRACT, VERSION } from './contract.js';
 import { merge_layers } from './config.js';
 import { ADAPTER_CONTRACT } from './cook.js';
 import { Deployment, make_directory } from './deploy.js';
-import type { Run } from './deploy.js';
+import type { ActivationCheck, Run } from './deploy.js';
 import { SafeError, diagnostic } from './errors.js';
 import type { Host } from './io/host.js';
 import { realHost } from './io/host.js';
@@ -45,6 +45,8 @@ export interface EngineOptions {
   identity?: readonly string[];
   /** `connectome_deploy.run`, replaceable as the oracle's tests replace it. */
   run?: Run;
+  /** Optional in-process policy, applied to the effective activation in both plan and apply. Not a request field. */
+  check_activation?: ActivationCheck;
   /** Told of a failure that is not a `SafeError`, before it becomes the generic refusal. For tests; nothing is returned. */
   unexpected?: (error: unknown) => void;
   /**
@@ -103,7 +105,7 @@ export function dispatch(data: PyValue, secrets: PyValue = null, options: Engine
       }
       const done: PyDict = new Map();
       if (phase === 'prepare' || phase === 'both') { prepared = dep.prepare(); done.set('prepare', prepared); }
-      if (phase === 'activate' || phase === 'both') { stage = 'activate'; done.set('activate', dep.activate(secrets)); }
+      if (phase === 'activate' || phase === 'both') { stage = 'activate'; done.set('activate', dep.activate(secrets, options.check_activation)); }
       done.set('changed', [...done.values()].some(part => item(part as PyDict, 'changed') === true));
       return [envelope(command, done), 0];
     } finally {

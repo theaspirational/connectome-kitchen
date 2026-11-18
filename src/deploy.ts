@@ -535,6 +535,10 @@ const ASCII_SPACE = /^[ \t\n\r\v\f]+|[ \t\n\r\v\f]+$/gu;
 /** A planned file or link: its ownership record and, for a file, its text. */
 export type Artifact = [record: PyDict, content: string | null];
 export type Artifacts = Map<string, Artifact>;
+/** Optional policy for a library caller to check the effective activation before any activation writes. */
+export type ActivationCheck = (plan: {
+  build: string; previous: string | null; units: ReadonlyMap<string, string>; artifacts: ReadonlyMap<string, Artifact>;
+}) => void;
 type ActivationPlan = [lock: PyDict, units: Map<string, string>, previous: string | null, previous_lock: PyDict | null, previous_units: Map<string, string>, artifacts: Artifacts];
 
 export interface DeploymentOptions {
@@ -1293,9 +1297,9 @@ export class Deployment {
   }
 
   /** deploy.py:1158-1186 */
-  _install(units: ReadonlyMap<string, string>, old_units: ReadonlyMap<string, string>, build: string): void {
+  _install(units: ReadonlyMap<string, string>, old_units: ReadonlyMap<string, string>, build: string, planned?: Artifacts): void {
     if (this.activation === 'start') this._exclusive_status(true);
-    const artifacts = this._artifacts(units, build);
+    const artifacts = planned ?? this._artifacts(units, build);
     this._preflight(artifacts);
     for (const name of old_units.keys()) {
       if (units.has(name)) continue;
@@ -1355,7 +1359,7 @@ export class Deployment {
   }
 
   /** deploy.py:1217-1301 */
-  activate(secrets: PyValue = null): PyDict {
+  activate(secrets: PyValue = null, check_activation?: ActivationCheck): PyDict {
     this.validate_paths();
     this.preflight_activation();
     this._check_secrets_file();
@@ -1374,6 +1378,7 @@ export class Deployment {
     if (direct.some(name => given.has(name) && /[\u0000\n\r]/u.test(given.get(name)!))) throw new DeployError('multiline/NUL env secrets are unsupported');
     if (this.check && !pathlib.isFile(pathlib.joinPath(this.build, '.prepared'))) return dict({ changed: true });
     const [lock, units, previous, previous_lock, previous_units, artifacts] = this._activation_plan();
+    check_activation?.({ build: this.build, previous, units, artifacts });
     const [file_snapshot, file_names] = this._secret_file_snapshot(previous, this.config);
     const secret_files = iterate(dictGet(this.config, 'secret_files', [])) as PyDict[];
     const file_values = new Map<string, Buffer>();
@@ -1409,7 +1414,7 @@ export class Deployment {
       step = 'release pointer';
       this._put(this.current, Deployment._link_record(this.build));
       step = 'unit installation';
-      this._install(units, previous_units, this.build);
+      this._install(units, previous_units, this.build, check_activation ? artifacts : undefined);
       step = 'health';
       this._health(units, lock, this.build);
       step = 'activation state';
