@@ -25,7 +25,7 @@
 // A first install: `expect.live_build: null` says that nothing is deployed, and the same four modes then install an agent
 // from nothing. In place of an engine's root whose pointer names the build that runs, the runner holds, before its first
 // write: `builds` has no build but the requested one (no `builds` at all is that too); `current` is not there (or, in
-// `verify` and `start`, names the new build, as after the first start); and, while `current` is not there, the account
+// `verify` only, names the new build, as after the first start); and, while `current` is not there, the account
 // has no unit link, no enable link and no drop-in directory of this deployment. `prepare` makes the root and the build
 // and starts nothing. `start` goes through the guard's mode `first-start`, which also passes `stop` of this one unit:
 // with nothing to go back to, the engine takes a failed first start back by stopping the unit and removing what it
@@ -184,7 +184,7 @@ function inventoryChanges(before, after, limit = 20) {
  * Whether the secrets file gives the build the environment file the engine would write, and whether that is the one
  * of the build `current` names. Returns names and yes or no. No value, no length and no digest of a value leaves here.
  */
-function secretsView(effective, names, secretsFile, root, current) {
+function secretsView(effective, names, secretsFile, root, current, first) {
   let values;
   try { values = JSON.parse(fs.readFileSync(secretsFile, 'utf8')); } catch { return { readable: false }; }
   if (values === null || typeof values !== 'object' || Array.isArray(values)) return { readable: false };
@@ -199,11 +199,18 @@ function secretsView(effective, names, secretsFile, root, current) {
   const env = new Map(direct.map(name => [name, values[name]]));
   for (const [name] of records) env.set(name, path.join(root, 'state', 'secret-files', name));
   const text = [...env].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([name, value]) => name + '="' + value.replaceAll('\\', '\\\\').replaceAll('"', '\\"') + '"\n').join('');
-  const same = file => { try { return fs.readFileSync(file, 'utf8') === text; } catch { return null; } };
-  view.environment_file_of_current_build_is_what_start_would_write = current === null ? null : same(path.join(current, 'secrets.env'));
-  view.secret_files_are_what_start_would_write = Object.fromEntries(records.map(([name, secret]) => {
-    try { return [name, fs.readFileSync(path.join(root, 'state', 'secret-files', name)).equals(Buffer.from(values[secret], 'utf8'))]; } catch { return [name, null]; }
-  }));
+  const matches = (file, compare) => {
+    try {
+      if (first && (!fs.lstatSync(file).isFile() || fs.realpathSync(file) !== file)) return false;
+      return compare(fs.readFileSync(file));
+    } catch (error) {
+      return first && error.code !== 'ENOENT' ? false : null;
+    }
+  };
+  // The legacy field is consumed by the role. In first mode it measures the requested build, even with no current.
+  view.environment_file_of_current_build_is_what_start_would_write = current === null ? null : matches(path.join(current, 'secrets.env'), bytes => bytes.toString('utf8') === text);
+  view.secret_files_are_what_start_would_write = Object.fromEntries(records.map(([name, secret]) =>
+    [name, matches(path.join(root, 'state', 'secret-files', name), bytes => bytes.equals(Buffer.from(values[secret], 'utf8')))]));
   return view;
 }
 
@@ -254,11 +261,11 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
     // The deployment to take over, before the first write of this runner: an engine's root whose pointer names a build we know.
     // Or, for a first install, none: no other build, no pointer, no unit of this deployment.
     const pointer = () => { try { return fs.readlinkSync(current); } catch { return null; } };
+    const absent = file => { try { fs.lstatSync(file); return false; } catch (error) { return error.code === 'ENOENT'; } };
     if (first) {
-      const absent = file => { try { fs.lstatSync(file); return false; } catch (error) { return error.code === 'ENOENT'; } };
       const others = (() => { try { return fs.readdirSync(builds).filter(leaf => leaf !== wanted); } catch (error) { return error.code === 'ENOENT' ? [] : null; } })();
       need(others !== null && others.length === 0, 'a first install is of a root with no build but its own: ' + builds);
-      need(pointer() === build ? mode === 'verify' || mode === 'start' : absent(current), 'a first install is of a root whose current is not there' + (mode === 'verify' || mode === 'start' ? ' or names the new build' : ''));
+      need(pointer() === build ? mode === 'verify' : absent(current), 'a first install is of a root whose current is not there' + (mode === 'verify' ? ' or names the new build' : ''));
       need(pointer() === build || [path.join(unitDir, 'connectome-' + name + '.service'), path.join(unitDir, 'default.target.wants', 'connectome-' + name + '.service'), path.join(unitDir, 'connectome-' + name + '.service.d')].every(absent),
         'a first install is of an account that has no unit of this deployment: the unit link, the enable link or the drop-in directory is there');
     } else need(fs.existsSync(path.join(root, 'state', 'ownership.json')), 'the deployment root is not one an engine made: ' + root);
@@ -366,7 +373,7 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
 
     const names = deploy.secret_names(effective);
     if (mode === 'verify' || mode === 'start') {
-      const view = secretsView(effective, names, secretsFile, root, pointer());
+      const view = secretsView(effective, names, secretsFile, root, first ? build : pointer(), first);
       log('secrets file', view);
       need(view.readable && !view.missing.length && !view.not_text.length && !view.multiline_or_nul.length, 'the secrets file does not hold every declared name as one line of text; nothing was changed');
     }
@@ -417,6 +424,27 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
     }
     if (mode === 'start') {
       need(planned.get('prepare').get('changed') === false, 'the build is not prepared: run prepare first. Nothing was changed');
+      if (first) {
+        // The first-install remover owns a single unit and its default.target enable link. Do not let cook
+        // expand this activation into a multi-unit install or create aliases/links the remover cannot prove.
+        const lock = JSON.parse(fs.readFileSync(path.join(build, 'connectome.lock'), 'utf8'));
+        const units = lock.units;
+        if (units !== undefined && units !== null) {
+          need(Array.isArray(units) && units.length === 1 && path.basename(units[0].path) === unit,
+            'first start requires exactly its named unit');
+          const unitText = fs.readFileSync(path.resolve(build, units[0].path), 'utf8');
+          need(!/[\u000b\u000c\u001c-\u001e\u0085\u2028\u2029]|\r(?!\n)/u.test(unitText), 'first start requires ordinary unit line endings');
+          let install = false;
+          const directives = [];
+          for (const line of unitText.split(/\r?\n/u).map(line => line.trim())) {
+            if (line.startsWith('[') && line.endsWith(']')) install = line === '[Install]';
+            else if (install && line && !/^[#;]/u.test(line)) directives.push(line);
+          }
+          need(directives.length === 1 && /^WantedBy\s*=\s*default\.target$/u.test(directives[0]),
+            'first start requires only WantedBy=default.target in the unit Install section');
+        }
+        need(absent(current), 'a first install is of a root whose current is not there');
+      }
       const [, applyStatus] = call('apply', { operator_files: operatorFiles, phase: 'both' });
       status = applyStatus === 0 ? 0 : 1;
     }

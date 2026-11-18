@@ -181,8 +181,16 @@ class Takeover(unittest.TestCase):
         self.assertFalse(next(entry for entry in log if entry['step'] == 'plan answered')['core']['changed'])
         view = next(entry for entry in log if entry['step'] == 'secrets file')
         self.assertEqual((view['environment_file_of_current_build_is_what_start_would_write'], view['secret_files_are_what_start_would_write']), (True, {'CHAT_RC_PATH': True}))
-        done, log, verbs = self.run_mode(world, 'start')  # again: nothing to do, no restart
-        self.assertEqual((done.returncode, verbs.count('restart'), verbs.count('daemon-reload'), verbs.count('stop')), (0, 0, 0, 0), done.stderr)
+        # A repeated null-live start must not apply at all, even with otherwise-valid rotated inputs.
+        secrets = Path(world.effective['secrets_file'])
+        rotated = json.loads(secrets.read_text())
+        rotated[next(iter(rotated))] = 'synthetic-rotation-must-not-appear'
+        secrets.write_text(json.dumps(rotated))
+        before = (build / 'secrets.env').read_bytes()
+        done, _, verbs = self.run_mode(world, 'start')
+        self.assertEqual((done.returncode, verbs, (build / 'secrets.env').read_bytes()), (3, [], before), done.stderr)
+        self.assertIn('a first install is of a root whose current is not there', done.stderr)
+        self.assertNotIn('synthetic-rotation-must-not-appear', done.stderr)
         # `check` and `prepare` are of a root where nothing runs: once the agent is installed they refuse this request.
         for mode in ('check', 'prepare'):
             done, log, verbs = self.run_mode(world, mode)
@@ -218,6 +226,22 @@ class Takeover(unittest.TestCase):
         # And the next start, with the cause gone, starts it.
         corpus.write(fake, passing, 0o755)
         done, log, verbs = self.run_mode(world, 'verify')
+        self.assertEqual(done.returncode, 0, done.stderr)
+        view = next(entry for entry in log if entry['step'] == 'secrets file')
+        self.assertIs(view['environment_file_of_current_build_is_what_start_would_write'], True)
+        self.assertEqual(view['secret_files_are_what_start_would_write'], {'CHAT_RC_PATH': None})
+        for secret in world.secrets.values():
+            self.assertNotIn(secret, done.stderr)
+        # An entry that cannot be read as a regular environment file is not missing.
+        env_path = build / 'secrets.env'
+        content = env_path.read_bytes()
+        env_path.unlink()
+        env_path.mkdir()
+        _, log, _ = self.run_mode(world, 'verify')
+        self.assertIs(next(entry for entry in log if entry['step'] == 'secrets file')['environment_file_of_current_build_is_what_start_would_write'], False)
+        env_path.rmdir()
+        env_path.write_bytes(content)
+        env_path.chmod(0o600)
         self.assertEqual(done.returncode, 0, done.stderr)
         done, log, verbs = self.run_mode(world, 'start')
         self.assertEqual((done.returncode, self.installed(world), verbs.count('restart'), verbs.count('stop')), (0, [True] * 4, 1, 0), done.stderr)
