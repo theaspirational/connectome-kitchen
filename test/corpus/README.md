@@ -346,6 +346,21 @@ the public `example` case after the role's own apply through the Python
 engine, behind the corpus seams, and a `start` whose restart fails: the engine
 takes it back to the running build.
 
+A first install is the same runner with `live_build: null` in the input:
+nothing is deployed. The runner then holds, in place of an engine's root and
+a pointer that names the running build, that `builds` has no build but the
+requested one, that `current` is not there (in `verify` and `start` it may
+name the new build), and that the account has no unit link, enable link or
+drop-in directory of this deployment. `prepare` makes the root and the build;
+`start` installs and starts the unit through the guard's mode `first-start`,
+which passes what `start` passes and `stop` of this one unit. The engine
+takes a failed first start back with that `stop`; refused, its take-back
+fails and leaves the unit link, the enable link and the drop-in with a
+failed unit. `test/unit/test_takeover.py` runs the four modes on a sandbox
+where nothing is deployed, a first start whose restart fails (nothing is
+left installed, and the next start succeeds), and the refusals where a
+build, a pointer or a unit is there.
+
 ## What a golden does not show
 
 These are stand-ins, and a golden says so under `engine`:

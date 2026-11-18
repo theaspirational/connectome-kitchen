@@ -17,6 +17,7 @@ import ts_port
 SCRATCH = ROOT / '.cache/takeover-test'
 GUARD = ROOT / 'scripts/takeover/systemctl-guard'
 NODE = os.environ.get('KITCHEN_NODE') or shutil.which('node')
+MODES = ('check', 'prepare', 'verify', 'start')
 
 
 class Takeover(unittest.TestCase):
@@ -79,6 +80,189 @@ class Takeover(unittest.TestCase):
         self.keep = world.home / 'kitchen-takeover' / world.effective['name']
         self.calls = root / 'systemctl-calls'
         return world
+
+    def first_world(self, label):
+        """A sandbox where nothing is deployed: the account, its secrets file and the pinned inputs, and no deployment root,
+        no unit and no build. The takeover input says so with `live_build: null`."""
+        case = copy.copy(self.case)
+        case.data = copy.deepcopy(self.case.data)
+        case.data['layers']['agent']['activation'] = 'start'
+        world = corpus.World(case, SCRATCH / label)
+        world.build()
+        sandbox, root = world.sandbox, Path(world.root)
+        self.assertFalse(root.exists() or Path(world.unit_dir).exists())  # the premise
+        self.unit = 'connectome-%s.service' % world.effective['name']
+        process = sandbox / 'fake-systemctl-process'
+        corpus.write(process, '#!/bin/sh\ncase "$*" in *MainPID*|*NRestarts*) %s %s %s "$@" >/dev/null || exit\n'
+                     '  case "$*" in *MainPID*) echo 0;; *) echo 0;; esac; exit 0;; esac\nexec %s %s %s "$@"\n' % (tuple(world.systemctl) * 2), 0o755)
+        fake = sandbox / 'fake-systemctl'
+        # The oracle's fake writes down what it was asked under the deployment root, which is not there yet: the calls are
+        # written down here, beside it.
+        self.calls = sandbox / 'first-systemctl-calls'
+        corpus.write(fake, '#!/bin/sh\n/usr/bin/python3 -I -c \'import json, sys; print(json.dumps(sys.argv[1:]))\' "$@" >>%s\nexec %s "$@"\n' % (self.calls, process), 0o755)
+        request = dict(copy.deepcopy(world.request))
+        del request['systemctl']
+        recipe = world.raw_layers['agent']['recipe_file']['path']
+        world.node, world.own_name = NODE, True
+        self.name = world.request_id()
+        self.input = sandbox / 'takeover.json'
+        pinned = next(str(path) for path in sorted(Path(world.sandbox / 'srv').rglob('*')) if path.is_file())
+        # The recipe's bytes as the operator hands them to the account; the configured path is not there for it.
+        source = sandbox / 'handed-recipe.json'
+        shutil.copyfile(recipe, source)
+        Path(recipe).unlink()
+        self.document = {'schema': 'connectome.kitchen-takeover/v1', 'request': request, 'systemctl': [str(fake), '--user'],
+                         'files': {pinned: hashlib.sha256(Path(pinned).read_bytes()).hexdigest()}, 'recipe': {'source': str(source)},
+                         'expect': {'home': str(world.home), 'account': os.environ.get('USER') or __import__('pwd').getpwuid(os.geteuid()).pw_name,
+                                    'request_id': self.name, 'live_build': None}}
+        self.input.write_text(json.dumps(self.document))
+        self.keep = world.home / 'kitchen-takeover' / world.effective['name']
+        return world
+
+    def installed(self, world):
+        """What of a deployment is there: the pointer, the unit link, the enable link, the drop-in directory."""
+        root, unit_dir = Path(world.root), Path(world.unit_dir)
+        return [os.path.lexists(path) for path in (root / 'current', unit_dir / self.unit, unit_dir / 'default.target.wants' / self.unit, unit_dir / (self.unit + '.d'))]
+
+    def test_first_install_check_prepare_verify_start(self):
+        world = self.first_world('first')
+        root, unit_dir = Path(world.root), Path(world.unit_dir)
+        build = root / 'builds' / self.name
+        tools = lambda log: [entry['kind'] for entry in log if entry['step'] == 'tool started']
+        guard = lambda log: [(entry['level'], entry['asked'], entry['refused']) for entry in log if entry['step'] == 'guard self-test']
+
+        done, log, verbs = self.run_mode(world, 'check')
+        self.assertEqual((done.returncode, root.exists(), unit_dir.exists()), (0, False, False), done.stderr)
+        self.assertEqual(set(verbs), {'is-active', 'show'})
+        plan = next(entry for entry in log if entry['step'] == 'plan answered')['core']
+        self.assertEqual((plan['prepare']['changed'], plan['prepare']['build_dir'], plan['activate']), (True, str(build), {'changed': True}))
+        self.assertIsNone(next(entry for entry in log if entry['step'] == 'start')['live_build'])
+        # The guard is asked six things it must refuse, two of them of the mode of a first start.
+        self.assertEqual(guard(log)[4:], [('first-start', 'stop another-' + self.unit, True), ('first-start', 'disable ' + self.unit, True)])
+        self.assertEqual(len(guard(log)), 6)
+
+        done, log, verbs = self.run_mode(world, 'start')  # not before prepare
+        self.assertEqual((done.returncode, self.installed(world), root.exists()), (3, [False] * 4, False), done.stderr)
+        self.assertIn('not prepared', log[-1]['why'])
+        self.assertEqual(set(verbs), {'is-active', 'show'})
+
+        done, log, verbs = self.run_mode(world, 'prepare')
+        self.assertEqual(done.returncode, 0, done.stderr)
+        self.assertEqual((tools(log), set(verbs), self.installed(world)), (['adapter'], {'is-active', 'show'}, [False] * 4))
+        self.assertEqual(((build / '.prepared').read_text(), (build / 'secrets.env').exists(), (root / 'state/secret-files').exists()), (self.name, False, False))
+        self.assertEqual([entry for entry in json.loads((root / 'state/ownership.json').read_text())['entries'] if entry['path'] == str(build)], [{'kind': 'directory', 'path': str(build)}])
+        witness = next(entry for entry in log if entry['step'] == 'running deployment')
+        # No build was there to measure, and `builds` not being there is an empty list that was read: the witness is complete.
+        self.assertEqual((witness['untouched_by_this_run'], witness['builds_measured'], witness['measurement_complete']), (True, [], True))
+        done, log, verbs = self.run_mode(world, 'prepare')  # again: nothing to do, no cook run
+        self.assertEqual((done.returncode, tools(log), self.installed(world)), (0, [], [False] * 4), done.stderr)
+
+        done, log, verbs = self.run_mode(world, 'verify')
+        self.assertEqual((done.returncode, self.installed(world)), (0, [False] * 4), done.stderr)
+        plan = next(entry for entry in log if entry['step'] == 'plan answered')['core']
+        self.assertEqual((plan['prepare']['changed'], plan['activate']), (False, {'changed': True}))
+        view = next(entry for entry in log if entry['step'] == 'secrets file')
+        # No build runs: there is no environment file to hold the secrets file to, and no secret file is there yet.
+        self.assertEqual((view['missing'], view['environment_file_of_current_build_is_what_start_would_write'], view['secret_files_are_what_start_would_write']), ([], None, {'CHAT_RC_PATH': None}))
+        self.assertEqual(set(verbs), {'is-active', 'show'})
+
+        done, log, verbs = self.run_mode(world, 'start')
+        self.assertEqual(done.returncode, 0, done.stderr)
+        self.assertEqual(tools(log), ['daemon-reload', 'restart', 'is-active'])
+        self.assertEqual((verbs.count('restart'), verbs.count('daemon-reload'), set(verbs)), (1, 1, {'is-active', 'show', 'daemon-reload', 'restart'}))
+        self.assertEqual((os.readlink(root / 'current'), os.readlink(unit_dir / self.unit), os.readlink(unit_dir / 'default.target.wants' / self.unit)),
+                         (str(build), str(build / 'managed-units' / self.unit), str(build / 'managed-units' / self.unit)))
+        self.assertIn(self.name, (unit_dir / (self.unit + '.d') / '90-connectome-env.conf').read_text())
+        self.assertTrue((build / 'secrets.env').is_file() and (root / 'state/secret-files/CHAT_RC_PATH').is_file())
+        self.assertEqual(json.loads((root.parent / 'unit-states.json').read_text())['user:' + self.unit], 'active')
+
+        done, log, verbs = self.run_mode(world, 'verify')  # after the first start: the pointer names the new build
+        self.assertEqual(done.returncode, 0, done.stderr)
+        self.assertFalse(next(entry for entry in log if entry['step'] == 'plan answered')['core']['changed'])
+        view = next(entry for entry in log if entry['step'] == 'secrets file')
+        self.assertEqual((view['environment_file_of_current_build_is_what_start_would_write'], view['secret_files_are_what_start_would_write']), (True, {'CHAT_RC_PATH': True}))
+        done, log, verbs = self.run_mode(world, 'start')  # again: nothing to do, no restart
+        self.assertEqual((done.returncode, verbs.count('restart'), verbs.count('daemon-reload'), verbs.count('stop')), (0, 0, 0, 0), done.stderr)
+        # `check` and `prepare` are of a root where nothing runs: once the agent is installed they refuse this request.
+        for mode in ('check', 'prepare'):
+            done, log, verbs = self.run_mode(world, mode)
+            self.assertEqual(done.returncode, 3, done.stderr)
+            self.assertIn('a first install is of a root whose current is not there', done.stderr)
+            self.assertEqual(set(verbs), set())
+        # No secret value in anything the runner kept.
+        kept = ''.join(path.read_text() for path in self.keep.iterdir())
+        for value in world.secrets.values():
+            self.assertNotIn(value, kept)
+
+    def test_a_first_start_that_fails_leaves_nothing_installed(self):
+        world = self.first_world('first-back')
+        root = Path(world.root)
+        build = root / 'builds' / self.name
+        self.assertEqual(self.run_mode(world, 'prepare')[0].returncode, 0)
+        # The unit does not come up: the service manager fails the restart.
+        fake = Path(self.document['systemctl'][0])
+        passing = fake.read_text()
+        corpus.write(fake, passing.replace('\nexec ', '\nfor a in "$@"; do if [ "$a" = restart ]; then exit 1; fi; done\nexec '), 0o755)
+        done, log, verbs = self.run_mode(world, 'start')
+        self.assertEqual(done.returncode, 1, done.stderr)
+        answer = next(entry for entry in log if entry['step'] == 'apply answered')['core']
+        self.assertEqual((answer['phase'], answer['error_code']), ('activate', 'E_DEPLOY_FAILED'))
+        self.assertIn('previous deployment restored', answer['msg'])
+        # The engine takes its start back with `stop` of this one unit, which the guard lets through for a first start only.
+        self.assertEqual([entry['kind'] for entry in log if entry['step'] == 'tool started'], ['daemon-reload', 'restart', 'stop', 'daemon-reload'])
+        self.assertEqual([entry for entry in log if entry['step'] == 'tool refused'], [])
+        self.assertEqual((verbs.count('restart'), verbs.count('stop'), verbs.count('daemon-reload')), (1, 1, 2))
+        # Nothing is installed: no pointer, no unit link, no enable link, no drop-in, no secret file. The build stays.
+        self.assertEqual((self.installed(world), (root / 'state/secret-files').exists(), (build / '.prepared').is_file()), ([False] * 4, False, True))
+        self.assertNotEqual(json.loads((root.parent / 'unit-states.json').read_text()).get('user:' + self.unit), 'active')
+        # And the next start, with the cause gone, starts it.
+        corpus.write(fake, passing, 0o755)
+        done, log, verbs = self.run_mode(world, 'verify')
+        self.assertEqual(done.returncode, 0, done.stderr)
+        done, log, verbs = self.run_mode(world, 'start')
+        self.assertEqual((done.returncode, self.installed(world), verbs.count('restart'), verbs.count('stop')), (0, [True] * 4, 1, 0), done.stderr)
+
+    def test_a_first_install_is_refused_where_something_is_deployed(self):
+        # `live_build: null` says nothing is deployed. Where a build, a pointer or a unit of this deployment is there, it is
+        # not a first install, and nothing is asked of the engine.
+        def refused(world, mode, word, change=lambda d: None):
+            changed = copy.deepcopy(self.document)
+            change(changed)
+            self.input.write_text(json.dumps(changed))
+            done, log, verbs = self.run_mode(world, mode)
+            self.assertEqual(done.returncode, 3, done.stderr)
+            self.assertIn(word, done.stderr)
+            self.assertEqual([entry for entry in log if entry['step'].endswith(' asked')], [])
+            self.assertLessEqual(set(verbs), {'is-active', 'show'})
+        world = self.world('first-on-running')  # a deployment that runs
+        before = self.pointers(world)
+        for mode in MODES:
+            refused(world, mode, 'a first install is of a root with no build but its own', lambda d: d['expect'].update(live_build=None))
+        self.assertEqual(self.pointers(world), before)
+        world = self.first_world('first-refusals')
+        root, unit_dir = Path(world.root), Path(world.unit_dir)
+        for value in ('', 0, False, 'null'):
+            refused(world, 'check', 'expect', lambda d: d['expect'].update(live_build=value))
+        # A takeover (two build names) of a root where nothing is deployed is refused as before.
+        refused(world, 'check', 'the deployment root is not one an engine made', lambda d: d['expect'].update(live_build='0' * 64))
+        root.mkdir(parents=True)
+        (root / 'current').symlink_to(root / 'builds' / ('0' * 64))
+        for mode in MODES:
+            refused(world, mode, 'a first install is of a root whose current is not there')
+        (root / 'current').unlink()
+        for leaf, directory in ((self.unit, False), ('default.target.wants/' + self.unit, False), (self.unit + '.d', True)):
+            path = unit_dir / leaf
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.mkdir() if directory else path.symlink_to('/nowhere/' + self.unit)  # also a link that names nothing
+            for mode in ('check', 'prepare'):
+                refused(world, mode, 'a first install is of an account that has no unit of this deployment')
+            path.rmdir() if directory else path.unlink()
+        # And with all of that gone it is one. (The directories made here are this test's, with its umask: the engine holds
+        # the ancestors of what it writes to modes of its own, so they go too.)
+        shutil.rmtree(root); shutil.rmtree(unit_dir.parent)
+        self.input.write_text(json.dumps(self.document))
+        done, log, verbs = self.run_mode(world, 'check')
+        self.assertEqual(done.returncode, 0, done.stderr)
 
     def run_mode(self, world, mode):
         env = {'HOME': str(world.home), 'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8', 'XDG_RUNTIME_DIR': str(world.sandbox)}
@@ -562,6 +746,17 @@ os.chmod(_dst, 0o755)
             self.assertEqual(status(mode, '--user', *args), 97, (mode, args))
         self.assertEqual(len(called.read_text().splitlines()), 8)
         self.assertEqual(len(log.read_text().splitlines()), 8 + len(refusals))
+        # The mode of a first start: what `start` passes, and `stop` of this one unit, with which the engine takes a failed
+        # first start back. Nothing else: no stop of another unit, and none of the verbs `start` refuses.
+        passed = questions + (['--user', 'daemon-reload'], ['--user', 'restart', 'a.service'], ['--user', 'stop', 'a.service'])
+        for args in passed:
+            self.assertEqual(status('first-start', *args), 0, args)
+        first = [('stop', 'b.service'), ('stop', 'a.service', 'b.service'), ('stop',), ('restart', 'b.service'), ('daemon-reload', 'a.service')]
+        first += [(verb, 'a.service') for verb in ('start', 'enable', 'disable', 'reload-or-restart', 'try-restart', 'mask', 'kill', 'isolate', 'edit', 'link', 'set-property')]
+        for args in first:
+            self.assertEqual(status('first-start', '--user', *args), 97, args)
+        self.assertEqual(len(called.read_text().splitlines()), 8 + len(passed))
+        self.assertEqual(len(log.read_text().splitlines()), 8 + len(refusals) + len(passed) + len(first))
 
 
 if __name__ == '__main__':

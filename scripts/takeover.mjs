@@ -22,6 +22,16 @@
 // Why not `activation: install_only` for the first step: the engine refuses it while the unit is active
 // (`E_UNIT_ACTIVE`, src/deploy.ts `preflight_activation`), and it would move the pointer and the unit.
 //
+// A first install: `expect.live_build: null` says that nothing is deployed, and the same four modes then install an agent
+// from nothing. In place of an engine's root whose pointer names the build that runs, the runner holds, before its first
+// write: `builds` has no build but the requested one (no `builds` at all is that too); `current` is not there (or, in
+// `verify` and `start`, names the new build, as after the first start); and, while `current` is not there, the account
+// has no unit link, no enable link and no drop-in directory of this deployment. `prepare` makes the root and the build
+// and starts nothing. `start` goes through the guard's mode `first-start`, which also passes `stop` of this one unit:
+// with nothing to go back to, the engine takes a failed first start back by stopping the unit and removing what it
+// installed (src/deploy.ts `activate`, through `_install` with no unit to keep). Without that `stop` its take-back fails, and the unit
+// link, the enable link and the drop-in stay behind with a failed unit. With two build names nothing of this applies.
+//
 // What it refuses to do, whatever the input says:
 //   - run as root, or for an account or a home other than the ones the input names;
 //   - any activation but `start`, or a deployment root no engine made;
@@ -29,7 +39,7 @@
 //     (takeover/systemctl-guard stands in front of it, also for the engine's own direct calls), and start any tool but
 //     the adapter (`prepare` only);
 //   - in `start`: anything of the service manager but those two, `daemon-reload` and `restart` of this deployment's
-//     one unit; cook; a build that is not prepared;
+//     one unit (and, in the `start` of a first install only, `stop` of that one unit); cook; a build that is not prepared;
 //   - write, copy or log a secret value. The engine reads the secrets file in place in `start`.
 //
 // What `untouched_by_this_run` says, and what it does not. Before and after a step the runner takes: the pointer, the
@@ -216,9 +226,10 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
     const real = input.get('systemctl');
     need(Array.isArray(real) && real.length === 2 && path.isAbsolute(String(real[0])) && real[1] === '--user', 'systemctl must be [<absolute systemctl>, "--user"]');
     const expect = input.get('expect');
-    need(expect instanceof Map && EXPECT_KEYS.every(key => typeof expect.get(key) === 'string') && expect.size === EXPECT_KEYS.length, 'expect must hold exactly ' + EXPECT_KEYS.join(', '));
+    need(expect instanceof Map && EXPECT_KEYS.every(key => typeof expect.get(key) === 'string' || (key === 'live_build' && expect.get(key) === null)) && expect.size === EXPECT_KEYS.length, 'expect must hold exactly ' + EXPECT_KEYS.join(', '));
     const wanted = expect.get('request_id'), live = expect.get('live_build');
-    need(HEX.test(wanted) && HEX.test(live) && wanted !== live, 'expect.request_id and expect.live_build must be two different build names');
+    const first = live === null;
+    need(HEX.test(wanted) && (first || (HEX.test(live) && wanted !== live)), 'expect.request_id and expect.live_build must be two different build names, or live_build null where nothing is deployed');
 
     // Who and where. Nothing has been written yet.
     const uid = process.geteuid();
@@ -239,11 +250,19 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
     need(typeof runtime === 'string' && fs.existsSync(runtime) && fs.statSync(runtime).isDirectory(), 'XDG_RUNTIME_DIR must name the runtime directory of this account\'s user manager');
     const root = request.get('root'), unitDir = request.get('unit_dir'), stateDir = effective.get('state_dir'), secretsFile = effective.get('secrets_file');
     need([root, unitDir, stateDir, secretsFile].every(value => typeof value === 'string' && value.startsWith(home + '/')), 'root, unit_dir, state_dir and secrets_file must lie in this account\'s home');
-    const builds = path.join(root, 'builds'), build = path.join(builds, wanted), liveBuild = path.join(builds, live), current = path.join(root, 'current');
+    const builds = path.join(root, 'builds'), build = path.join(builds, wanted), liveBuild = first ? null : path.join(builds, live), current = path.join(root, 'current');
     // The deployment to take over, before the first write of this runner: an engine's root whose pointer names a build we know.
-    need(fs.existsSync(path.join(root, 'state', 'ownership.json')), 'the deployment root is not one an engine made: ' + root);
+    // Or, for a first install, none: no other build, no pointer, no unit of this deployment.
     const pointer = () => { try { return fs.readlinkSync(current); } catch { return null; } };
-    need(pointer() === liveBuild || (pointer() === build && (mode === 'verify' || mode === 'start')),
+    if (first) {
+      const absent = file => { try { fs.lstatSync(file); return false; } catch (error) { return error.code === 'ENOENT'; } };
+      const others = (() => { try { return fs.readdirSync(builds).filter(leaf => leaf !== wanted); } catch (error) { return error.code === 'ENOENT' ? [] : null; } })();
+      need(others !== null && others.length === 0, 'a first install is of a root with no build but its own: ' + builds);
+      need(pointer() === build ? mode === 'verify' || mode === 'start' : absent(current), 'a first install is of a root whose current is not there' + (mode === 'verify' || mode === 'start' ? ' or names the new build' : ''));
+      need(pointer() === build || [path.join(unitDir, 'connectome-' + name + '.service'), path.join(unitDir, 'default.target.wants', 'connectome-' + name + '.service'), path.join(unitDir, 'connectome-' + name + '.service.d')].every(absent),
+        'a first install is of an account that has no unit of this deployment: the unit link, the enable link or the drop-in directory is there');
+    } else need(fs.existsSync(path.join(root, 'state', 'ownership.json')), 'the deployment root is not one an engine made: ' + root);
+    need(first || pointer() === liveBuild || (pointer() === build && (mode === 'verify' || mode === 'start')),
       mode === 'check' || mode === 'prepare' ? 'current does not name the build this takeover was prepared against' : 'current names neither the build this takeover was prepared against nor the new one');
     const recipe = input.get('recipe');
     need(effective.has('recipe_file') ? recipe instanceof Map && recipe.size === 1 && typeof recipe.get('source') === 'string' && path.isAbsolute(recipe.get('source')) : recipe === null,
@@ -297,14 +316,15 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
       operatorFiles = new Map([['cook-recipe.json', bytes.toString('base64')]]);
     }
 
-    // The service manager behind the guard. `start` alone may reload it and restart this one unit.
-    const guard = [SYSTEMCTL_GUARD, mode === 'start' ? 'start' : 'readonly', guardLog, unit, real[0], '--user'];
+    // The service manager behind the guard. `start` alone may reload it and restart this one unit; the `start` of a first
+    // install may also stop it, which is how the engine takes a failed first start back.
+    const guard = [SYSTEMCTL_GUARD, mode === 'start' ? (first ? 'first-start' : 'start') : 'readonly', guardLog, unit, real[0], '--user'];
     const viaGuard = (level, args) => spawnSync(guard[0], [level, guardLog, unit, real[0], ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
     const ask = args => {
       const done = viaGuard('readonly', args);
       return { argv: args, status: done.status, stdout: (done.stdout ?? '').trim() };
     };
-    for (const [level, args] of [['readonly', ['--user', 'restart', unit]], ['readonly', ['--user', 'daemon-reload']], ['start', ['--user', 'stop', unit]], ['start', ['--user', 'restart', 'another-' + unit]]]) {
+    for (const [level, args] of [['readonly', ['--user', 'restart', unit]], ['readonly', ['--user', 'daemon-reload']], ['start', ['--user', 'stop', unit]], ['start', ['--user', 'restart', 'another-' + unit]], ['first-start', ['--user', 'stop', 'another-' + unit]], ['first-start', ['--user', 'disable', unit]]]) {
       const status = viaGuard(level, args).status;
       log('guard self-test', { level, asked: args.slice(1).join(' '), status, refused: status === 97 });
       need(status === 97, 'the service-manager guard did not refuse: ' + level + ' ' + args.join(' '));
@@ -329,7 +349,8 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
     // too, also when it is the one that runs.
     const writesRequested = mode === 'prepare' || mode === 'start';
     let listed = true;
-    const there = () => { try { return fs.readdirSync(builds).sort(); } catch { listed = false; return []; } };
+    // K5: where nothing is deployed there is no `builds` yet: that is an empty list, read, and not one that could not be read.
+    const there = () => { try { return fs.readdirSync(builds).sort(); } catch (error) { if (!(first && error.code === 'ENOENT')) listed = false; return []; } };
     const measuredBuilds = () => there().filter(leaf => !(writesRequested && leaf === wanted));
     const inventories = new Map(measuredBuilds().map(leaf => [leaf, inventory(path.join(builds, leaf))]));
     log('builds measured', { requested_build: writesRequested ? 'left out: this step writes it' : inventories.has(wanted) ? 'measured' : 'not there',
@@ -357,7 +378,8 @@ export function takeover(mode, inputFile, { host = realHost, start = deploy.run,
         : mode !== 'start' || guarded === null ? null
           : guarded.length === 1 && guarded[0] === 'daemon-reload' ? 'daemon-reload'
             : guarded.length === 2 && guarded[0] === 'restart' && guarded[1] === unit ? 'restart'
-              : guarded.length === 3 && guarded[0] === 'is-active' && guarded[1] === '--quiet' && guarded[2] === unit ? 'is-active' : null;
+              : first && guarded.length === 2 && guarded[0] === 'stop' && guarded[1] === unit ? 'stop'
+                : guarded.length === 3 && guarded[0] === 'is-active' && guarded[1] === '--quiet' && guarded[2] === unit ? 'is-active' : null;
       if (kind === null) { log('tool refused', { argv }); throw new Error('the takeover does not start this tool in ' + mode); }
       const started = Date.now();
       log('tool started', { kind, argv, cwd: options.cwd ?? null });

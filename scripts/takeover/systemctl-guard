@@ -5,8 +5,11 @@
 #
 # MODE `readonly`: runs SYSTEMCTL ARGS... when the verb is `is-active` or `show`, and nothing else.
 # MODE `start`:    the same, and `daemon-reload`, and `restart UNIT` for exactly the one UNIT named here.
-# Every other call exits 97 without running anything: no start, stop, enable, disable, mask or kill reaches the
-# service manager through here, and no restart of another unit. Every call is written to LOG first, refused or not.
+# MODE `first-start`: as `start`, and `stop UNIT` for that one UNIT: the start of a first install, where the engine
+#                  takes a failed start back by stopping the unit it installed. No stop of another unit.
+# Every other call exits 97 without running anything: no start, enable, disable, mask or kill reaches the service
+# manager through here, no stop but the one above, and no restart of another unit. Every call is written to LOG first,
+# refused or not.
 set -eu
 umask 077
 mode=$1
@@ -26,9 +29,9 @@ for arg in "$@"; do
 done
 allowed=refused
 case "$mode:$verb" in
-  readonly:is-active|readonly:show|start:is-active|start:show) allowed=allowed ;;
-  start:daemon-reload) [ "$count" -eq 0 ] && allowed=allowed ;;
-  start:restart) [ "$count" -eq 1 ] && [ "$operands" = "$unit" ] && allowed=allowed ;;
+  readonly:is-active|readonly:show|start:is-active|start:show|first-start:is-active|first-start:show) allowed=allowed ;;
+  start:daemon-reload|first-start:daemon-reload) [ "$count" -eq 0 ] && allowed=allowed ;;
+  start:restart|first-start:restart|first-start:stop) [ "$count" -eq 1 ] && [ "$operands" = "$unit" ] && allowed=allowed ;;
 esac
 printf '%s %s %s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$mode" "$allowed" "$*" >>"$log"
 [ "$allowed" = allowed ] || exit 97
