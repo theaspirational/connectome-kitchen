@@ -899,8 +899,7 @@ Bun asks the registry for every package, and a range that no lockfile pins
 resolves to the newest version that fits; a warm account cache can answer the
 same request with an earlier version and no request to the registry at all.
 So the same recipe and the same pins can give other package bytes, and the
-owner had the number raised (poll 2535). What `/2` says, and what it does
-not:
+owner had the number raised. What `/2` says, and what it does not:
 
 - A build named under `/2` was installed from an empty Bun cache of its own.
   That acquisition is part of the contract. So is how Git takes a source
@@ -1097,10 +1096,11 @@ briefs, and in the third also from the owner through the manager: on 2026-11-14 
 findings); on 2026-11-15 after the delta review of the first fix round,
 `a198042` (APPROVE, two LOW findings and one INFO); and on 2026-11-15 after
 the delta review of the second fix round, `621d78d` (APPROVE, three LOW
-findings and three INFO). `test/port-rulings.golden`
-quotes each one as received and is what `scripts/check-port-ready` reads. The
-implementer records rulings and makes none. Three rulings of the second round
-left a choice open; the record names each choice as the implementer's
+findings and three INFO). `scripts/check-port-ready` reads
+`test/port-rulings.golden`, which preserves the rulings with personal and
+internal references removed. The implementer records rulings and makes none.
+Three rulings of the second round left a choice open; the record names each
+choice as the implementer's
 (`left_to_the_implementer`). D5 and D6 came later, from the owner through
 the briefs of the steps that built them: D5 on 2026-11-15, and D6 on
 2026-11-16 after the delta review of `40378ef..22caa8d` (REJECT as
@@ -1130,10 +1130,10 @@ itself since the record below replaced it.
 
 The closing step (`06ee0cc..05298e9`) had no delta review. The technical
 owner accepted it for the agreed success path, and the record holds that as
-what it is: her bounded technical acceptance, quoted as the brief relays it
-(Zulip Kitchen 2359), not an independent review. `delta_review` carries it
-with `kind` saying so. There is no review report; the digest the readiness
-check requires is the sha256 of the quotation, and the entry says that too.
+what it is: the technical owner's bounded technical acceptance, not an
+independent review. The record gives an English paraphrase and retains the
+sha256 of the original excerpt relayed in the brief, not of the paraphrase.
+There is no review report.
 The implementer recorded it on the manager's quoted instruction. It is kept
 under `earlier_delta_reviews` since the record below replaced it.
 
@@ -1201,7 +1201,7 @@ The mutant classification:
 | B17 | port | open, not fixed in the reader (LOW-2 of the same review): the sparse budget counts numbers, not their size, and a map in a global header is converted anew at every expansion. Bounded by the default instead: at 2^16 numbers about 115 MiB, inside the measured peak. Fix it (share the integers of a global map) before raising the sparse budget |
 | B18 | port | `catalog.ts`, and with it the catalog branches of `deploy.ts` and `cook.ts`. Until then an active catalog is refused. None of the five deployments activates it |
 | B19 | port, before any use on input that is not ours | `deploy.ts` and `cook.ts` have no mutants and no hostile vectors; the inventory rows they own (plan section 4.1) are not marked; exception classes on wrongly typed values are not modelled throughout. They are not listed as ported |
-| D6 | the adapter contract raised to `kitchen-cook-adapter/2`: the empty Bun cache of the build's own, and Git's transport for a local source repository, are part of the contract (the owner, poll 2535, after finding M1 of the delta review of `40378ef..22caa8d`) | the exception made under `/1` for the two cache names is withdrawn, since an empty cache can change which package versions enter a build. `/2` distinguishes the acquisition and pins nothing (B26 stays open). Every agent built under `/1` is built anew once, in a later window; no account was touched for this ruling. Received on 2026-11-16 through the dispatch brief |
+| D6 | the adapter contract raised to `kitchen-cook-adapter/2`: the empty Bun cache of the build's own, and Git's transport for a local source repository, are part of the contract (the owner, after finding M1 of the delta review of `40378ef..22caa8d`) | the exception made under `/1` for the two cache names is withdrawn, since an empty cache can change which package versions enter a build. `/2` distinguishes the acquisition and pins nothing (B26 stays open). Every agent built under `/1` is built anew once, in a later window; no account was touched for this ruling. Received on 2026-11-16 through the dispatch brief |
 | B20 | done (plan steps 4 and 5) | `verify_cook` has met a real cook checkout and cook has run under the TS engine, once, installed and not started, on a trial account (`scripts/rehearse.mjs`; "A rehearsal" above). The build is a case outside the repository, with the lock as cook wrote it, and both engines take it alike. Not done: a started agent, a later release on a real host, a release taken back there |
 | B21 | corpus | cases for the branches no case reaches: rollback onto a previous release, a retired unit, a dropped secret file, a health command, an engine-rendered unit, connectors from descriptors, the ownership refusals |
 | B22 | port, with the command line (plan phase 7) | there is no operational entry: `src/cli.ts` refuses. `src/engine.ts` is a library call; secrets on a descriptor, the receipt file and exit statuses are not built. `scripts/rehearse.mjs` is the runner of a rehearsal and nothing more: it lets the engine read the secrets file, and it installs without a start only |
